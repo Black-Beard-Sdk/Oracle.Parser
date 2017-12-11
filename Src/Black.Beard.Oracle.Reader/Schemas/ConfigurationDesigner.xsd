@@ -1,0 +1,1362 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema id="ConfigurationGeneratorSchema" targetNamespace="http://schemas.microsoft.com/dsltools/ConfigurationGenerator" elementFormDefault="qualified" xmlns="http://schemas.microsoft.com/dsltools/ConfigurationGenerator" xmlns:core="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:import id="CoreSchema" namespace="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" />
+  <!-- ConfigurationModel -->
+  <xsd:element name="configurationModel" type="ConfigurationModel" substitutionGroup="core:modelElement" />
+  <xsd:complexType name="ConfigurationModel">
+    <xsd:annotation>
+      <xsd:documentation>The root in which all other elements are embedded. Appears as a diagram.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="core:ModelElement">
+        <xsd:sequence minOccurs="0" maxOccurs="1">
+          <!-- Relationship: ConfigurationModelHasElements -->
+          <xsd:element name="elements" minOccurs="0" maxOccurs="1">
+            <xsd:annotation>
+              <xsd:documentation>Instances of ConfigurationModelHasElements</xsd:documentation>
+            </xsd:annotation>
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:choice minOccurs="0" maxOccurs="unbounded" >
+                  <xsd:element ref="configurationModelHasElements">
+                    <xsd:annotation>
+                      <xsd:documentation>[Relationship deriving from ConfigurationModelHasElements needs to be serialized in full-form]</xsd:documentation>
+                    </xsd:annotation>
+                  </xsd:element>
+                  <xsd:element ref="configurationElement" >
+                    <xsd:annotation>
+                      <xsd:documentation>[Target role-player]</xsd:documentation>
+                    </xsd:annotation>
+                  </xsd:element>
+                </xsd:choice>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+          <!-- Relationship: ConfigurationModelHasUsings -->
+          <xsd:element name="usings" minOccurs="0" maxOccurs="1">
+            <xsd:annotation>
+              <xsd:documentation>Instances of ConfigurationModelHasUsings</xsd:documentation>
+            </xsd:annotation>
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element ref="configurationModelHasUsings" minOccurs="0" maxOccurs="unbounded">
+                  <xsd:annotation>
+                    <xsd:documentation>[Instance of ConfigurationModelHasUsings needs to be serialized in full-form]</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+        <!-- Id -->
+        <xsd:attribute name="Id" type="xsd:string">
+          <xsd:annotation>
+            <xsd:documentation>Instance Guid of this element, needed because SerializeId is set to true.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- dslVersion -->
+        <xsd:attribute name="dslVersion" type="xsd:string">
+          <xsd:annotation>
+            <xsd:documentation>Version of the model serialized in this file.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: Namespace -->
+        <xsd:attribute name="namespace" type="xsd:string" >
+          <xsd:annotation>
+            <xsd:documentation>Define the namespace root for all the generated code</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: CategoryCanBeEmpty -->
+        <xsd:attribute name="categoryCanBeEmpty" type="xsd:boolean" />
+        <!-- Property: DescriptionCanBeEmpty -->
+        <xsd:attribute name="descriptionCanBeEmpty" type="xsd:boolean" />
+        <!-- Property: XmlAttributeMustRespectCase -->
+        <xsd:attribute name="xmlAttributeMustRespectCase" type="xsd:boolean" />
+        <!-- Property: GenerateCode -->
+        <xsd:attribute name="generateCode" type="xsd:boolean" >
+          <xsd:annotation>
+            <xsd:documentation>Enable or disable the generation of the code</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: GenerateXsd -->
+        <xsd:attribute name="generateXsd" type="xsd:boolean" >
+          <xsd:annotation>
+            <xsd:documentation>Enable or disable the generation of the xsd</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: GenerateSample -->
+        <xsd:attribute name="generateSample" type="xsd:boolean" >
+          <xsd:annotation>
+            <xsd:documentation>enable or disable the generation of the sample config with the default value;</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: OutputFileName -->
+        <xsd:attribute name="outputFileName" type="xsd:string" />
+        <!-- Property: ConfigurationGuid -->
+        <xsd:attribute name="configurationGuid" type="xsd:string" />
+        <!-- Property: GenerateT4 -->
+        <xsd:attribute name="generateT4" type="xsd:boolean" >
+          <xsd:annotation>
+            <xsd:documentation>Generate t4 script</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
+  <!-- ConfigurationModel Moniker -->
+  <xsd:element name="configurationModelMoniker" type="ConfigurationModelMoniker" substitutionGroup="core:modelElementMoniker" />
+  <xsd:complexType name="ConfigurationModelMoniker">
+    <xsd:annotation>
+      <xsd:documentation>Moniker for ConfigurationModel instance.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="core:ModelElementMoniker">
+        <xsd:attribute name="Id" type="xsd:string" >
+          <xsd:annotation>
+            <xsd:documentation>Attribute to store the moniker string.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
+  <!-- ConfigurationElement -->
+  <xsd:element name="configurationElement" type="ConfigurationElement" substitutionGroup="core:modelElement" />
+  <xsd:complexType name="ConfigurationElement">
+    <xsd:annotation>
+      <xsd:documentation>System.Configuration.ConfigurationElement</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="core:ModelElement">
+        <xsd:sequence minOccurs="0" maxOccurs="1">
+          <!-- Relationship: ConfigurationElementReferencesTargets -->
+          <xsd:element name="targets" minOccurs="0" maxOccurs="1">
+            <xsd:annotation>
+              <xsd:documentation>Instances of ConfigurationElementReferencesTargets</xsd:documentation>
+            </xsd:annotation>
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element ref="configurationElementReferencesTargets" minOccurs="0" maxOccurs="unbounded">
+                  <xsd:annotation>
+                    <xsd:documentation>[Instance of ConfigurationElementReferencesTargets needs to be serialized in full-form]</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+          <!-- Relationship: ConfigurationElementHasAttribute -->
+          <xsd:element name="attributeProperties" minOccurs="0" maxOccurs="1">
+            <xsd:annotation>
+              <xsd:documentation>Instances of ConfigurationElementHasAttribute</xsd:documentation>
+            </xsd:annotation>
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element ref="configurationElementHasAttribute" minOccurs="0" maxOccurs="unbounded">
+                  <xsd:annotation>
+                    <xsd:documentation>[Instance of ConfigurationElementHasAttribute needs to be serialized in full-form]</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+          <!-- Relationship: ConfigurationElementHasRefProperties -->
+          <xsd:element name="refProperties" minOccurs="0" maxOccurs="1">
+            <xsd:annotation>
+              <xsd:documentation>Instances of ConfigurationElementHasRefProperties</xsd:documentation>
+            </xsd:annotation>
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element ref="configurationElementHasRefProperties" minOccurs="0" maxOccurs="unbounded">
+                  <xsd:annotation>
+                    <xsd:documentation>[Instance of ConfigurationElementHasRefProperties needs to be serialized in full-form]</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+          <!-- Relationship: ConfigurationElementHasUsings -->
+          <xsd:element name="usings" minOccurs="0" maxOccurs="1">
+            <xsd:annotation>
+              <xsd:documentation>Instances of ConfigurationElementHasUsings</xsd:documentation>
+            </xsd:annotation>
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element ref="configurationElementHasUsings" minOccurs="0" maxOccurs="unbounded">
+                  <xsd:annotation>
+                    <xsd:documentation>[Instance of ConfigurationElementHasUsings needs to be serialized in full-form]</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+        <!-- Id -->
+        <xsd:attribute name="Id" type="xsd:string">
+          <xsd:annotation>
+            <xsd:documentation>Instance Guid of this element, needed because SerializeId is set to true.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: Name -->
+        <xsd:attribute name="name" type="xsd:string" use="required" />
+        <!-- Property: Namespace -->
+        <xsd:attribute name="namespace" type="xsd:string" />
+        <!-- Property: Description -->
+        <xsd:attribute name="description" type="xsd:string" />
+        <!-- Property: AccessModifier -->
+        <xsd:attribute name="accessModifier" type="EnumAccessibility" >
+          <xsd:annotation>
+            <xsd:documentation>Determines what the access modifier for the generated class is.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: InheritanceModifier -->
+        <xsd:attribute name="inheritanceModifier" type="InheritanceModifiers" >
+          <xsd:annotation>
+            <xsd:documentation>Determines if the inheritance modifier of the generated class is none, abstract or sealed</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: DeclarationIsRequired -->
+        <xsd:attribute name="declarationIsRequired" type="xsd:boolean" >
+          <xsd:annotation>
+            <xsd:documentation>Define the element must be present in the configuration section</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
+  <!-- ConfigurationElement Moniker -->
+  <xsd:element name="configurationElementMoniker" type="ConfigurationElementMoniker" substitutionGroup="core:modelElementMoniker" />
+  <xsd:complexType name="ConfigurationElementMoniker">
+    <xsd:annotation>
+      <xsd:documentation>Moniker for ConfigurationElement instance.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="core:ModelElementMoniker">
+        <xsd:attribute name="name" type="xsd:string" >
+          <xsd:annotation>
+            <xsd:documentation>Attribute to store the moniker string.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
+  <!-- AttributeProperty -->
+  <xsd:element name="attributeProperty" type="AttributeProperty" substitutionGroup="core:modelElement" />
+  <xsd:complexType name="AttributeProperty">
+    <xsd:complexContent>
+      <xsd:extension base="core:ModelElement">
+        <!-- Id -->
+        <xsd:attribute name="Id" type="xsd:string">
+          <xsd:annotation>
+            <xsd:documentation>Instance Guid of this element, needed because SerializeId is set to true.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: PropertyName -->
+        <xsd:attribute name="propertyName" type="xsd:string" use="required" >
+          <xsd:annotation>
+            <xsd:documentation>Define the name of the property in the class</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: XmlNameAttribute -->
+        <xsd:attribute name="xmlNameAttribute" type="xsd:string" >
+          <xsd:annotation>
+            <xsd:documentation>Define the name of the node in the xml tree.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: Description -->
+        <xsd:attribute name="description" type="xsd:string" >
+          <xsd:annotation>
+            <xsd:documentation>Description for comment code and the Description Attribute</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: DisplayName -->
+        <xsd:attribute name="displayName" type="xsd:string" >
+          <xsd:annotation>
+            <xsd:documentation>Display name for comment code and the DisplayName Attribute</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: Required -->
+        <xsd:attribute name="required" type="xsd:boolean" >
+          <xsd:annotation>
+            <xsd:documentation>define if the attribute porperty is required, if the value is true you must define the default value.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: Type -->
+        <xsd:attribute name="type" type="xsd:string" >
+          <xsd:annotation>
+            <xsd:documentation>define the return type.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: DefaultValue -->
+        <xsd:attribute name="defaultValue" type="xsd:string" >
+          <xsd:annotation>
+            <xsd:documentation>Define the default value if not define</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: Category -->
+        <xsd:attribute name="category" type="xsd:string" >
+          <xsd:annotation>
+            <xsd:documentation>Category for the Category Attribute.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: TypeConverter -->
+        <xsd:attribute name="typeConverter" type="xsd:string" >
+          <xsd:annotation>
+            <xsd:documentation>Define a TypeConverter for convert the value</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: IsPropertyNameOfClass -->
+        <xsd:attribute name="isPropertyNameOfClass" type="xsd:boolean" >
+          <xsd:annotation>
+            <xsd:documentation>Define the key</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: Kind -->
+        <xsd:attribute name="kind" type="EnumKind" >
+          <xsd:annotation>
+            <xsd:documentation>Define if the property must be generated.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: GetterAccessModifier -->
+        <xsd:attribute name="getterAccessModifier" type="EnumAccessibility" >
+          <xsd:annotation>
+            <xsd:documentation>Define the access for the getter</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: SetterAccessModifier -->
+        <xsd:attribute name="setterAccessModifier" type="EnumAccessibility" >
+          <xsd:annotation>
+            <xsd:documentation>Define the access for the setter</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: ReadOnly -->
+        <xsd:attribute name="readOnly" type="xsd:boolean" >
+          <xsd:annotation>
+            <xsd:documentation>Define if must Generate a Setter for this property</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: Validator -->
+        <xsd:attribute name="validator" type="xsd:string" >
+          <xsd:annotation>
+            <xsd:documentation>define the return type.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: DefaultValueIsString -->
+        <xsd:attribute name="defaultValueIsString" type="xsd:boolean" >
+          <xsd:annotation>
+            <xsd:documentation>The default value is a string</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: IsEnum -->
+        <xsd:attribute name="isEnum" type="xsd:boolean" />
+        <!-- Property: EnumValues -->
+        <xsd:attribute name="enumValues" type="xsd:string" />
+        <!-- Property: AuthorizeNoDefaultValue -->
+        <xsd:attribute name="authorizeNoDefaultValue" type="xsd:boolean" >
+          <xsd:annotation>
+            <xsd:documentation>Authorize No Default Value with the required value.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: Designer -->
+        <xsd:attribute name="designer" type="xsd:string" >
+          <xsd:annotation>
+            <xsd:documentation>Define a design template for the graphical designer</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: DesignerParameter -->
+        <xsd:attribute name="designerParameter" type="xsd:string" >
+          <xsd:annotation>
+            <xsd:documentation>Define a parameter for the graphical designer template</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
+  <!-- AttributeProperty Moniker -->
+  <xsd:element name="attributePropertyMoniker" type="AttributePropertyMoniker" substitutionGroup="core:modelElementMoniker" />
+  <xsd:complexType name="AttributePropertyMoniker">
+    <xsd:annotation>
+      <xsd:documentation>Moniker for AttributeProperty instance.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="core:ModelElementMoniker">
+        <xsd:attribute name="propertyName" type="xsd:string" >
+          <xsd:annotation>
+            <xsd:documentation>Attribute to store the moniker string.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
+  <!-- ConfigurationElementCollection -->
+  <xsd:element name="configurationElementCollection" type="ConfigurationElementCollection" substitutionGroup="configurationElement" />
+  <xsd:complexType name="ConfigurationElementCollection">
+    <xsd:complexContent>
+      <xsd:extension base="ConfigurationElement">
+        <xsd:sequence minOccurs="0" maxOccurs="1">
+          <!-- Relationship: ConfigurationElementCollectionReferencesTypeItem -->
+          <xsd:element name="typeItem" minOccurs="1" maxOccurs="1">
+            <xsd:annotation>
+              <xsd:documentation>Instance of ConfigurationElementCollectionReferencesTypeItem</xsd:documentation>
+            </xsd:annotation>
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element ref="configurationElementCollectionReferencesTypeItem" minOccurs="1" maxOccurs="1">
+                  <xsd:annotation>
+                    <xsd:documentation>[Instance of ConfigurationElementCollectionReferencesTypeItem needs to be serialized in full-form]</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+        <!-- Id -->
+        <xsd:attribute name="Id" type="xsd:string">
+          <xsd:annotation>
+            <xsd:documentation>Instance Guid of this element, needed because SerializeId is set to true.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: CollectionType -->
+        <xsd:attribute name="collectionType" type="CollectionType" >
+          <xsd:annotation>
+            <xsd:documentation>define the type of the items for the collection</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: AddItemName -->
+        <xsd:attribute name="addItemName" type="xsd:string" />
+        <!-- Property: ClearItemsName -->
+        <xsd:attribute name="clearItemsName" type="xsd:string" />
+        <!-- Property: RemoveItemName -->
+        <xsd:attribute name="removeItemName" type="xsd:string" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
+  <!-- ConfigurationElementCollection Moniker -->
+  <xsd:element name="configurationElementCollectionMoniker" type="ConfigurationElementCollectionMoniker" substitutionGroup="configurationElementMoniker" />
+  <xsd:complexType name="ConfigurationElementCollectionMoniker">
+    <xsd:annotation>
+      <xsd:documentation>Moniker for ConfigurationElementCollection instance.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="ConfigurationElementMoniker">
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
+  <!-- ConfigurationSection -->
+  <xsd:element name="configurationSection" type="ConfigurationSection" substitutionGroup="configurationElement" />
+  <xsd:complexType name="ConfigurationSection">
+    <xsd:complexContent>
+      <xsd:extension base="ConfigurationElement">
+        <!-- Id -->
+        <xsd:attribute name="Id" type="xsd:string">
+          <xsd:annotation>
+            <xsd:documentation>Instance Guid of this element, needed because SerializeId is set to true.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: DefaultName -->
+        <xsd:attribute name="defaultName" type="xsd:string" >
+          <xsd:annotation>
+            <xsd:documentation>Define the default name for the creation in the editor</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
+  <!-- ConfigurationSection Moniker -->
+  <xsd:element name="configurationSectionMoniker" type="ConfigurationSectionMoniker" substitutionGroup="configurationElementMoniker" />
+  <xsd:complexType name="ConfigurationSectionMoniker">
+    <xsd:annotation>
+      <xsd:documentation>Moniker for ConfigurationSection instance.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="ConfigurationElementMoniker">
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
+  <!-- ConfigurationSectionGroup -->
+  <xsd:element name="configurationSectionGroup" type="ConfigurationSectionGroup" substitutionGroup="configurationElement" />
+  <xsd:complexType name="ConfigurationSectionGroup">
+    <xsd:complexContent>
+      <xsd:extension base="ConfigurationElement">
+        <xsd:sequence minOccurs="0" maxOccurs="1">
+          <!-- Relationship: ConfigurationSectionGroupHasSectionProperties -->
+          <xsd:element name="sectionProperties" minOccurs="0" maxOccurs="1">
+            <xsd:annotation>
+              <xsd:documentation>Instances of ConfigurationSectionGroupHasSectionProperties</xsd:documentation>
+            </xsd:annotation>
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element ref="configurationSectionGroupHasSectionProperties" minOccurs="0" maxOccurs="unbounded">
+                  <xsd:annotation>
+                    <xsd:documentation>[Instance of ConfigurationSectionGroupHasSectionProperties needs to be serialized in full-form]</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+          <!-- Relationship: ConfigurationSectionGroupHasGroupPropertiesType -->
+          <xsd:element name="groupPropertiesType" minOccurs="0" maxOccurs="1">
+            <xsd:annotation>
+              <xsd:documentation>Instances of ConfigurationSectionGroupHasGroupPropertiesType</xsd:documentation>
+            </xsd:annotation>
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element ref="configurationSectionGroupHasGroupPropertiesType" minOccurs="0" maxOccurs="unbounded">
+                  <xsd:annotation>
+                    <xsd:documentation>[Instance of ConfigurationSectionGroupHasGroupPropertiesType needs to be serialized in full-form]</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+        <!-- Id -->
+        <xsd:attribute name="Id" type="xsd:string">
+          <xsd:annotation>
+            <xsd:documentation>Instance Guid of this element, needed because SerializeId is set to true.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: DefaultName -->
+        <xsd:attribute name="defaultName" type="xsd:string" >
+          <xsd:annotation>
+            <xsd:documentation>Define the default name for the creation in the editor</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
+  <!-- ConfigurationSectionGroup Moniker -->
+  <xsd:element name="configurationSectionGroupMoniker" type="ConfigurationSectionGroupMoniker" substitutionGroup="configurationElementMoniker" />
+  <xsd:complexType name="ConfigurationSectionGroupMoniker">
+    <xsd:annotation>
+      <xsd:documentation>Moniker for ConfigurationSectionGroup instance.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="ConfigurationElementMoniker">
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
+  <!-- RefProperty -->
+  <xsd:element name="refProperty" type="RefProperty" substitutionGroup="core:modelElement" />
+  <xsd:complexType name="RefProperty">
+    <xsd:complexContent>
+      <xsd:extension base="core:ModelElement">
+        <xsd:sequence minOccurs="0" maxOccurs="1">
+          <!-- Relationship: RefPropertyReferencesType -->
+          <xsd:element name="type" minOccurs="1" maxOccurs="1">
+            <xsd:annotation>
+              <xsd:documentation>Instance of RefPropertyReferencesType</xsd:documentation>
+            </xsd:annotation>
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:choice minOccurs="1" maxOccurs="1" >
+                  <xsd:element ref="refPropertyReferencesType">
+                    <xsd:annotation>
+                      <xsd:documentation>[Relationship deriving from RefPropertyReferencesType needs to be serialized in full-form]</xsd:documentation>
+                    </xsd:annotation>
+                  </xsd:element>
+                  <xsd:element ref="configurationElementMoniker" >
+                    <xsd:annotation>
+                      <xsd:documentation>[Target role-player]</xsd:documentation>
+                    </xsd:annotation>
+                  </xsd:element>
+                </xsd:choice>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+        <!-- Id -->
+        <xsd:attribute name="Id" type="xsd:string">
+          <xsd:annotation>
+            <xsd:documentation>Instance Guid of this element, needed because SerializeId is set to true.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: PropertyName -->
+        <xsd:attribute name="propertyName" type="xsd:string" >
+          <xsd:annotation>
+            <xsd:documentation>Define the name of the property in the class</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: XmlNameAttribute -->
+        <xsd:attribute name="xmlNameAttribute" type="xsd:string" >
+          <xsd:annotation>
+            <xsd:documentation>Define the name of the node in the xml tree.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: Description -->
+        <xsd:attribute name="description" type="xsd:string" >
+          <xsd:annotation>
+            <xsd:documentation>Description for comment code and the Description Attribute</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: DisplayName -->
+        <xsd:attribute name="displayName" type="xsd:string" >
+          <xsd:annotation>
+            <xsd:documentation>Display name for comment code and the DisplayName Attribute</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: Category -->
+        <xsd:attribute name="category" type="xsd:string" >
+          <xsd:annotation>
+            <xsd:documentation>Category for the Category Attribute.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: Required -->
+        <xsd:attribute name="required" type="xsd:boolean" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
+  <!-- RefProperty Moniker -->
+  <xsd:element name="refPropertyMoniker" type="RefPropertyMoniker" substitutionGroup="core:modelElementMoniker" />
+  <xsd:complexType name="RefPropertyMoniker">
+    <xsd:annotation>
+      <xsd:documentation>Moniker for RefProperty instance.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="core:ModelElementMoniker">
+        <xsd:attribute name="Id" type="xsd:string" >
+          <xsd:annotation>
+            <xsd:documentation>Attribute to store the moniker string.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
+  <!-- SectionProperty -->
+  <xsd:element name="sectionProperty" type="SectionProperty" substitutionGroup="core:modelElement" />
+  <xsd:complexType name="SectionProperty">
+    <xsd:complexContent>
+      <xsd:extension base="core:ModelElement">
+        <xsd:sequence minOccurs="0" maxOccurs="1">
+          <!-- Relationship: SectionPropertyReferencesType -->
+          <xsd:element name="type" minOccurs="1" maxOccurs="1">
+            <xsd:annotation>
+              <xsd:documentation>Instance of SectionPropertyReferencesType</xsd:documentation>
+            </xsd:annotation>
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:choice minOccurs="1" maxOccurs="1" >
+                  <xsd:element ref="sectionPropertyReferencesType">
+                    <xsd:annotation>
+                      <xsd:documentation>[Relationship deriving from SectionPropertyReferencesType needs to be serialized in full-form]</xsd:documentation>
+                    </xsd:annotation>
+                  </xsd:element>
+                  <xsd:element ref="configurationSectionMoniker" >
+                    <xsd:annotation>
+                      <xsd:documentation>[Target role-player]</xsd:documentation>
+                    </xsd:annotation>
+                  </xsd:element>
+                </xsd:choice>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+        <!-- Id -->
+        <xsd:attribute name="Id" type="xsd:string">
+          <xsd:annotation>
+            <xsd:documentation>Instance Guid of this element, needed because SerializeId is set to true.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: PropertyName -->
+        <xsd:attribute name="propertyName" type="xsd:string" >
+          <xsd:annotation>
+            <xsd:documentation>Define the name of the property in the class</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: XmlNameAttribute -->
+        <xsd:attribute name="xmlNameAttribute" type="xsd:string" >
+          <xsd:annotation>
+            <xsd:documentation>Define the name of the node in the xml tree.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: Description -->
+        <xsd:attribute name="description" type="xsd:string" >
+          <xsd:annotation>
+            <xsd:documentation>Description for comment code and the Description Attribute</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: DisplayName -->
+        <xsd:attribute name="displayName" type="xsd:string" >
+          <xsd:annotation>
+            <xsd:documentation>Display name for comment code and the DisplayName Attribute</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: Category -->
+        <xsd:attribute name="category" type="xsd:string" >
+          <xsd:annotation>
+            <xsd:documentation>Category for the Category Attribute.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
+  <!-- SectionProperty Moniker -->
+  <xsd:element name="sectionPropertyMoniker" type="SectionPropertyMoniker" substitutionGroup="core:modelElementMoniker" />
+  <xsd:complexType name="SectionPropertyMoniker">
+    <xsd:annotation>
+      <xsd:documentation>Moniker for SectionProperty instance.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="core:ModelElementMoniker">
+        <xsd:attribute name="Id" type="xsd:string" >
+          <xsd:annotation>
+            <xsd:documentation>Attribute to store the moniker string.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
+  <!-- GroupProperty -->
+  <xsd:element name="groupProperty" type="GroupProperty" substitutionGroup="core:modelElement" />
+  <xsd:complexType name="GroupProperty">
+    <xsd:complexContent>
+      <xsd:extension base="core:ModelElement">
+        <xsd:sequence minOccurs="0" maxOccurs="1">
+          <!-- Relationship: GroupPropertyReferencesType -->
+          <xsd:element name="type" minOccurs="1" maxOccurs="1">
+            <xsd:annotation>
+              <xsd:documentation>Instance of GroupPropertyReferencesType</xsd:documentation>
+            </xsd:annotation>
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:choice minOccurs="1" maxOccurs="1" >
+                  <xsd:element ref="groupPropertyReferencesType">
+                    <xsd:annotation>
+                      <xsd:documentation>[Relationship deriving from GroupPropertyReferencesType needs to be serialized in full-form]</xsd:documentation>
+                    </xsd:annotation>
+                  </xsd:element>
+                  <xsd:element ref="configurationSectionGroupMoniker" >
+                    <xsd:annotation>
+                      <xsd:documentation>[Target role-player]</xsd:documentation>
+                    </xsd:annotation>
+                  </xsd:element>
+                </xsd:choice>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+        <!-- Id -->
+        <xsd:attribute name="Id" type="xsd:string">
+          <xsd:annotation>
+            <xsd:documentation>Instance Guid of this element, needed because SerializeId is set to true.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: PropertyName -->
+        <xsd:attribute name="propertyName" type="xsd:string" >
+          <xsd:annotation>
+            <xsd:documentation>Define the name of the property in the class</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: XmlNameAttribute -->
+        <xsd:attribute name="xmlNameAttribute" type="xsd:string" >
+          <xsd:annotation>
+            <xsd:documentation>Define the name of the node in the xml tree.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: Description -->
+        <xsd:attribute name="description" type="xsd:string" >
+          <xsd:annotation>
+            <xsd:documentation>Description for comment code and the Description Attribute</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: DisplayName -->
+        <xsd:attribute name="displayName" type="xsd:string" >
+          <xsd:annotation>
+            <xsd:documentation>Display name for comment code and the DisplayName Attribute</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: Category -->
+        <xsd:attribute name="category" type="xsd:string" >
+          <xsd:annotation>
+            <xsd:documentation>Category for the Category Attribute.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
+  <!-- GroupProperty Moniker -->
+  <xsd:element name="groupPropertyMoniker" type="GroupPropertyMoniker" substitutionGroup="core:modelElementMoniker" />
+  <xsd:complexType name="GroupPropertyMoniker">
+    <xsd:annotation>
+      <xsd:documentation>Moniker for GroupProperty instance.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="core:ModelElementMoniker">
+        <xsd:attribute name="Id" type="xsd:string" >
+          <xsd:annotation>
+            <xsd:documentation>Attribute to store the moniker string.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
+  <!-- UsingNamespace -->
+  <xsd:element name="usingNamespace" type="UsingNamespace" substitutionGroup="core:modelElement" />
+  <xsd:complexType name="UsingNamespace">
+    <xsd:complexContent>
+      <xsd:extension base="core:ModelElement">
+        <!-- Id -->
+        <xsd:attribute name="Id" type="xsd:string">
+          <xsd:annotation>
+            <xsd:documentation>Instance Guid of this element, needed because SerializeId is set to true.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: Fullname -->
+        <xsd:attribute name="fullname" type="xsd:string" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
+  <!-- UsingNamespace Moniker -->
+  <xsd:element name="usingNamespaceMoniker" type="UsingNamespaceMoniker" substitutionGroup="core:modelElementMoniker" />
+  <xsd:complexType name="UsingNamespaceMoniker">
+    <xsd:annotation>
+      <xsd:documentation>Moniker for UsingNamespace instance.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="core:ModelElementMoniker">
+        <xsd:attribute name="Id" type="xsd:string" >
+          <xsd:annotation>
+            <xsd:documentation>Attribute to store the moniker string.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
+  <!-- ConfigurationModelHasElements -->
+  <xsd:element name="configurationModelHasElements" abstract="true" type="ConfigurationModelHasElements" substitutionGroup="core:modelElement" />
+  <xsd:complexType name="ConfigurationModelHasElements" abstract="true" >
+    <xsd:annotation>
+      <xsd:documentation>Embedding relationship between the Model and Elements</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="core:ModelElement">
+        <xsd:sequence minOccurs="0" maxOccurs="1">
+          <!-- Target end ConfigurationElement -->
+          <xsd:element ref="configurationElement" minOccurs="1" maxOccurs="1">
+            <xsd:annotation>
+              <xsd:documentation>[Target role-player]</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+        <!-- Id -->
+        <xsd:attribute name="Id" type="xsd:string">
+          <xsd:annotation>
+            <xsd:documentation>Instance Guid of this element, needed because SerializeId is set to true.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
+  <!-- ConfigurationModelHasElements Moniker -->
+  <xsd:element name="configurationModelHasElementsMoniker" type="ConfigurationModelHasElementsMoniker" substitutionGroup="core:modelElementMoniker" />
+  <xsd:complexType name="ConfigurationModelHasElementsMoniker">
+    <xsd:annotation>
+      <xsd:documentation>Moniker for ConfigurationModelHasElements instance.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="core:ModelElementMoniker">
+        <xsd:attribute name="Id" type="xsd:string" >
+          <xsd:annotation>
+            <xsd:documentation>Attribute to store the moniker string.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
+  <!-- ConfigurationElementReferencesTargets -->
+  <xsd:element name="configurationElementReferencesTargets" type="ConfigurationElementReferencesTargets" substitutionGroup="core:modelElement" />
+  <xsd:complexType name="ConfigurationElementReferencesTargets">
+    <xsd:annotation>
+      <xsd:documentation>Reference relationship between Elements.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="core:ModelElement">
+        <xsd:sequence minOccurs="0" maxOccurs="1">
+          <!-- Target end ConfigurationElement -->
+          <xsd:element ref="configurationElementMoniker" minOccurs="1" maxOccurs="1">
+            <xsd:annotation>
+              <xsd:documentation>[Target role-player]</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+        <!-- Id -->
+        <xsd:attribute name="Id" type="xsd:string">
+          <xsd:annotation>
+            <xsd:documentation>Instance Guid of this element, needed because SerializeId is set to true.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
+  <!-- ConfigurationElementReferencesTargets Moniker -->
+  <xsd:element name="configurationElementReferencesTargetsMoniker" type="ConfigurationElementReferencesTargetsMoniker" substitutionGroup="core:modelElementMoniker" />
+  <xsd:complexType name="ConfigurationElementReferencesTargetsMoniker">
+    <xsd:annotation>
+      <xsd:documentation>Moniker for ConfigurationElementReferencesTargets instance.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="core:ModelElementMoniker">
+        <xsd:attribute name="Id" type="xsd:string" >
+          <xsd:annotation>
+            <xsd:documentation>Attribute to store the moniker string.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
+  <!-- ConfigurationElementHasAttribute -->
+  <xsd:element name="configurationElementHasAttribute" type="ConfigurationElementHasAttribute" substitutionGroup="core:modelElement" />
+  <xsd:complexType name="ConfigurationElementHasAttribute">
+    <xsd:complexContent>
+      <xsd:extension base="core:ModelElement">
+        <xsd:sequence minOccurs="0" maxOccurs="1">
+          <!-- Target end AttributeProperty -->
+          <xsd:element ref="attributeProperty" minOccurs="1" maxOccurs="1">
+            <xsd:annotation>
+              <xsd:documentation>[Target role-player]</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+        <!-- Id -->
+        <xsd:attribute name="Id" type="xsd:string">
+          <xsd:annotation>
+            <xsd:documentation>Instance Guid of this element, needed because SerializeId is set to true.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
+  <!-- ConfigurationElementHasAttribute Moniker -->
+  <xsd:element name="configurationElementHasAttributeMoniker" type="ConfigurationElementHasAttributeMoniker" substitutionGroup="core:modelElementMoniker" />
+  <xsd:complexType name="ConfigurationElementHasAttributeMoniker">
+    <xsd:annotation>
+      <xsd:documentation>Moniker for ConfigurationElementHasAttribute instance.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="core:ModelElementMoniker">
+        <xsd:attribute name="Id" type="xsd:string" >
+          <xsd:annotation>
+            <xsd:documentation>Attribute to store the moniker string.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
+  <!-- ConfigurationElementHasRefProperties -->
+  <xsd:element name="configurationElementHasRefProperties" type="ConfigurationElementHasRefProperties" substitutionGroup="core:modelElement" />
+  <xsd:complexType name="ConfigurationElementHasRefProperties">
+    <xsd:complexContent>
+      <xsd:extension base="core:ModelElement">
+        <xsd:sequence minOccurs="0" maxOccurs="1">
+          <!-- Target end RefProperty -->
+          <xsd:element ref="refProperty" minOccurs="1" maxOccurs="1">
+            <xsd:annotation>
+              <xsd:documentation>[Target role-player]</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+        <!-- Id -->
+        <xsd:attribute name="Id" type="xsd:string">
+          <xsd:annotation>
+            <xsd:documentation>Instance Guid of this element, needed because SerializeId is set to true.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
+  <!-- ConfigurationElementHasRefProperties Moniker -->
+  <xsd:element name="configurationElementHasRefPropertiesMoniker" type="ConfigurationElementHasRefPropertiesMoniker" substitutionGroup="core:modelElementMoniker" />
+  <xsd:complexType name="ConfigurationElementHasRefPropertiesMoniker">
+    <xsd:annotation>
+      <xsd:documentation>Moniker for ConfigurationElementHasRefProperties instance.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="core:ModelElementMoniker">
+        <xsd:attribute name="Id" type="xsd:string" >
+          <xsd:annotation>
+            <xsd:documentation>Attribute to store the moniker string.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
+  <!-- RefPropertyReferencesType -->
+  <xsd:element name="refPropertyReferencesType" abstract="true" type="RefPropertyReferencesType" substitutionGroup="core:modelElement" />
+  <xsd:complexType name="RefPropertyReferencesType" abstract="true" >
+    <xsd:complexContent>
+      <xsd:extension base="core:ModelElement">
+        <xsd:sequence minOccurs="0" maxOccurs="1">
+          <!-- Target end ConfigurationElement -->
+          <xsd:element ref="configurationElementMoniker" minOccurs="1" maxOccurs="1">
+            <xsd:annotation>
+              <xsd:documentation>[Target role-player]</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
+  <!-- RefPropertyReferencesType Moniker -->
+  <xsd:element name="refPropertyReferencesTypeMoniker" abstract="true" type="RefPropertyReferencesTypeMoniker" substitutionGroup="core:modelElementMoniker" />
+  <xsd:complexType name="RefPropertyReferencesTypeMoniker">
+    <xsd:annotation>
+      <xsd:documentation>Moniker for RefPropertyReferencesType instance.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="core:ModelElementMoniker">
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
+  <!-- SectionPropertyReferencesType -->
+  <xsd:element name="sectionPropertyReferencesType" abstract="true" type="SectionPropertyReferencesType" substitutionGroup="core:modelElement" />
+  <xsd:complexType name="SectionPropertyReferencesType" abstract="true" >
+    <xsd:complexContent>
+      <xsd:extension base="core:ModelElement">
+        <xsd:sequence minOccurs="0" maxOccurs="1">
+          <!-- Target end ConfigurationSection -->
+          <xsd:element ref="configurationSectionMoniker" minOccurs="1" maxOccurs="1">
+            <xsd:annotation>
+              <xsd:documentation>[Target role-player]</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
+  <!-- SectionPropertyReferencesType Moniker -->
+  <xsd:element name="sectionPropertyReferencesTypeMoniker" abstract="true" type="SectionPropertyReferencesTypeMoniker" substitutionGroup="core:modelElementMoniker" />
+  <xsd:complexType name="SectionPropertyReferencesTypeMoniker">
+    <xsd:annotation>
+      <xsd:documentation>Moniker for SectionPropertyReferencesType instance.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="core:ModelElementMoniker">
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
+  <!-- GroupPropertyReferencesType -->
+  <xsd:element name="groupPropertyReferencesType" abstract="true" type="GroupPropertyReferencesType" substitutionGroup="core:modelElement" />
+  <xsd:complexType name="GroupPropertyReferencesType" abstract="true" >
+    <xsd:complexContent>
+      <xsd:extension base="core:ModelElement">
+        <xsd:sequence minOccurs="0" maxOccurs="1">
+          <!-- Target end ConfigurationSectionGroup -->
+          <xsd:element ref="configurationSectionGroupMoniker" minOccurs="1" maxOccurs="1">
+            <xsd:annotation>
+              <xsd:documentation>[Target role-player]</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
+  <!-- GroupPropertyReferencesType Moniker -->
+  <xsd:element name="groupPropertyReferencesTypeMoniker" abstract="true" type="GroupPropertyReferencesTypeMoniker" substitutionGroup="core:modelElementMoniker" />
+  <xsd:complexType name="GroupPropertyReferencesTypeMoniker">
+    <xsd:annotation>
+      <xsd:documentation>Moniker for GroupPropertyReferencesType instance.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="core:ModelElementMoniker">
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
+  <!-- ConfigurationSectionGroupHasSectionProperties -->
+  <xsd:element name="configurationSectionGroupHasSectionProperties" type="ConfigurationSectionGroupHasSectionProperties" substitutionGroup="core:modelElement" />
+  <xsd:complexType name="ConfigurationSectionGroupHasSectionProperties">
+    <xsd:complexContent>
+      <xsd:extension base="core:ModelElement">
+        <xsd:sequence minOccurs="0" maxOccurs="1">
+          <!-- Target end SectionProperty -->
+          <xsd:element ref="sectionProperty" minOccurs="1" maxOccurs="1">
+            <xsd:annotation>
+              <xsd:documentation>[Target role-player]</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+        <!-- Id -->
+        <xsd:attribute name="Id" type="xsd:string">
+          <xsd:annotation>
+            <xsd:documentation>Instance Guid of this element, needed because SerializeId is set to true.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
+  <!-- ConfigurationSectionGroupHasSectionProperties Moniker -->
+  <xsd:element name="configurationSectionGroupHasSectionPropertiesMoniker" type="ConfigurationSectionGroupHasSectionPropertiesMoniker" substitutionGroup="core:modelElementMoniker" />
+  <xsd:complexType name="ConfigurationSectionGroupHasSectionPropertiesMoniker">
+    <xsd:annotation>
+      <xsd:documentation>Moniker for ConfigurationSectionGroupHasSectionProperties instance.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="core:ModelElementMoniker">
+        <xsd:attribute name="Id" type="xsd:string" >
+          <xsd:annotation>
+            <xsd:documentation>Attribute to store the moniker string.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
+  <!-- ConfigurationSectionGroupHasGroupPropertiesType -->
+  <xsd:element name="configurationSectionGroupHasGroupPropertiesType" type="ConfigurationSectionGroupHasGroupPropertiesType" substitutionGroup="core:modelElement" />
+  <xsd:complexType name="ConfigurationSectionGroupHasGroupPropertiesType">
+    <xsd:complexContent>
+      <xsd:extension base="core:ModelElement">
+        <xsd:sequence minOccurs="0" maxOccurs="1">
+          <!-- Target end GroupProperty -->
+          <xsd:element ref="groupProperty" minOccurs="1" maxOccurs="1">
+            <xsd:annotation>
+              <xsd:documentation>[Target role-player]</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+        <!-- Id -->
+        <xsd:attribute name="Id" type="xsd:string">
+          <xsd:annotation>
+            <xsd:documentation>Instance Guid of this element, needed because SerializeId is set to true.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
+  <!-- ConfigurationSectionGroupHasGroupPropertiesType Moniker -->
+  <xsd:element name="configurationSectionGroupHasGroupPropertiesTypeMoniker" type="ConfigurationSectionGroupHasGroupPropertiesTypeMoniker" substitutionGroup="core:modelElementMoniker" />
+  <xsd:complexType name="ConfigurationSectionGroupHasGroupPropertiesTypeMoniker">
+    <xsd:annotation>
+      <xsd:documentation>Moniker for ConfigurationSectionGroupHasGroupPropertiesType instance.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="core:ModelElementMoniker">
+        <xsd:attribute name="Id" type="xsd:string" >
+          <xsd:annotation>
+            <xsd:documentation>Attribute to store the moniker string.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
+  <!-- ConfigurationElementCollectionReferencesTypeItem -->
+  <xsd:element name="configurationElementCollectionReferencesTypeItem" type="ConfigurationElementCollectionReferencesTypeItem" substitutionGroup="core:modelElement" />
+  <xsd:complexType name="ConfigurationElementCollectionReferencesTypeItem">
+    <xsd:complexContent>
+      <xsd:extension base="core:ModelElement">
+        <xsd:sequence minOccurs="0" maxOccurs="1">
+          <!-- Target end ConfigurationElement -->
+          <xsd:element ref="configurationElementMoniker" minOccurs="1" maxOccurs="1">
+            <xsd:annotation>
+              <xsd:documentation>[Target role-player]</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+        <!-- Id -->
+        <xsd:attribute name="Id" type="xsd:string">
+          <xsd:annotation>
+            <xsd:documentation>Instance Guid of this element, needed because SerializeId is set to true.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
+  <!-- ConfigurationElementCollectionReferencesTypeItem Moniker -->
+  <xsd:element name="configurationElementCollectionReferencesTypeItemMoniker" type="ConfigurationElementCollectionReferencesTypeItemMoniker" substitutionGroup="core:modelElementMoniker" />
+  <xsd:complexType name="ConfigurationElementCollectionReferencesTypeItemMoniker">
+    <xsd:annotation>
+      <xsd:documentation>Moniker for ConfigurationElementCollectionReferencesTypeItem instance.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="core:ModelElementMoniker">
+        <xsd:attribute name="Id" type="xsd:string" >
+          <xsd:annotation>
+            <xsd:documentation>Attribute to store the moniker string.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
+  <!-- ConfigurationElementHasUsings -->
+  <xsd:element name="configurationElementHasUsings" type="ConfigurationElementHasUsings" substitutionGroup="core:modelElement" />
+  <xsd:complexType name="ConfigurationElementHasUsings">
+    <xsd:complexContent>
+      <xsd:extension base="core:ModelElement">
+        <xsd:sequence minOccurs="0" maxOccurs="1">
+          <!-- Target end UsingNamespace -->
+          <xsd:element ref="usingNamespace" minOccurs="1" maxOccurs="1">
+            <xsd:annotation>
+              <xsd:documentation>[Target role-player]</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+        <!-- Id -->
+        <xsd:attribute name="Id" type="xsd:string">
+          <xsd:annotation>
+            <xsd:documentation>Instance Guid of this element, needed because SerializeId is set to true.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
+  <!-- ConfigurationElementHasUsings Moniker -->
+  <xsd:element name="configurationElementHasUsingsMoniker" type="ConfigurationElementHasUsingsMoniker" substitutionGroup="core:modelElementMoniker" />
+  <xsd:complexType name="ConfigurationElementHasUsingsMoniker">
+    <xsd:annotation>
+      <xsd:documentation>Moniker for ConfigurationElementHasUsings instance.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="core:ModelElementMoniker">
+        <xsd:attribute name="Id" type="xsd:string" >
+          <xsd:annotation>
+            <xsd:documentation>Attribute to store the moniker string.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
+  <!-- ConfigurationModelHasUsings -->
+  <xsd:element name="configurationModelHasUsings" type="ConfigurationModelHasUsings" substitutionGroup="core:modelElement" />
+  <xsd:complexType name="ConfigurationModelHasUsings">
+    <xsd:complexContent>
+      <xsd:extension base="core:ModelElement">
+        <xsd:sequence minOccurs="0" maxOccurs="1">
+          <!-- Target end UsingNamespace -->
+          <xsd:element ref="usingNamespace" minOccurs="1" maxOccurs="1">
+            <xsd:annotation>
+              <xsd:documentation>[Target role-player]</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+        <!-- Id -->
+        <xsd:attribute name="Id" type="xsd:string">
+          <xsd:annotation>
+            <xsd:documentation>Instance Guid of this element, needed because SerializeId is set to true.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
+  <!-- ConfigurationModelHasUsings Moniker -->
+  <xsd:element name="configurationModelHasUsingsMoniker" type="ConfigurationModelHasUsingsMoniker" substitutionGroup="core:modelElementMoniker" />
+  <xsd:complexType name="ConfigurationModelHasUsingsMoniker">
+    <xsd:annotation>
+      <xsd:documentation>Moniker for ConfigurationModelHasUsings instance.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="core:ModelElementMoniker">
+        <xsd:attribute name="Id" type="xsd:string" >
+          <xsd:annotation>
+            <xsd:documentation>Attribute to store the moniker string.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
+  <!-- Enum TypeEnum -->
+  <xsd:simpleType name="TypeEnum">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="Enum"/>
+      <xsd:enumeration value="Validator"/>
+      <xsd:enumeration value="TypeConverter"/>
+      <xsd:enumeration value="TypeReturn"/>
+      <xsd:enumeration value="NoFilter"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  
+  <!-- Enum EnumKind -->
+  <xsd:simpleType name="EnumKind">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="Normal"/>
+      <xsd:enumeration value="External"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  
+  <!-- Enum EnumAccessibility -->
+  <xsd:simpleType name="EnumAccessibility">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="Public"/>
+      <xsd:enumeration value="Internal"/>
+      <xsd:enumeration value="Protected"/>
+      <xsd:enumeration value="Private"/>
+      <xsd:enumeration value="ProtectedInternal"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  
+  <!-- Enum CollectionType -->
+  <xsd:simpleType name="CollectionType">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="BasicMap">
+        <xsd:annotation>
+          <xsd:documentation>Collections of this type contain elements that apply to the level at which they are specified, and to all child levels. A child level cannot modify the properties specified by a parent element of this type.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="AddRemoveClearMap">
+        <xsd:annotation>
+          <xsd:documentation>The default type of ConfigurationElementCollection. Collections of this type contain elements that can be merged across a hierarchy of configuration files. At any particular level within such a hierarchy, add, remove, and clear directives are used to modify any inherited properties and specify new ones.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="BasicMapAlternate">
+        <xsd:annotation>
+          <xsd:documentation>Same as BasicMap, except that this type causes the ConfigurationElementCollection object to sort its contents such that inherited elements are listed last.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="AddRemoveClearMapAlternate">
+        <xsd:annotation>
+          <xsd:documentation>Same as AddRemoveClearMap, except that this type causes the ConfigurationElementCollection object to sort its contents such that inherited elements are listed last.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+    </xsd:restriction>
+  </xsd:simpleType>
+  
+  <!-- Enum InheritanceModifiers -->
+  <xsd:simpleType name="InheritanceModifiers">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="None"/>
+      <xsd:enumeration value="Abstract"/>
+      <xsd:enumeration value="Sealed"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  
+</xsd:schema>
+

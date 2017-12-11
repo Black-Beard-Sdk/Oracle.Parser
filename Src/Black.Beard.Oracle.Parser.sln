@@ -5,6 +5,14 @@ VisualStudioVersion = 15.0.27004.2009
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Black.Beard.Oracle.Parser", "Black.Beard.Oracle.Parser\Black.Beard.Oracle.Parser.csproj", "{2DEACC35-BD90-4239-883C-E7DB2344E0DC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Black.Beard.Oracle.Parser.UnitTest", "Black.Beard.Oracle.Parser.UnitTest\Black.Beard.Oracle.Parser.UnitTest.csproj", "{F8073B32-0F6A-4376-A0C3-49FCD1B7E96F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Black.Beard.Oracle.Models", "Black.Beard.Oracle.Model\Black.Beard.Oracle.Models.csproj", "{1FB97F0D-8E91-4557-AB73-F4DAE05B1582}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Black.Beard.Oracle.Reader", "Black.Beard.Oracle.Reader\Black.Beard.Oracle.Reader.csproj", "{C8F9129D-913F-4B0C-AF11-D4706695A6F7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Black.Beard.Oracle.Helpers", "Black.Beard.Oracle.Helpers\Black.Beard.Oracle.Helpers.csproj", "{4002EF43-21B1-473A-A055-C5FEC837A75D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +23,22 @@ Global
 		{2DEACC35-BD90-4239-883C-E7DB2344E0DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2DEACC35-BD90-4239-883C-E7DB2344E0DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2DEACC35-BD90-4239-883C-E7DB2344E0DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8073B32-0F6A-4376-A0C3-49FCD1B7E96F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8073B32-0F6A-4376-A0C3-49FCD1B7E96F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8073B32-0F6A-4376-A0C3-49FCD1B7E96F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8073B32-0F6A-4376-A0C3-49FCD1B7E96F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1FB97F0D-8E91-4557-AB73-F4DAE05B1582}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FB97F0D-8E91-4557-AB73-F4DAE05B1582}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1FB97F0D-8E91-4557-AB73-F4DAE05B1582}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FB97F0D-8E91-4557-AB73-F4DAE05B1582}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8F9129D-913F-4B0C-AF11-D4706695A6F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8F9129D-913F-4B0C-AF11-D4706695A6F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8F9129D-913F-4B0C-AF11-D4706695A6F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8F9129D-913F-4B0C-AF11-D4706695A6F7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4002EF43-21B1-473A-A055-C5FEC837A75D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4002EF43-21B1-473A-A055-C5FEC837A75D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4002EF43-21B1-473A-A055-C5FEC837A75D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4002EF43-21B1-473A-A055-C5FEC837A75D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
