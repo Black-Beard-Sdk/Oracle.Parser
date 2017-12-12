@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Bb.Oracle.Models
@@ -95,6 +96,7 @@ namespace Bb.Oracle.Models
         /// </returns>
         public OracleType Type { get; set; }
 
+        [JsonIgnore]
         public TableModel Parent { get; set; }
 
 

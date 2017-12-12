@@ -1,12 +1,12 @@
-﻿using Pssa.Sdk.DataAccess.Dao;
-using Pssa.Sdk.DataAccess.Dao.Contracts;
-using Pssa.Tools.Databases.Models;
+﻿using Bb.Beard.Oracle.Reader;
+using Bb.Beard.Oracle.Reader.Dao;
+using Bb.Oracle.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 
-namespace Pssa.Tools.Databases.Generators.Queries.Oracle
+namespace Bb.Oracle.Reader.Queries
 {
 
     public class IndexColumnQuery : DbQueryBase<IndexColumnQueryTable>
@@ -88,7 +88,7 @@ ORDER BY i.table_owner, i.table_name, c.INDEX_OWNER, i.index_name, c.column_posi
                         string key = t.Column_Table_Owner + "." + t.Column_Table_name;
                         TableModel table;
 
-                        if (db.ResolveTable(key, out table))
+                        if (db.Tables.TryGet(key, out table))
                         {
 
                             var key2 = t.Index_Owner + "." + t.Index_Name;

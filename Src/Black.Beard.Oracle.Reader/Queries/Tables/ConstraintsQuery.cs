@@ -1,12 +1,11 @@
-﻿using PPssa.Tools.Databases.Models.Helpers;
-using Pssa.Sdk.DataAccess.Dao;
-using Pssa.Sdk.DataAccess.Dao.Contracts;
-using Pssa.Tools.Databases.Models;
+﻿using Bb.Beard.Oracle.Reader;
+using Bb.Beard.Oracle.Reader.Dao;
+using Bb.Oracle.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Pssa.Tools.Databases.Generators.Queries.Oracle
+namespace Bb.Oracle.Reader.Queries
 {
 
     public class ConstraintsQuery : DbQueryBase<ConstraintsTable>
@@ -60,7 +59,7 @@ ORDER BY t.OWNER, t.TABLE_NAME, t.CONSTRAINT_NAME, t.CONSTRAINT_TYPE, t.R_CONSTR
                     string key = t.SchemaName + "." + t.TABLE_NAME;
                     TableModel table;
 
-                    if (db.ResolveTable(key, out table))
+                    if (db.Tables.TryGet(key, out table))
                     {
 
                         table.Constraints.Add(new ConstraintModel()

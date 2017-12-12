@@ -1,4 +1,6 @@
-﻿namespace Bb.Oracle.Models
+﻿using Newtonsoft.Json;
+
+namespace Bb.Oracle.Models
 {
     /// <summary>
     /// 
@@ -16,6 +18,7 @@
         /// </summary>
         public int Position { get; set; }
 
+        [JsonIgnore]
         public ConstraintModel Parent { get; set; }
 
         internal void Initialize()

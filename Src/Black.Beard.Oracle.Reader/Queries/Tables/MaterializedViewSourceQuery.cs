@@ -1,15 +1,13 @@
-﻿using PPssa.Tools.Databases.Models.Helpers;
-using Pssa.Sdk.DataAccess.Dao;
-using Pssa.Sdk.DataAccess.Dao.Contracts;
-using Pssa.Tools.Databases.Generators.Writers;
-using Pssa.Tools.Databases.Models;
+﻿using Bb.Beard.Oracle.Reader;
+using Bb.Beard.Oracle.Reader.Dao;
+using Bb.Oracle.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
 
-namespace Pssa.Tools.Databases.Generators.Queries.Oracle
+namespace Bb.Oracle.Reader.Queries
 {
 
     public class MaterializedViewSourceQuery : DbQueryBase<MaterializedViewSourceQueryTable>
@@ -42,10 +40,10 @@ LEFT JOIN all_mview_comments c ON t.OWNER = c.OWNER AND t.MVIEW_NAME = c.MVIEW_N
                         string key = t.SchemaName + "." + t.ObjectName;
 
                         TableModel table;
-                        if (!db.ResolveTable(key, out table))
+                        if (!db.Tables.TryGet(key, out table))
                         {
                             table = new TableModel() { Key = key, Name = t.ObjectName, IsView = true, IsMatrializedView = true, SchemaName = t.SchemaName, Comment = "", Generated = false, Parsed = true };
-                            db.Add(table);
+                            db.Tables.Add(table);
 
                         }
 

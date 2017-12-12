@@ -15,7 +15,7 @@
         /// Items
         /// </summary>
         /// <returns>		
-        /// Objet <see cref="Pssa.Tools.Databases.Models.Configurations.ExcludingRules" />.");
+        /// Objet <see cref="ExcludingRules" />.");
         /// </returns>
         public ExcludingRules Items { get; set; } = new ExcludingRules();
 

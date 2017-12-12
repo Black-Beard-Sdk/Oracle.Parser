@@ -286,3 +286,5 @@ __pycache__/
 *.btm.cs
 *.odx.cs
 *.xsd.cs
+/Src/Black.Beard.Oracle.DdlReader/App.config
+/Src/Black.Beard.Oracle.Parser.UnitTest/OracleLoaderUnitTest.cs

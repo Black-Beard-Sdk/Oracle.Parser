@@ -1,12 +1,12 @@
-﻿using Pssa.Sdk.DataAccess.Dao;
-using Pssa.Sdk.DataAccess.Dao.Contracts;
-using Pssa.Tools.Databases.Models;
+﻿using Bb.Beard.Oracle.Reader;
+using Bb.Beard.Oracle.Reader.Dao;
+using Bb.Oracle.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 
-namespace Pssa.Tools.Databases.Generators.Queries.Oracle
+namespace Bb.Oracle.Reader.Queries
 {
 
     public class ProcQuery : DbQueryBase<ModelProc>
@@ -49,7 +49,7 @@ WHERE NOT EXISTS(SELECT 1 FROM dba_arguments a WHERE a.OBJECT_ID = t.OBJECT_ID) 
                     else
                         key = t.ObjectId.ToString() + t.OWNER + "::" + t.OBJECT_NAME;
 
-                    if (!db.ResolveProcedure(key, out proc))
+                    if (!db.Procedures.TryGet(key, out proc))
                     {
 
                         proc = new ProcedureModel()
@@ -62,7 +62,7 @@ WHERE NOT EXISTS(SELECT 1 FROM dba_arguments a WHERE a.OBJECT_ID = t.OBJECT_ID) 
                             IsFunction = false,
                         };
 
-                        db.Add(proc);
+                        db.Procedures.Add(proc);
 
                     }
                     else

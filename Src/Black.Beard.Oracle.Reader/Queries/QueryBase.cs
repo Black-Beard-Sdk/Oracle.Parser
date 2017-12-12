@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Bb.Beard.Oracle.Reader;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
 
-namespace Pssa.Tools.Databases.Generators.Queries
+namespace Bb.Oracle.Reader.Queries
 {
 
     public abstract class QueryBase

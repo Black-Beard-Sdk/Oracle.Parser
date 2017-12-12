@@ -1,14 +1,13 @@
-﻿using PPssa.Tools.Databases.Models.Helpers;
-using Pssa.Sdk.DataAccess.Dao;
-using Pssa.Sdk.DataAccess.Dao.Contracts;
-using Pssa.Tools.Databases.Models;
+﻿using Bb.Beard.Oracle.Reader;
+using Bb.Beard.Oracle.Reader.Dao;
+using Bb.Oracle.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
 
-namespace Pssa.Tools.Databases.Generators.Queries.Oracle
+namespace Bb.Oracle.Reader.Queries
 {
 
     public class ViewSourceQuery : DbQueryBase<ViewSourceQueryTable>
@@ -44,7 +43,7 @@ AND t.OBJECT_TYPE = 'VIEW'
 
                         TableModel table;
 
-                        if (db.ResolveTable(key, out table))
+                        if (db.Tables.TryGet(key, out table))
                         {
 
                             StringBuilder sb = new StringBuilder(t.Source.Length + 2);
@@ -114,19 +113,19 @@ AND t.OBJECT_TYPE = 'VIEW'
             public static Field<string> Owner = new Field<string>()
             {
                 ColumnName = "OWNER",
-                Read = reader => reader.Field<string>((int)ViewQueryColumns.OWNER)
+                Read = reader => reader.Field<string>((int)ViewSourceQueryColumns.OWNER)
             };
 
             public static Field<string> ObjectName = new Field<string>()
             {
                 ColumnName = "OBJECT_NAME",
-                Read = reader => reader.Field<string>((int)ViewQueryColumns.OBJECT_NAME)
+                Read = reader => reader.Field<string>((int)ViewSourceQueryColumns.OBJECT_NAME)
             };
 
             public static Field<string> Source = new Field<string>()
             {
                 ColumnName = "SOURCE",
-                Read = reader => reader.Field<string>((int)ViewQueryColumns.OBJECT_TYPE)
+                Read = reader => reader.Field<string>((int)ViewSourceQueryColumns.Source)
             };
 
         }

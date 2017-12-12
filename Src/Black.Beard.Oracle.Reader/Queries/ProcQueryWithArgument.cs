@@ -1,12 +1,12 @@
-﻿using Pssa.Sdk.DataAccess.Dao;
-using Pssa.Sdk.DataAccess.Dao.Contracts;
-using Pssa.Tools.Databases.Models;
+﻿using Bb.Beard.Oracle.Reader;
+using Bb.Beard.Oracle.Reader.Dao;
+using Bb.Oracle.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 
-namespace Pssa.Tools.Databases.Generators.Queries.Oracle
+namespace Bb.Oracle.Reader.Queries
 {
 
     public class ProcQueryWithArgument : DbQueryBase<ModelProcWithArgument>
@@ -46,7 +46,7 @@ ORDER BY t.subprogram_id, t.PACKAGE_NAME, t.OBJECT_NAME, t.SEQUENCE, t.IN_OUT
 
                     string key = t.ObjectId.ToString() + ":" + t.PackageName + "::" + t.Owner + "." + t.ObjectName;
 
-                    if (!db.ResolveProcedure(key, out proc))
+                    if (!db.Procedures.TryGet(key, out proc))
                     {
 
                         proc = new ProcedureModel()
@@ -63,7 +63,7 @@ ORDER BY t.subprogram_id, t.PACKAGE_NAME, t.OBJECT_NAME, t.SEQUENCE, t.IN_OUT
                         proc.ResultType.Type.TypeOwner = t.TypeOwner;
                         proc.ResultType.Type.TypeName = t.TypeName;
 
-                        db.Add(proc);
+                        db.Procedures.Add(proc);
 
                     }
                    

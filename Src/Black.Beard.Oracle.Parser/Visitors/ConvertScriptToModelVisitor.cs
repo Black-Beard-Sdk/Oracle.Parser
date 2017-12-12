@@ -2,6 +2,9 @@
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
 using Bb.Oracle.Models;
+using Antlr4.Runtime;
+using System;
+using System.Collections.Generic;
 
 namespace Bb.Oracle.Visitors
 {
@@ -22,6 +25,12 @@ namespace Bb.Oracle.Visitors
 
         public override object VisitSql_script([NotNull] PlSqlParser.Sql_scriptContext context)
         {
+
+            if (context.exception != null)
+            {
+
+            }
+
             return base.VisitSql_script(context);
         }
 
@@ -129,6 +138,7 @@ namespace Bb.Oracle.Visitors
 
         public override object VisitAlter_user([NotNull] PlSqlParser.Alter_userContext context)
         {
+            //this.File
             Stop();
             return base.VisitAlter_user(context);
         }
@@ -763,12 +773,6 @@ namespace Bb.Oracle.Visitors
             return base.VisitEnable_constraint(context);
         }
 
-        public override object VisitErrorNode(IErrorNode node)
-        {
-            Stop();
-            return base.VisitErrorNode(node);
-        }
-
         public override object VisitError_logging_clause([NotNull] PlSqlParser.Error_logging_clauseContext context)
         {
             Stop();
@@ -1031,19 +1035,6 @@ namespace Bb.Oracle.Visitors
         {
             Stop();
             return base.VisitIdentified_other_clause(context);
-        }
-
-        public override object VisitIdentifier([NotNull] PlSqlParser.IdentifierContext context)
-        {
-            var t = context.GetText();
-            Stop();
-            return base.VisitIdentifier(context);
-        }
-
-        public override object VisitId_expression([NotNull] PlSqlParser.Id_expressionContext context)
-        {
-            Stop();
-            return base.VisitId_expression(context);
         }
 
         public override object VisitIf_statement([NotNull] PlSqlParser.If_statementContext context)
@@ -1782,12 +1773,6 @@ namespace Bb.Oracle.Visitors
         {
             Stop();
             return base.VisitRef_cursor_type_def(context);
-        }
-
-        public override object VisitRegular_id([NotNull] PlSqlParser.Regular_idContext context)
-        {
-            Stop();
-            return base.VisitRegular_id(context);
         }
 
         public override object VisitRelational_expression([NotNull] PlSqlParser.Relational_expressionContext context)
@@ -2643,6 +2628,46 @@ namespace Bb.Oracle.Visitors
         }
 
 
+        private void AppendException(RecognitionException exception)
+        {
+            var t = exception.OffendingToken;
+            string message = $"{exception.Message}. {exception.Context.GetText()} token '{t.Text}' at line {t.Line} column {t.Column}, offset {t.StartIndex}";
+            _anomalies.Add(new Error() { Exception = exception, Message = message, File = this.File });
+            System.Diagnostics.Debug.WriteLine(message + " in " + this.File);
+        }
+
+        //private void AppendException(Exception exception, ParserRuleContext context)
+        //{
+        //    var t = context;
+        //    string message = $"{exception.Message}. {t.GetText()} at line {t.Start.Line} column {t.Start.Column}, offset {t.Start.StartIndex}";
+        //    _anomalies.Add(new Error() { Exception = exception, Message = message, File = this.File });
+        //    System.Diagnostics.Debug.WriteLine(message + " in " + this.File);
+        //}
+
+        public override object VisitErrorNode(IErrorNode node)
+        {
+            //IRuleNode r = null;
+            //if (_models.Count > 0)
+            //    r = _models.Peek();
+
+            string message = $"{node.Symbol.Text} at line {node.Symbol.Line} column {node.Symbol.Column}, offset {node.Symbol.StartIndex}";
+            _anomalies.Add(new Error() { Exception = null, Message = message, File = this.File });
+            System.Diagnostics.Debug.WriteLine(message + " in " + this.File);
+            return null;
+        }
+
+        public override object VisitChildren(IRuleNode node)
+        {
+            //_models.Push(node);
+            //try
+            //{
+            return base.VisitChildren(node);
+            //}
+            //finally
+            //{
+            //_models.Pop();
+            //}
+        }
 
         [System.Diagnostics.DebuggerStepThrough]
         [System.Diagnostics.DebuggerNonUserCode]
@@ -2655,10 +2680,31 @@ namespace Bb.Oracle.Visitors
         public OracleDatabase db { get; }
 
         public string File { get; set; }
+        private Stack<IRuleNode> _models = new Stack<IRuleNode>();
+        private List<Error> _anomalies = new List<Error>();
+
     }
-    
+
 }
 
+//public override object VisitIdentifier([NotNull] PlSqlParser.IdentifierContext context)
+//{
+//    var t = context.GetText();
+//    Stop();
+//    return base.VisitIdentifier(context);
+//}
+
+//public override object VisitId_expression([NotNull] PlSqlParser.Id_expressionContext context)
+//{
+//    Stop();
+//    return base.VisitId_expression(context);
+//}
+
+//public override object VisitRegular_id([NotNull] PlSqlParser.Regular_idContext context)
+//{
+//    Stop();
+//    return base.VisitRegular_id(context);
+//}
 
 //public override object VisitTerminal(ITerminalNode node)
 //{
@@ -2667,8 +2713,3 @@ namespace Bb.Oracle.Visitors
 //    return base.VisitTerminal(node);
 //}
 
-//public override object VisitChildren(IRuleNode node)
-//{
-//    Stop();
-//    return base.VisitChildren(node);
-//}

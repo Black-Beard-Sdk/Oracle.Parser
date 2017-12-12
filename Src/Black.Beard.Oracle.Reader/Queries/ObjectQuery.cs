@@ -1,12 +1,12 @@
-﻿using Pssa.Sdk.DataAccess.Dao;
-using Pssa.Sdk.DataAccess.Dao.Contracts;
-using Pssa.Tools.Databases.Models;
+﻿using Bb.Beard.Oracle.Reader;
+using Bb.Beard.Oracle.Reader.Dao;
+using Bb.Oracle.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 
-namespace Pssa.Tools.Databases.Generators.Queries.Oracle
+namespace Bb.Oracle.Reader.Queries
 {
 
     public class ObjectQuery : DbQueryBase<ModelObject>
@@ -101,7 +101,7 @@ ORDER BY o.OWNER, o.OBJECT_NAME
 
                         case "TABLE":
                             if (!t.Name.ExcludIfStartwith(t.Owner, Models.Configurations.ExcludeKindEnum.Table))
-                                db.Add(new TableModel() { Key = t.Owner + "." + t.Name, Name = t.Name, SchemaName = t.Owner, Comment = t.Comment, Generated = t.GENERATED, Status = t.STATUS, Temporary = t.TEMPORARY, Parsed = true });
+                                db.Tables.Add(new TableModel() { Key = t.Owner + "." + t.Name, Name = t.Name, SchemaName = t.Owner, Comment = t.Comment, Generated = t.GENERATED, Status = t.STATUS, Temporary = t.TEMPORARY, Parsed = true });
                             break;
 
                         //case "MATERIALIZED VIEW":
@@ -110,7 +110,7 @@ ORDER BY o.OWNER, o.OBJECT_NAME
 
                         case "VIEW":
                             if (!t.Name.ExcludIfStartwith(t.Owner, Models.Configurations.ExcludeKindEnum.View))
-                                db.Add(new TableModel() { Key = t.Owner + "." + t.Name, Name = t.Name, IsView = true, SchemaName = t.Owner, Comment = t.Comment, Generated = t.GENERATED, Status = t.STATUS, Temporary = t.TEMPORARY, Parsed = true });
+                                db.Tables.Add(new TableModel() { Key = t.Owner + "." + t.Name, Name = t.Name, IsView = true, SchemaName = t.Owner, Comment = t.Comment, Generated = t.GENERATED, Status = t.STATUS, Temporary = t.TEMPORARY, Parsed = true });
                             break;
                         default:
                             break;

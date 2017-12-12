@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace Bb.Oracle.Models
 {
@@ -56,6 +57,7 @@ namespace Bb.Oracle.Models
         /// </returns>
         public OracleType Type { get; set; }
 
+        [JsonIgnore]
         public ProcedureModel Parent { get; set; }
 
         internal void Initialize()

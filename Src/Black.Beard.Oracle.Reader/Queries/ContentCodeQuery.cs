@@ -1,7 +1,6 @@
-﻿using PPssa.Tools.Databases.Models.Helpers;
-using Pssa.Sdk.DataAccess.Dao;
-using Pssa.Sdk.DataAccess.Dao.Contracts;
-using Pssa.Tools.Databases.Models;
+﻿using Bb.Beard.Oracle.Reader;
+using Bb.Beard.Oracle.Reader.Dao;
+using Bb.Oracle.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -9,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Pssa.Tools.Databases.Generators.Queries.Oracle
+namespace Bb.Oracle.Reader.Queries
 {
 
     public class ContentCodeQuery : DbQueryBase<ContentCodeQueryTable>
@@ -161,9 +160,9 @@ ORDER BY owner, s.type, s.name, s.line
                         code = GetSource(item).ToString();
                         Sources.Add(new CodeSource() { Key = key, Code = code, Type = k[0] });
 
-                        var trigger = db.ResolveTrigger(key);
-                        if (trigger != null)
-                            trigger.Code = code;
+                        //var trigger = db.ResolveTrigger(key);
+                        //if (trigger != null)
+                        //    trigger.Code = code;
                         break;
 
                     case "TYPE":

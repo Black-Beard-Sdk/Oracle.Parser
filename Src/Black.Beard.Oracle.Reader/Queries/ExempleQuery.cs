@@ -12,7 +12,7 @@
 //using Pssa.Sdk.DataAccess.Dao;
 //using Pssa.Tools.Databases.Models;
 
-//namespace Pssa.Tools.Databases.Generators.Queries.Oracle
+//namespace Bb.Oracle.Reader.Queries
 //{
 
 //    public class OwnerNameQuery : DbQueryBase

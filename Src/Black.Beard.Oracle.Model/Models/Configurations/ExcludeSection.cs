@@ -1,4 +1,8 @@
-﻿namespace Bb.Oracle.Models.Configurations
+﻿using Newtonsoft.Json;
+using System;
+using System.IO;
+
+namespace Bb.Oracle.Models.Configurations
 {
     public partial class ExcludeSection
 	{
@@ -20,11 +24,23 @@
         /// Schemas
         /// </summary>
         /// <returns>		
-        /// Objet <see cref="Pssa.Tools.Databases.Models.Configurations.ExcludeSchemaCollection" />.");
+        /// Objet <see cref="ExcludeSchemaCollection" />.");
         /// </returns>
         public ExcludeSchemaCollection Schemas { get; set; } = new ExcludeSchemaCollection();
 
-	}
+        public static ExcludeSection LoadFile(string excludeFile)
+        {
+
+            FileInfo file = new FileInfo(excludeFile);
+            using (StreamReader stream = file.OpenText())
+            {
+                ExcludeSection result = JsonConvert.DeserializeObject<ExcludeSection>(stream.ReadToEnd());
+                return result;
+            }
+        }
+
+
+    }
 
 }
 		

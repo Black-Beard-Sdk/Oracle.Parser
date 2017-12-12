@@ -1,11 +1,10 @@
-﻿using Pssa.Sdk.DataAccess.Dao.Contracts;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Text;
 
-namespace Pssa.Sdk.DataAccess.Dao
+namespace Bb.Beard.Oracle.Reader.Dao
 {
 
 

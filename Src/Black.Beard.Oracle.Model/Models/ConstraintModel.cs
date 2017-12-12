@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Bb.Oracle.Models
 {
@@ -118,6 +119,7 @@ namespace Bb.Oracle.Models
         }
 
 
+        [JsonIgnore]
         public TableModel Parent { get; set; }
 
         internal void Initialize()
@@ -133,12 +135,15 @@ namespace Bb.Oracle.Models
             {
 
                 string key = this.Rel_Constraint_Owner + "." + this.Rel_Constraint_Name;
-                var db = this.Parent.Parent;
+                var table = this.Parent;
                 if (this.Reference == null)
                 {
+
                     ConstraintModel constraint;
-                    if (db.ResolveConstraint(key, out constraint))
+
+                    if (table.Constraints.TryGet(key, out constraint))
                         this.Reference = constraint;
+
                 }
             }
 

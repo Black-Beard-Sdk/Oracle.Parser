@@ -1,7 +1,8 @@
-﻿using System;
+﻿using Bb.Beard.Oracle.Reader.Dao;
+using System;
 using System.Data.Common;
 
-namespace Pssa.Tools.Databases.Generators.Queries
+namespace Bb.Beard.Oracle.Reader
 {
 
 
@@ -30,7 +31,7 @@ namespace Pssa.Tools.Databases.Generators.Queries
         /// <value>
         /// The manager.
         /// </value>
-        public Sdk.DataAccess.Dao.Oracle.OracleManager Manager { get; set; }
+        public OracleManager Manager { get; set; }
 
         #region IDisposable Support
 

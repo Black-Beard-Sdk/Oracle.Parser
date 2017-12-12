@@ -1,13 +1,13 @@
-﻿using Bb.Oracle.Models;
+﻿using Bb.Beard.Oracle.Reader;
+using Bb.Beard.Oracle.Reader.Dao;
+using Bb.Oracle.Models;
 using Bb.Oracle.Models.Configurations;
-using Pssa.Sdk.DataAccess.Dao;
-using Pssa.Sdk.DataAccess.Dao.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 
-namespace Pssa.Tools.Databases.Generators.Queries.Oracle
+namespace Bb.Oracle.Reader.Queries
 {
 
     public class GrantQuery : DbQueryBase<GrantQueryTable>

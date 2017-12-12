@@ -3,6 +3,8 @@ using Antlr4.Runtime.Misc;
 using Bb.Oracle.Models;
 using System.Collections.Generic;
 using System.Linq;
+using Antlr4.Runtime;
+using System;
 
 namespace Bb.Oracle.Visitors
 {
@@ -10,8 +12,34 @@ namespace Bb.Oracle.Visitors
     public partial class ConvertScriptToModelVisitor
     {
 
+        public override object VisitRevoke_object_privileges([NotNull] PlSqlParser.Revoke_object_privilegesContext context)
+        {
+            return base.VisitRevoke_object_privileges(context);
+        }
+
+        public override object VisitGrant_object_name([NotNull] PlSqlParser.Grant_object_nameContext context)
+        {
+            return base.VisitGrant_object_name(context);
+        }
+
+        public override object VisitRevoke_statment([NotNull] PlSqlParser.Revoke_statmentContext context)
+        {
+            return base.VisitRevoke_statment(context);
+        }
+
+        public override object VisitRevoke_system_privileges([NotNull] PlSqlParser.Revoke_system_privilegesContext context)
+        {
+            return base.VisitRevoke_system_privileges(context);
+        }     
+
         public override object VisitGrant_statement([NotNull] PlSqlParser.Grant_statementContext context)
         {
+
+            if (context.exception != null)
+            {
+                AppendException(context.exception);
+                return null;
+            }
 
             string _schema = string.Empty;
             string _object = string.Empty;

@@ -675,6 +675,24 @@ public interface IPlSqlParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitDrop_index([NotNull] PlSqlParser.Drop_indexContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.revoke_statment"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitRevoke_statment([NotNull] PlSqlParser.Revoke_statmentContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.revoke_system_privileges"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitRevoke_system_privileges([NotNull] PlSqlParser.Revoke_system_privilegesContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.revoke_object_privileges"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitRevoke_object_privileges([NotNull] PlSqlParser.Revoke_object_privilegesContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="PlSqlParser.grant_statement"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>

@@ -7,11 +7,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Black.Beard.Oracle.Parser",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Black.Beard.Oracle.Parser.UnitTest", "Black.Beard.Oracle.Parser.UnitTest\Black.Beard.Oracle.Parser.UnitTest.csproj", "{F8073B32-0F6A-4376-A0C3-49FCD1B7E96F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Black.Beard.Oracle.Models", "Black.Beard.Oracle.Model\Black.Beard.Oracle.Models.csproj", "{1FB97F0D-8E91-4557-AB73-F4DAE05B1582}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Black.Beard.Oracle.Models", "Black.Beard.Oracle.Model\Black.Beard.Oracle.Models.csproj", "{1FB97F0D-8E91-4557-AB73-F4DAE05B1582}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Black.Beard.Oracle.Reader", "Black.Beard.Oracle.Reader\Black.Beard.Oracle.Reader.csproj", "{C8F9129D-913F-4B0C-AF11-D4706695A6F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Black.Beard.Oracle.Helpers", "Black.Beard.Oracle.Helpers\Black.Beard.Oracle.Helpers.csproj", "{4002EF43-21B1-473A-A055-C5FEC837A75D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Black.Beard.Oracle.Helpers", "Black.Beard.Oracle.Helpers\Black.Beard.Oracle.Helpers.csproj", "{4002EF43-21B1-473A-A055-C5FEC837A75D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Black.Beard.Antlr.Visualizer", "Black.Beard.Antlr.Visualizer\Black.Beard.Antlr.Visualizer.csproj", "{40D043C9-C022-41C6-A80D-052FEAA75D27}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Black.Beard.Oracle.DdlReader", "Black.Beard.Oracle.DdlReader\Black.Beard.Oracle.DdlReader.csproj", "{96061953-2592-4BF8-A956-F0E2A37DC465}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +43,14 @@ Global
 		{4002EF43-21B1-473A-A055-C5FEC837A75D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4002EF43-21B1-473A-A055-C5FEC837A75D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4002EF43-21B1-473A-A055-C5FEC837A75D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40D043C9-C022-41C6-A80D-052FEAA75D27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40D043C9-C022-41C6-A80D-052FEAA75D27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40D043C9-C022-41C6-A80D-052FEAA75D27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40D043C9-C022-41C6-A80D-052FEAA75D27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96061953-2592-4BF8-A956-F0E2A37DC465}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96061953-2592-4BF8-A956-F0E2A37DC465}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96061953-2592-4BF8-A956-F0E2A37DC465}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96061953-2592-4BF8-A956-F0E2A37DC465}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

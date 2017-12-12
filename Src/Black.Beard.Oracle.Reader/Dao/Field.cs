@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
-namespace Pssa.Sdk.DataAccess.Dao.Contracts
+namespace Bb.Beard.Oracle.Reader.Dao
 {
 
         [DebuggerDisplay("{ColumnName} : {Type.FullName}")]
@@ -36,7 +36,7 @@ namespace Pssa.Sdk.DataAccess.Dao.Contracts
 
             public Func<object, object> ReadItem { get; set; }
 
-            public DataColumn CreateColumn() { return new DataColumn(ColumnName, Type); }
+            public virtual DataColumn CreateColumn() { return new DataColumn(ColumnName, Type); }
 
         }
 
@@ -59,7 +59,7 @@ namespace Pssa.Sdk.DataAccess.Dao.Contracts
             /// Creates the column.
             /// </summary>
             /// <returns></returns>
-            public DataColumn CreateColumn()
+            public override DataColumn CreateColumn()
             {
                 return new DataColumn(ColumnName, typeof(T));
             }

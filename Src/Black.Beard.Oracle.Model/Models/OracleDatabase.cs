@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.IO;
 
 namespace Bb.Oracle.Models
 {
@@ -96,30 +96,24 @@ namespace Bb.Oracle.Models
         /// </returns>
         public PartitionCollection Partitions { get; set; } = new PartitionCollection();
 
-        private Dictionary<string, TableModel> _tables = null;
-        private Dictionary<string, SequenceModel> _sequences = null;
-        private Dictionary<string, ProcedureModel> _procedures = null;
-        private Dictionary<string, ConstraintModel> _constraints = null;
-        private Dictionary<string, TypeItem> _types = null;
+        //public TriggerModel ResolveTrigger(string key)
+        //{
 
-        public TriggerModel ResolveTrigger(string key)
-        {
+        //    TriggerModel trigger = null;
 
-            TriggerModel trigger = null;
+        //    foreach (TableModel table in Tables)
+        //    {
 
-            foreach (TableModel table in Tables)
-            {
+        //        trigger = table.Triggers[key];
 
-                trigger = table.Triggers[key];
+        //        if (trigger != null)
+        //            break;
 
-                if (trigger != null)
-                    break;
+        //    }
 
-            }
+        //    return trigger;
 
-            return trigger;
-
-        }
+        //}
 
         public bool ResolveIndex(string key, out IndexModel index)
         {
@@ -140,110 +134,36 @@ namespace Bb.Oracle.Models
 
         }
 
-        public void Add(ProcedureModel item)
-        {
-            if (_procedures == null)
-                Initialize();
-            _procedures.Add(item.Key, item);
-            Procedures.Add(item);
-            item.Parent = this;
-        }
-
-        public void Add(SequenceModel item)
-        {
-            if (_sequences == null)
-                Initialize();
-            _sequences.Add(item.Name, item);
-            Sequences.Add(item);
-            item.Parent = this;
-        }
-
-        public void Add(TableModel item)
-        {
-            if (_tables == null)
-                Initialize();
-            _tables.Add(item.Key, item);
-            Tables.Add(item);
-            item.Parent = this;
-        }
-
-        public void Add(TypeItem item)
-        {
-            if (_types == null)
-                Initialize();
-            _types.Add(item.Key, item);
-            Types.Add(item);
-            item.Parent = this;
-        }
-
-        public bool ResolveProcedure(string key, out ProcedureModel table)
-        {
-
-            if (_procedures == null)
-                Initialize();
-
-            return _procedures.TryGetValue(key, out table);
-
-        }
-
-        public bool ResolveTable(string key, out TableModel table)
-        {
-            if (_tables == null)
-                Initialize();
-
-            return _tables.TryGetValue(key, out table);
-        }
-
-        public bool ResolveSequence(string key, out SequenceModel sequence)
-        {
-
-            if (_sequences == null)
-                Initialize();
-
-            return _sequences.TryGetValue(key, out sequence);
-        }
-
         public void Initialize()
         {
-
-            _constraints = new Dictionary<string, ConstraintModel>();
-            _tables = new Dictionary<string, TableModel>();
-            _sequences = new Dictionary<string, SequenceModel>();
-            _procedures = new Dictionary<string, ProcedureModel>();
-            _types = new Dictionary<string, TypeItem>();
 
             foreach (TableModel item in Tables)
             {
 
                 item.Parent = this;
-                _tables.Add(item.Key, item);
 
                 foreach (ConstraintModel c in item.Constraints)
-                {
-                    if (!_constraints.ContainsKey(c.Key))
-                        _constraints.Add(c.Key, c);
-                }
+                    c.Initialize();
+
             }
 
             foreach (SequenceModel item in this.Sequences)
             {
                 item.Parent = this;
-                if (!_sequences.ContainsKey(item.Name))
-                    _sequences.Add(item.Name, item);
+                item.Initialize();
             }
 
             foreach (ProcedureModel item in this.Procedures)
             {
                 item.Parent = this;
-                if (!_procedures.ContainsKey(item.Key))
-                    _procedures.Add(item.Key, item);
+                item.Initialize();
+                
             }
 
             foreach (TypeItem item in this.Types)
             {
                 item.Parent = this;
-                if (!_types.ContainsKey(item.Key))
-                    _types.Add(item.Key, item);
+                item.Initialize();                
             }
 
             foreach (TableModel item in Tables)
@@ -259,24 +179,10 @@ namespace Bb.Oracle.Models
                 item.Initialize();
 
             foreach (GrantModel item in this.Grants)
-            {
                 item.Parent = this;
-            }
 
             foreach (SynonymModel item in this.Synonymes)
-            {
                 item.Parent = this;
-            }
-
-        }
-
-        internal bool ResolveConstraint(string key, out ConstraintModel constraint)
-        {
-
-            if (_constraints == null)
-                Initialize();
-
-            return _constraints.TryGetValue(key, out constraint);
 
         }
 
@@ -284,6 +190,29 @@ namespace Bb.Oracle.Models
         /// Annotations for the debug. (this property is not serialized)
         /// </summary>
         public string Annotation { get; set; }
+
+
+        public void WriteFile(string filename)
+        {
+            FileInfo file = new FileInfo(filename);
+            using (FileStream stream = file.OpenWrite())
+            {
+                string sz = JsonConvert.SerializeObject(this, Formatting.Indented);
+                byte[] ar = System.Text.Encoding.UTF8.GetBytes(sz);
+                stream.Write(ar, 0, ar.Length);
+            }
+        }
+
+        public static OracleDatabase ReadFlie(string filename)
+        {
+            FileInfo file = new FileInfo(filename);
+            using (StreamReader stream = file.OpenText())
+            {
+                OracleDatabase result = JsonConvert.DeserializeObject<OracleDatabase>(stream.ReadToEnd());
+                result.Initialize();
+                return result;
+            }
+        }
 
     }
 

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 
-namespace Pssa.Sdk.DataAccess.Dao.Contracts
+namespace Bb.Beard.Oracle.Reader.Dao
 {
 
     public static class IDataReaderExtension
@@ -264,7 +264,6 @@ namespace Pssa.Sdk.DataAccess.Dao.Contracts
     public class Reader
     {
 
-        private bool intialized;
         IDataReader reader;
         private Func<string, int> GetColumnName;
         private bool ignorecase;
@@ -279,8 +278,6 @@ namespace Pssa.Sdk.DataAccess.Dao.Contracts
 
         private void Initialize()
         {
-
-            intialized = true;
 
             List<SwitchCase> lst = new List<SwitchCase>();
             var sourceParameterExpr = Expression.Parameter(typeof(string), "columnName");

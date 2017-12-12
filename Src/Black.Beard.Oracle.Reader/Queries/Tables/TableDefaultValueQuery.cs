@@ -1,13 +1,13 @@
-﻿using Pssa.Sdk.DataAccess.Dao;
-using Pssa.Sdk.DataAccess.Dao.Contracts;
-using Pssa.Tools.Databases.Models;
+﻿using Bb.Beard.Oracle.Reader;
+using Bb.Beard.Oracle.Reader.Dao;
+using Bb.Oracle.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace Pssa.Tools.Databases.Generators.Queries.Oracle
+namespace Bb.Oracle.Reader.Queries
 {
 
 
@@ -55,7 +55,7 @@ WHERE t.DATA_DEFAULT is not NULL {0}
 
                         string key = t.SchemaName + "." + t.TableName;
                         TableModel table;
-                        if (db.ResolveTable(key, out table))
+                        if (db.Tables.TryGet(key, out table))
                         {
 
                             if (t.DefaultLenght > 0)

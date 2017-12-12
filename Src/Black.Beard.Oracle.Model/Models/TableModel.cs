@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Bb.Oracle.Models
@@ -362,6 +363,7 @@ namespace Bb.Oracle.Models
 
         }
 
+        [JsonIgnore]
         public OracleDatabase Parent { get; set; }
 
         public KindModelEnum KindModel

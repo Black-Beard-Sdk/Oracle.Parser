@@ -1,12 +1,12 @@
-using Pssa.Sdk.DataAccess.Dao;
-using Pssa.Sdk.DataAccess.Dao.Contracts;
-using Pssa.Tools.Databases.Models;
+using Bb.Beard.Oracle.Reader;
+using Bb.Beard.Oracle.Reader.Dao;
+using Bb.Oracle.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 
-namespace Pssa.Tools.Databases.Generators.Queries.Oracle
+namespace Bb.Oracle.Reader.Queries
 {
 
     public class TablePartitionColumnQuery : DbQueryBase<TablePartitionColumnDto>
@@ -42,7 +42,7 @@ namespace Pssa.Tools.Databases.Generators.Queries.Oracle
                             return;
 
                         TableModel table;
-                        if (db.ResolveTable(k, out table))
+                        if (db.Tables.TryGet(k, out table))
                         {
 
                             table.BlocPartition.PartitioningType = t.PartitioningType;

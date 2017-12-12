@@ -1,12 +1,12 @@
-﻿using Pssa.Sdk.DataAccess.Dao;
-using Pssa.Sdk.DataAccess.Dao.Contracts;
-using Pssa.Tools.Databases.Models;
+﻿using Bb.Beard.Oracle.Reader;
+using Bb.Beard.Oracle.Reader.Dao;
+using Bb.Oracle.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 
-namespace Pssa.Tools.Databases.Generators.Queries.Oracle
+namespace Bb.Oracle.Reader.Queries
 {
 
     public class ConstraintColumnQuery : DbQueryBase<ConstraintColumnTable>
@@ -41,7 +41,7 @@ ORDER BY t.OWNER, t.TABLE_NAME, t.CONSTRAINT_NAME
 
                 TableModel table;
 
-                if (db.ResolveTable(keyTable, out table))
+                if (db.Tables.TryGet(keyTable, out table))
                 {
 
                     string keyContraint = t.Owner + "." + t.CONSTRAINT_NAME;

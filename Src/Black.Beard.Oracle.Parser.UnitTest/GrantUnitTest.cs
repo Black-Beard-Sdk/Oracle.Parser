@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Bb.Oracle.Visitors;
 using Bb.Oracle.Models;
 using System.Linq;
+using Black.Beard.Oracle.Helpers;
 
 namespace Black.Beard.Oracle.Parser.UnitTest
 {
@@ -13,6 +14,30 @@ namespace Black.Beard.Oracle.Parser.UnitTest
     [TestClass]
     public class GrantUnitTest : UnitTestBase
     {
+
+        [TestMethod]
+        public void TestGrantSelectWithGrant_1()
+        {
+
+            // GRANT SELECT ON CONFIG.BUILD TO IMPORT_PDA;
+            // 
+            var g1 = Grant(@"GRANT SELECT ON config.pda_pudo_link TO anomalylifecycle;").FirstOrDefault();
+
+
+        }
+
+        [TestMethod]
+        public void TestSerializeGrant()
+        {
+
+            string file = Path.Combine(Path.GetTempPath(), Path.GetTempFileName());
+
+            var db1 = Parse(@"GRANT SELECT ON schema1.TABLE_1 TO ROLE1 WITH GRANT OPTION;");
+
+            db1.WriteFile(file);
+            var db2 = OracleDatabase.ReadFlie(file);
+
+        }
 
         [TestMethod]
         public void TestGrantSelectWithGrant()

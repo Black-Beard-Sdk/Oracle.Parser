@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Bb.Oracle.Models
 {
@@ -49,6 +50,7 @@ namespace Bb.Oracle.Models
 
         public KindModelEnum KindModel { get { return KindModelEnum.Property; } }
 
+        [JsonIgnore]
         public TypeItem Parent { get; internal set; }
 
         public void Alter(IchangeVisitor visitor, Ichangable source, string propertyName)

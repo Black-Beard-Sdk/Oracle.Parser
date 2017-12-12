@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Bb.Oracle.Models
 {
@@ -118,6 +119,7 @@ namespace Bb.Oracle.Models
 
         }
 
+        [JsonIgnore]
         public OracleDatabase Parent { get; internal set; }
 
         public string GetCodeSource()

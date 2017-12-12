@@ -1,14 +1,13 @@
-﻿using PPssa.Tools.Databases.Models.Helpers;
-using Pssa.Sdk.DataAccess.Dao;
-using Pssa.Sdk.DataAccess.Dao.Contracts;
-using Pssa.Tools.Databases.Models;
+﻿using Bb.Beard.Oracle.Reader;
+using Bb.Beard.Oracle.Reader.Dao;
+using Bb.Oracle.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
 
-namespace Pssa.Tools.Databases.Generators.Queries.Oracle
+namespace Bb.Oracle.Reader.Queries
 {
 
     public class TableColumnQuery : DbQueryBase<ModelTable>
@@ -53,11 +52,11 @@ ORDER BY tt.TABLE_NAME,tt.COLUMN_ID
                         string key = t.SchemaName + "." + t.TableName;
                         TableModel table;
 
-                        if (!db.ResolveTable(key, out table))
+                        if (!db.Tables.TryGet(key, out table))
                         {
                             table = new TableModel() { Key = key, SchemaName = t.SchemaName, Name = t.TableName };
                             db.Tables.Add(table);
-                            db.Add(table);
+                            db.Tables.Add(table);
                         }
                       
                         //if (!table.Columns.Contains(t.ColumnName))

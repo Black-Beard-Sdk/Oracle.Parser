@@ -1,17 +1,12 @@
 ﻿
-using Pssa.Sdk.DataAccess.Dao.Contracts.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Pssa.Sdk.DataAccess.Dao;
 using System.Data.Common;
 using Oracle.ManagedDataAccess.Client;
-using Pssa.Tools.Databases.Generators.Queries;
+using Bb.Beard.Oracle.Reader.Dao.Exceptions;
 
-namespace Pssa.Sdk.DataAccess.Dao.Oracle
+namespace Bb.Beard.Oracle.Reader.Dao
 {
 
     /// <summary>

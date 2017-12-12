@@ -71,6 +71,7 @@ unit_statement
     | anonymous_block
 
     | grant_statement
+	| revoke_statment
     ;
 
 // DDL -> SQL Statements for Stored PL/SQL Units
@@ -642,6 +643,22 @@ container_data_clause
 drop_index
     : DROP INDEX index_name ';'
     ;
+
+revoke_statment
+	: REVOKE (revoke_system_privileges | revoke_object_privileges)';'
+	;
+
+revoke_system_privileges
+	: ( ','? (role_name | system_privilege)) 
+	  FROM (','? grantee_name | PUBLIC)+
+	;
+
+revoke_object_privileges
+	: ( ','? (role_name | object_privilege)) 
+	  ON (','? grantee_name | PUBLIC | role_name)+
+	  FROM (','? grantee_name | PUBLIC | role_name)+
+	  (CASCADE CONSTRAINTS | FORCE)?
+	;
 
 grant_statement
     : GRANT
@@ -2520,6 +2537,7 @@ object_privilege
     | DEBUG
     | DELETE
     | EXECUTE
+    | FLASHBACK
     | FLASHBACK ARCHIVE
     | INDEX
     | INHERIT PRIVILEGES
@@ -3008,7 +3026,7 @@ regular_id
     | RETURNING
     | REUSE
     | REVERSE
-    //| REVOKE
+    | REVOKE
     | RIGHT
     | ROLLBACK
     | ROLLUP

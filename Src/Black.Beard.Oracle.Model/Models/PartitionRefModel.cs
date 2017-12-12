@@ -1,4 +1,6 @@
 ﻿
+using Newtonsoft.Json;
+
 namespace Bb.Oracle.Models
 {
     /// <summary>
@@ -14,6 +16,7 @@ namespace Bb.Oracle.Models
 
 
 
+        [JsonIgnore]
         public TableModel Parent { get; set; }
 
         internal void Initialize()

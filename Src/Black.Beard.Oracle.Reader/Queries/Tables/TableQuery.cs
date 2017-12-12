@@ -1,12 +1,12 @@
-using Pssa.Sdk.DataAccess.Dao;
-using Pssa.Sdk.DataAccess.Dao.Contracts;
-using Pssa.Tools.Databases.Models;
+using Bb.Beard.Oracle.Reader;
+using Bb.Beard.Oracle.Reader.Dao;
+using Bb.Oracle.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 
-namespace Pssa.Tools.Databases.Generators.Queries.Oracle
+namespace Bb.Oracle.Reader.Queries
 {
 
     public class TableQuery : DbQueryBase<TableDto>
@@ -80,7 +80,7 @@ ORDER BY OWNER, TABLE_NAME
                         string key = t.Owner + "." + t.TableName;
                         TableModel table;
 
-                        if (db.ResolveTable(key, out table))
+                        if (db.Tables.TryGet(key, out table))
                         {
 
                             table.TablespaceName = t.TablespaceName;

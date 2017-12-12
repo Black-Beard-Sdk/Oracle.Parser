@@ -23,7 +23,7 @@ namespace Bb.Oracle.Parser
         public static ScriptParser ParseString(string source, string sourceFile = "")
         {
 
-            ICharStream stream = CharStreams.fromstring(source);
+            ICharStream stream = CharStreams.fromstring(ToUpper(new StringBuilder(source)).ToString());
 
             var parser = new ScriptParser() { File = sourceFile ?? string.Empty };
             parser.ParseCharStream(stream);
@@ -34,7 +34,8 @@ namespace Bb.Oracle.Parser
         public static ScriptParser ParsePath(string source)
         {
 
-            ICharStream stream = CharStreams.fromPath(source);
+            var payload = LoadContent(source);
+            ICharStream stream = CharStreams.fromstring(payload.ToString());
 
             var parser = new ScriptParser() { File = source };
             parser.ParseCharStream(stream);
@@ -42,29 +43,106 @@ namespace Bb.Oracle.Parser
 
         }
 
-        public static ScriptParser ParseStream(Stream source, string sourceFile = "")
+        /// <summary>
+        /// Loads the content of the file.
+        /// </summary>
+        /// <param name="rootSource">The root source.</param>
+        /// <returns></returns>
+        public static StringBuilder LoadContent(string rootSource)
         {
 
-            ICharStream stream = CharStreams.fromStream(source);
+            String fileContents = string.Empty;
+            System.Text.Encoding encoding = null;
+            string _path = System.IO.Path.Combine(rootSource, rootSource);
+            FileInfo _file = new FileInfo(_path);
+            using (FileStream fs = _file.OpenRead())
+            {
 
-            var parser = new ScriptParser() { File = sourceFile ?? string.Empty };
-            parser.ParseCharStream(stream);
-            return parser;
+                Ude.CharsetDetector cdet = new Ude.CharsetDetector();
+                cdet.Feed(fs);
+                cdet.DataEnd();
+                if (cdet.Charset != null)
+                    encoding = System.Text.Encoding.GetEncoding(cdet.Charset);
+                else
+                    encoding = System.Text.Encoding.UTF8;
+
+                fs.Position = 0;
+
+                byte[] ar = new byte[_file.Length];
+                fs.Read(ar, 0, ar.Length);
+                fileContents = encoding.GetString(ar);
+            }
+
+            if (fileContents.StartsWith("ï»¿"))
+                fileContents = fileContents.Substring(3);
+
+            if (encoding != System.Text.Encoding.UTF8)
+            {
+                var datas = System.Text.Encoding.UTF8.GetBytes(fileContents);
+                fileContents = System.Text.Encoding.UTF8.GetString(datas);
+            }
+
+            StringBuilder result = new StringBuilder(fileContents);
+
+            StringBuilder _result = ToUpper(result);
+
+            return _result;
 
         }
 
-        public static ScriptParser ParseTextReader(TextReader source, string sourceFile = "")
+        private static StringBuilder ToUpper(StringBuilder result)
         {
 
-            ICharStream stream = CharStreams.fromTextReader(source);
+            int length = result.Length;
 
-            var parser = new ScriptParser() { File = sourceFile ?? string.Empty };
-            parser.ParseCharStream(stream);
-            return parser;
+            StringBuilder sb = new StringBuilder(length + 200);
+            bool inChar = false;
+
+            char lastChar = ' ';
+            for (int i = 0; i < length; i++)
+            {
+
+                var c = result[i];
+
+                if (c == '\'' && lastChar != '\\')
+                    inChar = !inChar;
+
+                else if (char.IsLower(c) && !inChar)
+                    c = char.ToUpper(c);
+
+                lastChar = c;
+
+                sb.Append(c);
+
+            }
+
+            return sb;
 
         }
 
-        
+        //public static ScriptParser ParseStream(Stream source, string sourceFile = "")
+        //{
+
+        //    ICharStream stream = CharStreams.fromStream(source);
+
+        //    var parser = new ScriptParser() { File = sourceFile ?? string.Empty };
+        //    parser.ParseCharStream(stream);
+        //    return parser;
+
+        //}
+
+        //public static ScriptParser ParseTextReader(TextReader source, string sourceFile = "")
+        //{
+
+        //    ICharStream stream = CharStreams.fromTextReader(source);
+
+        //    var parser = new ScriptParser() { File = sourceFile ?? string.Empty };
+        //    parser.ParseCharStream(stream);
+        //    return parser;
+
+        //}
+
+
         public static bool Trace { get; set; }
 
         public PlSqlParser.Sql_scriptContext Tree { get { return this.context; } }

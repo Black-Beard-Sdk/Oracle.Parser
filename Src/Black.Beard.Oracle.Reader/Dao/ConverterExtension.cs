@@ -6,7 +6,7 @@ using System.Data;
 using System.Globalization;
 using System.Data.Common;
 
-namespace Pssa.Sdk.DataAccess.Dao.Contracts
+namespace Bb.Beard.Oracle.Reader.Dao
 {
 
     /// <summary>

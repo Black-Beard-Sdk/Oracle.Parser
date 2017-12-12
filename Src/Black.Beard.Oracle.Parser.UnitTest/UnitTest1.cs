@@ -5,6 +5,7 @@ using System.IO;
 using System.Collections.Generic;
 using Bb.Oracle.Visitors;
 using Bb.Oracle.Models;
+using System.Diagnostics;
 
 namespace Black.Beard.Oracle.Parser.UnitTest
 {
@@ -16,17 +17,19 @@ namespace Black.Beard.Oracle.Parser.UnitTest
         {
 
             List<FileInfo> _files = new List<FileInfo>();
-            DirectoryInfo dir = new DirectoryInfo(@"C:\src\PLSQL\Pickup\Main\Schemas\CONFIG");
+            DirectoryInfo dir = new DirectoryInfo(@"C:\src\PLSQL\Pickup\Main\Schemas");
 
             foreach (FileInfo file in dir.GetFiles("*.sql", SearchOption.AllDirectories))
                 if (file.Directory.Name.ToLower() == "userobjectprivileges")
                     _files.Add(file);
 
-            ConvertScriptToModelVisitor visitor = new ConvertScriptToModelVisitor(new OracleDatabase());
+            var db = new OracleDatabase();
+
+            ConvertScriptToModelVisitor visitor = new ConvertScriptToModelVisitor(db);
 
             foreach (var item in _files)
             {
-
+                Debug.WriteLine($"parsing {item.FullName}");
                 var p = ScriptParser.ParsePath(item.FullName);
                 p.Visit<object>(visitor);
 

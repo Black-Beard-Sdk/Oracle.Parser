@@ -1,7 +1,8 @@
-﻿using Bb.Oracle.Models;
+﻿using Bb.Beard.Oracle.Reader.Dao;
+using Bb.Oracle.Models;
 using System;
 
-namespace Pssa.Tools.Databases.Generators.Queries
+namespace Bb.Beard.Oracle.Reader
 {
 
     public class DbContextOracle : DbContextBase
@@ -11,7 +12,7 @@ namespace Pssa.Tools.Databases.Generators.Queries
         /// Initializes a new instance of the <see cref="DbContextOracle"/> class.
         /// </summary>
         /// <param name="manager">The manager.</param>
-        public DbContextOracle(Sdk.DataAccess.Dao.Oracle.OracleManager manager)
+        public DbContextOracle(OracleManager manager)
         {
             this.Manager = manager;
         }

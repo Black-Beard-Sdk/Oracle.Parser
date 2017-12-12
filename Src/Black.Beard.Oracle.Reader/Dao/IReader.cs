@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Data.Common;
-namespace Pssa.Sdk.DataAccess.Dao.Contracts
+namespace Bb.Beard.Oracle.Reader.Dao
 {
     
     public interface IReader<T>

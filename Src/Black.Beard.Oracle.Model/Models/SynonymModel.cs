@@ -1,4 +1,6 @@
-﻿namespace Bb.Oracle.Models
+﻿using Newtonsoft.Json;
+
+namespace Bb.Oracle.Models
 {
     /// <summary>
     /// Synonym
@@ -35,6 +37,7 @@
         /// </summary>
         public string SynonymOwner { get; set; }
 
+        [JsonIgnore]
         public OracleDatabase Parent { get; internal set; }
 
     }

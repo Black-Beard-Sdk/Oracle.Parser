@@ -1,27 +1,24 @@
-﻿using System;
+﻿using Bb.Beard.Oracle.Reader.Dao;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Pssa.Tools.Databases.Generators.Queries
+namespace Bb.Beard.Oracle.Reader
 {
 
     public static class ContextLoader
     {
 
 
-        private static string Sql1 = @"SELECT u.USERNAME from DBA_USERS u WHERE u.USERNAME IN ( select p.GRANTEE USERNAME from DBA_ROLE_PRIVS p where p.granted_role like 'PICKUP_USER' AND USERNAME NOT LIKE 'ZZZ\_%' ESCAPE '\' ) ORDER BY u.USERNAME";
-        private static string Sql2 = @"SELECT u.USERNAME from DBA_USERS u ORDER BY u.USERNAME";
+        private static string Sql1 = @"SELECT u.USERNAME from DBA_USERS u {userFilter}";
 
         public static string GetOwners(string connectionString)
         {
 
             StringBuilder sb = new StringBuilder();
-            LoadSchemas(sb, connectionString, Sql1);
-
-            if (sb.Length == 0)
-                LoadSchemas(sb, connectionString, Sql2);
+            LoadSchemas(sb, connectionString, Sql1.Replace("{userFilter}", System.Configuration.ConfigurationManager.AppSettings["userFilter"]));
 
             string result = sb.ToString();
             result = result.Trim(';');
@@ -32,7 +29,7 @@ namespace Pssa.Tools.Databases.Generators.Queries
         {
 
             sb.Append("PUBLIC;");
-            var manager = new Pssa.Sdk.DataAccess.Dao.Oracle.OracleManager(connectionString);
+            var manager = new OracleManager(connectionString);
             using (var reader = manager.ExecuteReader(System.Data.CommandType.Text, sql))
             {
                 while (reader.Read())

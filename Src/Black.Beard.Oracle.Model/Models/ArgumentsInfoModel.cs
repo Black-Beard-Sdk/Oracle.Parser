@@ -13,7 +13,7 @@ namespace Bb.Oracle.Models
     [System.Diagnostics.DebuggerDisplay("{Argument.ArgumentName}")]
     public partial class ArgumentInfoModel
     {
-        private string _defaultValue;
+        //private string _defaultValue;
 
         public ArgumentModel Argument { get; set; }
 
@@ -61,10 +61,10 @@ namespace Bb.Oracle.Models
 
         }
 
-        public string GetDefaultValue()
-        {
-            return _defaultValue;
-        }
+        //public string GetDefaultValue()
+        //{
+        //    return _defaultValue;
+        //}
 
         public string Comma { get; set; }
 
