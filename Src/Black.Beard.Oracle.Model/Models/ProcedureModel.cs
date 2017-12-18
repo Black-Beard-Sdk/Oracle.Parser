@@ -8,7 +8,7 @@ namespace Bb.Oracle.Models
     /// <summary>
     /// 
     /// </summary>
-    public partial class ProcedureModel : ItemBase
+    public partial class ProcedureModel : ItemBase, Ichangable
     {
 
         /// <summary>

@@ -12,7 +12,7 @@
         /// <returns>		
         /// Objet <see cref="OracleType" />.");
         /// </returns>   
-        public OracleType Type { get; set; }
+        public OracleType Type { get; set; } = new OracleType();
 
         /// <summary>
         /// Columns

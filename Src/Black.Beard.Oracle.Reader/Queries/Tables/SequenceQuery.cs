@@ -91,7 +91,6 @@ ORDER BY s.sequence_owner, s.sequence_name
                             };
 
                             db.Sequences.Add(s);
-                            db.Sequences.Add(s);
                         }
 
                     };

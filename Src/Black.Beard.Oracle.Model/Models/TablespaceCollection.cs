@@ -5,7 +5,7 @@ namespace Bb.Oracle.Models
     /// <summary>
     /// 
     /// </summary>
-    public partial class TablespaceCollection : ItemBaseCollection<TablespaceModel>
+    public partial class TablespaceCollection : IndexedCollection<TablespaceModel>
     {
 
         /// <summary>
@@ -13,7 +13,7 @@ namespace Bb.Oracle.Models
         /// </summary>
         static TablespaceCollection()
         {
-            TablespaceCollection.Key = ItemBaseCollection<TablespaceModel>.GetMethodKey(c => c.TablespaceName);
+            TablespaceCollection.Key = IndexedCollection<TablespaceModel>.GetMethodKey(c => c.TablespaceName);
         }
 
     }

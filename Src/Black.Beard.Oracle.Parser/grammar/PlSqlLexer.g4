@@ -435,7 +435,7 @@ DSINTERVAL_UNCONSTRAINED:     'DSINTERVAL_UNCONSTRAINED';
 // DYNAMIC_SAMPLING:             'DYNAMIC_SAMPLING';
 // DYNAMIC_SAMPLING_EST_CDN:     'DYNAMIC_SAMPLING_EST_CDN';
 EACH:                         'EACH';
-// EDITIONABLE:                  'EDITIONABLE';
+EDITIONABLE:                  'EDITIONABLE';
 EDITION:                      'EDITION';
 EDITIONING:                   'EDITIONING';
 EDITIONS:                     'EDITIONS';

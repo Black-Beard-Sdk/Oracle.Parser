@@ -5,7 +5,7 @@ namespace Bb.Oracle.Models
     /// <summary>
     /// Trigger
     /// </summary>
-    public partial class TriggerCollection : ItemBaseCollection<TriggerModel>
+    public partial class TriggerCollection : IndexedCollection<TriggerModel>
     {
 
         /// <summary>
@@ -13,7 +13,7 @@ namespace Bb.Oracle.Models
         /// </summary>
         static TriggerCollection()
         {
-            TriggerCollection.Key = ItemBaseCollection<TriggerModel>.GetMethodKey(c => c.Name);
+            TriggerCollection.Key = IndexedCollection<TriggerModel>.GetMethodKey(c => c.Name);
         }
 
     }

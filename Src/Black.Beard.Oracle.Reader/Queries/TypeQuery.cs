@@ -38,16 +38,16 @@ ORDER BY t1.OWNER,t1.TYPE_NAME,t1.ATTR_NO
                 t =>
                 {
 
-                    if (t.TYPE_NAME.ExcludIfStartwith(t.OWNER, Models.Configurations.ExcludeKindEnum.Type))
+                    if (!string.IsNullOrEmpty(t.OWNER) && t.TYPE_NAME.ExcludIfStartwith(t.OWNER, Models.Configurations.ExcludeKindEnum.Type))
                         return;
 
                     if (!context.Use(t.OWNER))
                         return;
 
                     string key = t.OWNER + "." + t.TYPE_NAME;
-                    var type = db.Types[key];
+                    TypeItem type;
 
-                    if (type == null)
+                    if (!db.Types.TryGet(key, out type))
                     {
                         string superType = string.Empty;
                         if (!string.IsNullOrEmpty(t.SUPERTYPE_OWNER))

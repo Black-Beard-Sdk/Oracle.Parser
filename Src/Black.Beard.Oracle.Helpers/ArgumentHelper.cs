@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace Black.Beard.Oracle.Helpers
+namespace Bb.Oracle.Helpers
 {
 
     /// <summary>
@@ -52,6 +52,28 @@ namespace Black.Beard.Oracle.Helpers
             return unresolvedArgs.ToArray();
         }
 
+        public static string[] ToArray(object instance)
+        {
+
+            List<string> result = new List<string>();
+
+            var type = instance.GetType();
+
+            var instanceProperties = instance.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
+
+            foreach (PropertyInfo acc in instanceProperties)
+            {
+                string value = (string)Convert.ChangeType(acc.GetValue(instance), typeof(string));
+                if (!string.IsNullOrEmpty(value))
+                {
+                    result.Add("-" + acc.Name);
+                    result.Add(@"""" + value + @"""");
+                }
+            }
+
+            return result.ToArray();
+
+        }
     }
 
 

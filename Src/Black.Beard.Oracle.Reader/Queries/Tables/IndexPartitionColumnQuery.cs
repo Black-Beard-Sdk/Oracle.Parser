@@ -41,9 +41,9 @@ namespace Bb.Oracle.Reader.Queries
 
                         string k2 = t.Owner + "." + t.IndexName;
 
-                        var index = table.Indexes[k2];
-
-                        if (index == null)
+                        IndexModel index;
+                        
+                        if (!table.Indexes.TryGet(k2, out index))
                         {
                             index = new IndexModel() { Name = k2 };
                             table.Indexes.Add(index);

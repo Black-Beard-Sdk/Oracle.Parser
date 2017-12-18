@@ -49,7 +49,7 @@ ORDER BY owner, s.type, s.name, s.line
                         if (t.name.ExcludIfStartwith(t.owner, Models.Configurations.ExcludeKindEnum.Procedure))
                             return;
 
-                        string key = t.type + "." + t.owner + "." + t.name;                       
+                        string key = t.type + "." + t.owner + "." + t.name;
 
                         List<KeyValuePair<int, string>> sb;
                         if (!_dic.TryGetValue(key, out sb))
@@ -120,8 +120,7 @@ ORDER BY owner, s.type, s.name, s.line
                         break;
 
                     case "PACKAGE":
-                        pck = db.Packages[key];
-                        if (pck == null)
+                        if (!db.Packages.TryGet(key, out pck))
                             db.Packages.Add(pck = new PackageModel() { Name = key, PackageOwner = k[1], PackageName = k[2] });
 
                         index = item.Value.Select(c => c.Key).Max();
@@ -135,7 +134,9 @@ ORDER BY owner, s.type, s.name, s.line
                         break;
 
                     case "PACKAGE BODY":
-                        pck = db.Packages[key];
+                        if (!db.Packages.TryGet(key, out pck))
+                            db.Packages.Add(pck = new PackageModel() { Name = key, PackageOwner = k[1], PackageName = k[2] });
+
                         index = item.Value.Select(c => c.Key).Max();
                         v = item.Value.LastOrDefault().Value;
                         if (!string.IsNullOrEmpty(v) && !string.IsNullOrEmpty(v.Trim()))
@@ -160,9 +161,10 @@ ORDER BY owner, s.type, s.name, s.line
                         code = GetSource(item).ToString();
                         Sources.Add(new CodeSource() { Key = key, Code = code, Type = k[0] });
 
-                        //var trigger = db.ResolveTrigger(key);
-                        //if (trigger != null)
-                        //    trigger.Code = code;
+                        TriggerModel trigger;
+                        if (db.ResolveTrigger(key, out trigger))
+                            trigger.Code = code;
+
                         break;
 
                     case "TYPE":
@@ -173,9 +175,10 @@ ORDER BY owner, s.type, s.name, s.line
                         item.Value.Add(new KeyValuePair<int, string>(++index, "/\n"));
                         code = GetSource(item).ToString();
                         Sources.Add(new CodeSource() { Key = key, Code = code, Type = k[0] });
-                        type = db.Types[key];
-                        if (type != null)
+
+                        if (db.Types.TryGet(key, out type))
                             type.Code = code;
+
                         break;
 
                     case "TYPE BODY":
@@ -186,9 +189,10 @@ ORDER BY owner, s.type, s.name, s.line
                         item.Value.Add(new KeyValuePair<int, string>(++index, "/\n"));
                         code = GetSource(item).ToString();
                         Sources.Add(new CodeSource() { Key = key, Code = code, Type = k[0] });
-                        type = db.Types[key];
-                        if (type != null)
+
+                        if (db.Types.TryGet(key, out type))
                             type.CodeBody = code;
+
                         break;
 
                     case "JAVA SOURCE":
@@ -215,14 +219,9 @@ ORDER BY owner, s.type, s.name, s.line
             foreach (KeyValuePair<int, string> lines in source)
                 count += lines.Value.Length;
 
-            string aa = string.Empty;
-
             StringBuilder sb = new StringBuilder(count);
             foreach (KeyValuePair<int, string> lines in source)
-            {
-                aa += lines.Value;
                 sb.Append(lines.Value);
-            }
 
             string result = sb.ToString();
 

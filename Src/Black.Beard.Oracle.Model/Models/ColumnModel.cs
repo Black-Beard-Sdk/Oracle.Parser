@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 namespace Bb.Oracle.Models
@@ -24,11 +25,13 @@ namespace Bb.Oracle.Models
         /// <summary>
         /// Description
         /// </summary>
+        [DefaultValue("")]
         public string Description { get; set; }
 
         /// <summary>
         /// Is Sequence
         /// </summary>
+        [DefaultValue(false)]
         public bool IsSequence { get; set; }
 
         /// <summary>
@@ -54,11 +57,13 @@ namespace Bb.Oracle.Models
         /// <summary>
         /// Is Primary Key
         /// </summary>
+        [DefaultValue(false)]
         public bool IsPrimaryKey { get; set; }
 
         /// <summary>
         /// Is Computed
         /// </summary>
+        [DefaultValue(false)]
         public bool IsComputed { get; set; }
 
         /// <summary>
@@ -94,7 +99,7 @@ namespace Bb.Oracle.Models
         /// <returns>		
         /// Objet <see cref="OracleType" />.");
         /// </returns>
-        public OracleType Type { get; set; }
+        public OracleType Type { get; set; } = new OracleType();
 
         [JsonIgnore]
         public TableModel Parent { get; set; }

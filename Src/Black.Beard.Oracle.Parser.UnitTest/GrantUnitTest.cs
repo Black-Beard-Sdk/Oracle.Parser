@@ -16,17 +16,6 @@ namespace Black.Beard.Oracle.Parser.UnitTest
     {
 
         [TestMethod]
-        public void TestGrantSelectWithGrant_1()
-        {
-
-            // GRANT SELECT ON CONFIG.BUILD TO IMPORT_PDA;
-            // 
-            var g1 = Grant(@"GRANT SELECT ON config.pda_pudo_link TO anomalylifecycle;").FirstOrDefault();
-
-
-        }
-
-        [TestMethod]
         public void TestSerializeGrant()
         {
 
@@ -35,7 +24,7 @@ namespace Black.Beard.Oracle.Parser.UnitTest
             var db1 = Parse(@"GRANT SELECT ON schema1.TABLE_1 TO ROLE1 WITH GRANT OPTION;");
 
             db1.WriteFile(file);
-            var db2 = OracleDatabase.ReadFlie(file);
+            var db2 = OracleDatabase.ReadFile(file);
 
         }
 

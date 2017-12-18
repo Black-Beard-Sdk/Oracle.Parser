@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Bb.Oracle.Models
 {
@@ -37,6 +38,7 @@ namespace Bb.Oracle.Models
             return this.ObjectSchema;
         }
 
+        [JsonIgnore]
         public OracleDatabase Parent { get; internal set; }
 
         public IEnumerable<Anomaly> Evaluate(IEvaluateManager manager)

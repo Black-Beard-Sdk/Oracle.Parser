@@ -11,9 +11,9 @@ namespace Bb.Oracle.Models.Configurations
 		public static ExcludeSection Configuration 
 		{ 
 			get 
-			{ 
-				return _configuration ?? null; 
-			} 
+			{
+                return _configuration ?? (_configuration = ReadFile("ExcludeSection.json"));
+            } 
 			set
 			{
 				_configuration = value;
@@ -39,6 +39,32 @@ namespace Bb.Oracle.Models.Configurations
             }
         }
 
+
+
+        public void WriteFile(string filename)
+        {
+            FileInfo file = new FileInfo(filename);
+            using (StreamWriter stream = file.CreateText())
+            {
+                JsonSerializer serializer = new JsonSerializer();
+                serializer.Serialize(stream, this);
+            }
+        }
+
+        public static ExcludeSection ReadFile(string filename)
+        {
+            FileInfo file = new FileInfo(filename);
+            if (file.Exists)
+            {
+                using (StreamReader stream = file.OpenText())
+                {
+                    JsonSerializer serializer = new JsonSerializer();
+                    ExcludeSection db = (ExcludeSection)serializer.Deserialize(stream, typeof(ExcludeSection));
+                    return db;
+                }
+            }
+            return new ExcludeSection();
+        }
 
     }
 

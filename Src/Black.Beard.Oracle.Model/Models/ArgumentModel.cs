@@ -55,7 +55,7 @@ namespace Bb.Oracle.Models
         /// <returns>		
         /// Objet <see cref="OracleType" />.");
         /// </returns>
-        public OracleType Type { get; set; }
+        public OracleType Type { get; set; } = new OracleType();
 
         [JsonIgnore]
         public ProcedureModel Parent { get; set; }

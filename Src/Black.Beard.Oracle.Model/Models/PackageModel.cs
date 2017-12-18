@@ -5,7 +5,7 @@ namespace Bb.Oracle.Models
     /// <summary>
     /// Package
     /// </summary>
-    public partial class PackageModel : ItemBase
+    public partial class PackageModel : ItemBase, Ichangable
     {
 
         /// <summary>

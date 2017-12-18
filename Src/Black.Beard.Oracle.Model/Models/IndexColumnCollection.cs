@@ -5,12 +5,12 @@ namespace Bb.Oracle.Models
     /// <summary>
     /// 
     /// </summary>
-    public partial class IndexColumnCollection : ItemBaseCollection<IndexColumnModel>
+    public partial class IndexColumnCollection : IndexedCollection<IndexColumnModel>
     {
 
         static IndexColumnCollection()
         {
-            IndexColumnCollection.Key = ItemBaseCollection<IndexColumnModel>.GetMethodKey(c => c.Name);
+            IndexColumnCollection.Key = IndexedCollection<IndexColumnModel>.GetMethodKey(c => c.Name);
         }
 
     }

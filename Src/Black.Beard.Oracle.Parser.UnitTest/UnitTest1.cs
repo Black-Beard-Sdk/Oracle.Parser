@@ -38,5 +38,29 @@ namespace Black.Beard.Oracle.Parser.UnitTest
 
         }
 
+        [TestMethod]
+        public void TestMethod2()
+        {
+
+            var db = new OracleDatabase();
+
+            db.Grants.Add(new GrantModel()
+            {
+                Key = "toto",
+                ColumnObjectName = "col",
+                FullObjectName = "",
+                Files = new FileCollection() { new FileElement()  { Path = "toto.sql" } },
+                Grantable = true,
+                Hierarchy = true,
+                ObjectName = "obj",
+                ObjectSchema = "schema",
+                Privileges = new HashSet<string>() { "SELECT", "DELETE" },
+                Role = "role",
+                Valid = true,
+            });
+
+        }
+
+
     }
 }

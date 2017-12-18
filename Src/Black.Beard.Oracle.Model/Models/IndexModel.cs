@@ -1,12 +1,13 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace Bb.Oracle.Models
 {
     /// <summary>
     /// Index
     /// </summary>
-    public partial class IndexModel : ItemBase
+    public partial class IndexModel : ItemBase, Ichangable
     {
 
         /// <summary>
@@ -117,16 +118,19 @@ namespace Bb.Oracle.Models
         /// <summary>
         /// Index Name
         /// </summary>
+        [DefaultValue("")]
         public string IndexName { get; set; }
 
         /// <summary>
         /// Index Owner
         /// </summary>
+        [DefaultValue("")]
         public string IndexOwner { get; set; }
 
         /// <summary>
         /// Index Type
         /// </summary>
+        [DefaultValue("")]
         public string IndexType { get; set; }
 
         /// <summary>
@@ -142,11 +146,13 @@ namespace Bb.Oracle.Models
         /// <summary>
         /// Compression_ Prefix
         /// </summary>
+        [DefaultValue("")]
         public string Compression_Prefix { get; set; }
 
         /// <summary>
         /// Generated
         /// </summary>
+        [DefaultValue("")]
         public string Generated { get; set; }
 
         /// <summary>
@@ -191,7 +197,6 @@ namespace Bb.Oracle.Models
             }
 
         }
-
 
         [JsonIgnore]
         public TableModel Parent { get; set; }

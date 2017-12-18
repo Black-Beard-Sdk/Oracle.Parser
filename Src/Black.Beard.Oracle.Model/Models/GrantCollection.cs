@@ -5,7 +5,7 @@ namespace Bb.Oracle.Models
     /// <summary>
     /// Grant
     /// </summary>
-    public partial class GrantCollection : ItemBaseCollection<GrantModel>
+    public partial class GrantCollection : IndexedCollection<GrantModel>
     {
 
         /// <summary>
@@ -13,7 +13,7 @@ namespace Bb.Oracle.Models
         /// </summary>
         static GrantCollection()
         {
-            GrantCollection.Key = ItemBaseCollection<GrantModel>.GetMethodKey(c => c.Key);
+            GrantCollection.Key = IndexedCollection<GrantModel>.GetMethodKey(c => c.Key);
         }
 
     }

@@ -24,13 +24,14 @@ namespace Bb.Oracle.Visitors
 
         public override object VisitRevoke_statment([NotNull] PlSqlParser.Revoke_statmentContext context)
         {
+            
             return base.VisitRevoke_statment(context);
         }
 
         public override object VisitRevoke_system_privileges([NotNull] PlSqlParser.Revoke_system_privilegesContext context)
         {
             return base.VisitRevoke_system_privileges(context);
-        }     
+        }
 
         public override object VisitGrant_statement([NotNull] PlSqlParser.Grant_statementContext context)
         {
@@ -65,6 +66,9 @@ namespace Bb.Oracle.Visitors
                     _object = _schema.Substring(i + 1, _schema.Length - i - 1);
                     _schema = _schema.Substring(0, i);
                 }
+                _schema = _schema.Replace(@"""", "");
+                _object = _object.Replace(@"""", "");
+
             }
 
             var grantee_names = context.grantee_name();
@@ -183,6 +187,7 @@ namespace Bb.Oracle.Visitors
 
         private GrantModel CreateGrant(string key, string objectSchema, string objectName, HashSet<string> privileges, string role, string columnObjectName, bool withHierarchy, bool withGrant, bool withDelegate, bool withAdmin, bool withDirectory, bool withUser, bool withEdition, bool withMiningModel, bool withJavaSource, bool JavaResource, bool withSqlTranslationProfile)
         {
+
             GrantModel grant;
             if (!this.db.Grants.TryGet(key, out grant))
             {

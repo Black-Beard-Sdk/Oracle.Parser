@@ -7,12 +7,12 @@ namespace Bb.Oracle.Models
     /// <summary>
     /// Package
     /// </summary>
-    public partial class PackageCollection : ItemBaseCollection<PackageModel>
+    public partial class PackageCollection : IndexedCollection<PackageModel>
     {
 
         static PackageCollection()
         {
-            PackageCollection.Key = ItemBaseCollection<PackageModel>.GetMethodKey(c => c.Name);
+            PackageCollection.Key = IndexedCollection<PackageModel>.GetMethodKey(c => c.Name);
         }
 
     }

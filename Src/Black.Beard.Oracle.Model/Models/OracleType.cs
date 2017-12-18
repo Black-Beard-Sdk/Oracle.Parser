@@ -1,4 +1,6 @@
 ﻿
+using System.ComponentModel;
+
 namespace Bb.Oracle.Models
 {
     /// <summary>
@@ -20,11 +22,13 @@ namespace Bb.Oracle.Models
         /// <summary>
         /// default Length
         /// </summary>   
+        [DefaultValue(0)]
         public int defaultLength { get; set; }
 
         /// <summary>
         /// Data Default
         /// </summary>   
+        [DefaultValue("")]
         public string DataDefault { get; set; }
 
         /// <summary>
@@ -65,6 +69,7 @@ namespace Bb.Oracle.Models
         /// <summary>
         /// Is Record
         /// </summary>   
+        [DefaultValue(false)]
         public bool IsRecord { get; set; }
 
     }

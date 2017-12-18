@@ -96,41 +96,29 @@ namespace Bb.Oracle.Models
         /// </returns>
         public PartitionCollection Partitions { get; set; } = new PartitionCollection();
 
-        //public TriggerModel ResolveTrigger(string key)
-        //{
-
-        //    TriggerModel trigger = null;
-
-        //    foreach (TableModel table in Tables)
-        //    {
-
-        //        trigger = table.Triggers[key];
-
-        //        if (trigger != null)
-        //            break;
-
-        //    }
-
-        //    return trigger;
-
-        //}
-
         public bool ResolveIndex(string key, out IndexModel index)
         {
 
             index = null;
 
             foreach (TableModel table in Tables)
-            {
+                if (table.Indexes.TryGet(key, out index))
+                    return true;
 
-                index = table.Indexes[key];
+            return false;
 
-                if (index != null)
-                    break;
+        }
 
-            }
+        public bool ResolveTrigger(string key, out TriggerModel trigger)
+        {
 
-            return index != null;
+            trigger = null;
+
+            foreach (TableModel table in Tables)
+                if (table.Triggers.TryGet(key, out trigger))
+                    return true;
+
+            return false;
 
         }
 
@@ -139,12 +127,14 @@ namespace Bb.Oracle.Models
 
             foreach (TableModel item in Tables)
             {
-
                 item.Parent = this;
-
-                foreach (ConstraintModel c in item.Constraints)
-                    c.Initialize();
-
+                item.Initialize();
+            }
+            
+            foreach (TypeItem item in this.Types)
+            {
+                item.Parent = this;
+                item.Initialize();
             }
 
             foreach (SequenceModel item in this.Sequences)
@@ -157,32 +147,17 @@ namespace Bb.Oracle.Models
             {
                 item.Parent = this;
                 item.Initialize();
-                
             }
-
-            foreach (TypeItem item in this.Types)
-            {
-                item.Parent = this;
-                item.Initialize();                
-            }
-
-            foreach (TableModel item in Tables)
-                item.Initialize();
-
-            foreach (SequenceModel item in this.Sequences)
-                item.Initialize();
-
-            foreach (ProcedureModel item in this.Procedures)
-                item.Initialize();
-
-            foreach (TypeItem item in this.Types)
-                item.Initialize();
 
             foreach (GrantModel item in this.Grants)
+            {
                 item.Parent = this;
+            }
 
             foreach (SynonymModel item in this.Synonymes)
-                item.Parent = this;
+            {
+                item.Parent = this;                
+            }
 
         }
 
@@ -195,22 +170,27 @@ namespace Bb.Oracle.Models
         public void WriteFile(string filename)
         {
             FileInfo file = new FileInfo(filename);
-            using (FileStream stream = file.OpenWrite())
+            using (StreamWriter stream = file.CreateText())
             {
-                string sz = JsonConvert.SerializeObject(this, Formatting.Indented);
-                byte[] ar = System.Text.Encoding.UTF8.GetBytes(sz);
-                stream.Write(ar, 0, ar.Length);
+                JsonSerializer serializer = new JsonSerializer()
+                {
+                    Formatting = Formatting.Indented,
+                    DefaultValueHandling = DefaultValueHandling.Ignore,
+                    NullValueHandling = NullValueHandling.Ignore,
+                };
+                serializer.Serialize(stream, this);
             }
         }
 
-        public static OracleDatabase ReadFlie(string filename)
+        public static OracleDatabase ReadFile(string filename)
         {
             FileInfo file = new FileInfo(filename);
             using (StreamReader stream = file.OpenText())
             {
-                OracleDatabase result = JsonConvert.DeserializeObject<OracleDatabase>(stream.ReadToEnd());
-                result.Initialize();
-                return result;
+                JsonSerializer serializer = new JsonSerializer();
+                OracleDatabase db = (OracleDatabase)serializer.Deserialize(stream, typeof(OracleDatabase));
+                db.Initialize();
+                return db;
             }
         }
 

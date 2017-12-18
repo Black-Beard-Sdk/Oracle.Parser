@@ -2,5 +2,8 @@
 {
     public interface IScriptChangeEvaluator
     {
+
+        void Generate(IFileManager fileManager, IchangeVisitor visitor, IEvaluateManager evaluator);
+
     }
 }

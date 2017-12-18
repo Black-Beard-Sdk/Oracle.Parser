@@ -5,12 +5,12 @@ namespace Bb.Oracle.Models.Configurations
     /// <summary>
     /// 
     /// </summary>
-    public partial class ExcludeSchemaCollection : ItemBaseCollection<ExcludeSchemaElement>
+    public partial class ExcludeSchemaCollection : IndexedCollection<ExcludeSchemaElement>
 	{
 
         static ExcludeSchemaCollection()
         {
-            ExcludeSchemaCollection.Key = ItemBaseCollection<ExcludeSchemaElement>.GetMethodKey(c => c.Name);
+            ExcludeSchemaCollection.Key = IndexedCollection<ExcludeSchemaElement>.GetMethodKey(c => c.Name);
         }
 
     }

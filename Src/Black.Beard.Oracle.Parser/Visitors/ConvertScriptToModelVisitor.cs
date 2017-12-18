@@ -5,6 +5,7 @@ using Bb.Oracle.Models;
 using Antlr4.Runtime;
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Bb.Oracle.Visitors
 {
@@ -20,11 +21,14 @@ namespace Bb.Oracle.Visitors
 
         public override object Visit(IParseTree tree)
         {
+
             return base.Visit(tree);
         }
 
         public override object VisitSql_script([NotNull] PlSqlParser.Sql_scriptContext context)
         {
+
+            this._initialSource = new StringBuilder(context.Start.InputStream.ToString());
 
             if (context.exception != null)
             {
@@ -2630,29 +2634,53 @@ namespace Bb.Oracle.Visitors
 
         private void AppendException(RecognitionException exception)
         {
+            StringBuilder txt = GetText(exception.Context.Parent);
+
             var t = exception.OffendingToken;
-            string message = $"{exception.Message}. {exception.Context.GetText()} token '{t.Text}' at line {t.Line} column {t.Column}, offset {t.StartIndex}";
+            string message = $"'{exception.Message}' at line '{t.Line} {txt.ToString()}' with token '{t.Text}' column {t.Column}, offset {t.StartIndex}";
             _anomalies.Add(new Error() { Exception = exception, Message = message, File = this.File });
             System.Diagnostics.Debug.WriteLine(message + " in " + this.File);
         }
 
-        //private void AppendException(Exception exception, ParserRuleContext context)
-        //{
-        //    var t = context;
-        //    string message = $"{exception.Message}. {t.GetText()} at line {t.Start.Line} column {t.Start.Column}, offset {t.Start.StartIndex}";
-        //    _anomalies.Add(new Error() { Exception = exception, Message = message, File = this.File });
-        //    System.Diagnostics.Debug.WriteLine(message + " in " + this.File);
-        //}
+
+        private StringBuilder GetText(RuleContext context)
+        {
+            if (context is ParserRuleContext s)
+            {
+                char[] ar = new char[s.Stop.StopIndex - s.Start.StartIndex];
+                _initialSource.CopyTo(s.Start.StartIndex, ar, 0, ar.Length);
+                StringBuilder sb2 = new StringBuilder(ar.Length);
+                sb2.Append(ar);
+
+                return sb2;
+            }
+
+            Stop();
+            return new StringBuilder();
+
+        }
+
+        private void AppendException(Exception exception, ParserRuleContext context)
+        {
+            var t = context;
+            string message = $"{exception.Message}. {t.GetText()} at line {t.Start.Line} column {t.Start.Column}, offset {t.Start.StartIndex}";
+            _anomalies.Add(new Error() { Exception = exception, Message = message, File = this.File });
+            System.Diagnostics.Debug.WriteLine(message + " in " + this.File);
+        }
 
         public override object VisitErrorNode(IErrorNode node)
         {
-            //IRuleNode r = null;
-            //if (_models.Count > 0)
-            //    r = _models.Peek();
+            if (node.Parent is ParserRuleContext n)
+            {
+                if (n.exception != null)
+                    AppendException(n.exception);
 
-            string message = $"{node.Symbol.Text} at line {node.Symbol.Line} column {node.Symbol.Column}, offset {node.Symbol.StartIndex}";
-            _anomalies.Add(new Error() { Exception = null, Message = message, File = this.File });
-            System.Diagnostics.Debug.WriteLine(message + " in " + this.File);
+                return null;
+            }
+
+            //string message = $"{node.Symbol.Text} at line {node.Symbol.Line} column {node.Symbol.Column}, offset {node.Symbol.StartIndex}";
+            //_anomalies.Add(new Error() { Exception = null, Message = message, File = this.File });
+            //System.Diagnostics.Debug.WriteLine(message + " in " + this.File);
             return null;
         }
 
@@ -2682,7 +2710,7 @@ namespace Bb.Oracle.Visitors
         public string File { get; set; }
         private Stack<IRuleNode> _models = new Stack<IRuleNode>();
         private List<Error> _anomalies = new List<Error>();
-
+        private StringBuilder _initialSource;
     }
 
 }

@@ -1,4 +1,6 @@
-﻿namespace Bb.Oracle.Models
+﻿using Newtonsoft.Json;
+
+namespace Bb.Oracle.Models
 {
     /// <summary>
     /// 
@@ -21,6 +23,7 @@
         /// </summary>
         public bool Asc { get; set; }
 
+        [JsonIgnore]
         public IndexModel Parent { get; set; }
 
         public void Initialize()

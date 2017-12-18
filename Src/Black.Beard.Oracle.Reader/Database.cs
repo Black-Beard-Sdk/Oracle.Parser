@@ -1,5 +1,6 @@
 ﻿using Bb.Beard.Oracle.Reader.Dao;
 using Bb.Oracle.Models;
+using Bb.Oracle.Models.Configurations;
 using Bb.Oracle.Reader.Queries;
 using System;
 using System.Collections.Generic;
@@ -33,43 +34,45 @@ namespace Bb.Beard.Oracle.Reader
         /// <param name="outputfileFullPath">The outputfile full path.</param>
         /// <param name="use">The use.</param>
         /// <returns></returns>
-        public static OracleDatabase GenerateFile(string sourceName, string connectionString, string outputfileFullPath,  Func<string, bool> use = null, bool excludeCode = false, string name = "")
+        public static OracleDatabase GenerateFile(ArgumentContext ctx,  Func<string, bool> use = null)
         {
 
             System.Data.Common.DbConnectionStringBuilder builder = new System.Data.Common.DbConnectionStringBuilder();
-            builder.ConnectionString = connectionString;
+            builder.ConnectionString = string.Format(@"Data source={0};USER ID={1};Password={2};", ctx.Source, ctx.Login, ctx.Pwd);
             
-            var manager = new OracleManager(connectionString);
+            var manager = new OracleManager(builder.ConnectionString);
             if (System.Diagnostics.Debugger.IsAttached)
-                Console.WriteLine("{0} Success", connectionString);
+                Console.WriteLine("{0} Success", builder.ConnectionString);
 
             if (use == null)
                 use = shema => true;
 
-            DbContextOracle dbContext = new DbContextOracle(manager) { Use = use, ExcludeCode = excludeCode };
+            DbContextOracle dbContext = new DbContextOracle(manager) { Use = use, ExcludeCode = ctx.ExcludeCode };
         
             dbContext.database = new OracleDatabase()
             {
-                Name = "Instance server " +  sourceName,
+                Name = "Instance server " + ctx.Source,
                 SourceScript = false
             };
 
-            if (!string.IsNullOrEmpty(name))
-                dbContext.database.Name = name;
+            if (!string.IsNullOrEmpty(ctx.Name))
+                dbContext.database.Name = ctx.Name;
+            else
+                dbContext.database.Name = ctx.Source;
 
-            //dbContext.database.Name = builder["data source"].ToString();
-            
+            Filtre(ctx, builder.ConnectionString);
+
             Run(dbContext);
 
-            if (!string.IsNullOrEmpty(outputfileFullPath))
+            if (!string.IsNullOrEmpty(ctx.Filename))
             {
 
-                FileInfo f = new FileInfo(outputfileFullPath);
+                FileInfo f = new FileInfo(ctx.Filename);
                 if (!f.Directory.Exists)
                     f.Directory.Create();
 
-                Console.WriteLine("Writing file at " + outputfileFullPath);
-                dbContext.database.WriteFile(outputfileFullPath);
+                Console.WriteLine("Writing file at " + ctx.Filename);
+                dbContext.database.WriteFile(ctx.Filename);
             }
 
             Console.WriteLine("the end");
@@ -101,7 +104,7 @@ namespace Bb.Beard.Oracle.Reader
             Run(dbContext, new SequenceQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve sequences");
 
             Run(dbContext, new TableQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve tables");
-            Run(dbContext, new ViewSourceQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve code views");
+            //Run(dbContext, new ViewSourceQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve code views");
             Run(dbContext, new MaterializedViewSourceQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve code materialized views");
             Run(dbContext, new TableColumnQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve columns of tables");
 
@@ -124,7 +127,7 @@ namespace Bb.Beard.Oracle.Reader
             Run(dbContext, new ProcQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext, ProcedureNames = Database.ProcedureNames }, "Resolve oracle stored procedures");
             Run(dbContext, new ProcQueryWithArgument() { OwnerNames = Database.OwnerNames, OracleContext = dbContext, ProcedureNames = Database.ProcedureNames }, "Resolve oracle stored procedures with arguments");
             Run(dbContext, new TypeQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve oracle types");
-            Run(dbContext, new ViewQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve oracle views");
+            //Run(dbContext, new ViewQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve oracle views");
 
             Run(dbContext, new SynonymQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve oracle synonymes");
             Run(dbContext, new GrantQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve database grants");
@@ -132,13 +135,45 @@ namespace Bb.Beard.Oracle.Reader
             Run(dbContext, new TriggerQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve triggers");
             Run(dbContext, new ContentCodeQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve sources", dbContext.ExcludeCode);
 
-            Run(dbContext, new TablespacesQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve sources", dbContext.ExcludeCode);
-
-
-
+            //Run(dbContext, new TablespacesQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve sources", dbContext.ExcludeCode);
             
 
         }
+
+
+
+        /// <summary>
+        /// Filtre
+        /// Utilisation
+        /// Le filtrage réagit lorsqu'on affecte la valeur 
+        /// à une ou plusieurs propriétés quelconques
+        /// (OwnerName, PackageName, ProcedureName, TableName)
+        /// ci-dessous. Sans aucune affectation, ou avec "" chaine vide, la génération se fait sur 
+        /// la totalité de la base de données selon le droit d'accés autorisé
+        /// par le login.
+        /// </summary>
+        static void Filtre(ArgumentContext ctx, string connectionString)
+        {
+
+            if (!string.IsNullOrEmpty(ctx.ExcludeFile))
+                ExcludeSection.Configuration = ExcludeSection.LoadFile(ctx.ExcludeFile);
+
+            if (ctx.OwnerFilter == "*")
+                ctx.OwnerFilter = ContextLoader.GetOwners(connectionString);
+
+            SetFilter(Database.OwnerNames, ctx.OwnerFilter);
+            SetFilter(Database.ProcedureNames, ctx.Procedures);
+            SetFilter(Database.TableNames, ctx.Tables);
+
+        }
+
+        private static void SetFilter(List<string> list, string arg)
+        {
+            if (!string.IsNullOrEmpty(arg) && !string.IsNullOrEmpty(arg = arg.Trim()))
+                foreach (var item in arg.Split(';'))
+                    list.Add(item);
+        }
+
 
     }
 

@@ -8,7 +8,7 @@ using System.Text;
 namespace Bb.Oracle.Models
 {
 
-    public class ItemBaseCollection<T> : IEnumerable<T>, ICollection<T>
+    public class IndexedCollection<T> : IEnumerable<T>, ICollection<T>
     {
 
         /// <summary>
@@ -19,7 +19,11 @@ namespace Bb.Oracle.Models
         {
             get
             {
-                return (T)this._datas[key];
+
+                T e;
+                if (this._datas.TryGetValue(key, out e))
+                    return e;
+                return default(T);
             }
             set
             {

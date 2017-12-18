@@ -1,0 +1,1949 @@
+
+ identifier : ' ( IDENTIFIER )?'
+ digit : ' ( REGEX:\d )?'
+
+ root : ( /* create | alter | drop | insert | select | update | delete | revoke | */ grant )
+
+ asm_version : ' ( STRING )?'
+ hsm_auth_string : ' ( STRING )?'
+ certificate_id : ' ( STRING )?'
+ sid : ' ( STRING )?'
+ location_specifier : ' ( STRING )?'
+ directory_dn : ' ( STRING )?'
+ encrypt_algorithm : ' ( STRING )?'
+ pfile_name : ' ( STRING )?'
+ spfile_name : ' ( STRING )?'
+ path_name : ' ( STRING )?'
+ integrity_algorithm : ' ( STRING )?'
+ connect_string : ' ( STRING )?'
+ time_zone_region : ' ( STRING )?'
+ password : ' ( STRING )?'
+ attribute_name : ' ( STRING )?'
+ attribute_value : ' ( STRING )?'
+ location : ' ( STRING )?'
+ chars : ' ( STRING )?'
+
+ string : ( ( 'N' | 'n') )? 
+ ( 
+ '"' ( chars )* '"' 
+| ( 'Q' | 'q' ) '"' quote_delimiter chars ( chars )* quote_delimiter '"' 
+)
+ 
+ quote_delimiter : ''
+
+ literal : ( Numeric_literals | string | datetime_datatypes | interval_year_to_month | interval_day_to_second )
+ Numeric_literals : integer | number 
+
+ date : ' ( STRING )?'
+ fractional_second_precision : ' ( STRING )?'
+
+ digits : digit ( digit )* 
+ year_precision : digits 
+ day_precision : digits 
+ precision : digits 
+ leading_precision : digits 
+ hh : digits 
+ mi : digits 
+ ss : digits 
+ n : digits 
+ 
+ file_number : digit 
+ level : digit 
+ child_level : digit 
+ hash_partition_quantity : digit 
+ leading_field_precision : digit 
+ hash_subpartition_quantity : digit 
+ cell_reference : digit /* a confirmer */
+ dimension_column : digit /* a confirmer */
+ sample_percent : digit 
+ seed_value : digit 
+
+
+ clause : ''
+ data_item : ''
+ scn_value : ''
+ parameter_value : ''
+ varray : ''
+ package_compile_clause : ''
+ procedure_compile_clause : ''
+ trigger_compile_clause : ''
+ alter_type_clauses : ''
+ library_compile_clause : ''
+ xmlindex_parameters_clause : ''
+ xmlindex_parameters : ''
+ function_compile_clause : ''
+ collection_item : ''
+ character_set : ''
+ filenumber : ''
+ charset : ''
+ lob_retention_clause : ''
+ xmlschema_spec : ''
+ match_string : ''
+ source_outline : ''
+ outline : ''
+ return_type : ''
+ plsql_source : ''
+ datatype : ''
+ parameter_type : ''
+ value_expr : ''
+ subclauses : ''
+ ordering_column : ''
+ cycle_mark_c_alias : ''
+ cycle_value : ''
+ no_cycle_value : ''
+ cursor_expression : ''
+ function_expression : ''
+ scalar_subquery_expression : ''
+ condition : expr 
+ xmltable_index_clause : ''
+ position : digits 
+ statement : ''
+ modify_column_clause : ''
+ alter_xmlschema_clause : ''
+
+ time_zone_name : string 
+ odci_parameters : string 
+ source_char : string 
+ pattern : string 
+ match_param : string 
+ namespace_string : string 
+ 
+ argument : literal 
+
+ cluster_fullname  : identifier_fullname 
+ dimension_fullname  : identifier_fullname 
+ index_fullname   : identifier_fullname 
+ indextype_fullname  : identifier_fullname 
+ materialized_view_fullname : identifier_fullname 
+ library_name_fullname  : identifier_fullname 
+ operator_fullname   : identifier_fullname 
+ package_fullname  : identifier_fullname 
+ sequence_fullname   : identifier_fullname 
+ synonym_fullname  : identifier_fullname 
+ type_fullname   : identifier_fullname 
+ trigger_fullname  : identifier_fullname 
+ function_name_fullname : identifier_fullname 
+ primary_name_fullname  : identifier_fullname 
+ model_fullname   : identifier_fullname 
+ scope_table_fullname  : identifier_fullname 
+ type_name_fullname  : identifier_fullname 
+ varray_type_fullname  : identifier_fullname 
+ statistics_type_fullname : identifier_fullname 
+ implementation_type_fullname : identifier_fullname 
+ table_fullname   : identifier_fullname 
+ view_name_fullname  : identifier_fullname 
+ source_fullname   : identifier_fullname 
+
+
+
+ column : identifier 
+
+ column_expression : simple_expressions | compound_expressions | function_expression | expression_list 
+
+ lob_item : identifier ( ',' identifier )?
+
+ alter : alter_cluster | alter_database | alter_database_link | alter_dimension | alter_diskgroup | alter_flashback_archive | alter_function | alter_index | alter_indextype | alter_java | alter_library | alter_materialized_view | alter_materialized_view_log | alter_operator | alter_outline | alter_package | alter_procedure | alter_profile | alter_resource_cost | alter_role | alter_rollback_segment | alter_sequence | alter_session | alter_system | alter_table | alter_tablespace | alter_trigger | alter_type | alter_user | alter_view )
+ 
+ alter_cluster : 'ALTER' 'CLUSTER' cluster_fullname ( physical_attributes_clause | 'SIZE' size_clause | allocate_extent_clause | deallocate_unused_clause | ( 'CACHE' | 'NOCACHE' ) )+ ( parallel_clause )? ';' 
+ 
+ alter_database : 'ALTER' 'DATABASE' ( database )? ( startup_clauses | recovery_clauses | database_file_clauses | logfile_clauses | controlfile_clauses | standby_database_clauses | default_settings_clauses | instance_clauses | security_clause ) ';' 
+
+ alter_database_link : 'ALTER' 'DATABASE' 'LINK' dblink ( 'CONNECT' 'TO' user 'IDENTIFIED' 'BY' password ( dblink_authentication )? | dblink_authentication ) ';' 
+
+ alter_dimension : 'ALTER' 'DIMENSION' dimension_fullname ( 'ADD' ( level_clause | hierarchy_clause | attribute_clause | extended_attribute_clause ) )+ | ( 'DROP' ( 'LEVEL' level ( 'RESTRICT' | 'CASCADE' )? | 'HIERARCHY' hierarchy | 'ATTRIBUTE' attribute ( 'LEVEL' level ( 'COLUMN' column )? )* ) )+ | 'COMPILE' ';' 
+
+ alter_diskgroup : 'ALTER' 'DISKGROUP' ( diskgroup_name ( ( ( add_disk_clause | drop_disk_clause ) ( ',' ( add_disk_clause | drop_disk_clause ) )* | resize_disk_clause ) ( rebalance_diskgroup_clause )? | disk_online_clause | disk_offline_clause | rebalance_diskgroup_clause | check_diskgroup_clause | diskgroup_template_clauses | diskgroup_directory_clauses | diskgroup_alias_clauses | diskgroup_volume_clauses | diskgroup_attributes | modify_diskgroup_file | drop_diskgroup_file_clause | usergroup_clauses | user_clauses | file_permissions_clause | file_owner_clause ) | ( diskgroup_name ( ',' diskgroup_name )* | 'ALL' ) ( undrop_disk_clause | diskgroup_availability | enable_disable_volume ) ) ';' 
+ 
+ alter_flashback_archive : 'ALTER' 'FLASHBACK' 'ARCHIVE' flashback_archive ( 'SET' 'DEFAULT' | ( 'ADD' | 'MODIFY' ) 'TABLESPACE' tablespace ( flashback_archive_quota )? | 'REMOVE' 'TABLESPACE' tablespace_name | 'MODIFY' 'RETENTION' flashback_archive_retention | 'PURGE' ( 'ALL' | 'BEFORE' ( 'SCN' expr | 'TIMESTAMP' expr ) ) | ( 'NO' )? 'OPTIMIZE' 'DATA' ) ';' 
+ 
+ alter_function : 'ALTER' 'FUNCTION' identifier_fullname function_compile_clause 
+
+ alter_index : 'ALTER' 'INDEX' index_fullname ( ( deallocate_unused_clause | allocate_extent_clause | shrink_clause | parallel_clause | physical_attributes_clause | logging_clause )+ | rebuild_clause | 'PARAMETERS' '(' '"' odci_parameters '"' ')' ')' | 'COMPILE' | ( 'ENABLE' | 'DISABLE' ) | 'UNUSABLE' | 'VISIBLE' | 'INVISIBLE' | 'RENAME' 'TO' name | 'COALESCE' | ( 'MONITORING' | 'NOMONITORING' ) 'USAGE' | 'UPDATE' 'BLOCK' 'REFERENCES' | alter_index_partitioning ) ';' 
+
+ alter_indextype : 'ALTER' 'INDEXTYPE' indextype_fullname ( ( 'ADD' | 'DROP' ) operator_fullname '(' parameter_type ')' ( ',' ( 'ADD' | 'DROP' ) operator_fullname '(' parameter_type ')' )* ( using_type_clause )? | 'COMPILE' ) ( 'WITH' 'LOCAL' ( 'RANGE' )? 'PARTITION' )? ( storage_table_clause )? ';' 
+
+ alter_java : 'ALTER' 'JAVA' ( 'SOURCE' | 'CLASS' ) identifier_fullname ( 'RESOLVER' '(' '(' match_string ( ',' )? ( schema_name | - ) ')'... ')' )? ( ( 'COMPILE' | 'RESOLVE' ) | invoker_rights_clause ) ';' 
+
+ alter_library : 'ALTER' 'LIBRARY' library_name_fullname library_compile_clause 
+ 
+ alter_materialized_view : 'ALTER' 'MATERIALIZED' 'VIEW' materialized_view_fullname ( physical_attributes_clause | modify_mv_column_clause | table_compression | lob_storage_clause ( ',' lob_storage_clause )* | modify_lob_storage_clause ( ',' modify_lob_storage_clause )* | alter_table_partitioning | parallel_clause | logging_clause | allocate_extent_clause | deallocate_unused_clause | shrink_clause | ( 'CACHE' | 'NOCACHE' ) )? ( alter_iot_clauses )? ( 'USING' 'INDEX' physical_attributes_clause )? ( 'MODIFY' scoped_table_ref_constraint | alter_mv_refresh )? ( ( 'ENABLE' | 'DISABLE' ) 'QUERY' 'REWRITE' | 'COMPILE' | 'CONSIDER' 'FRESH' )? ';' 
+ 
+ alter_materialized_view_log : 'ALTER' 'MATERIALIZED' 'VIEW' 'LOG' ( 'FORCE' )? 'ON' table_fullname ( physical_attributes_clause | add_mv_log_column_clause | alter_table_partitioning | parallel_clause | logging_clause | allocate_extent_clause | shrink_clause | move_mv_log_clause | ( 'CACHE' | 'NOCACHE' ) )? ( mv_log_augmentation )? ( mv_log_purge_clause )? ';' 
+
+ alter_operator : 'ALTER' 'OPERATOR' operator_fullname ( add_binding_clause | drop_binding_clause | 'COMPILE' ) ';' 
+
+ alter_outline : 'ALTER' 'OUTLINE' ( 'PUBLIC' | 'PRIVATE' )? outline ( 'REBUILD' | 'RENAME' 'TO' new_outline_name | 'CHANGE' 'CATEGORY' 'TO' category_name | ( 'ENABLE' | 'DISABLE' ) )+ ';' 
+ 
+ alter_package : 'ALTER' 'PACKAGE' package_fullname package_compile_clause 
+ 
+ alter_procedure : 'ALTER' 'PROCEDURE' identifier_fullname procedure_compile_clause 
+
+ alter_profile : 'ALTER' 'PROFILE' profile 'LIMIT' ( resource_parameters | password_parameters )+ ';' 
+
+ alter_resource_cost : 'ALTER' 'RESOURCE' 'COST' ( ( 'CPU_PER_SESSION' | 'CONNECT_TIME' | 'LOGICAL_READS_PER_SESSION' | 'PRIVATE_SGA' ) integer )+ ';' 
+
+ alter_role : 'ALTER' 'ROLE' role ( 'NOT' 'IDENTIFIED' | 'IDENTIFIED' ( 'BY' password | 'USING' package_fullname | 'EXTERNALLY' | 'GLOBALLY' ) ) ';' 
+
+ alter_rollback_segment : 'ALTER' 'ROLLBACK' 'SEGMENT' segment ( 'ONLINE' | 'OFFLINE' | storage_clause | 'SHRINK' ( 'TO' size_clause )? ) ';' 
+
+ alter_sequence : 'ALTER' 'SEQUENCE' sequence_fullname ( 'INCREMENT' 'BY' integer | ( 'MAXVALUE' integer | 'NOMAXVALUE' ) | ( 'MINVALUE' integer | 'NOMINVALUE' ) | ( 'CYCLE' | 'NOCYCLE' ) | ( 'CACHE' integer | 'NOCACHE' ) | ( 'ORDER' | 'NOORDER' ) )+ ';' 
+ 
+ alter_session : 'ALTER' 'SESSION' ( 'ADVISE' ( 'COMMIT' | 'ROLLBACK' | 'NOTHING' ) | 'CLOSE' 'DATABASE' 'LINK' dblink | ( 'ENABLE' | 'DISABLE' ) 'COMMIT' 'IN' 'PROCEDURE' | ( 'ENABLE' | 'DISABLE' ) 'GUARD' | ( 'ENABLE' | 'DISABLE' | 'FORCE' ) 'PARALLEL' ( 'DML' | 'DDL' | 'QUERY' ) ( 'PARALLEL' integer )? | ( 'ENABLE' 'RESUMABLE' ( 'TIMEOUT' integer )? ( 'NAME' string )? | 'DISABLE' 'RESUMABLE' ) | 'SYNC' 'WITH' 'PRIMARY' | alter_session_set_clause ) ';' 
+
+ alter_system : 'ALTER' 'SYSTEM' ( archive_log_clause | checkpoint_clause | check_datafiles_clause | distributed_recov_clauses | 'FLUSH' ( 'SHARED_POOL' | 'BUFFER_CACHE' | 'REDO' 'TO' target_db_name ( ( 'NO' )? 'CONFIRM' 'APPLY' )? ) | end_session_clauses | 'SWITCH' 'LOGFILE' | ( 'SUSPEND' | 'RESUME' ) | quiesce_clauses | rolling_migration_clauses | security_clauses | shutdown_dispatcher_clause | 'REGISTER' | 'SET' alter_system_set_clause ( alter_system_set_clause )* | 'RESET' alter_system_reset_clause ( alter_system_reset_clause )* ) ';' 
+
+ alter_table : 'ALTER' 'TABLE' table_fullname ( alter_table_properties | column_clauses | constraint_clauses | alter_table_partitioning | alter_external_table | move_table_clause )? ( enable_disable_clause | ( 'ENABLE' | 'DISABLE' ) ( 'TABLE' 'LOCK' | 'ALL' 'TRIGGERS' ) )* ';' 
+
+ alter_tablespace : 'ALTER' 'TABLESPACE' tablespace ( 'DEFAULT' ( table_compression )? ( storage_clause )? | 'MINIMUM' 'EXTENT' size_clause | 'RESIZE' size_clause | 'COALESCE' | 'SHRINK' 'SPACE' ( 'KEEP' size_clause )? | 'RENAME' 'TO' new_tablespace_name | ( 'BEGIN' | 'END' ) 'BACKUP' | datafile_tempfile_clauses | tablespace_logging_clauses | tablespace_group_clause | tablespace_state_clauses | autoextend_clause | flashback_mode_clause | tablespace_retention_clause ) ';' 
+
+ alter_trigger : 'ALTER' 'TRIGGER' trigger_fullname ( 'ENABLE' | 'DISABLE' | 'RENAME' 'TO' schema_name | trigger_compile_clause ) ';' 
+ 
+ alter_type : 'ALTER' 'TYPE' type_fullname alter_type_clauses 
+
+ alter_user : 'ALTER' 'USER' ( user ( 'IDENTIFIED' ( 'BY' password ( 'REPLACE' password )? | 'EXTERNALLY' ( 'AS' '"' certificate_dn '"' | 'AS' '"' kerberos_principal_name '"' )? | 'GLOBALLY' ( 'AS' '"' ( directory_dn )? '"' )? ) | 'DEFAULT' 'TABLESPACE' tablespace | 'TEMPORARY' 'TABLESPACE' ( tablespace | tablespace_group_name ) | ( 'QUOTA' ( size_clause | 'UNLIMITED' ) 'ON' tablespace )+ | 'PROFILE' profile | 'DEFAULT' 'ROLE' ( role ( ',' role )* | 'ALL' ( 'EXCEPT' role ( ',' role )* )? | 'NONE' ) | 'PASSWORD' 'EXPIRE' | 'ACCOUNT' ( 'LOCK' | 'UNLOCK' ) | 'ENABLE' 'EDITIONS' ( 'FORCE' )? )+ | user ( ',' user )* proxy_clause ) ';' 
+
+ alter_view : 'ALTER' 'VIEW' view_name_fullname ( 'ADD' out_of_line_constraint | 'MODIFY' 'CONSTRAINT' constraint ( 'RELY' | 'NORELY' ) | 'DROP' ( 'CONSTRAINT' constraint | 'PRIMARY' 'KEY' | 'UNIQUE' column_list_paren ) | 'COMPILE' | ( 'READ' 'ONLY' | 'READ' 'WRITE' ) ) ';' 
+
+ analyze : 'ANALYZE' ( ( 'TABLE' table_fullname | 'INDEX' index_fullname ) ( partition_extension_clause )? | 'CLUSTER' cluster_fullname ) ( validation_clauses | 'LIST' 'CHAINED' 'ROWS' ( into_clause )? | 'DELETE' ( 'SYSTEM' )? 'STATISTICS' ) ';' 
+
+ associate_statistics : 'ASSOCIATE' 'STATISTICS' 'WITH' ( column_association | function_association ) ( storage_table_clause )? ';' 
+
+ audit : 'AUDIT' ( audit_operation_clause ( auditing_by_clause | 'IN' 'SESSION' 'CURRENT' )? | audit_schema_object_clause | 'NETWORK' ) ( 'BY' ( 'SESSION' | 'ACCESS' ) )? ( 'WHENEVER' ( 'NOT' )? 'SUCCESSFUL' )? ';' 
+
+ call : 'CALL' ( routine_clause | object_access_expression ) ( 'INTO' ':' host_variable ( ( 'INDICATOR' )? ':' indicator_variable )? )? ';' 
+
+ comment : 'COMMENT' 'ON' ( 'COLUMN' ( schema_name '.' )? ( identifier '.' ) column | 'EDITION' edition | 'INDEXTYPE' indextype_fullname | 'MATERIALIZED' 'VIEW' materialized_view | 'MINING' 'MODEL' model_fullname | 'OPERATOR' operator_fullname | 'TABLE' table_fullname ) 'IS' string ';' 
+ 
+ commit : 'COMMIT' ( 'WORK' )? ( ( 'COMMENT' string )? | ( 'WRITE' ( 'WAIT' | 'NOWAIT' )? ( 'IMMEDIATE' | 'BATCH' )? )? | 'FORCE' ( string ( ',' integer )? | 'CORRUPT_XID' string | 'CORRUPT_XID_ALL' ) )? ';' 
+
+ create : ( create_cluster | create_context | create_controlfile | create_database | create_database_LINK | create_dimension | create_directory | create_diskgroup | create_edition | create_flashback_ARCHIVE | create_function | create_indextype | create_java | create_library | create_materialized_view | create_materialized_view_log | create_operator | create_outline | create_package | create_package_body | create_pfile | create_procedure | create_profile | create_restore_point | create_role | create_rollback_segment | create_schema | create_sequence | create_spfile | create_synonym | create_table | create_tablespace | create_trigger | create_type | create_type_body | create_user | create_view )
+ 
+ create_cluster : 'CREATE' 'CLUSTER' cluster_fullname '(' column datatype ( 'SORT' )? ( ',' column datatype ( 'SORT' )? )* ')' ( ( physical_attributes_clause | 'SIZE' size_clause | 'TABLESPACE' tablespace | ( 'INDEX' | ( 'SINGLE' 'TABLE' )? 'HASHKEYS' integer ( 'HASH' 'IS' expr )? ) )+ )? ( parallel_clause )? ( 'NOROWDEPENDENCIES' | 'ROWDEPENDENCIES' )? ( 'CACHE' | 'NOCACHE' )? ';' 
+ 
+ create_context : 'CREATE' ( 'OR' 'REPLACE' )? 'CONTEXT' namespace 'USING' package_fullname ( 'INITIALIZED' ( 'EXTERNALLY' | 'GLOBALLY' ) | 'ACCESSED' 'GLOBALLY' )? ';' 
+
+ create_controlfile : 'CREATE' 'CONTROLFILE' ( 'REUSE' )? ( 'SET' )? 'DATABASE' database ( logfile_clause )? ( 'RESETLOGS' | 'NORESETLOGS' ) ( 'DATAFILE' file_specification ( ',' file_specification )* )? ( 'MAXLOGFILES' integer | 'MAXLOGMEMBERS' integer | 'MAXLOGHISTORY' integer | 'MAXDATAFILES' integer | 'MAXINSTANCES' integer | ( 'ARCHIVELOG' | 'NOARCHIVELOG' ) | 'FORCE' 'LOGGING' )* ( character_set_clause )? ';' 
+
+ create_database : 'CREATE' 'DATABASE' ( database )? ( 'USER' 'SYS' 'IDENTIFIED' 'BY' password | 'USER' 'SYSTEM' 'IDENTIFIED' 'BY' password | 'CONTROLFILE' 'REUSE' | 'MAXDATAFILES' integer | 'MAXINSTANCES' integer | 'CHARACTER' 'SET' charset | 'NATIONAL' 'CHARACTER' 'SET' charset | 'SET' 'DEFAULT' ( 'BIGFILE' | 'SMALLFILE' ) 'TABLESPACE' | database_logging_clauses | tablespace_clauses | set_time_zone_clause )+ ';' 
+
+ create_database_LINK : 'CREATE' ( 'SHARED' )? ( 'PUBLIC' )? 'DATABASE' 'LINK' dblink ( 'CONNECT' 'TO' ( 'CURRENT_USER' | user 'IDENTIFIED' 'BY' password ( dblink_authentication )? ) | dblink_authentication )* ( 'USING' connect_string )? ';' 
+
+ create_dimension : 'CREATE' 'DIMENSION' dimension_fullname level_clause ... ( hierarchy_clause | attribute_clause | extended_attribute_clause )+ ';' 
+
+ create_directory : 'CREATE' ( 'OR' 'REPLACE' )? 'DIRECTORY' directory 'AS' '"' path_name '"' ';' 
+
+ create_diskgroup : 'CREATE' 'DISKGROUP' diskgroup_name ( ( 'HIGH' | 'NORMAL' | 'EXTERNAL' ) 'REDUNDANCY' )? ( ( 'QUORUM' | 'REGULAR' )? ( 'FAILGROUP' failgroup_name )? 'DISK' qualified_disk_clause ( ',' qualified_disk_clause )* )+ ( 'ATTRIBUTE' ( '"' attribute_name '"' = '"' attribute_value '"' )+ )? ';' 
+
+ create_edition : 'CREATE' 'EDITION' edition ( 'AS' 'CHILD' 'OF' edition )? ';' 
+
+ create_flashback_ARCHIVE : 'CREATE' 'FLASHBACK' 'ARCHIVE' ( 'DEFAULT' )? flashback_archive 'TABLESPACE' tablespace ( flashback_archive_quota )? ( ( 'NO' )? 'OPTIMIZE' 'DATA' )? flashback_archive_retention ';' 
+
+ create_function : 'CREATE' ( 'OR' 'REPLACE' )? 'FUNCTION' plsql_source 
+
+ create_index : 'CREATE' ( 'UNIQUE' | 'BITMAP' )? 'INDEX' index_fullname 'ON' ( cluster_index_clause | table_index_clause | bitmap_join_index_clause ) ( 'UNUSABLE' )? ';' 
+
+ create_indextype : 'CREATE' ( 'OR' 'REPLACE' )? 'INDEXTYPE' indextype_fullname 'FOR' operator_fullname '(' parameter_type ( ',' parameter_type )* ')' ( ',' operator_fullname '(' parameter_type ( ',' parameter_type )* ')' )* using_type_clause ( 'WITH' 'LOCAL' ( 'RANGE' )? 'PARTITION' )? ( storage_table_clause )? ';' 
+
+ create_java : 'CREATE' ( 'OR' 'REPLACE' )? ( 'AND' ( 'RESOLVE' | 'COMPILE' ) )? ( 'NOFORCE' )? 'JAVA' ( ( 'SOURCE' | 'RESOURCE' ) 'NAMED' primary_name_fullname | 'CLASS' ( 'SCHEMA' schema_name )? ) ( invoker_rights_clause )? ( 'RESOLVER' '(' '(' match_string ( ',' )? ( schema_name | - ) ')'... ')' )? ( 'USING' ( 'BFILE' '(' directory_object_name ',' server_file_name ')' | ( 'CLOB' | 'BLOB' | 'BFILE' ) subquery | '"' key_for_blob '"' ) | 'AS' source_char ) ';' 
+ 
+ create_library : 'CREATE' ( 'OR' 'REPLACE' )? 'LIBRARY' plsql_source 
+
+ create_materialized_view : 'CREATE' 'MATERIALIZED' 'VIEW' materialized_view_fullname ( 'OF' object_type_fullname )? ( '(' ( scoped_table_ref_constraint | column_alias ( 'ENCRYPT' ( encryption_spec )? )? ) ( ',' ( scoped_table_ref_constraint | column_alias ( 'ENCRYPT' ( encryption_spec )? )? ) )* ')' )? ( 'ON' 'PREBUILT' 'TABLE' ( ( 'WITH' | 'WITHOUT' ) 'REDUCED' 'PRECISION' )? | physical_properties materialized_view_props ) ( 'USING' 'INDEX' ( physical_attributes_clause | 'TABLESPACE' tablespace )* | 'USING' 'NO' 'INDEX' )? ( create_mv_refresh )? ( 'FOR' 'UPDATE' )? ( ( 'DISABLE' | 'ENABLE' ) 'QUERY' 'REWRITE' )? 'AS' subquery ';' 
+
+ create_materialized_view_log : 'CREATE' 'MATERIALIZED' 'VIEW' 'LOG' 'ON' table_fullname ( physical_attributes_clause | 'TABLESPACE' tablespace | logging_clause | ( 'CACHE' | 'NOCACHE' ) )* ( parallel_clause )? ( table_partitioning_clauses )? ( 'WITH' ( ( 'OBJECT' 'ID' | 'PRIMARY' 'KEY' | 'ROWID' | 'SEQUENCE' | 'COMMIT' 'SCN' ) ( ( ',' 'OBJECT' 'ID' | ',' 'PRIMARY' 'KEY' | ',' 'ROWID' | ',' 'SEQUENCE' | ',' 'COMMIT' 'SCN' ) )* )? column_list_paren ( new_values_clause )? )? ( mv_log_purge_clause )? ';' 
+
+ create_operator : 'CREATE' ( 'OR' 'REPLACE' )? 'OPERATOR' operator_fullname binding_clause ';' 
+
+ create_outline : 'CREATE' ( 'OR' 'REPLACE' )? ( 'PUBLIC' | 'PRIVATE' )? 'OUTLINE' ( outline )? ( 'FROM' ( 'PUBLIC' | 'PRIVATE' )? source_outline )? ( 'FOR' 'CATEGORY' category_name )? ( 'ON' statement )? ';' 
+
+ create_package : 'CREATE' ( 'OR' 'REPLACE' )? 'PACKAGE' plsql_source 
+
+ create_package_body : 'CREATE' ( 'OR' 'REPLACE' )? 'PACKAGE' 'BODY' plsql_source 
+
+ create_pfile : 'CREATE' 'PFILE' ( = '"' pfile_name '"' )? 'FROM' ( 'SPFILE' ( = '"' spfile_name '"' )? | 'MEMORY') ';' 
+
+ create_procedure : 'CREATE' ( 'OR' 'REPLACE' )? 'PROCEDURE' plsql_source 
+
+ create_profile : 'CREATE' 'PROFILE' profile 'LIMIT' ( resource_parameters | password_parameters )+ ';' 
+
+ create_restore_point : 'CREATE' 'RESTORE' 'POINT' restore_point ( 'AS' 'OF' ( 'TIMESTAMP' | 'SCN') expr )? ( 'PRESERVE' | 'GUARANTEE' 'FLASHBACK' 'DATABASE' )? ';' 
+ 
+ create_role : 'CREATE' 'ROLE' role ( 'NOT' 'IDENTIFIED' | 'IDENTIFIED' ( 'BY' password | 'USING' package_fullname | 'EXTERNALLY' | 'GLOBALLY' ) )? ';' 
+
+ create_rollback_segment : 'CREATE' ( 'PUBLIC' )? 'ROLLBACK' 'SEGMENT' segment ( 'TABLESPACE' tablespace | storage_clause )* )? ';' 
+
+ create_schema : 'CREATE' 'SCHEMA' 'AUTHORIZATION' schema_name ( create_table | create_view | grant )+ ';' 
+
+ create_sequence : 'CREATE' 'SEQUENCE' sequence_fullname ( ( 'INCREMENT' 'BY' | 'START' 'WITH' ) integer | ( 'MAXVALUE' integer | 'NOMAXVALUE' ) | ( 'MINVALUE' integer | 'NOMINVALUE' ) | ( 'CYCLE' | 'NOCYCLE' ) | ( 'CACHE' integer | 'NOCACHE' ) | ( 'ORDER' | 'NOORDER' ) )* ';' 
+
+ create_spfile : 'CREATE' 'SPFILE' ( = '"' spfile_name '"' )? 'FROM' ( 'PFILE' ( = '"' pfile_name '"' )? | 'MEMORY' ) ';' 
+
+ create_synonym : 'CREATE' ( 'OR' 'REPLACE' )? ( 'PUBLIC' )? 'SYNONYM' synonym_fullname 'FOR' identifier_fullname ( @ dblink )? ';' 
+
+ create_table : 'CREATE' ( 'GLOBAL' 'TEMPORARY' )? 'TABLE' table_fullname ( relational_table | object_table | xmltype_table ) ';' 
+
+ create_tablespace : 'CREATE' ( 'BIGFILE' | 'SMALLFILE' )? ( permanent_tablespace_clause | temporary_tablespace_clause | undo_tablespace_clause ) ';' 
+
+ create_trigger : 'CREATE' ( 'OR' 'REPLACE' )? 'TRIGGER' plsql_source 
+
+ create_type : 'CREATE' ( 'OR' 'REPLACE' )? 'TYPE' plsql_source 
+
+ create_type_body : 'CREATE' ( 'OR' 'REPLACE' )? 'TYPE' 'BODY' plsql_source 
+
+ create_user : 'CREATE' 'USER' user 'IDENTIFIED' ( 'BY' password | 'EXTERNALLY' ( 'AS' '"' certificate_dn '"' | 'AS' '"' kerberos_principal_name '"' )? | 'GLOBALLY' ( 'AS' '"' ( directory_dn )? '"' )? ) ( 'DEFAULT' 'TABLESPACE' tablespace | 'TEMPORARY' 'TABLESPACE' ( tablespace | tablespace_group_name ) | ( 'QUOTA' ( size_clause | 'UNLIMITED' ) 'ON' tablespace )+ | 'PROFILE' profile | 'PASSWORD' 'EXPIRE' | 'ACCOUNT' ( 'LOCK' | 'UNLOCK' ) ( 'DEFAULT' 'TABLESPACE' tablespace | 'TEMPORARY' 'TABLESPACE' ( tablespace | tablespace_group_name ) | ( 'QUOTA' ( size_clause | 'UNLIMITED' ) 'ON' tablespace )+ | 'PROFILE' profile | 'PASSWORD' 'EXPIRE' | 'ACCOUNT' ( 'LOCK' | 'UNLOCK' ) | 'ENABLE' 'EDITIONS' )* )? ';' 
+
+ create_view : 'CREATE' ( 'OR' 'REPLACE' )? ( ( 'NO' )? 'FORCE' )? ( 'EDITIONING' )? 'VIEW' view_name_fullname ( '(' ( alias ( inline_constraint ... )? | out_of_line_constraint ) ( ',' ( alias ( inline_constraint ... )? | out_of_line_constraint ) )? ')' | object_view_clause | xmltype_view_clause )? 'AS' subquery ( subquery_restriction_clause )? ';' 
+
+ delete : 'DELETE' ( hint )? ( 'FROM' )? ( dml_table_expression_clause | 'ONLY' '(' dml_table_expression_clause ')' ) ( alias )? ( where_clause )? ( returning_clause )? ( error_logging_clause )? ';' 
+
+ disassociate_statistics : 'DISASSOCIATE' 'STATISTICS' 'FROM' ( 'COLUMNS' table_fullname '.' column ( ',' table_fullname '.' column )* | 'FUNCTIONS' identifier_fullname ( ',' identifier_fullname )* | 'PACKAGES' package_fullname ( ',' package_fullname )* | 'TYPES' type_fullname ( ',' type_fullname )* | 'INDEXES' index_fullname ( ',' index_fullname )* | 'INDEXTYPES' indextype_fullname ( ',' indextype_fullname )* ) ( 'FORCE' )? ';' 
+
+ drop : ( drop_cluster | drop_context | drop_database | drop_database_LINK | drop_dimension | drop_directory | drop_diskgroup | drop_edition | drop_flashback_archive | drop_function | drop_index | drop_indextype | drop_java | drop_library | drop_materialized_view | drop_materialized_view_log | drop_operator | drop_outline | drop_package | drop_procedure | drop_profile | drop_restore_point | drop_role | drop_rollback_segment | drop_sequence | drop_synonym | drop_table | drop_tablespace | drop_trigger | drop_type | drop_type_body | drop_user | drop_view )
+
+ drop_cluster : 'DROP' 'CLUSTER' cluster_fullname ( 'INCLUDING' 'TABLES' ( 'CASCADE' 'CONSTRAINTS' )? )? ';' 
+
+ drop_context : 'DROP' 'CONTEXT' namespace ';' 
+
+ drop_database : 'DROP' 'DATABASE' ';' 
+
+ drop_database_LINK : 'DROP' ( 'PUBLIC' )? 'DATABASE' 'LINK' dblink ';' 
+
+ drop_dimension : 'DROP' 'DIMENSION' dimension_fullname ';' 
+
+ drop_directory : 'DROP' 'DIRECTORY' directory ';' 
+
+ drop_diskgroup : 'DROP' 'DISKGROUP' diskgroup_name ( 'FORCE' 'INCLUDING' 'CONTENTS' | ( 'INCLUDING' | 'EXCLUDING' ) 'CONTENTS' )? ';' 
+
+ drop_edition : 'DROP' 'EDITION' edition ( 'CASCADE' )? ';' 
+
+ drop_flashback_archive : 'DROP' 'FLASHBACK' 'ARCHIVE' flashback_archive ';' 
+
+ drop_function : 'DROP' 'FUNCTION' function_name_fullname ';' 
+ 
+ drop_index : 'DROP' 'INDEX' index_fullname ( 'FORCE' )? ';' 
+
+ drop_indextype : 'DROP' 'INDEXTYPE' indextype_fullname ( 'FORCE' )? ';' 
+
+ drop_java : 'DROP' 'JAVA' ( 'SOURCE' | 'CLASS' | 'RESOURCE' ) identifier_fullname ';' 
+
+ drop_library : 'DROP' 'LIBRARY' library_name ';' 
+
+ drop_materialized_view : 'DROP' 'MATERIALIZED' 'VIEW' materialized_view_fullname ( 'PRESERVE' 'TABLE' )? ';' 
+
+ drop_materialized_view_log : 'DROP' 'MATERIALIZED' 'VIEW' 'LOG' 'ON' table_fullname ';' 
+
+ drop_operator : 'DROP' 'OPERATOR' operator_fullname ( 'FORCE' )? ';' 
+
+ drop_outline : 'DROP' 'OUTLINE' outline ';' 
+
+ drop_package : 'DROP' 'PACKAGE' ( 'BODY' )? package_fullname ';' 
+
+ drop_procedure : 'DROP' 'PROCEDURE' identifier_fullname ';' 
+
+ drop_profile : 'DROP' 'PROFILE' profile ( 'CASCADE' )? ';' 
+
+ drop_restore_point : 'DROP' 'RESTORE' 'POINT' restore_point ';' 
+
+ drop_role : 'DROP' 'ROLE' role ';' 
+
+ drop_rollback_segment : 'DROP' 'ROLLBACK' 'SEGMENT' segment ';' 
+
+ drop_sequence : 'DROP' 'SEQUENCE' sequence_fullname ';' 
+
+ drop_synonym : 'DROP' ( 'PUBLIC' )? 'SYNONYM' synonym_fullname ( 'FORCE' )? ';' 
+
+ drop_table : 'DROP' 'TABLE' table_fullname ( 'CASCADE' 'CONSTRAINTS' )? ( 'PURGE' )? ';' 
+
+ drop_tablespace : 'DROP' 'TABLESPACE' tablespace ( 'INCLUDING' 'CONTENTS' ( ( 'AND' | 'KEEP') 'DATAFILES' )? ( 'CASCADE' 'CONSTRAINTS' )? )? ';' 
+
+ drop_trigger : 'DROP' 'TRIGGER' trigger_fullname ';' 
+
+ drop_type : 'DROP' 'TYPE' type_name_fullname ( 'FORCE' | 'VALIDATE' )? ';' 
+
+ drop_type_body : 'DROP' 'TYPE' 'BODY' type_name_fullname ';' 
+
+ drop_user : 'DROP' 'USER' user ( 'CASCADE' )? ';' 
+
+ drop_view : 'DROP' 'VIEW' view_name_fullname ( 'CASCADE' 'CONSTRAINTS' )? ';' 
+
+ explain_plan : 'EXPLAIN' 'PLAN' ( 'SET' 'STATEMENT_ID' = string )? ( 'INTO' table_fullname ( @ dblink )? )? 'FOR' statement ';' 
+
+ flashback_database : 'FLASHBACK' ( 'STANDBY' )? 'DATABASE' ( database )? ( 'TO' ( ( 'SCN' | 'TIMESTAMP' ) expr | 'RESTORE' 'POINT' restore_point ) | 'TO' 'BEFORE' ( 'SCN' | 'TIMESTAMP') expr | 'RESETLOGS' ) ) ';' 
+
+ flashback_table : 'FLASHBACK' 'TABLE' table_fullname ( ',' table_fullname )* 'TO' ( ( ( 'SCN' | 'TIMESTAMP' ) expr | 'RESTORE' 'POINT' restore_point ) ( ( 'ENABLE' | 'DISABLE' ) 'TRIGGERS' )? | 'BEFORE' 'DROP' ( 'RENAME' 'TO' table )? ) ';' 
+
+ insert : 'INSERT' ( hint )? ( single_table_insert | multi_table_insert ) ';' 
+
+ lock_table : 'LOCK' 'TABLE' source_fullname ( partition_extension_clause | @ dblink )? ( ',' source_fullname ( partition_extension_clause | @ dblink )? )* 'IN' lockmode 'MODE' ( 'NOWAIT' | 'WAIT' integer )? ';' 
+
+ merge : 'MERGE' ( hint )? 'INTO' source_fullname ( alias )? 'USING' ( source_fullname | subquery ) ( alias )? 'ON' '(' condition ')' ( merge_update_clause )? ( merge_insert_clause )? ( error_logging_clause )? ';' 
+
+ noaudit : 'NOAUDIT' ( audit_operation_clause ( auditing_by_clause )? | audit_schema_object_clause | 'NETWORK' ) ( 'WHENEVER' ( 'NOT' )? 'SUCCESSFUL' )? ';' 
+
+ purge : 'PURGE' ( ( 'TABLE' table | 'INDEX' index ) | ( 'RECYCLEBIN' | 'DBA_RECYCLEBIN' ) | 'TABLESPACE' tablespace ( 'USER' username )? ) ';' 
+
+ rename : 'RENAME' old_name 'TO' new_name ';' 
+
+ revoke : 'REVOKE' ( revoke_system_privileges | revoke_object_privileges ) ';' 
+
+ rollback : 'ROLLBACK' ( 'WORK' )? ( 'TO' ( 'SAVEPOINT' )? savepoint | 'FORCE' string )? ';' 
+
+ savepoint : 'SAVEPOINT' savepoint ';' 
+
+ select : subquery ( for_update_clause )? ';' 
+
+ set_constraints : 'SET' ( 'CONSTRAINT' | 'CONSTRAINTS' ) ( constraint ( ',' constraint )* | 'ALL' ) ( 'IMMEDIATE' | 'DEFERRED' ) ';' 
+
+ set_role : 'SET' 'ROLE' ( role ( 'IDENTIFIED' 'BY' password )? ( ',' role ( 'IDENTIFIED' 'BY' password )? )* | 'ALL' ( 'EXCEPT' role ( ',' role )* )? | 'NONE' ) ';' 
+
+ set_transaction : 'SET' 'TRANSACTION' ( ( 'READ' ( 'ONLY' | 'WRITE' ) | 'ISOLATION' 'LEVEL' ( 'SERIALIZABLE' | 'READ' 'COMMITTED' ) | 'USE' 'ROLLBACK' 'SEGMENT' segment ) ( 'NAME' string )? | 'NAME' string ) ';' 
+
+ truncate_cluster : 'TRUNCATE' 'CLUSTER' cluster_fullname ( ( 'DROP' | 'REUSE') 'STORAGE' )? ';' 
+
+ truncate_table : 'TRUNCATE' 'TABLE' table_fullname ( ( 'PRESERVE' | 'PURGE') 'MATERIALIZED' 'VIEW' 'LOG' )? ( ( 'DROP' ( 'ALL' )? | 'REUSE') 'STORAGE' )? ';' 
+
+ update : 'UPDATE' ( hint )? ( dml_table_expression_clause | 'ONLY' '(' dml_table_expression_clause ')' ) ( alias )? update_set_clause ( where_clause )? ( returning_clause )? ( error_logging_clause )? ';' 
+
+ sql_functions : ( abs | acos | add_months | analytic_function | appendchildxml | ascii | asciistr | asin | atan | atan2 | avg | bfilename | bin_to_num | bitand | cardinality | cast | ceil | chartorowid | chr | cluster_id | cluster_probability | cluster_set | coalesce | compose | collect | concat | convert | corr | corr_k | corr_s | cos | cosh | count | covar_pop | covar_sampr_s | cube_table | current_date | current_timestamp | cv | dataobj_to_partition | dbtimezone | decode | decompose | deletexml | depth | deref | dump | empty_blob_comma_EMPTY_CLOB | existsnode | exp | extract_datetime | extract_XML | extractvalue | feature_id | feature_set | feature_value | first | first_value | floor | from_tz | greatest | group_id | grouping | grouping_id | hextoraw | initcap | insertchildxml | insertchildxmlafter | insertchildxmlbefore | insertxmlafter | insertxmlbefore | instr | iteration_number | lag | last | last_day | last_value | lead | least | length | listagg | ln | lnnvl | localtimestamp | log | lower | lpad | ltrim | trim | make_ref | max | median | min | mod | months_between | nanvl | ncgr | new_time | new_day | nls_charset_decl_len | nls_charset_id | nls_charset_name | nls_initcap | nls_lower | nls_upper | nlssort | nth_value | ntile | nullif | numtodsinterval | numtoyminterval | nvl | nvl2 | ora_dst_affected | ora_dst_convert | ora_dst_error | ora_hash | path | percentile_cont | percentile_disc | power | powermultiset | powermultiset_by_cardinality | prediction | prediction_bounds | prediction_cost | prediction_details | prediction_probability | prediction_set | presentnnv | presentv | previous | ratio_to_report | rawtohex | rawtonhex | ref | reftohex | ref | reftohex | regexp_count | regexp_instr | regexp_replace | regexp_substr | regr_avgx | regr_avgy | regr_count | regr_intercept | regr_r2 | regr_slope | regr_sxx | regr_sxy | regr_syy | remainder | replace | round_date | round_number | row_number | rowidtochar | rowtonchar | rpad | rtrim | scn_to_timestamp | sessiontimezone | set | sign | sin | sinh | soundex | sqrt | stats_binomial_test | stats_crosstab | stats_f_test | stats_ks_test | stats_mode | stats_mw_test | stats_one_way_anova | stats_t_test_methods | stats_wsr_test | stddev | stddev_pop | stddev_samp | substr | sum | sys_connect_by_path | sys_context | sys_dburigen | sys_extract_utc | sys_guid | sys_typeid | sys_xmlagg | sys_xmlgen | systate | systimestamp | tan | tanh | timestamp | to_binary_double | to_binary_float | to_blob | to_char_character | to_char_datetime | to_char_number | to_clob | to_date | to_dsinterval | to_lob | to_multi_byte | to_nchar_character | to_nchar_datetime | to_nchar_number | to_nclob | to_number | to_single_byte | to_timestamp | to_timestamp_tz | to_yminterval | translate | translate_using | treat | trunc_date | trunc_number | tz_offset | uid | unistr | updatexml | upper | user | user_defined_function | userenv | value | var_pop | var_samp | variance | vsize | width_bucket | xmlagg | xmlcast | xmlcdata | xmlcolattval | xmlcomment | xmlconcat | xmldiff | xmlelement | xmlexists | xmlforest | xmlisvalid | xmlparse | xmlpatch | xmlpi | xmlquery | xmlroot | xmlsequence | xmlserialize | xmltable | xmltransform | analytic_functions | aggregate_functions ) 
+ 
+ analytic_functions : ( rank_analytic | cume_dist_analytic | percent_rank_analytic | dense_rank_analytic | rank_aggregate )
+
+ aggregate_functions : ( cume_dist_aggregate | dense_rank_aggregate | percent_rank_aggregate | rank_aggregate | rank_analytic )
+
+ abs : 'ABS' '(' n ')'
+
+ acos : 'ACOS' '(' n ')'
+
+ add_months : 'ADD_MONTHS' '(' date ',' integer ')'
+
+ analytic_function : analytic_function '(' ( arguments )? ')' 'OVER' '(' analytic_clause ')'
+
+ arguments : ( argument ( ',' argument )* )
+
+ appendchildxml : 'APPENDCHILDXML' '(' xmltype_instance ',' xpath_string ',' expr ( ',' namespace_string )? ')'
+
+ ascii : 'ASCII' '(' char ')'
+
+ asciistr : 'ASCIISTR' '(' char ')'
+
+ asin : 'ASIN' '(' n ')'
+
+ atan : 'ATAN' '(' n ')'
+
+ atan2 : 'ATAN2' '(' n ',' n ')'
+
+ avg : 'AVG' '(' ( 'DISTINCT' | 'ALL' )? expr ')' ( 'OVER' '(' analytic_clause ')' )?
+
+ bfilename : 'BFILENAME' '(' '"' directory '"' ',' '"' filename '"' ')'
+
+ bin_to_num : 'BIN_TO_NUM' '(' expr ( ',' expr )* ')'
+
+ bitand : 'BITAND' '(' expr ',' expr ')'
+
+ cardinality : 'CARDINALITY' '(' nested_table ')'
+
+ cast : 'CAST' '(' ( expr | 'MULTISET' '(' subquery ')' ) 'AS' type_name ')'
+
+ ceil : 'CEIL' '(' n ')'
+
+ chartorowid : 'CHARTOROWID' '(' char ')'
+
+ chr : 'CHR' '(' n ( 'USING' 'NCHAR_CS' )? ')'
+
+ cluster_id : 'CLUSTER_ID' '(' model_fullname mining_attribute_clause ')'
+
+ cluster_probability : 'CLUSTER_PROBABILITY' '(' model_fullname ( ',' cluster_id )? mining_attribute_clause ')'
+
+ cluster_set : 'CLUSTER_SET' '(' model_fullname ( ',' top N ( ',' cutoff )? )? mining_attribute_clause ')'
+
+ coalesce : 'COALESCE' '(' expr ( ',' expr )* ')'
+
+ collect : 'COLLECT' '(' ( 'DISTINCT' | 'UNIQUE' )? column ( 'ORDER' 'BY' expr )? ')'
+
+ compose : 'COMPOSE' '(' char ')'
+
+ concat : 'CONCAT' '(' char ',' char ')'
+
+ convert : 'CONVERT' '(' char ',' dest_char_set ( ',' source_char_set )? ')'
+
+ corr : 'CORR' '(' expr ',' expr ')' ( 'OVER' '(' analytic_clause ')' )?
+
+ corr_ : ( 'CORR_K' | 'CORR_S' ) '(' expr ',' expr ( ',' ( 'COEFFICIENT' | 'ONE_SIDED_SIG' | 'ONE_SIDED_SIG_POS' | 'ONE_SIDED_SIG_NEG' | 'TWO_SIDED_SIG' ) )? ')'
+
+ cos : 'COS' '(' n ')'
+
+ cosh : 'COSH' '(' n ')'
+
+ count : 'COUNT' '(' ( * | ( 'DISTINCT' | 'ALL' )? expr ) ')' ( 'OVER' '(' analytic_clause ')' )?
+
+ covar_pop : 'COVAR_POP' '(' expr ',' expr ')' ( 'OVER' '(' analytic_clause ')' )?
+
+ covar_samp : 'COVAR_SAMP' '(' expr ',' expr ')' ( 'OVER' '(' analytic_clause ')' )?
+
+ cube_table : 'CUBE_TABLE' '(' '"' ( schema_name '.' cube ( ( 'HIERARCHY' | 'HRR') dimension hierarchy )* | schema_name '.' dimension ( ( 'HIERARCHY' | 'HRR') ( dimension )? hierarchy )? ) '"' ')'
+
+ cume_dist_aggregate : 'CUME_DIST' '(' expr ( ',' expr )* ')' 'WITHIN' 'GROUP' '(' 'ORDER' 'BY' expr ( 'DESC' | 'ASC' )? ( 'NULLS' ( 'FIRST' | 'LAST' ) )? ( ',' expr ( 'DESC' | 'ASC' )? ( 'NULLS' ( 'FIRST' | 'LAST' ) )? )* ')'
+
+ cume_dist_analytic : 'CUME_DIST' '(' ')' 'OVER' '(' ( query_partition_clause )? order_by_clause ')'
+
+ current_date : 'CURRENT_DATE'
+
+ current_timestamp : 'CURRENT_TIMESTAMP' ( '(' precision ')' )?
+
+ cv : 'CV' '(' ( dimension_column )? ')'
+
+ dataobj_to_partition : 'DATAOBJ_TO_PARTITION' '(' table ',' partition_id ')'
+
+ dbtimezone : 'DBTIMEZONE'
+
+ decode : 'DECODE' '(' expr ',' search ',' result ( ',' search ',' result )* ( ',' default )? ')'
+
+ decompose : 'DECOMPOSE' '(' string ( ',' ( '"' 'CANONICAL' '"' | '"' 'COMPATIBILITY' '"' ) )? ')'
+
+ deletexml : 'DELETEXML' '(' xmltype_instance ',' xpath_string ( ',' namespace_string )? ')'
+
+ dense_rank_aggregate : 'DENSE_RANK' '(' expr ( ',' expr )* ')' 'WITHIN' 'GROUP' '(' 'ORDER' 'BY' expr ( 'DESC' | 'ASC' )? ( 'NULLS' ( 'FIRST' | 'LAST' ) )? ( ',' expr ( 'DESC' | 'ASC' )? ( 'NULLS' ( 'FIRST' | 'LAST' ) )? )* ')'
+
+ dense_rank_analytic : 'DENSE_RANK' '(' ')' 'OVER' '(' ( query_partition_clause )? order_by_clause ')'
+
+ depth : 'DEPTH' '(' correlation_integer ')'
+
+ deref : 'DEREF' '(' expr ')'
+
+ dump : 'DUMP' '(' expr ( ',' return_fmt ( ',' start_position ( ',' length )? )? )? ')'
+
+ empty_blob_comma_EMPTY_CLOB : ( 'EMPTY_BLOB' | 'EMPTY_CLOB' ) '(' ')'
+
+ existsnode : 'EXISTSNODE' '(' xmltype_instance ',' xpath_string ( ',' namespace_string )? ')'
+
+ exp : 'EXP' '(' n ')'
+
+ extract_datetime : 'EXTRACT' '(' ( 'YEAR' | 'MONTH' | 'DAY' | 'HOUR' | 'MINUTE' | 'SECOND' | 'TIMEZONE_HOUR' | 'TIMEZONE_MINUTE' | 'TIMEZONE_REGION' | 'TIMEZONE_ABBR' ) 'FROM' ( expr ) ')'
+
+ extract_XML : 'EXTRACT' '(' xmltype_instance ',' xpath_string ( ',' namespace_string )? ')'
+
+ extractvalue : 'EXTRACTVALUE' '(' xmltype_instance ',' xpath_string ( ',' namespace_string )? ')'
+
+ feature_id : 'FEATURE_ID' '(' model_fullname mining_attribute_clause ')'
+
+ feature_set : 'FEATURE_SET' '(' model_fullname ( ',' top N ( ',' cutoff )? )? mining_attribute_clause ')'
+
+ feature_value : 'FEATURE_VALUE' '(' model_fullname ( ',' feature_id )? mining_attribute_clause ')'
+
+ first : 'KEEP' '(' 'DENSE_RANK' 'FIRST' 'ORDER' 'BY' expr ( 'DESC' | 'ASC' )? ( 'NULLS' ( 'FIRST' | 'LAST' ) )? ( ',' expr ( 'DESC' | 'ASC' )? ( 'NULLS' ( 'FIRST' | 'LAST' ) )? )* ')' ( 'OVER' '(' ( query_partition_clause )? ')' )?
+
+ first_value : 'FIRST_VALUE' ( '(' expr ')' ( ( 'RESPECT' | 'IGNORE') 'NULLS' )? | '(' expr ( ( 'RESPECT' | 'IGNORE') 'NULLS' )? ')' ) 'OVER' '(' analytic_clause ')'
+
+ floor : 'FLOOR' '(' n ')'
+
+ from_tz : 'FROM_TZ' '(' timestamp_value ',' time_zone_value ')'
+
+ greatest : 'GREATEST' '(' expr ( ',' expr )* ')'
+
+ group_id : 'GROUP_ID' '(' ')'
+
+ grouping : 'GROUPING' '(' expr ')'
+
+ grouping_id : 'GROUPING_ID' '(' expr ( ',' expr )* ')'
+
+ hextoraw : 'HEXTORAW' '(' char ')'
+
+ initcap : 'INITCAP' '(' char ')'
+
+ insertchildxml : 'INSERTCHILDXML' '(' xmltype_instance ',' xpath_string ',' child_expr ',' value_expr ( ',' namespace_string )? ')'
+
+ insertchildxmlafter : 'INSERTCHILDXMLAFTER' '(' xmltype_instance ',' xpath_string ',' child_expr ',' value_expr ( ',' namespace_string )? ')'
+
+ insertchildxmlbefore : 'INSERTCHILDXMLBEFORE' '(' xmltype_instance ',' xpath_string ',' child_expr ',' value_expr ( ',' namespace_string )? ')'
+
+ insertxmlafter : 'INSERTXMLAFTER' '(' xmltype_instance ',' xpath_string ',' value_expr ( ',' namespace_string )? ')'
+
+ insertxmlbefore : 'INSERTXMLBEFORE' '(' xmltype_instance ',' xpath_string ',' value_expr ( ',' namespace_string )? ')'
+
+ instr : ( 'INSTR' | 'INSTRB' | 'INSTRC' | 'INSTR2' | 'INSTR4' ) '(' string ',' substring ( ',' position ( ',' occurrence )? )? ')'
+
+ iteration_number : 'ITERATION_NUMBER'
+
+ lag : 'LAG' ( '(' value_expr ( ',' offset ( ',' default )? )? ')' ( ( 'RESPECT' | 'IGNORE' ) 'NULLS' )? | '(' value_expr ( ( 'RESPECT' | 'IGNORE' ) 'NULLS' )? ( ',' offset ( ',' default )? )? ')' ) 'OVER' '(' ( query_partition_clause )? order_by_clause ')'
+
+ last : 'KEEP' '(' 'DENSE_RANK' 'LAST' 'ORDER' 'BY' expr ( 'DESC' | 'ASC' )? ( 'NULLS' ( 'FIRST' | 'LAST' ) )? ( ',' expr ( 'DESC' | 'ASC' )? ( 'NULLS' ( 'FIRST' | 'LAST' ) )? )* ')' ( 'OVER' '(' ( query_partition_clause )? ')' )?
+
+ last_day : 'LAST_DAY' '(' date ')'
+
+ last_value : 'LAST_VALUE' ( '(' expr ')' ( ( 'RESPECT' | 'IGNORE' ) 'NULLS' )? | '(' expr ( ( 'RESPECT' | 'IGNORE' ) 'NULLS' )? ')' 'OVER' '(' analytic_clause ')'
+
+ lead : 'LEAD' ( '(' value_expr ( ',' offset ( ',' default )? )? ')' ( ( 'RESPECT' | 'IGNORE' ) 'NULLS' )? | '(' value_expr ( ( 'RESPECT' | 'IGNORE' ) 'NULLS' )? ( ',' offset ( ',' default )? )? ')' ) 'OVER' '(' ( query_partition_clause )? order_by_clause ')'
+
+ least : 'LEAST' '(' expr ( ',' expr )* ')'
+
+ length : ( 'LENGTH' | 'LENGTHB' | 'LENGTHC' | 'LENGTH2' | 'LENGTH4' ) '(' char ')'
+
+ listagg : 'LISTAGG' '(' measure_expr ( ',' '"' delimiter '"' )? ')' 'WITHIN' 'GROUP' '(' order_by_clause ')' ( 'OVER' query_partition_clause )?
+
+ ln : 'LN' '(' n ')'
+
+ lnnvl : 'LNNVL' '(' condition ')'
+
+ localtimestamp : 'LOCALTIMESTAMP' ( '(' timestamp_precision ')' )?
+
+ log : 'LOG' '(' n ',' n ')'
+
+ lower : 'LOWER' '(' char ')'
+
+ lpad : 'LPAD' '(' expr ',' n ( ',' expr )? ')'
+
+ ltrim : 'LTRIM' '(' char ( ',' set )? ')'
+
+ make_ref : 'MAKE_REF' '(' ( table | view_name ) ',' key ( ',' key )* ')'
+
+ max : 'MAX' '(' ( 'DISTINCT' | 'ALL' )? expr ')' ( 'OVER' '(' analytic_clause ')' )?
+
+ median : 'MEDIAN' '(' expr ')' ( 'OVER' '(' query_partition_clause ')' )?
+
+ min : 'MIN' '(' ( 'DISTINCT' | 'ALL' )? expr ')' ( 'OVER' '(' analytic_clause ')' )?
+
+ mod : 'MOD' '(' n ',' n ')'
+
+ months_between : 'MONTHS_BETWEEN' '(' date ',' date ')'
+
+ nanvl : 'NANVL' '(' n ',' n ')'
+
+ nchr : 'NCHR' '(' number ')'
+
+ new_time : 'NEW_TIME' '(' date ',' timezone ',' timezone ')'
+
+ next_day : 'NEXT_DAY' '(' date ',' char ')'
+
+ nls_charset_decl_len : 'NLS_CHARSET_DECL_LEN' '(' byte_count ',' '"' char_set_id '"' ')'
+
+ nls_charset_id : 'NLS_CHARSET_ID' '(' string ')'
+
+ nls_charset_name : 'NLS_CHARSET_NAME' '(' number ')'
+
+ nls_initcap : 'NLS_INITCAP' '(' char ( ',' '"' nlsparam '"' )? ')'
+
+ nls_lower : 'NLS_LOWER' '(' char ( ',' '"' nlsparam '"' )? ')'
+
+ nls_upper : 'NLS_UPPER' '(' char ( ',' '"' nlsparam '"' )? ')'
+
+ nlssort : 'NLSSORT' '(' char ( ',' '"' nlsparam '"' )? ')'
+
+ nth_value : 'NTH_VALUE' '(' measure_expr ',' n ')' ( 'FROM' ( 'FIRST' | 'LAST' ) )? ( ( 'RESPECT' | 'IGNORE' ) 'NULLS' )? 'OVER' '(' analytic_clause ')'
+
+ ntile : 'NTILE' '(' expr ')' 'OVER' '(' ( query_partition_clause )? order_by_clause ')'
+
+ nullif : 'NULLIF' '(' expr ',' expr ')'
+
+ numtodsinterval : 'NUMTODSINTERVAL' '(' n ',' '"' interval_unit '"' ')'
+
+ numtoyminterval : 'NUMTOYMINTERVAL' '(' n ',' '"' interval_unit '"' ')'
+
+ nvl : 'NVL' '(' expr ',' expr ')'
+
+ nvl2 : 'NVL2' '(' expr ',' expr ',' expr ')'
+
+ ora_dst_affected : 'ORA_DST_AFFECTED' '(' datetime_expressions ')'
+
+ ora_dst_convert : 'ORA_DST_CONVERT' '(' datetime_expressions ( ',' integer ( ',' integer )? )? ')'
+
+ ora_dst_error : 'ORA_DST_ERROR' '(' datetime_expressions ')'
+
+ ora_hash : 'ORA_HASH' '(' expr ( ',' max_bucket ( ',' seed_value )? )? ')'
+
+ path : 'PATH' '(' correlation_integer ')'
+
+ percent_rank_aggregate : 'PERCENT_RANK' '(' expr ( ',' expr )* ')' 'WITHIN' 'GROUP' '(' 'ORDER' 'BY' expr ( 'DESC' | 'ASC' )? ( 'NULLS' ( 'FIRST' | 'LAST' ) )? ( ',' expr ( 'DESC' | 'ASC' )? ( 'NULLS' ( 'FIRST' | 'LAST' ) )? )* ')'
+
+ percent_rank_analytic : 'PERCENT_RANK' '(' ')' 'OVER' '(' ( query_partition_clause )? order_by_clause ')'
+
+ percentile_cont : 'PERCENTILE_CONT' '(' expr ')' 'WITHIN' 'GROUP' '(' 'ORDER' 'BY' expr ( 'DESC' | 'ASC' )? ')' ( 'OVER' '(' query_partition_clause ')' )?
+
+ percentile_disc : 'PERCENTILE_DISC' '(' expr ')' 'WITHIN' 'GROUP' '(' 'ORDER' 'BY' expr ( 'DESC' | 'ASC' )? ')' ( 'OVER' '(' query_partition_clause ')' )?
+
+ power : 'POWER' '(' n ',' n ')'
+
+ powermultiset : 'POWERMULTISET' '(' expr ')'
+
+ powermultiset_by_cardinality : 'POWERMULTISET_BY_CARDINALITY' '(' expr ',' cardinality ')'
+
+ prediction : 'PREDICTION' '(' model_fullname ( cost_matrix_clause )? mining_attribute_clause ')'
+
+ prediction_bounds : 'PREDICTION_BOUNDS' '(' model_fullname ( ',' confidence_level ( ',' class_value )? )? mining_attribute_clause ')'
+
+ prediction_cost : 'PREDICTION_COST' '(' model_fullname ( ',' class )? cost_matrix_clause mining_attribute_clause ')'
+
+ prediction_details : 'PREDICTION_DETAILS' '(' model_fullname mining_attribute_clause ')'
+
+ prediction_probability : 'PREDICTION_PROBABILITY' '(' model_fullname ( ',' class )? mining_attribute_clause ')'
+
+ prediction_set : 'PREDICTION_SET' '(' model_fullname ( ',' best N ( ',' cutoff )? )? ( cost_matrix_clause )? mining_attribute_clause ')'
+
+ presentnnv : 'PRESENTNNV' '(' cell_reference ',' expr ',' expr ')'
+
+ presentv : 'PRESENTV' '(' cell_reference ',' expr ',' expr ')'
+
+ previous : 'PREVIOUS' '(' cell_reference ')'
+
+ rank_aggregate : 'RANK' '(' expr ( ',' expr )* ')' 'WITHIN' 'GROUP' '(' 'ORDER' 'BY' expr ( 'DESC' | 'ASC' )? ( 'NULLS' ( 'FIRST' | 'LAST' ) )? ( ',' expr ( 'DESC' | 'ASC' )? ( 'NULLS' ( 'FIRST' | 'LAST' ) )? )* ')'
+
+ rank_analytic : 'RANK' '(' ')' 'OVER' '(' ( query_partition_clause )? order_by_clause ')'
+
+ ratio_to_report : 'RATIO_TO_REPORT' '(' expr ')' 'OVER' '(' ( query_partition_clause )? ')'
+
+ rawtohex : 'RAWTOHEX' '(' raw ')'
+
+ rawtonhex : 'RAWTONHEX' '(' raw ')'
+
+ ref : 'REF' '(' correlation_variable ')'
+
+ reftohex : 'REFTOHEX' '(' expr ')'
+
+ regexp_count : 'REGEXP_COUNT' '(' source_char ',' pattern ( ',' position ( ',' match_param )? )? ')'
+
+ regexp_instr : 'REGEXP_INSTR' '(' source_char ',' pattern ( ',' position ( ',' occurrence ( ',' return_opt ( ',' match_param ( ',' subexpr )? )? )? )? )?
+
+ regexp_replace : 'REGEXP_REPLACE' '(' source_char ',' pattern ( ',' replace_string ( ',' position ( ',' occurrence ( ',' match_param )? )? )? )? ')'
+
+ regexp_substr : 'REGEXP_SUBSTR' '(' source_char ',' pattern ( ',' position ( ',' occurrence ( ',' match_param ( ',' subexpr )? )? )? )? ')'
+
+ regr_methods : ( 'REGR_SLOPE' | 'REGR_INTERCEPT' | 'REGR_COUNT' | 'REGR_R2' | 'REGR_AVGX' | 'REGR_AVGY' | 'REGR_SXX' | 'REGR_SYY' | 'REGR_SXY') '(' expr ',' expr ')' ( 'OVER' '(' analytic_clause ')' )?
+
+ remainder : 'REMAINDER' '(' n ',' n ')'
+
+ replace : 'REPLACE' '(' char ',' string ( ',' string )? ')'
+
+ round_date : 'ROUND' '(' date ( ',' fmt )? ')'
+
+ round_number : 'ROUND' '(' n ( ',' integer )? ')'
+
+ row_number : 'ROW_NUMBER' '(' ')' 'OVER' '(' ( query_partition_clause )? order_by_clause ')'
+
+ rowidtochar : 'ROWIDTOCHAR' '(' rowid ')'
+
+ rowidtonchar : 'ROWIDTONCHAR' '(' rowid ')'
+
+ rpad : 'RPAD' '(' expr ',' n ( ',' expr )? ')'
+
+ rtrim : 'RTRIM' '(' char ( ',' set )? ')'
+
+ scn_to_timestamp : 'SCN_TO_TIMESTAMP' '(' number ')'
+
+ sessiontimezone : 'SESSIONTIMEZONE'
+
+ set : 'SET' '(' nested_table ')'
+
+ sign : 'SIGN' '(' n ')'
+
+ sin : 'SIN' '(' n ')'
+
+ sinh : 'SINH' '(' n ')'
+
+ soundex : 'SOUNDEX' '(' char ')'
+
+ sqrt : 'SQRT' '(' n ')'
+
+ stats_binomial_test : 'STATS_BINOMIAL_TEST' '(' expr ',' expr ',' p ( ',' ( 'TWO_SIDED_PROB' | 'EXACT_PROB' | 'ONE_SIDED_PROB_OR_MORE' | 'ONE_SIDED_PROB_OR_LESS' ) )? ')'
+
+ stats_crosstab : 'STATS_CROSSTAB' '(' expr ',' expr ( ',' ( 'CHISQ_OBS' | 'CHISQ_SIG' | 'CHISQ_DF' | 'PHI_COEFFICIENT' | 'CRAMERS_V' | 'CONT_COEFFICIENT' | 'COHENS_K' ) )? ')'
+
+ stats_f_test : 'STATS_F_TEST' '(' expr ',' expr ( ',' ( ( 'STATISTIC' | 'DF_NUM' | 'DF_DEN' | 'ONE_SIDED_SIG' ) ',' expr | 'TWO_SIDED_SIG' ) )? ')'
+
+ stats_ks_test : 'STATS_KS_TEST' '(' expr ',' expr ( ',' ( 'STATISTIC' | 'SIG' ) )? ')'
+
+ stats_mode : 'STATS_MODE' '(' expr ')'
+
+ stats_mw_test : 'STATS_MW_TEST' '(' expr ',' expr ( ',' ( 'STATISTIC' | 'U_STATISTIC' | 'ONE_SIDED_SIG' ',' expr | 'TWO_SIDED_SIG' ) )? ')'
+
+ stats_one_way_anova : 'STATS_ONE_WAY_ANOVA' '(' expr ',' expr ( ',' ( 'SUM_SQUARES_BETWEEN' | 'SUM_SQUARES_WITHIN' | 'DF_BETWEEN' | 'DF_WITHIN' | 'MEAN_SQUARES_BETWEEN' | 'MEAN_SQUARES_WITHIN' | 'F_RATIO' | 'SIG' ) )? ')'
+
+ stats_t_test_methods : ( 'STATS_T_TEST_ONE' '(' expr ( ',' expr )? | ( ( 'STATS_T_TEST_PAIRED' | 'STATS_T_TEST_INDEP' | 'STATS_T_TEST_INDEPU' ) '(' expr ',' expr )) ( ',' ( ( 'STATISTIC' | 'ONE_SIDED_SIG' ) ',' expr | 'TWO_SIDED_SIG' | 'DF' ) )? ')'
+
+ stats_wsr_test : 'STATS_WSR_TEST' '(' expr ',' expr ( ',' ( 'STATISTIC' | 'ONE_SIDED_SIG' | 'TWO_SIDED_SIG' ) )? ')'
+
+ stddev : 'STDDEV' '(' ( 'DISTINCT' | 'ALL' )? expr ')' ( 'OVER' '(' analytic_clause ')' )?
+
+ stddev_pop : 'STDDEV_POP' '(' expr ')' ( 'OVER' '(' analytic_clause ')' )?
+
+ stddev_samp : 'STDDEV_SAMP' '(' expr ')' ( 'OVER' '(' analytic_clause ')' )?
+
+ substr : ( 'SUBSTR' | 'SUBSTRB' | 'SUBSTRC' | 'SUBSTR2' | 'SUBSTR4' ) '(' char ',' position ( ',' substring_length )? ')'
+
+ sum : 'SUM' '(' ( 'DISTINCT' | 'ALL' )? expr ')' ( 'OVER' '(' analytic_clause ')' )?
+
+ sys_connect_by_path : 'SYS_CONNECT_BY_PATH' '(' column ',' char ')'
+
+ sys_context : 'SYS_CONTEXT' '(' '"' namespace '"' ',' '"' parameter '"' ( ',' length )? ')'
+
+ sys_dburigen : 'SYS_DBURIGEN' '(' ( column | attribute ) ( rowid )? ( ',' ( column | attribute ) ( rowid )? )* ( ',' '"' text '(' ')' '"' )? ')'
+
+ sys_extract_utc : 'SYS_EXTRACT_UTC' '(' datetime_with_timezone ')'
+
+ sys_guid : 'SYS_GUID' '(' ')'
+
+ sys_typeid : 'SYS_TYPEID' '(' object_type_value ')'
+
+ sys_xmlagg : 'SYS_XMLAGG' '(' expr ( ',' fmt )? ')'
+
+ sys_xmlgen : 'SYS_XMLGEN' '(' expr ( ',' fmt )? ')'
+
+ sysdate : 'SYSDATE'
+
+ systimestamp : 'SYSTIMESTAMP'
+
+ tan : 'TAN' '(' n ')'
+
+ tanh : 'TANH' '(' n ')'
+
+ timestamp_to_scn : 'TIMESTAMP_TO_SCN' '(' timestamp ')'
+
+ to_binary_double : 'TO_BINARY_DOUBLE' '(' expr ( ',' fmt ( ',' '"' nlsparam '"' )? )? ')'
+
+ to_binary_float : 'TO_BINARY_FLOAT' '(' expr ( ',' fmt ( ',' '"' nlsparam '"' )? )? ')'
+
+ to_blob : 'TO_BLOB' '(' raw_value ')'
+
+ to_char_character : 'TO_CHAR' '(' nchar | clob | nclob ')'
+
+ to_char_datetime : 'TO_CHAR' '(' ( datetime | interval ) ( ',' fmt ( ',' '"' nlsparam '"' )? )? ')'
+
+ to_char_number : 'TO_CHAR' '(' n ( ',' fmt ( ',' '"' nlsparam '"' )? )? ')'
+
+ to_clob : 'TO_CLOB' '(' lob_column | char ')'
+
+ to_date : 'TO_DATE' '(' char ( ',' fmt ( ',' '"' nlsparam '"' )? )? ')'
+
+ to_dsinterval : 'TO_DSINTERVAL' '(' '"' ( sql_format | ds_iso_format ) '"' ')'
+
+ to_lob : 'TO_LOB' '(' long_column ')'
+
+ to_multi_byte : 'TO_MULTI_BYTE' '(' char ')'
+
+ to_nchar_character : 'TO_NCHAR' '(' ( char | clob | nclob ) ')'
+
+ to_nchar_datetime : 'TO_NCHAR' '(' ( datetime | interval ) ( ',' fmt ( ',' '"' nlsparam '"' )? )? ')'
+
+ to_nchar_number : 'TO_NCHAR' '(' n ( ',' fmt ( ',' '"' nlsparam '"' )? )? ')'
+
+ to_nclob : 'TO_NCLOB' '(' lob_column | char ')'
+
+ to_number : 'TO_NUMBER' '(' expr ( ',' fmt ( ',' '"' nlsparam '"' )? )? ')'
+
+ to_single_byte : 'TO_SINGLE_BYTE' '(' char ')'
+
+ to_timestamp : 'TO_TIMESTAMP' '(' char ( ',' fmt ( ',' '"' nlsparam '"' )? )? ')'
+
+ to_timestamp_tz : 'TO_TIMESTAMP_TZ' '(' char ( ',' fmt ( ',' '"' nlsparam '"' )? )? ')'
+
+ to_yminterval : 'TO_YMINTERVAL' '(' '"' ( ( +|- )? years - months | ym_iso_format ) '"' ')'
+
+ translate : 'TRANSLATE' '(' expr ',' from_string ',' to_string ')'
+
+ translate_using : 'TRANSLATE' '(' char 'USING' ( 'CHAR_CS' | 'NCHAR_CS' ) ')'
+
+ treat : 'TREAT' '(' expr 'AS' ( 'REF' )? type_fullname ')'
+
+ trim : 'TRIM' '(' ( ( ( 'LEADING' | 'TRAILING' | 'BOTH' ) ( trim_character )? | trim_character ) 'FROM' )? trim_source ')'
+
+ trunc_date : 'TRUNC' '(' date ( ',' fmt )? ')'
+
+ trunc_number : 'TRUNC' '(' n ( ',' n )? ')'
+
+ tz_offset : 'TZ_OFFSET' '(' ( '"' time_zone_name '"' | '"' ( + | - ) hh ':' mi '"' | 'SESSIONTIMEZONE' | 'DBTMEZONE' ) ')'
+
+ uid : 'UID'
+
+ unistr : 'UNISTR' '(' string ')'
+
+ updatexml : 'UPDATEXML' '(' xmltype_instance ',' xpath_string ',' value_expr ( ',' xpath_string ',' value_expr )* ( ',' namespace_string )? ')'
+
+ upper : 'UPPER' '(' char ')'
+
+ user : identifier 
+
+ user_defined_function : ( schema_name '.' )? ( ( package '.' )? identifier | user_defined_operator ) ( @ dblink '.' )? ( '(' ( ( 'DISTINCT' | 'ALL' )? expr ( ',' expr )* )? ')' )?
+
+ userenv : 'USERENV' '(' '"' parameter '"' ')'
+
+ value : 'VALUE' '(' correlation_variable ')'
+
+ var_pop : 'VAR_POP' '(' expr ')' ( 'OVER' '(' analytic_clause ')' )?
+
+ var_samp : 'VAR_SAMP' '(' expr ')' ( 'OVER' '(' analytic_clause ')' )?
+
+ variance : 'VARIANCE' '(' ( 'DISTINCT' | 'ALL' )? expr ')' ( 'OVER' '(' analytic_clause ')' )?
+
+ vsize : 'VSIZE' '(' expr ')'
+
+ width_bucket : 'WIDTH_BUCKET' '(' expr ',' min_value ',' max_value ',' num_buckets ')'
+
+ xmlagg : 'XMLAGG' '(' xmltype_instance ( order_by_clause )? ')'
+
+ xmlcast : 'XMLCAST' '(' value_expression 'AS' datatype ')'
+
+ xmlcdata : 'XMLCDATA' '(' value_expr ')'
+
+ xmlcolattval : 'XMLCOLATTVAL' '(' value_expr ( 'AS' ( alias | 'EVALNAME' value_expr ) )? ( ',' value_expr ( 'AS' ( alias | 'EVALNAME' value_expr ) )? )* ')'
+
+ xmlcomment : 'XMLCOMMENT' '(' value_expr ')'
+
+ xmlconcat : 'XMLCONCAT' '(' xmltype_instance ( ',' xmltype_instance )* ')'
+
+ xmldiff : 'XMLDIFF' '(' xmltype_document ',' xmltype_document ( ',' integer ',' string )? ')'
+
+ xmlelement : 'XMLELEMENT' '(' ( 'ENTITYESCAPING' | 'NOENTITYESCAPING' )? ( 'NAME' )? ( identifier | 'EVALNAME' value_expr ) ( ',' xml_attributes_clause )? ( ',' value_expr ( ( 'AS' )? alias )? )* ')'
+
+ xmlexists : 'XMLEXISTS' '(' xquery_string ( xml_passing_clause )? ')'
+
+ xmlforest : 'XMLFOREST' '(' value_expr ( 'AS' ( alias | 'EVALNAME' value_expr ) )? ( ',' value_expr ( 'AS' ( alias | 'EVALNAME' value_expr ) )? )* ')'
+
+ xmlisvalid : 'XMLISVALID' '(' xmltype_instance ( ',' xmlschema_url ( ',' element )? )? ')'
+
+ xmlparse : 'XMLPARSE' '(' ( 'DOCUMENT' | 'CONTENT' ) value_expr ( 'WELLFORMED' )? ')'
+
+ xmlpatch : 'XMLPATCH' '(' xmltype_document ',' xmltype_document ')'
+
+ xmlpi : 'XMLPI' '(' ( ( 'NAME' )? identifier | 'EVALNAME' value_expr ) ( ',' value_expr )? ')'
+
+ xmlquery : 'XMLQUERY' '(' xquery_string ( xml_passing_clause )? 'RETURNING' 'CONTENT' ( 'NULL' 'ON' 'EMPTY' )? ')'
+
+ xmlroot : 'XMLROOT' '(' value_expr ',' 'VERSION' ( value_expr | 'NO' 'VALUE' ) ( ',' 'STANDALONE' ( 'YES' | 'NO' | 'NO' 'VALUE' ) )? ')'
+
+ xmlsequence : 'XMLSEQUENCE' '(' xmltype_instance | sys_refcursor_instance ( ',' fmt )? ')'
+
+ xmlserialize : 'XMLSERIALIZE' '(' ( 'DOCUMENT' | 'CONTENT' ) value_expr ( 'AS' datatype )? ( 'ENCODING' xml_encoding_spec )? ( 'VERSION' string )? ( 'NO' 'INDENT' | ( 'INDENT' ( 'SIZE' = number )? ) )? ( ( 'HIDE' | 'SHOW' ) 'DEFAULTS' )? ')'
+
+ xmltable : 'XMLTABLE' '(' ( xmlnamespaces_clause ',' )? xquery_string xmltable_options ')'
+
+ xmltransform : 'XMLTRANSFORM' '(' xmltype_instance ',' ( xmltype_instance | string ) ')'
+
+ case_expressions : 'CASE' ( simple_case_expression | searched_case_expression ) ( else_clause )? 'END'
+
+ compound_expressions : ( '(' expr ')' | ( '+' | '-' | 'PRIOR' ) expr | expr ( '*' | '/' | '+' | '-' | '|' ) expr )
+
+ datetime_expressions : expr 'AT' ( 'LOCAL' | 'TIME' 'ZONE' ( '"' ( + | - )? hh ':' mi '"' | 'DBTIMEZONE' | '"' time_zone_name '"' | expr ) )
+
+ interval_expression : '(' expr - expr ')' ( 'DAY' ( '(' leading_field_precision ')' )? 'TO' 'SECOND' ( '(' fractional_second_precision ')' )? | 'YEAR' ( '(' leading_field_precision ')' )? 'TO' 'MONTH' )
+
+ model_expression : ( measure_column ( ( condition | expr ) ( , ( condition | expr )+ )? )? | aggregate_functions ( ( ( condition | expr ) ( ',' ( condition | expr )+ )? )? | ( single_column_for_loop ( ',' single_column_for_loop )* )? | ( multi_column_for_loop )? ) | analytic_function )
+ 
+ object_access_expression : ( table_alias '.' column '.' | object_table_alias '.' | '(' expr ')' '.' ) ( attribute ( '.' attribute )* ( '.' identifier '(' ( arguments )? ')' )? | identifier '(' ( arguments )? ')' )
+
+ placeholder_expressions : ':' host_variable ( ( 'INDICATOR' )? ':' indicator_variable )?
+
+ simple_expressions : ( ( query_name '.' | ( schema_name '.' )? ( table '.' | view_name '.' | materialized_view '.' ) )? ( column | 'ROWID' ) | 'ROWNUM' | string | number | sequence '.' ( 'CURRVAL' | 'NEXTVAL' ) | 'NULL' )
+
+ type_constructor_expression : ( 'NEW' )? type_name_fullname '(' ( expr ( ',' expr )* )? ')'
+
+ between_condition : expr ( 'NOT' )? 'BETWEEN' expr 'AND' expr 
+
+ compound_conditions : ( '(' condition ')' | 'NOT' condition | condition ( 'AND' | 'OR' ) condition )
+
+ equals_path_condition : 'EQUALS_PATH' '(' column ',' path_string ( ',' correlation_integer )? ')'
+
+ exists_condition : 'EXISTS' '(' subquery ')'
+
+ floating_point_conditions : expr 'IS' ( 'NOT' )? ( 'NAN' | 'INFINITE' )
+
+ group_comparison_conditions : ( expr ( = | != | ^= | '&lt;' '&gt;' | '&gt;' | '&lt;'' | '&gt;=' | '&lt;=' ) ( 'ANY' | 'SOME' | 'ALL' ) '(' ( expression_list | subquery ) ')' | '(' expr ( ',' expr )* ')' ( = | != | ^= | '&lt;' '&gt;' ) ( 'ANY' | 'SOME' | 'ALL' ) '(' ( expression_list ( ',' expression_list )* | subquery ) ')' ) where != ',' ^= ',' and '&lt;' '&gt;' test for inequality 
+
+ in_condition : ( expr ( 'NOT' )? 'IN' '(' ( expression_list | subquery ) ')' | '(' expr ( ',' expr )* ')' ( 'NOT' )? 'IN' '(' ( expression_list ( ',' expression_list )* | subquery ) ')' )
+
+ is_a_set_condition : nested_table 'IS' ( 'NOT' )? A 'SET'
+
+ is_any_condition : ( dimension_column 'IS' )? 'ANY'
+
+ is_empty_condition : nested_table 'IS' ( 'NOT' )? 'EMPTY'
+
+ is_of_type_condition : expr 'IS' ( 'NOT' )? 'OF' ( 'TYPE' )? '(' ( 'ONLY' )? type_fullname ( ',' ( 'ONLY' )? type_fullname )* ')'
+
+ is_present_condition : cell_reference 'IS' 'PRESENT'
+
+ like_condition : char ( 'NOT' )? ( 'LIKE' | 'LIKEC' | 'LIKE2' | 'LIKE4' ) char ( 'ESCAPE' esc_char )?
+
+ logical_conditions : ( 'NOT' | 'AND' | 'OR' )
+
+ member_condition : expr ( 'NOT' )? 'MEMBER' ( 'OF' )? nested_table 
+
+ null_conditions : expr 'IS' ( 'NOT' )? 'NULL'
+
+ regexp_like_condition : 'REGEXP_LIKE' '(' source_char ',' pattern ( ',' match_param )? ')'
+
+ simple_comparison_conditions : ( expr ( = | != | ^= | '&lt;' '&gt;' | '&gt;' | '&lt;' | '&gt;=' | '&lt;=' ) expr | '(' expr ( ',' expr )* ')' ( = | != | ^= | '&lt;' '&gt;' ) '(' subquery ')' ) where != ',' ^= ',' and '&lt;' '&gt;' test for inequality 
+
+ submultiset_condition : nested_table ( 'NOT' )? 'SUBMULTISET' ( 'OF' )? nested_table 
+
+ under_path_condition : 'UNDER_PATH' '(' column ( ',' levels )? ',' path_string ( ',' correlation_integer )? ')'
+
+ activate_standby_db_clause : 'ACTIVATE' ( 'PHYSICAL' | 'LOGICAL' )? 'STANDBY' 'DATABASE' ( 'FINISH' 'APPLY' )?
+
+ add_binding_clause : 'ADD' 'BINDING' '(' parameter_type ( ',' parameter_type )* ')' 'RETURN' '(' return_type ')' ( implementation_clause )? using_function_clause 
+
+ add_column_clause : 'ADD' ( column_definition | virtual_column_definition ( ',' column_definition | virtual_column_definition )* ) ( column_properties )? ( out_of_line_part_storage ( ',' out_of_line_part_storage )* )?
+
+ add_disk_clause : 'ADD' ( ( 'QUORUM' | 'REGULAR' )? ( 'FAILGROUP' failgroup_name )? subclauses 'DISK' qualified_disk_clause ( ',' qualified_disk_clause )* )+ 
+
+ add_hash_index_partition : 'ADD' 'PARTITION' ( partition_name )? ( 'TABLESPACE' tablespace_name )? ( key_compression )? ( parallel_clause )?
+
+ add_hash_partition_clause : partitioning_storage_clause ( update_index_clauses )? ( parallel_clause )?
+
+ add_hash_subpartition : 'ADD' individual_hash_subparts ( dependent_tables_clause )? ( update_index_clauses )? ( parallel_clause )?
+
+ add_list_partition_clause : list_values_clause ( table_partition_description )? ( '(' ( range_subpartition_desc ( ',' range_subpartition_desc )* | list_subpartition_desc ( ',' list_subpartition_desc )* | individual_hash_subparts ( ',' individual_hash_subparts )* ) ')' | hash_subparts_by_quantity )? ( update_index_clauses )?
+
+ add_list_subpartition : 'ADD' list_subpartition_desc ( dependent_tables_clause )? ( update_index_clauses )?
+
+ add_logfile_clauses : 'ADD' ( 'STANDBY' )? 'LOGFILE' ( ( ( 'INSTANCE' '"' instance_name '"' )? | ( 'THREAD' '"' integer '"' )? ) ( 'GROUP' integer )? redo_log_file_spec ( ',' ( 'GROUP' integer )? redo_log_file_spec )* | 'MEMBER' '"' filename '"' ( 'REUSE' )? ( ',' '"' filename '"' ( 'REUSE' )? )* 'TO' logfile_descriptor ( ',' logfile_descriptor )* )
+
+ add_mv_log_column_clause : 'ADD' '(' column ')'
+
+ add_overflow_clause : 'ADD' 'OVERFLOW' ( segment_attributes_clause )? ( '(' 'PARTITION' ( segment_attributes_clause )? ( ',' 'PARTITION' ( segment_attributes_clause )? )* ')' )?
+
+ add_range_partition_clause : range_values_clause ( table_partition_description )? ( '(' ( range_subpartition_desc ( ',' range_subpartition_desc )* | list_subpartition_desc ( ',' list_subpartition_desc )* | individual_hash_subparts ( ',' individual_hash_subparts )* ) ')' | hash_subparts_by_quantity )? ( update_index_clauses )?
+
+ add_range_subpartition : 'ADD' range_subpartition_desc ( dependent_tables_clause )? ( update_index_clauses )?
+
+ add_system_partition_clause : ( 'BEFORE' ( partition_name | partition_number ) )? ( table_partition_description )? ( update_index_clauses )?
+
+ add_table_partition : 'ADD' 'PARTITION' ( partition )? ( add_range_partition_clause | add_hash_partition_clause | add_list_partition_clause ) ( dependent_tables_clause )?
+
+ add_volume_clause : 'ADD' 'VOLUME' asm_volume 'SIZE' size_clause ( redundancy_clause )? ( 'STRIPE_WIDTH' integer ( K | M) )? ( 'STRIPE_COLUMNS' integer )? ( 'ATTRIBUTE' '(' disk_region_clause ')' )?
+
+ alias_file_name : + diskgroup_name ( '(' template_name ')' )? / alias_name 
+
+ allocate_extent_clause : 'ALLOCATE' 'EXTENT' ( '(' ( 'SIZE' size_clause | 'DATAFILE' '"' filename '"' | 'INSTANCE' integer )+ ')' )?
+
+ alter_datafile_clause : 'DATAFILE' ( '"' filename '"' | filenumber ) ( ',' '"' filename '"' | filenumber )* ) ( 'ONLINE' | 'OFFLINE' ( 'FOR' 'DROP' )? | 'RESIZE' size_clause | autoextend_clause | 'END' 'BACKUP' )
+
+ alter_external_table : ( add_column_clause | modify_column_clauses | drop_column_clause | parallel_clause | external_data_properties | 'REJECT' 'LIMIT' ( integer | 'UNLIMITED' ) | 'PROJECT' 'COLUMN' ( 'ALL' | 'REFERENCED' ) ) ( add_column_clause subclauses | modify_column_clauses | drop_column_clause | parallel_clause | external_data_properties | 'REJECT' 'LIMIT' ( integer | 'UNLIMITED' ) | 'PROJECT' 'COLUMN' ( 'ALL' | 'REFERENCED' ) )* 
+
+ alter_index_partitioning : ( modify_index_default_attrs | add_hash_index_partition | modify_index_partition | rename_index_partition | drop_index_partition | split_index_partition | coalesce_index_partition | modify_index_subpartition )
+
+ alter_interval_partitioning : ( 'SET' 'INTERVAL' '(' ( expr )? ')' | 'SET' 'STORE' 'IN' '(' tablespace ( ',' tablespace )* ')' )
+
+ alter_iot_clauses : ( index_org_table_clause | alter_overflow_clause | alter_mapping_table_clause | 'COALESCE' )
+
+ alter_mapping_table_clause : 'MAPPING' 'TABLE' ( allocate_extent_clause | deallocate_unused_clause )
+
+ alter_mv_refresh : 'REFRESH' ( ( 'FAST' | 'COMPLETE' | 'FORCE' ) | 'ON' ( 'DEMAND' | 'COMMIT' ) | ( 'START' 'WITH' | 'NEXT' ) date | 'WITH' 'PRIMARY' 'KEY' | 'USING' ( 'DEFAULT' 'MASTER' 'ROLLBACK' 'SEGMENT' | 'MASTER' 'ROLLBACK' 'SEGMENT' segment ) | 'USING' ( 'ENFORCED' | 'TRUSTED' ) 'CONSTRAINTS' )
+
+ alter_overflow_clause : ( add_overflow_clause | 'OVERFLOW' ( segment_attributes_clause | allocate_extent_clause | shrink_clause | deallocate_unused_clause )+ )
+
+ alter_session_set_clause : 'SET' ( ( parameter = parameter_value )+ | 'EDITION' = edition )
+
+ alter_system_reset_clause : parameter ( ( 'SCOPE' = 'SPFILE' | 'SID' = ( '"' sid '"' | '"' * '"' ) )+ )?
+
+ alter_system_set_clause : ( set_parameter_clause | 'USE_STORED_OUTLINES' = '(' 'TRUE' | 'FALSE' | category_name ')' | 'GLOBAL_TOPIC_ENABLED' = '(' 'TRUE' | 'FALSE' ')' )
+
+ alter_table_partitioning : ( modify_table_default_attrs | alter_interval_partitioning | set_subpartition_template | modify_table_partition | modify_table_subpartition | move_table_partition | move_table_subpartition | add_table_partition | coalesce_table_partition | coalesce_table_subpartition | drop_table_partition | drop_table_subpartition | rename_partition_subpart | truncate_partition_subpart | split_table_partition | split_table_subpartition | merge_table_partitions | merge_table_subpartitions | exchange_partition_subpart )
+
+ alter_table_properties : ( ( ( physical_attributes_clause | logging_clause | table_compression | supplemental_table_logging | allocate_extent_clause | deallocate_unused_clause | ( 'CACHE' | 'NOCACHE' ) | 'RESULT_CACHE' '(' 'MODE' ( 'DEFAULT' | 'FORCE') ')' | upgrade_table_clause | records_per_block_clause | parallel_clause | row_movement_clause | flashback_archive_clause )+ | 'RENAME' 'TO' table ) ( alter_iot_clauses )? ( alter_xmlschema_clause )? | ( shrink_clause | 'READ' 'ONLY' | 'READ' 'WRITE' | 'REKEY' encryption_spec ) ) subclauses 
+
+ alter_tempfile_clause : 'TEMPFILE' ( '"' filename '"' ( ',' '"' filename '"' )* | filenumber ( ',' filenumber )* ) ( 'RESIZE' size_clause | autoextend_clause | 'DROP' ( 'INCLUDING' 'DATAFILES' )? | 'ONLINE' | 'OFFLINE' )
+
+ alter_varray_col_properties : 'MODIFY' 'VARRAY' varray_item '(' modify_lob_parameters ')'
+
+ alter_xmls_chema_clause : ( 'ALLOW' 'ANYSCHEMA' | 'ALLOW' 'NONSCHEMA' | 'DISALLOW' 'NONSCHEMA' )
+
+ analytic_clause : ( query_partition_clause )? ( order_by_clause ( windowing_clause )? )?
+
+ archive_log_clause : 'ARCHIVE' 'LOG' ( 'INSTANCE' '"' instance_name '"' )? ( ( 'SEQUENCE' integer | 'CHANGE' integer | 'CURRENT' ( 'NOSWITCH' )? | 'GROUP' integer | 'LOGFILE' '"' filename '"' ( 'USING' 'BACKUP' 'CONTROLFILE' )? | 'NEXT' | 'ALL' ) ( 'TO' '"' location '"' )? )
+
+ array_dml_clause : ( 'WITH' | 'WITHOUT' )? 'ARRAY' 'DML' ( '(' type_fullname ( ',' varray_type_fullname )? ')' ( ',' '(' type_fullname ( ',' varray_type_fullname )? ')'... )?
+ 
+ asm_filename : ( fully_qualified_file_name | numeric_file_name | incomplete_file_name | alias_file_name )
+
+ attribute_clause : 'ATTRIBUTE' level 'DETERMINES' ( column | column_list_paren )
+
+ audit_operation_clause : ( ( sql_statement_shortcut | 'ALL' | 'ALL' 'STATEMENTS' ) ( ',' ( sql_statement_shortcut | 'ALL' ) )? | ( system_privilege | 'ALL' 'PRIVILEGES' ) ( ',' ( system_privilege | 'ALL' 'PRIVILEGES' ) )? )
+
+ audit_schema_object_clause : ( sql_operation ( ',' object_option )? | 'ALL' ) auditing_on_clause 
+
+ auditing_by_clause : 'BY' user ( ',' user )* 
+
+ auditing_on_clause : 'ON' ( identifier_fullname | 'DIRECTORY' directory | 'MINING' 'MODEL' model_fullname | 'DEFAULT' )
+
+ autoextend_clause : 'AUTOEXTEND' ( 'OFF' | 'ON' ( 'NEXT' size_clause )? ( maxsize_clause )? )
+
+ binding_clause : 'BINDING' '(' parameter_type ( ',' parameter_type )* ')' 'RETURN' return_type ( implementation_clause )? using_function_clause ( ',' '(' parameter_type ( ',' parameter_type )* ')' 'RETURN' return_type ( implementation_clause )? using_function_clause )* 
+
+ bitmap_join_index_clause : table_fullname '(' ( table_fullname '.' | alias '.' )? column ( 'ASC' | 'DESC' )? ( ',' ( table_fullname '.' | alias '.' )? column ( 'ASC' | 'DESC' )? )* subclauses ')' 'FROM' table_fullname ( alias )? ( ',' table_fullname ( alias )? )* 'WHERE' condition ( local_partitioned_index )? index_attributes 
+
+ build_clause : 'BUILD' ( 'IMMEDIATE' | 'DEFERRED' )
+
+ cell_assignment : measure_column ( ( ( condition | expr | single_column_for_loop ) ( ',' ( condition | expr | single_column_for_loop ) )* | multi_column_for_loop ) )?
+
+ cell_reference_options : ( ( 'IGNORE' | 'KEEP' ) 'NAV' )? ( 'UNIQUE' ( 'DIMENSION' | 'SINGLE' 'REFERENCE' ) )?
+
+ character_set_clause : 'CHARACTER' 'SET' character_set 
+
+ check_datafiles_clause : 'CHECK' 'DATAFILES' ( 'GLOBAL' | 'LOCAL' )?
+
+ check_diskgroup_clause : 'CHECK' ( 'REPAIR' | 'NOREPAIR' )?
+
+ checkpoint_clause : 'CHECKPOINT' ( 'GLOBAL' | 'LOCAL' )?
+
+ cluster_index_clause : 'CLUSTER' cluster_fullname index_attributes 
+
+ coalesce_index_partition : 'COALESCE' 'PARTITION' ( parallel_clause )?
+
+ coalesce_table_partition : 'COALESCE' 'PARTITION' ( update_index_clauses )? ( parallel_clause )?
+
+ coalesce_table_subpartition : 'COALESCE' 'SUBPARTITION' subpartition ( update_index_clauses )? ( parallel_clause )?
+
+ column_association : 'COLUMNS' table_fullname '.' column ( ',' table_fullname '.' column )* using_statistics_type 
+
+ column_clauses : ( ( add_column_clause | modify_column_clause | drop_column_clause )+ | rename_column_clause | ( modify_collection_retrieval )+ | ( modify_lob_storage_clause )+ | ( alter_varray_col_properties )+ )
+
+ column_definition : column datatype ( 'SORT' )? ( 'DEFAULT' expr )? ( 'ENCRYPT' encryption_spec )? ( '(' ( inline_constraint )+ ')' | inline_ref_constraint )?
+
+ column_properties : ( object_type_col_properties | nested_table_col_properties | ( varray_col_properties | lob_storage_clause ) ( '(' lob_partition_storage ( ',' lob_partition_storage )* ')' )? | xmltype_column_properties )+ 
+
+ commit_switchover_clause : ( 'PREPARE' | 'COMMIT' ) 'TO' 'SWITCHOVER' ( 'TO' ( ( ( 'PHYSICAL' | 'LOGICAL' )? 'PRIMARY' | ( 'PHYSICAL' )? 'STANDBY' ) ( ( 'WITH' | 'WITHOUT' ) 'SESSION' 'SHUTDOWN' ( 'WAIT' | 'NOWAIT' ) )? | 'LOGICAL' 'STANDBY' ) | 'CANCEL' )?
+
+ composite_hash_partitions : 'PARTITION' 'BY' 'HASH' column_list_paren ( subpartition_by_range | subpartition_by_list | subpartition_by_hash ) ( individual_hash_partitions | hash_partitions_by_quantity )
+
+ composite_list_partitions : 'PARTITION' 'BY' 'LIST' '(' column ')' ( subpartition_by_range | subpartition_by_list | subpartition_by_hash ) '(' list_partition_desc ( ',' list_partition_desc )* ')' subclauses 
+
+ composite_range_partitions : 'PARTITION' 'BY' 'RANGE' column_list_paren ( 'INTERVAL' '(' expr ')' ( 'STORE' 'IN' '(' tablespace ( ',' tablespace )* ')' )? )? ( subpartition_by_range | subpartition_by_list | subpartition_by_hash ) '(' range_partition_desc ( ',' range_partition_desc )* ')'
+
+ conditional_insert_clause : ( 'ALL' | 'FIRST' )? 'WHEN' condition 'THEN' insert_into_clause ( values_clause )? ( error_logging_clause )? ( insert_into_clause ( values_clause )? ( error_logging_clause )? )* ( 'WHEN' condition 'THEN' insert_into_clause ( values_clause )? ( error_logging_clause )? ( insert_into_clause ( values_clause )? ( error_logging_clause )? )* )* ( 'ELSE' insert_into_clause ( values_clause )? ( error_logging_clause )? ( insert_into_clause ( values_clause )? ( error_logging_clause )? )* )?
+
+ constraint : ( inline_constraint | out_of_line_constraint | inline_ref_constraint | out_of_line_ref_constraint )
+
+ constraint_clauses : ( 'ADD' ( ( out_of_line_constraint )+ | out_of_line_ref_constraint ) | 'MODIFY' ( 'CONSTRAINT' constraint_name | 'PRIMARY' 'KEY' | 'UNIQUE' column_list_paren ) constraint_state ( 'CASCADE' )? | 'RENAME' 'CONSTRAINT' old_name 'TO' new_name | drop_constraint_clause )
+
+ constraint_state : ( ( ( 'NOT' )? 'DEFERRABLE' )? ( 'INITIALLY' ( 'IMMEDIATE' | 'DEFERRED' ) )? | ( 'INITIALLY' ( 'IMMEDIATE' | 'DEFERRED' ) )? ( ( 'NOT' )? 'DEFERRABLE' )? )? ( 'RELY' | 'NORELY' )? ( using_index_clause )? ( 'ENABLE' | 'DISABLE' )? ( 'VALIDATE' | 'NOVALIDATE' )? ( exceptions_clause )?
+
+ context_clause : ( 'WITH' 'INDEX' 'CONTEXT' ',' 'SCAN' 'CONTEXT' implementation_type ( 'COMPUTE' 'ANCILLARY' 'DATA' )? )? ( 'WITH' 'COLUMN' 'CONTEXT' )?
+
+ controlfile_clauses : ( 'CREATE' ( 'LOGICAL' | 'PHYSICAL' )? 'STANDBY' 'CONTROLFILE' 'AS' '"' filename '"' ( 'REUSE' )? | 'BACKUP' 'CONTROLFILE' 'TO' ( '"' filename '"' ( 'REUSE' )? | trace_file_clause ) )
+
+ convert_database_clause : 'CONVERT' 'TO' '(' 'PHYSICAL' | 'SNAPSHOT' ')' 'STANDBY'
+
+ cost_matrix_clause : 'COST' ( 'MODEL' ( 'AUTO' )? | '(' class_value ( ',' class_value )* ')' 'VALUES' '(' '(' cost_value ( ',' cost_value )* ')' ( ',' '(' cost_value ( ',' cost_value )* ')' )* ')' )
+
+ create_datafile_clause : 'CREATE' 'DATAFILE' ( '"' filename '"' | filenumber ) ( ',' '"' filename '"' | filenumber )* ) ( 'AS' ( file_specification ( ',' file_specification )* | 'NEW' ) )?
+
+ create_mv_refresh : ( 'REFRESH' ( ( 'FAST' | 'COMPLETE' | 'FORCE' ) | ( 'ON' 'DEMAND' | 'ON' 'COMMIT' ) | ( 'START' 'WITH' date | 'NEXT' date )+ | 'WITH' ( 'PRIMARY' 'KEY' | 'ROWID' ) | 'USING' ( 'DEFAULT' ( 'MASTER' | 'LOCAL' )? 'ROLLBACK' 'SEGMENT' | ( 'MASTER' | 'LOCAL' )? 'ROLLBACK' 'SEGMENT' segment )+ | 'USING' ( 'ENFORCED' | 'TRUSTED' ) 'CONSTRAINTS' )+ | 'NEVER' 'REFRESH' )
+
+ cycle_clause : ( 'CYCLE' alias ( ',' alias )* 'SET' cycle_mark_c_alias 'TO' cycle_value subclauses 'DEFAULT' no_cycle_value )
+
+ database_file_clauses : ( 'RENAME' 'FILE' '"' filename '"' ( ',' '"' filename '"' )* 'TO' '"' filename '"' | create_datafile_clause | alter_datafile_clause | alter_tempfile_clause )
+
+ database_logging_clauses : ( 'LOGFILE' ( 'GROUP' integer )? file_specification ( ',' ( 'GROUP' integer )? file_specification )* | 'MAXLOGFILES' integer | 'MAXLOGMEMBERS' integer | 'MAXLOGHISTORY' integer | ( 'ARCHIVELOG' | 'NOARCHIVELOG' ) | 'FORCE' 'LOGGING' )
+
+ datafile_tempfile_clauses : ( 'ADD' ( 'DATAFILE' | 'TEMPFILE' ) ( file_specification ( ',' file_specification )* )? | 'DROP' ( 'DATAFILE' | 'TEMPFILE' ) ( '"' filename '"' | file_number ) | 'SHRINK' 'TEMPFILE' ( '"' filename '"' | file_number ) ( 'KEEP' size_clause )? | 'RENAME' 'DATAFILE' '"' filename '"' ( ',' '"' filename '"' )* 'TO' '"' filename '"' ( ',' '"' filename '"' )* | ( 'DATAFILE' | 'TEMPFILE' ) ( 'ONLINE' | 'OFFLINE' ) )
+
+ datafile_tempfile_spec : ( '"' filename '"' | '"' asm_filename '"' )? ( 'SIZE' size_clause )? ( 'REUSE' )? ( autoextend_clause )?
+
+ db_user_proxy_clauses : ( 'WITH' ( 'ROLE' ( role_name ( ',' role_name )* | 'ALL' 'EXCEPT' role_name ( ',' role_name )* ) | 'NO' 'ROLES' ) )? ( 'AUTHENTICATION' 'REQUIRED' )?
+
+ dblink : database ( '.' domain ( '.' domain )* )? ( '@' connection_qualifier )?
+
+ dblink_authentication : 'AUTHENTICATED' 'BY' user 'IDENTIFIED' 'BY' password 
+
+ deallocate_unused_clause : 'DEALLOCATE' 'UNUSED' ( 'KEEP' size_clause )?
+
+ default_cost_clause : 'DEFAULT' 'COST' '(' cpu_cost ',' io_cost ',' network_cost ')'
+
+ default_selectivity_clause : 'DEFAULT' 'SELECTIVITY' default_selectivity 
+
+ default_settings_clauses : ( 'DEFAULT' 'EDITION' = edition | 'SET' 'DEFAULT' ( 'BIGFILE' | 'SMALLFILE' ) 'TABLESPACE' | 'DEFAULT' 'TABLESPACE' tablespace | 'DEFAULT' 'TEMPORARY' 'TABLESPACE' ( tablespace | tablespace_group_name ) | 'RENAME' 'GLOBAL_NAME' 'TO' database '.' domain ( '.' domain )* | ( 'ENABLE' 'BLOCK' 'CHANGE' 'TRACKING' ( 'USING' 'FILE' '"' filename '"' ( 'REUSE' )? )? | 'DISABLE' 'BLOCK' 'CHANGE' 'TRACKING' ) | flashback_mode_clause | set_time_zone_clause )
+
+ default_tablespace : 'DEFAULT' 'TABLESPACE' tablespace ( 'DATAFILE' datafile_tempfile_spec )? ( extent_management_clause )?
+
+ default_temp_tablespace : ( 'BIGFILE' | 'SMALLFILE' )? 'DEFAULT' 'TEMPORARY' 'TABLESPACE' tablespace ( 'TEMPFILE' file_specification ( ',' file_specification )* )? ( extent_management_clause )?
+
+ deferred_segment_creation : 'SEGMENT' 'CREATION' ( 'IMMEDIATE' | 'DEFERRED' )
+
+ dependent_tables_clause : 'DEPENDENT' 'TABLES' '(' table '(' partition_spec ( ',' partition_spec )* ( ',' table '(' partition_spec ( ',' partition_spec )* )? ')' ')'
+
+ dimension_join_clause : ( 'JOIN' 'KEY' ( column | column_list_paren ) 'REFERENCES' parent_level )+ 
+
+ disk_offline_clause : 'OFFLINE' ( ( 'QUORUM' | 'REGULAR' )? 'DISK' disk_name ( ',' disk_name )* | 'DISKS' 'IN' ( 'QUORUM' | 'REGULAR' )? 'FAILGROUP' failgroup_name ( ',' failgroup_name )* )+ ( timeout_clause )?
+
+ disk_online_clause : 'ONLINE' ( ( ( 'QUORUM' | 'REGULAR' )? 'DISK' disk_name ( ',' disk_name )* | 'DISKS' 'IN' ( 'QUORUM' | 'REGULAR' )? 'FAILGROUP' failgroup_name ( ',' failgroup_name )* )+ subclauses | 'ALL' ) ( 'WAIT' | 'NOWAIT' )?
+
+ disk_region_clause : ( 'HOT' | 'COLD' )? ( 'MIRRORHOT' | 'MIRRORCOLD' )?
+
+ diskgroup_alias_clauses : ( 'ADD' 'ALIAS' '"' alias_name '"' 'FOR' '"' filename '"' ( ',' '"' alias_name '"' 'FOR' '"' filename '"' )* | 'DROP' 'ALIAS' '"' alias_name '"' ( ',' '"' alias_name '"' )* | 'RENAME' 'ALIAS' '"' alias_name '"' 'TO' '"' alias_name '"' ( ',' '"' alias_name '"' 'TO' '"' alias_name '"' )* )
+
+ diskgroup_attributes : 'SET' 'ATTRIBUTE' '"' attribute_name '"' = '"' attribute_value "
+
+ diskgroup_availability : ( 'MOUNT' ( 'RESTRICTED' | 'NORMAL' )? ( 'FORCE' | 'NOFORCE' )? | 'DISMOUNT' ( 'FORCE' | 'NOFORCE' )? )
+
+ diskgroup_directory_clauses : ( 'ADD' 'DIRECTORY' '"' filename '"' ( ',' '"' filename '"' )* | 'DROP' 'DIRECTORY' '"' filename '"' ( 'FORCE' | 'NOFORCE' )? ( ',' '"' filename '"' ( 'FORCE' | 'NOFORCE' )? )* | 'RENAME' 'DIRECTORY' '"' old_dir_name '"' 'TO' '"' new_dir_name '"' ( ',' '"' old_dir_name '"' 'TO' '"' new_dir_name '"' )* )
+
+ diskgroup_template_clauses : ( ( 'ADD' | 'MODIFY' ) 'TEMPLATE' template_name qualified_template_clause ( ',' template_name qualified_template_clause )* | 'DROP' 'TEMPLATE' template_name ( ',' template_name )* )
+
+ diskgroup_volume_clauses : ( add_volume_clause | modify_volume_clause | 'RESIZE' 'VOLUME' asm_volume 'SIZE' size_clause | 'DROP' 'VOLUME' asm_volume )
+
+ distributed_recov_clauses : ( 'ENABLE' | 'DISABLE' ) 'DISTRIBUTED' 'RECOVERY'
+
+ dml_table_expression_clause : ( ( schema_name '.' )? ( table ( partition_extension_clause | @ dblink )? | ( view_name | materialized_view ) ( @ dblink )? ) | '(' subquery ( subquery_restriction_clause )? ')' | table_collection_expression )
+
+ domain_index_clause : indextype ( local_domain_index_clause )? ( parallel_clause )? ( 'PARAMETERS' '(' '"' odci_parameters '"' ')' )?
+
+ drop_binding_clause : 'DROP' 'BINDING' '(' parameter_type ( ',' parameter_type )* ')' ( 'FORCE' )?
+
+ drop_column_clause : ( 'SET' 'UNUSED' ( 'COLUMN' column | column_list_paren ) ( ( 'CASCADE' 'CONSTRAINTS' | 'INVALIDATE' )+ )? | 'DROP' ( 'COLUMN' column | column_list_paren ) ( ( 'CASCADE' 'CONSTRAINTS' | 'INVALIDATE' )+ )? ( 'CHECKPOINT' integer )? | 'DROP' ( 'UNUSED' 'COLUMNS' | 'COLUMNS' 'CONTINUE' ) ( 'CHECKPOINT' integer )? )
+
+ drop_constraint_clause : 'DROP' ( ( 'PRIMARY' 'KEY' | 'UNIQUE' column_list_paren ) ( 'CASCADE' )? ( ( 'KEEP' | 'DROP' ) 'INDEX' )? | 'CONSTRAINT' constraint_name ( 'CASCADE' )? )
+
+ drop_disk_clause : 'DROP' ( ( 'QUORUM' | 'REGULAR' )? 'DISK' disk_name ( 'FORCE' | 'NOFORCE' )? ( ',' disk_name ( 'FORCE' | 'NOFORCE' )? )* | 'DISKS' 'IN' ( 'QUORUM' | 'REGULAR' )? 'FAILGROUP' failgroup_name ( 'FORCE' | 'NOFORCE' )? ( ',' failgroup_name ( 'FORCE' | 'NOFORCE' )? )* )
+
+ drop_diskgroup_file_clause : 'DROP' 'FILE' '"' filename '"' ( ',' '"' filename '"' )* 
+
+ drop_index_partition : 'DROP' 'PARTITION' partition_name 
+
+ drop_logfile_clauses : 'DROP' ( 'STANDBY' )? 'LOGFILE' ( logfile_descriptor subclauses ( ',' logfile_descriptor )* | 'MEMBER' '"' filename '"' ( ',' '"' filename '"' )* )
+
+ drop_table_partition : 'DROP' partition_extended_name ( update_index_clauses ( parallel_clause )? )?
+
+ drop_table_subpartition : 'DROP' subpartition_extended_name ( update_index_clauses ( parallel_clause )? )?
+
+ ds_iso_format : ( - )? P ( days D )? ( T ( hours H )? ( minutes M )? ( seconds ( '.' frac_secs )? S )? )?
+
+ else_clause : 'ELSE' expr 
+
+ enable_disable_clause : ( 'ENABLE' | 'DISABLE' ) ( 'VALIDATE' | 'NOVALIDATE' )? ( 'UNIQUE' column_list_paren | 'PRIMARY' 'KEY' | 'CONSTRAINT' constraint_name ) ( using_index_clause )? ( exceptions_clause )? ( 'CASCADE' )? ( ( 'KEEP' | 'DROP' ) 'INDEX' )?
+
+ enable_disable_volume : ( 'ENABLE' | 'DISABLE' ) 'VOLUME' ( asm_volume ( ',' asm_volume )* | 'ALL' )
+
+ encryption_spec : ( 'USING' '"' encrypt_algorithm '"' )? ( 'IDENTIFIED' 'BY' password )? ( '"' integrity_algorithm '"' )? ( ( 'NO' )? 'SALT' )?
+
+ end_session_clauses : ( 'DISCONNECT' 'SESSION' '"' integer ',' integer '"' ( 'POST_TRANSACTION' )? | 'KILL' 'SESSION' '"' integer ',' integer ( ',' '@' integer )? '"' ) ( 'IMMEDIATE' )?
+
+ error_logging_clause : 'LOG' 'ERRORS' ( 'INTO' table_fullname )? ( '(' simple_expressions ')' )? ( 'REJECT' 'LIMIT' ( integer | 'UNLIMITED' ) )?
+
+ exceptions_clause : 'EXCEPTIONS' 'INTO' table_fullname 
+
+ exchange_partition_subpart : 'EXCHANGE' ( partition_extended_name | subpartition_extended_name ) 'WITH' 'TABLE' table_fullname ( ( 'INCLUDING' | 'EXCLUDING' ) 'INDEXES' )? ( ( 'WITH' | 'WITHOUT' ) 'VALIDATION' )? ( exceptions_clause )? ( update_index_clauses ( parallel_clause )? )?
+
+ expr : ( simple_expressions | compound_expressions | case_expressions | cursor_expression | datetime_expressions | function_expression | interval_expression | object_access_expression | scalar_subquery_expression | model_expression | type_constructor_expression | variable_expression )
+ 
+ expression_list : ( expr ( ',' expr )* | '(' ( expr ( ',' expr )? )* ')' )
+
+ extended_attribute_clause : 'ATTRIBUTE' attribute ( 'LEVEL' level 'DETERMINES' ( column | column_list_paren ) )+ 
+
+ extent_management_clause : 'EXTENT' 'MANAGEMENT' 'LOCAL' ( 'AUTOALLOCATE' | 'UNIFORM' ( 'SIZE' size_clause )? )?
+
+ external_data_properties : 'DEFAULT' 'DIRECTORY' directory ( 'ACCESS' 'PARAMETERS' ( '(' opaque_format_spec ')' | 'USING' 'CLOB' subquery ) )? 'LOCATION' '(' ( directory ':' )? '"' location_specifier '"' ( ',' ( directory ':' )? '"' location_specifier '"' )* ')' subclauses 
+
+ external_table_clause : '(' ( 'TYPE' access_driver_type )? external_data_properties ')' ( 'REJECT' 'LIMIT' ( integer | 'UNLIMITED' ) )?
+
+ file_owner_clause : 'SET' 'OWNERSHIP' ( 'OWNER' = user | 'GROUP' = usergroup ( ',' 'OWNER' = user | 'GROUP' = usergroup )* ) 'FOR' 'FILE' '"' filename '"' ( ',' '"' filename '"' )* 
+
+ file_permissions_clause : 'SET' 'PERMISSION' ( 'OWNER' | 'GROUP' | 'OTHER' ) = ( 'NONE' | 'READ' 'ONLY' | 'READ' 'WRITE' ) ( ',' ( 'OWNER' | 'GROUP' | 'OTHER' | 'ALL' ) = ( 'NONE' | 'READ' 'ONLY' | 'READ' 'WRITE' ) )* 'FOR' 'FILE' '"' filename '"' ( ',' '"' filename '"' )* 
+
+ file_specification : ( datafile_tempfile_spec | redo_log_file_spec )
+
+ flashback_archive_clause : 'FLASHBACK' 'ARCHIVE' ( flashback_archive )? | 'NO' 'FLASHBACK' 'ARCHIVE'
+
+ flashback_archive_quota : 'QUOTA' integer ( 'M' | 'G' | 'T' | 'P' | 'E' )
+
+ flashback_archive_retention : 'RETENTION' integer ( 'YEAR' | 'MONTH' | 'DAY')
+
+ flashback_mode_clause : 'FLASHBACK' ( 'ON' | 'OFF' )
+
+ flashback_query_clause : ( 'VERSIONS' 'BETWEEN' ( 'SCN' | 'TIMESTAMP' ) ( expr | 'MINVALUE' ) 'AND' ( expr | 'MAXVALUE' ) | 'AS' 'OF' ( 'SCN' | 'TIMESTAMP' ) expr )
+
+ for_update_clause : 'FOR' 'UPDATE' ( 'OF' ( source_fullname '.' )? column ( ',' ( source_fullname '.' )? column )* )? ( ( 'NOWAIT' | 'WAIT' integer | 'SKIP' 'LOCKED' ) )?
+
+ full_database_recovery : ( 'STANDBY' )? 'DATABASE' ( ( 'UNTIL' ( 'CANCEL' | 'TIME' date | 'CHANGE' integer | 'CONSISTENT' ) | 'USING' 'BACKUP' 'CONTROLFILE' )+ )?
+
+ fully_qualified_file_name : + diskgroup_name / db_name / file_type / file_type_tag '.' filenumber '.' incarnation_number 
+
+ function_association : ( 'FUNCTIONS' identifier_fullname ( ',' identifier_fullname )* | 'PACKAGES' package_fullname ( ',' package_fullname )* | 'TYPES' type_fullname ( ',' type_fullname )* | 'INDEXES' index_fullname ( ',' index_fullname )* | 'INDEXTYPES' indextype_fullname ( ',' indextype_fullname )* ) ( using_statistics_type | ( default_cost_clause ( ',' default_selectivity_clause )? | default_selectivity_clause ( ',' default_cost_clause )? ) )
+
+ general_recovery : 'RECOVER' ( 'AUTOMATIC' )? ( 'FROM' '"' location '"' )? ( ( full_database_recovery | partial_database_recovery | 'LOGFILE' '"' filename '"' ) ( ( 'TEST' | 'ALLOW' integer 'CORRUPTION' | parallel_clause )+ )? | 'CONTINUE' ( 'DEFAULT' )? | 'CANCEL' )
+
+ global_partitioned_index : 'GLOBAL' 'PARTITION' 'BY' ( 'RANGE' column_list_paren '(' index_partitioning_clause ')' | 'HASH' column_list_paren ( individual_hash_partitions | hash_partitions_by_quantity ) )
+
+ group_by_clause : 'GROUP' 'BY' ( expr | rollup_cube_clause | grouping_sets_clause ) ( ',' ( expr | rollup_cube_clause | grouping_sets_clause ) )* ( 'HAVING' condition )?
+
+ grouping_expression_list : expression_list ( ',' expression_list )* 
+
+ grouping_sets_clause : 'GROUPING' 'SETS' '(' ( rollup_cube_clause | grouping_expression_list ) ')'
+
+ hash_partitions : 'PARTITION' 'BY' 'HASH' column_list_paren ( individual_hash_partitions | hash_partitions_by_quantity )
+
+ hash_partitions_by_quantity : 'PARTITIONS' hash_partition_quantity ( 'STORE' 'IN' '(' tablespace ( ',' tablespace )* ')' )? ( table_compression | key_compression )? ( 'OVERFLOW' 'STORE' 'IN' '(' tablespace ( ',' tablespace )* ')' )?
+
+ hash_subparts_by_quantity : 'SUBPARTITIONS' integer ( 'STORE' 'IN' '(' tablespace ( ',' tablespace )* ')' )?
+
+ hierarchical_query_clause : ( 'CONNECT' 'BY' ( 'NOCYCLE' )? condition ( 'START' 'WITH' condition )? | 'START' 'WITH' condition 'CONNECT' 'BY' ( 'NOCYCLE' )? condition )
+
+ hierarchy_clause : 'HIERARCHY' hierarchy '(' child_level ( 'CHILD' 'OF' parent_level )+ ( dimension_join_clause )? ')'
+
+ implementation_clause : ( 'ANCILLARY' 'TO' primary_operator '(' parameter_type ( ',' parameter_type )* ')' ( ',' primary_operator '(' parameter_type ( ',' parameter_type )* ')' )* | context_clause )
+
+ incomplete_file_name : + diskgroup_name ( '(' template_name ')' )?
+
+ index_attributes : ( ( physical_attributes_clause | logging_clause | 'ONLINE' | 'TABLESPACE' ( tablespace | 'DEFAULT' ) | key_compression | ( 'SORT' | 'NOSORT' ) | 'REVERSE' | 'VISIBLE' | 'INVISIBLE' | parallel_clause )+ )?
+
+ index_expr : ( column | column_expression )
+
+ index_org_overflow_clause : ( 'INCLUDING' column_name )? 'OVERFLOW' ( segment_attributes_clause )?
+
+ index_org_table_clause : ( ( mapping_table_clause | 'PCTTHRESHOLD' integer | key_compression )+ )? ( index_org_overflow_clause )?
+
+ index_partition_description : 'PARTITION' ( partition ( ( segment_attributes_clause | key_compression subclauses )+ | 'PARAMETERS' '(' '"' odci_parameters '"' ')' )? ( 'UNUSABLE' )? )?
+
+ index_partitioning_clause : 'PARTITION' ( partition )? 'VALUES' 'LESS' 'THAN' '(' literal ( ',' literal )* ')' ( segment_attributes_clause )?
+
+ index_properties : ( ( ( global_partitioned_index | local_partitioned_index ) | index_attributes )+ | 'INDEXTYPE' 'IS' ( domain_index_clause | xmltable_index_clause | xmlindex_clause ) )?
+
+ index_subpartition_clause : ( 'STORE' 'IN' '(' tablespace ( ',' tablespace )* ')' | '(' 'SUBPARTITION' ( subpartition )? ( 'TABLESPACE' tablespace )? ( key_compression )? ( 'UNUSABLE' )? ( ',' 'SUBPARTITION' ( subpartition )? ( 'TABLESPACE' tablespace )? ( key_compression )? ( 'UNUSABLE' )? )* ')' )
+
+ individual_hash_partitions : 'PARTITION' ( partition )? ( partitioning_storage_clause )? ( ',' 'PARTITION' ( partition )? ( partitioning_storage_clause )? )* 
+
+ individual_hash_subparts : 'SUBPARTITION' ( subpartition )? ( partitioning_storage_clause )?
+
+ inline_constraint : ( 'CONSTRAINT' constraint_name )? ( ( 'NOT' )? 'NULL' | 'UNIQUE' | 'PRIMARY' 'KEY' | references_clause | 'CHECK' '(' condition ')' ) ( constraint_state )?
+
+ inline_ref_constraint : ( 'SCOPE' 'IS' scope_table_fullname | 'WITH' 'ROWID' | ( 'CONSTRAINT' constraint_name )? references_clause ( constraint_state )? )
+ 
+ inner_cross_join_clause : ( ( 'INNER' )? 'JOIN' table_reference ( 'ON' condition | 'USING' column_list_paren ) | ( 'CROSS' | 'NATURAL' ( 'INNER' )? ) 'JOIN' table_reference )
+
+ insert_into_clause : 'INTO' dml_table_expression_clause ( alias )? ( column_list_paren )?
+
+ instance_clauses : ( 'ENABLE' | 'DISABLE' ) 'INSTANCE' '"' instance_name "
+
+ integer : ( + | - )? digit ( digit )* 
+
+ interval_day_to_second : 'INTERVAL' '"' ( integer | integer time_expr | time_expr ) '"' ( ( 'DAY' | 'HOUR' | 'MINUTE' ) ( '(' leading_precision ')' )? | 'SECOND' ( '(' leading_precision ( ',' fractional_second_precision )? ')' )? ) ( 'TO' ( 'DAY' | 'HOUR' | 'MINUTE' | 'SECOND' ( '(' fractional_second_precision ')' )? ) )?
+
+ interval_year_to_month : 'INTERVAL' '"' integer ( - integer )? '"' ( 'YEAR' | 'MONTH' ) ( '(' precision ')' )? ( 'TO' ( 'YEAR' | 'MONTH' ) )?
+
+ into_clause : 'INTO' table_fullname 
+
+ invoker_rights_clause : 'AUTHID' ( 'CURRENT_USER' | 'DEFINER' )
+
+ time_expr : hh ( ':' mi ( ':' ss ( '.' n )? )? )? | mi ( ':' ss ( '.' n )? )? | ss ( '.' n )?
+
+ join_clause : table_reference ( inner_cross_join_clause | outer_join_clause )+ 
+
+ key_compression : ( 'COMPRESS' ( integer )? | 'NOCOMPRESS' )
+
+ level_clause : 'LEVEL' level 'IS' ( level_table '.' level_column | '(' level_table '.' level_column ( ',' level_table '.' level_column )* ')' )
+
+ list_partition_desc : 'PARTITION' ( partition )? list_values_clause table_partition_description ( '(' range_subpartition_desc ( ',' range_subpartition_desc )* subclauses | list_subpartition_desc ',' ( ',' list_subpartition_desc )* | individual_hash_subparts ( ',' individual_hash_subparts )* ')' | hash_subparts_by_quantity )?
+
+ list_partitions : 'PARTITION' 'BY' 'LIST' '(' column ')' '(' 'PARTITION' ( partition )? list_values_clause table_partition_description ( ',' 'PARTITION' ( partition )? list_values_clause table_partition_description )* ')'
+
+ list_subpartition_desc : 'SUBPARTITION' ( subpartition )? list_values_clause ( partitioning_storage_clause )?
+
+ list_values_clause : 'VALUES' '(' ( literal | 'NULL' ) ( ',' ( literal | 'NULL' ) )* | 'DEFAULT' ')'
+
+ lob_compression_clause : ( 'COMPRESS' ( 'HIGH' | 'MEDIUM' | 'LOW' )? | 'NOCOMPRESS' )
+
+ lob_deduplicate_clause : ( 'DEDUPLICATE' | 'KEEP_DUPLICATES' )
+
+ lob_parameters : ( ( 'ENABLE' | 'DISABLE' ) 'STORAGE' 'IN' 'ROW' | 'CHUNK' integer | 'PCTVERSION' integer | 'FREEPOOLS' integer | lob_retention_clause | lob_deduplicate_clause | lob_compression_clause | ( 'ENCRYPT' encryption_spec | 'DECRYPT' ) | ( 'CACHE' | 'NOCACHE' | 'CACHE' 'READS' ) ( logging_clause )? )+ 
+
+ lob_partition_storage : 'PARTITION' partition ( lob_storage_clause | varray_col_properties )+ ( '(' 'SUBPARTITION' subpartition ( lob_partitioning_storage | varray_col_properties )+ ')' )?
+
+ lob_partitioning_storage : 'LOB' '(' lob_item ')' 'STORE' 'AS' ( 'BASICFILE' | 'SECUREFILE' )? ( lob_segname ( '(' 'TABLESPACE' tablespace ')' )? | '(' 'TABLESPACE' tablespace ')' )?
+
+ lob_retention_storage : 'RETENTION' ( 'MAX' | 'MIN' integer | 'AUTO' | 'NONE' )?
+
+ lob_storage_clause : 'LOB' ( '(' lob_item ( ',' lob_item )* ')' 'STORE' 'AS' ( ( 'SECUREFILE' | 'BASICFILE') | '(' lob_storage_parameters ')' )+ | '(' lob_item ')' 'STORE' 'AS' ( ( 'SECUREFILE' | 'BASICFILE') | lob_segname | '(' lob_storage_parameters ')' )+ )
+
+ lob_storage_parameters : ( ( 'TABLESPACE' tablespace | lob_parameters ( storage_clause )? )+ | storage_clause )
+
+ local_domain_index_clause : 'LOCAL' ( '(' 'PARTITION' partition ( 'PARAMETERS' '(' '"' odci_parameters '"' ')' )? ( ',' 'PARTITION' partition ( 'PARAMETERS' '(' '"' odci_parameters '"' ')' )? )* ')' )?
+
+ local_partitioned_index : 'LOCAL' ( on_range_partitioned_table | on_list_partitioned_table | on_hash_partitioned_table | on_comp_partitioned_table )?
+
+ local_xmlindex_clause : 'LOCAL' ( '(' 'PARTITION' partition ( xmlindex_parameters_clause )? ( ',' 'PARTITION' partition ( xmlindex_parameters ')' clause )? )* ')' )?
+
+ logfile_clause : 'LOGFILE' ( 'GROUP' integer )? file_specification ( ',' ( 'GROUP' integer )? file_specification )* 
+
+ logfile_clauses : ( ( 'ARCHIVELOG' ( 'MANUAL' )? | 'NOARCHIVELOG' ) | ( 'NO' )? 'FORCE' 'LOGGING' subclauses | 'RENAME' 'FILE' '"' filename '"' ( ',' '"' filename '"' )* 'TO' '"' filename '"' | 'CLEAR' ( 'UNARCHIVED' )? 'LOGFILE' logfile_descriptor ( ',' logfile_descriptor )* ( 'UNRECOVERABLE' 'DATAFILE' )? | add_logfile_clauses | drop_logfile_clauses | switch_logfile_clause | supplemental_db_logging )
+
+ logfile_descriptor : ( 'GROUP' integer | '(' '"' filename '"' ( ',' '"' filename '"' )* ')' | '"' filename '"' )
+
+ logging_clause : ( 'LOGGING' | 'NOLOGGING' | 'FILESYSTEM_LIKE_LOGGING' )
+
+ main_model : ( 'MAIN' main_model_name )? model_column_clauses ( cell_reference_options )? model_rules_clause 
+
+ managed_standby_recovery : 'RECOVER' ( 'MANAGED' 'STANDBY' 'DATABASE' ( ( 'USING' 'CURRENT' 'LOGFILE' | 'DISCONNECT' ( 'FROM' 'SESSION' )? | 'NODELAY' | 'UNTIL' 'CHANGE' integer | 'UNTIL' 'CONSISTENT' | parallel_clause )+ | 'FINISH' | 'CANCEL' )? | 'TO' 'LOGICAL' 'STANDBY' ( db_name | 'KEEP' 'IDENTITY' ))
+
+ mapping_table_clause : ( 'MAPPING' 'TABLE' | 'NOMAPPING' )
+
+ materialized_view_props : ( column_properties )? ( table_partitioning_clauses )? ( 'CACHE' | 'NOCACHE' )? ( parallel_clause )? ( build_clause )?
+
+ maximize_standby_db_clause : 'SET' 'STANDBY' 'DATABASE' 'TO' 'MAXIMIZE' ( 'PROTECTION' | 'AVAILABILITY' | 'PERFORMANCE' )
+
+ maxsize_clause : 'MAXSIZE' ( 'UNLIMITED' | size_clause )
+
+ merge_insert_clause : 'WHEN' 'NOT' 'MATCHED' 'THEN' 'INSERT' ( column_list_paren )? 'VALUES' '(' ( expr | 'DEFAULT' ) ( ',' ( expr | 'DEFAULT' ) )* ')' ( where_clause )?
+
+ merge_table_partitions : 'MERGE' 'PARTITIONS' partition | ( 'FOR' '(' partition_key_value ( ',' partition_key_value )* ')' ) ',' partition | ( 'FOR' '(' partition_key_value ( ',' partition_key_value )* ')' ) ( 'INTO' partition_spec )? ( dependent_tables_clause )? ( update_index_clauses )? ( parallel_clause )?
+
+ merge_table_subpartitions : 'MERGE' 'SUBPARTITIONS' subpartition | ( 'FOR' '(' subpartition_key_value ( ',' subpartition_key_value )* ')' ) ',' subpartition | ( 'FOR' '(' subpartition_key_value ( ',' subpartition_key_value )* ')' ) ( 'INTO' ( range_subpartition_desc | list_subpartition_desc ) )? ( dependent_tables_clause )? ( update_index_clauses )? ( parallel_clause )?
+
+ merge_update_clause : 'WHEN' 'MATCHED' 'THEN' 'UPDATE' 'SET' column = ( expr | 'DEFAULT' ) ( ',' column = ( expr | 'DEFAULT' ) )* ( where_clause )? ( 'DELETE' where_clause )?
+
+ mining_attribute_clause : 'USING' ( * | ( table_fullname '.' * | expr ( 'AS' alias )? ) ( ',' ( table_fullname '.' * | expr ( 'AS' alias )? ) )* )
+
+ model_clause : 'MODEL' ( cell_reference_options )? ( return_rows_clause )? ( reference_model )* main_model 
+
+ model_column : expr ( ( 'AS' )? alias )? subclauses 
+
+ model_column_clauses : ( 'PARTITION' 'BY' '(' expr ( alias )? ( ',' expr ( alias )? )* ')' )? 'DIMENSION' 'BY' '(' expr ( alias )? ( ',' expr ( alias )? )* ')' 'MEASURES' '(' expr ( alias )? ( ',' expr ( alias )? )* ')'
+
+ model_iterate_clause : 'ITERATE' '(' number ')' ( 'UNTIL' '(' condition ')' )?
+
+ model_rules_clause : ( 'RULES' ( ( 'UPDATE' | 'UPSERT' ( 'ALL' )? ) )? ( ( 'AUTOMATIC' | 'SEQUENTIAL' ) 'ORDER' )? ( model_iterate_clause )? )? '(' ( ( 'UPDATE' | 'UPSERT' ( 'ALL' )? ) )? cell_assignment ( order_by_clause )? = expr ( ',' ( ( 'UPDATE' | 'UPSERT' ( 'ALL' )? ) )? cell_assignment ( order_by_clause )? = expr )* ')'
+
+ modify_col_properties : column ( datatype )? ( 'DEFAULT' expr )? ( ( 'ENCRYPT' encryption_spec | 'DECRYPT' ) ( inline_constraint ... ( lob_storage_clause )? ( alter_xmlschema_clause )?
+
+ modify_col_substitutable : 'COLUMN' column ( 'NOT' )? 'SUBSTITUTABLE' 'AT' 'ALL' 'LEVELS' ( 'FORCE' )?
+
+ modify_collection_retrieval : 'MODIFY' 'NESTED' 'TABLE' collection_item 'RETURN' 'AS' ( 'LOCATOR' | 'VALUE' )
+
+ modify_column_clauses : 'MODIFY' ( '(' modify_col_properties ( ',' modify_col_properties )* ')' | modify_col_substitutable )
+
+ modify_diskgroup_file : 'MODIFY' 'FILE' '"' filename '"' 'ATTRIBUTE' '(' disk_region_clause ')' ( ',' '"' filename '"' 'ATTRIBUTE' '(' disk_region_clause ')' )* 
+
+ modify_hash_partition : 'MODIFY' partition_extended_name ( partition_attributes | alter_mapping_table_clause | ( 'REBUILD' )? 'UNUSABLE' 'LOCAL' 'INDEXES' )
+
+ modify_index_default_attrs : 'MODIFY' 'DEFAULT' 'ATTRIBUTES' ( 'FOR' 'PARTITION' partition )? ( physical_attributes_clause | 'TABLESPACE' ( tablespace | 'DEFAULT' ) | logging_clause )+ 
+
+ modify_index_partition : 'MODIFY' 'PARTITION' partition ( ( deallocate_unused_clause | allocate_extent_clause | physical_attributes_clause | logging_clause | key_compression )+ | 'PARAMETERS' '(' '"' odci_parameters '"' ')' | 'COALESCE' | 'UPDATE' 'BLOCK' 'REFERENCES' | 'UNUSABLE' )
+
+ modify_index_subpartition : 'MODIFY' 'SUBPARTITION' subpartition ( 'UNUSABLE' | allocate_extent_clause | deallocate_unused_clause )
+
+ modify_list_partition : 'MODIFY' partition_extended_name ( partition_attributes | ( 'ADD' | 'DROP' ) 'VALUES' '(' literal ( ',' literal )* ')' | ( add_range_subpartition | add_list_subpartition | add_hash_subpartition ) | 'COALESCE' 'SUBPARTITION' ( update_index_clauses )? ( parallel_clause )? | ( 'REBUILD' )? 'UNUSABLE' 'LOCAL' 'INDEXES' )
+
+ modify_lob_parameters : ( storage_clause | 'PCTVERSION' integer | 'FREEPOOLS' integer | 'REBUILD' 'FREEPOOLS' | lob_retention_clause | lob_deduplicate_clause | lob_compression_clause | ( 'ENCRYPT' encryption_spec | 'DECRYPT' ) | ( 'CACHE' | ( 'NOCACHE' | 'CACHE' 'READS' ) ( logging_clause )? ) | allocate_extent_clause | shrink_clause | deallocate_unused_clause )+ 
+
+ modify_lob_storage_clause : 'MODIFY' 'LOB' '(' lob_item ')' '(' modify_lob_parameters ')'
+
+ modify_mv_column_clause : 'MODIFY' '(' column ( 'ENCRYPT' encryption_spec | 'DECRYPT' )? ')' subclauses 
+
+ modify_range_partition : 'MODIFY' partition_extended_name ( partition_attributes | ( add_range_subpartition | add_hash_subpartition | add_list_subpartition ) | 'COALESCE' 'SUBPARTITION' ( update_index_clauses )? ( parallel_clause )? | alter_mapping_table_clause | ( 'REBUILD' )? 'UNUSABLE' 'LOCAL' 'INDEXES' )
+
+ modify_table_default_attrs : 'MODIFY' 'DEFAULT' 'ATTRIBUTES' ( 'FOR' partition_extended_name )? ( deferred_segment_creation )? ( segment_attributes_clause )? ( table_compression )? ( 'PCTTHRESHOLD' integer )? ( key_compression )? ( alter_overflow_clause )? ( ( 'LOB' '(' lob_item ')' | 'VARRAY' varray ) '(' lob_parameters ')' )* 
+
+ modify_table_partition : ( modify_range_partition | modify_hash_partition | modify_list_partition )
+
+ modify_table_subpartition : 'MODIFY' subpartition_extended_name ( allocate_extent_clause | deallocate_unused_clause | shrink_clause | ( ( 'LOB' lob_item | 'VARRAY' varray ) '(' modify_lob_parameters ')' )+ | ( 'REBUILD' )? 'UNUSABLE' 'LOCAL' 'INDEXES' | ( 'ADD' | 'DROP' ) 'VALUES' '(' literal ( ',' literal )* ')' )
+
+ modify_volume_clause : 'MODIFY' 'VOLUME' asm_volume ( 'ATTRIBUTE' '(' disk_region_clause ')' )? ( 'MOUNTPATH' '"' mountpath_name '"' )? ( 'USAGE' '"' usage_name '"' )?
+
+ move_mv_log_clause : 'MOVE' segment_attributes_clause ( parallel_clause )?
+
+ move_table_clause : 'MOVE' ( 'ONLINE' )? ( segment_attributes_clause )? ( table_compression )? ( index_org_table_clause )? ( ( lob_storage_clause | varray_col_properties )+ )? ( parallel_clause )?
+
+ move_table_partition : 'MOVE' partition_extended_name ( 'MAPPING' 'TABLE' )? ( table_partition_description )? ( update_index_clauses )? ( parallel_clause )?
+
+ move_table_subpartition : 'MOVE' subpartition_extended_name ( partitioning_storage_clause )? ( update_index_clauses )? ( parallel_clause )?
+
+ multi_column_for_loop : 'FOR' '(' dimension_column ( ',' dimension_column )* ')' 'IN' '(' ( '(' literal ( ',' literal )* ')' ( '(' literal ( ',' literal )* ')' )* | subquery ) ')'
+
+ multi_table_insert : ( 'ALL' ( insert_into_clause ( values_clause )? ( error_logging_clause )? )+ | conditional_insert_clause ) subquery 
+
+ multiset_except : nested_table 'MULTISET' 'EXCEPT' ( 'ALL' | 'DISTINCT' )? nested_table 
+
+ multiset_intersect : nested_table 'MULTISET' 'INTERSECT' ( 'ALL' | 'DISTINCT' )? nested_table 
+
+ multiset_union : nested_table 'MULTISET' 'UNION' ( 'ALL' | 'DISTINCT' )? nested_table 
+
+ mv_log_augmentation : 'ADD' ( ( 'OBJECT' 'ID' | 'PRIMARY' 'KEY' | 'ROWID' | 'SEQUENCE' ) ( column_list_paren )? | column_list_paren ) ( ',' ( ( 'OBJECT' 'ID' | 'PRIMARY' 'KEY' | 'ROWID' | 'SEQUENCE' ) ( column_list_paren )? | column_list_paren ) subclauses )* ( new_values_clause )?
+
+ mv_log_purge_clause : 'PURGE' ( 'IMMEDIATE' ( 'SYNCHRONOUS' | 'ASYNCHRONOUS' )? ')' | 'START' 'WITH' datetime_expressions ( 'NEXT' datetime_expressions | 'REPEAT' 'INTERVAL' interval_expression )? | ( 'START' 'WITH' datetime_expressions )? ( 'NEXT' datetime_expressions | 'REPEAT' 'INTERVAL' interval_expression ) )
+
+ nested_table_col_properties : 'NESTED' 'TABLE' ( nested_item | 'COLUMN_VALUE' ) ( substitutable_column_clause )? ( 'LOCAL' | 'GLOBAL' )? 'STORE' 'AS' storage_table ( '(' ( '(' object_properties ')' | ( physical_properties )? | ( column_properties )? )+ ')' )? ( 'RETURN' ( 'AS' )? ( 'LOCATOR' | 'VALUE' ) )?
+
+ nested_table_partition_spec : 'PARTITION' partition ( segment_attributes_clause )?
+
+ new_values_clause : ( 'INCLUDING' | 'EXCLUDING' ) 'NEW' 'VALUES'
+
+ number : ( '+' | '-' )? ( digit ( digit )* ( '.' )? ( digit ( digit )* )? | '.' digit ( digit )* ) ( ( 'e' | 'E' )? ( '+' | '-' )? digit ( digit )* )? ( 'f' | 'F' | 'd' | 'D' )?
+
+ numeric_file_name : + diskgroup_name '.' filenumber '.' incarnation_number 
+
+ object_properties : ( ( column | attribute ) ( 'DEFAULT' expr )? ( ( inline_constraint )+ | inline_ref_constraint )? | ( out_of_line_constraint | out_of_line_ref_constraint | supplemental_logging_props ) )
+
+ object_table : 'OF' object_type_fullname ( object_table_substitution )? ( '(' object_properties ')' )? ( 'ON' 'COMMIT' ( 'DELETE' | 'PRESERVE' ) 'ROWS' )? ( oid_clause )? ( oid_index_clause )? ( physical_properties )? ( table_properties )?
+
+ object_table_substitution : ( 'NOT' )? 'SUBSTITUTABLE' 'AT' 'ALL' 'LEVELS'
+
+ object_type_col_properties : 'COLUMN' column substitutable_column_clause 
+
+ object_view_clause : 'OF' type_name_fullname ( 'WITH' 'OBJECT' 'IDENTIFIER' ( 'DEFAULT' | '(' attribute ( ',' attribute )* ')' ) | 'UNDER' view_name_fullname ) ( '(' ( out_of_line_constraint | attribute ( inline_constraint )+ ) ( ',' ( out_of_line_constraint | attribute ( inline_constraint )+ ) )* ')' )?
+
+ oid_clause : 'OBJECT' 'IDENTIFIER' 'IS' ( 'SYSTEM' 'GENERATED' | 'PRIMARY' 'KEY' )
+
+ oid_index_clause : 'OIDINDEX' ( index )? '(' ( physical_attributes_clause | 'TABLESPACE' tablespace )+ ')'
+
+ on_comp_partitioned_table : ( 'STORE' 'IN' '(' tablespace ( ',' tablespace )* ')' )? '(' 'PARTITION' ( partition )? ( ( segment_attributes_clause | key_compression )+ )? ( 'UNUSABLE' )? ( index_subpartition_clause )? ( ',' 'PARTITION' ( partition )? ( ( segment_attributes_clause | key_compression )+ )? ( 'UNUSABLE' )? ( index_subpartition_clause )? )* ')'
+
+ on_hash_partitioned_table : ( 'STORE' 'IN' '(' tablespace ( ',' tablespace )* ')' | '(' 'PARTITION' ( partition )? ( 'TABLESPACE' tablespace )? ( key_compression )? ( 'UNUSABLE' )? ( ',' 'PARTITION' ( partition )? ( 'TABLESPACE' tablespace )? ( key_compression )? ( 'UNUSABLE' )? )* ')' ) subclauses 
+
+ on_list_partitioned_table : '(' 'PARTITION' ( partition )? ( ( segment_attributes_clause | key_compression )+ )? ( 'UNUSABLE' )? ( ',' 'PARTITION' ( partition )? ( ( segment_attributes_clause | key_compression )+ )? ( 'UNUSABLE' )? )* ')'
+
+ on_range_partitioned_table : '(' 'PARTITION' ( partition )? ( ( segment_attributes_clause | key_compression )+ )? ( 'UNUSABLE' )? ( ',' 'PARTITION' ( partition )? ( ( segment_attributes_clause | key_compression )+ )? ( 'UNUSABLE' )? )* ')'
+
+ order_by_clause : 'ORDER' ( 'SIBLINGS' )? 'BY' ( expr | position | alias ) ( 'ASC' | 'DESC' )? ( 'NULLS' 'FIRST' | 'NULLS' 'LAST' )? ( ',' ( expr | position | alias ) ( 'ASC' | 'DESC' )? ( 'NULLS' 'FIRST' | 'NULLS' 'LAST' )? )* 
+
+ out_of_line_constraint : ( 'CONSTRAINT' constraint_name )? ( 'UNIQUE' column_list_paren | 'PRIMARY' 'KEY' column_list_paren | 'FOREIGN' 'KEY' column_list_paren references_clause | 'CHECK' '(' condition ')' ) ( constraint_state )?
+
+ out_of_line_part_storage : 'PARTITION' partition ( nested_table_col_properties | lob_storage_clause | varray_col_properties ) ( nested_table_col_properties | lob_storage_clause | varray_col_properties )* ( '(' 'SUBPARTITION' subpartition ( nested_table_col_properties | lob_storage_clause | varray_col_properties ) ( nested_table_col_properties | lob_storage_clause | varray_col_properties )* ')' )?
+
+ out_of_line_ref_constraint : ( 'SCOPE' 'FOR' '(' ( ref_col | ref_attr ) ')' 'IS' scope_table_fullname | 'REF' '(' ( ref_col | ref_attr ) ')' 'WITH' 'ROWID' | ( 'CONSTRAINT' constraint_name )? 'FOREIGN' 'KEY' '(' ( ref_col ( ',' ref_col )? | ref_attr ( ',' ref_attr )? ) ')' references_clause ( constraint_state )? )
+ 
+ outer_join_clause : ( query_partition_clause )? ( 'NATURAL' )? outer_join_type 'JOIN' ( query_partition_clause )? ( 'ON' condition | 'USING' column_list_paren )?
+
+ outer_join_type : ( 'FULL' | 'LEFT' | 'RIGHT' ) ( 'OUTER' )?
+
+ parallel_clause : ( 'NOPARALLEL' | 'PARALLEL' ( integer )? )
+
+ partial_database_recovery : ( 'TABLESPACE' tablespace ( ',' tablespace )* | 'DATAFILE' ( '"' filename '"' | filenumber ) ( ',' '"' filename '"' | filenumber )* )
+
+ partition_attributes : ( ( physical_attributes_clause | logging_clause | allocate_extent_clause | deallocate_unused_clause | shrink_clause )+ )? ( 'OVERFLOW' ( physical_attributes_clause | logging_clause | allocate_extent_clause | deallocate_unused_clause )+ )? ( table_compression )? ( ( ( 'LOB' lob_item | 'VARRAY' varray ) '(' modify_lob_parameters ')' )+ )?
+
+ partition_extended_name : 'PARTITION' partition | 'PARTITION' 'FOR' '(' partition_key_value ( ',' partition_key_value )* ')' subclauses 
+
+ partition_extension_clause : ( 'PARTITION' '(' partition ')' | 'PARTITION' 'FOR' '(' partition_key_value ( ',' partition_key_value )* ')' | 'SUBPARTITION' '(' subpartition ')' | 'SUBPARTITION' 'FOR' '(' subpartition_key_value ( ',' subpartition_key_value )* ')' )
+
+ partition_spec : 'PARTITION' ( partition )? ( table_partition_description )?
+
+ partitioning_storage_clause : ( ( 'TABLESPACE' tablespace | 'OVERFLOW' ( 'TABLESPACE' tablespace )? | table_compression | key_compression | lob_partitioning_storage | 'VARRAY' varray_item 'STORE' 'AS' ( 'SECUREFILE' | 'BASICFILE' )? 'LOB' lob_segname )+ )?
+
+ password_parameters : ( ( 'FAILED_LOGIN_ATTEMPTS' | 'PASSWORD_LIFE_TIME' | 'PASSWORD_REUSE_TIME' | 'PASSWORD_REUSE_MAX' | 'PASSWORD_LOCK_TIME' | 'PASSWORD_GRACE_TIME' ) ( expr | 'UNLIMITED' | 'DEFAULT' ) | 'PASSWORD_VERIFY_FUNCTION' ( identifier | 'NULL' | 'DEFAULT' ) )
+
+ permanent_tablespace_clause : 'TABLESPACE' tablespace ( 'DATAFILE' file_specification ( ',' file_specification )* )? ( 'MINIMUM' 'EXTENT' size_clause | 'BLOCKSIZE' integer ( K )? | logging_clause | 'FORCE' 'LOGGING' | 'ENCRYPTION' tablespace_encryption_spec | 'DEFAULT' ( table_compression )? ( storage_clause )? | ( 'ONLINE' | 'OFFLINE' ) | extent_management_clause | segment_management_clause | flashback_mode_clause )+ 
+
+ physical_attributes_clause : ( ( 'PCTFREE' integer | 'PCTUSED' integer | 'INITRANS' integer | storage_clause )+ )?
+
+ physical_properties : ( ( deferred_segment_creation )? segment_attributes_clause ( table_compression )? | ( deferred_segment_creation )? 'ORGANIZATION' ( 'HEAP' ( segment_attributes_clause )? ( table_compression )? | 'INDEX' ( segment_attributes_clause )? index_org_table_clause | 'EXTERNAL' external_table_clause ) | 'CLUSTER' cluster column_list_paren )
+
+ pivot_clause : 'PIVOT' ( 'XML' )? '(' '(' expr ')' ( ( 'AS' )? alias )? ( ',' '(' expr ')' ( ( 'AS' )? alias )? )* pivot_for_clause pivot_in_clause ')'
+
+ pivot_for_clause : 'FOR' ( column | column_list_paren )
+
+ pivot_in_clause : 'IN' '(' ( ( ( expr | '(' expr ( ',' expr )* ')' ) ( ( 'AS' )? alias )? )+ | subquery | 'ANY' ( ',' 'ANY' )* ) ')'
+
+ proxy_clause : ( 'GRANT' 'CONNECT' 'THROUGH' ( 'ENTERPRISE' 'USERS' | db_user_proxy db_user_proxy_clauses ) | 'REVOKE' 'CONNECT' 'THROUGH' ( 'ENTERPRISE' 'USERS' | db_user_proxy ))
+
+ qualified_disk_clause : string ( 'NAME' disk_name )? ( 'SIZE' size_clause )? ( 'FORCE' | 'NOFORCE' )?
+
+ qualified_template_clause : 'ATTRIBUTE' '(' redundancy_clause striping_clause disk_region_clause ')'
+
+ query_block : ( subquery_factoring_clause )? 'SELECT' ( hint )? ( ( ( 'DISTINCT' | 'UNIQUE' ) | 'ALL' ) )? select_list 'FROM' ( | join_clause | '(' join_clause ')' ) ( ',' ( | join_clause | '(' join_clause ')' ) )* ( where_clause )? ( hierarchical_query_clause )? ( group_by_clause )? ( model_clause )?
+
+ query_partition_clause : 'PARTITION' 'BY' ( value_expr ( ',' value_expr )* | '(' value_expr ( ',' value_expr )* ')' subclauses )
+
+ query_table_expression : ( query_name | ( schema_name '.' )? ( table ( partition_extension_clause | @ dblink )? | ( view_name | materialized_view ) ( @ dblink )? ) ( '"' sample_clause '"' )? | '(' subquery ( subquery_restriction_clause )? ')' | table_collection_expression )
+
+ quiesce_clauses : 'QUIESCE' 'RESTRICTED' | 'UNQUIESCE'
+
+ range_partition_desc : 'PARTITION' ( partition )? range_values_clause table_partition_description ( '(' ( range_subpartition_desc ( ',' range_subpartition_desc )* | list_subpartition_desc ( ',' list_subpartition_desc )* | individual_hash_subparts ( ',' individual_hash_subparts )* ) ')' | hash_subparts_by_quantity )?
+
+ range_partitions : 'PARTITION' 'BY' 'RANGE' '(' column ( ',' column )* ')' ( 'INTERVAL' '(' expr ')' ( 'STORE' 'IN' '(' tablespace ( ',' tablespace )* ')' )? )? '(' 'PARTITION' ( partition )? range_values_clause table_partition_description ( ',' 'PARTITION' ( partition )? range_values_clause table_partition_description )* ')'
+
+ range_subpartition_desc : 'SUBPARTITION' ( subpartition )? range_values_clause ( partitioning_storage_clause )?
+
+ range_values_clause : 'VALUES' 'LESS' 'THAN' '(' ( literal | 'MAXVALUE' ) ( ',' ( literal | 'MAXVALUE' ) )* ')'
+
+ rebalance_diskgroup_clause : 'REBALANCE' ( 'POWER' integer )? ( 'WAIT' | 'NOWAIT' )?
+
+ rebuild_clause : 'REBUILD' ( ( 'PARTITION' partition | 'SUBPARTITION' subpartition ) | ( 'REVERSE' | 'NOREVERSE' ) )? ( parallel_clause | 'TABLESPACE' tablespace | 'PARAMETERS' '(' '"' odci_parameters '"' ')' | xmlindex_parameters_clause | 'ONLINE' | physical_attributes_clause | key_compression | logging_clause )* 
+
+ records_per_block_clause : ( 'MINIMIZE' | 'NOMINIMIZE' ) 'RECORDS_PER_BLOCK'
+
+ recovery_clauses : ( general_recovery | managed_standby_recovery | 'BEGIN' 'BACKUP' | 'END' 'BACKUP' )
+
+ redo_log_file_spec : ( '"' filename | asm_filename '"' | '(' '"' filename | asm_filename '"' ( ',' '"' filename | asm_filename '"' )* ')' )? ( 'SIZE' size_clause )? ( 'BLOCKSIZE' size_clause ( 'REUSE' )?
+
+ redundancy_clause : ( 'MIRROR' | 'HIGH' | 'UNPROTECTED' )?
+
+ reference_model : 'REFERENCE' reference_model_name 'ON' '(' subquery ')' model_column_clauses ( cell_reference_options )?
+
+ reference_partition_desc : 'PARTITION' ( partition )? ( table_partition_description )? ')'
+
+ reference_partitioning : 'PARTITION' 'BY' 'REFERENCE' '(' constraint ')' ( '(' reference_partition_desc ... ')' )?
+
+ references_clause : 'REFERENCES' identifier_fullname ( column_list_paren )? ( 'ON' 'DELETE' ( 'CASCADE' | 'SET' 'NULL' ) )?
+
+ register_logfile_clause : 'REGISTER' ( 'OR' 'REPLACE' )? ( 'PHYSICAL' | 'LOGICAL' )? 'LOGFILE' ( file_specification ( ',' file_specification )* ( 'FOR' logminer_session_name )?
+
+ relational_properties : ( column_definition | virtual_column_definition | ( out_of_line_constraint | out_of_line_ref_constraint subclauses | supplemental_logging_props ) ) ( ',' ( column_definition | virtual_column_definition | ( out_of_line_constraint | out_of_line_ref_constraint | supplemental_logging_props ) ) )* 
+
+ relational_table : ( '(' relational_properties ')' )? ( 'ON' 'COMMIT' ( 'DELETE' | 'PRESERVE' ) 'ROWS' )? ( physical_properties )? ( table_properties )?
+
+ rename_column_clause : 'RENAME' 'COLUMN' column 'TO' column 
+
+ rename_index_partition : 'RENAME' ( 'PARTITION' name | 'SUBPARTITION' name ) 'TO' name 
+
+ rename_partition_subpart : 'RENAME' ( partition_extended_name | subpartition_extended_name ) 'TO' name 
+
+ resize_disk_clause : 'RESIZE' ( 'ALL' ( 'SIZE' size_clause )? | ( 'QUORUM' | 'REGULAR' )? 'DISK' disk_name ( 'SIZE' size_clause )? ( ',' disk_name ( 'SIZE' size_clause )? )* | 'DISKS' 'IN' ( 'QUORUM' | 'REGULAR' )? 'FAILGROUP' failgroup_name ( 'SIZE' size_clause )? ( ',' failgroup_name ( 'SIZE' size_clause )? )* )
+
+ resource_parameters : ( ( 'SESSIONS_PER_USER' | 'CPU_PER_SESSION' | 'CPU_PER_CALL' | 'CONNECT_TIME' | 'IDLE_TIME' | 'LOGICAL_READS_PER_SESSION' | 'LOGICAL_READS_PER_CALL' | 'COMPOSITE_LIMIT' ) ( integer | 'UNLIMITED' | 'DEFAULT' ) | 'PRIVATE_SGA' ( size_clause | 'UNLIMITED' | 'DEFAULT' ) )
+
+ return_rows_clause : 'RETURN' ( 'UPDATED' | 'ALL' ) 'ROWS'
+
+ returning_clause : ( 'RETURN' | 'RETURNING' ) expr ( ',' expr )* 'INTO' data_item ( ',' data_item )* 
+
+ revoke_object_privileges : ( object_privilege | 'ALL' ( 'PRIVILEGES' )? ) ( ',' ( object_privilege | 'ALL' ( 'PRIVILEGES' )? ) )* on_object_clause 'FROM' grantee_clause ( 'CASCADE' 'CONSTRAINTS' | 'FORCE' )?
+
+ revoke_system_privileges : ( system_privilege | role | 'ALL' 'PRIVILEGES' ) ( ',' ( system_privilege | role | 'ALL' 'PRIVILEGES' ) )* 'FROM' grantee_clause 
+
+ rolling_migration_clauses : ( 'START' 'ROLLING' 'MIGRATION' 'TO' '"' asm_version '"' | 'STOP' 'ROLLING' 'MIGRATION' )
+
+ rollup_cube_clause : ( 'ROLLUP' | 'CUBE' ) '(' grouping_expression_list ')'
+
+ routine_clause : ( schema_name '.' )? ( type '.' | package '.' )? ( identifier | identifier | identifier ) ( @ dblink_name )? '(' ( arguments )? ')'
+
+ row_movement_clause : ( 'ENABLE' | 'DISABLE' ) 'ROW' 'MOVEMENT'
+
+ sample_clause : 'SAMPLE' ( 'BLOCK' )? '(' sample_percent ')' ( 'SEED' '(' seed_value ')' )?
+
+ scoped_table_ref_constraint : ( 'SCOPE' 'FOR' '(' ( ref_column | ref_attribute ) ')' 'IS' ( schema_name '.' )? ( scope_table_name | alias ) )
+ 
+ search_clause : ( 'SEARCH' ( 'DEPTH' 'FIRST' 'BY' alias ( ',' alias )* ( 'ASC' | 'DESC' )? ( 'NULLS' 'FIRST' | 'NULLS' 'LAST' )? | 'BREADTH' 'FIRST' 'BY' alias ( ',' alias )* ( 'ASC' | 'DESC' )? ( 'NULLS' 'FIRST' | 'NULLS' 'LAST' )? subclauses ) 'SET' ordering_column )
+
+ searched_case_expression : ( 'WHEN' condition 'THEN' expr )+ 
+
+ security_clause : 'GUARD' ( 'ALL' | 'STANDBY' | 'NONE' )
+
+ security_clauses : ( ( 'ENABLE' | 'DISABLE' ) 'RESTRICTED' 'SESSION' | 'SET' 'ENCRYPTION' 'WALLET' 'OPEN' 'IDENTIFIED' 'BY' ( '"' password '"' | '"' hsm_auth_string '"' ) | 'SET' 'ENCRYPTION' 'WALLET' 'CLOSE' ( 'IDENTIFIED' 'BY' ( '"' password '"' | '"' hsm_auth_string '"' ) )? | set_encryption_key )
+
+ segment_attributes_clause : ( physical_attributes_clause | 'TABLESPACE' tablespace | logging_clause )+ 
+
+ segment_management_clause : 'SEGMENT' 'SPACE' 'MANAGEMENT' ( 'AUTO' | 'MANUAL' )
+
+ select_list : ( ( alias '.' )? * | ( query_name '.' * | ( schema_name '.' )? ( table | view_name | materialized_view ) '.' * | expr ( ( 'AS' )? alias )? ) ( ',' ( query_name '.' * | ( schema_name '.' )? ( table | view_name | materialized_view ) '.' * | expr ( ( 'AS' )? alias )? ) )* )
+
+ set_encryption_key : ( 'SET' 'ENCRYPTION' 'KEY' ( ( '"' certificate_id '"' )? 'IDENTIFIED' 'BY' '"' password '"' | 'IDENTIFIED' 'BY' '"' hsm_auth_string '"' ( 'MIGRATE' 'USING' '"' password '"' )? ) )
+
+ set_parameter_clause : parameter = parameter_value ( ',' parameter_value )* ( 'COMMENT' = string )? ( 'DEFERRED' )? ( ( 'SCOPE' = ( 'MEMORY' | 'SPFILE' | 'BOTH' ) | 'SID' = ( '"' sid '"' | '"' * '"' ) )+ )?
+
+ set_subpartition_template : 'SET' 'SUBPARTITION' 'TEMPLATE' ( '(' range_subpartition_desc ( ',' range_subpartition_desc )* ')' | '(' list_subpartition_desc ( ',' list_subpartition_desc )* ')' | '(' individual_hash_subparts ( ',' individual_hash_subparts )* ')' | '(' ')' | hash_subpartition_quantity )
+
+ set_time_zone_clause : 'SET' 'TIME_ZONE' = '"' ( ( + | - ) hh ':' mi | time_zone_region ) "
+
+ shrink_clause : 'SHRINK' 'SPACE' ( 'COMPACT' )? ( 'CASCADE' )?
+
+ shutdown_dispatcher_clause : 'SHUTDOWN' ( 'IMMEDIATE' )? dispatcher_name 
+
+ simple_case_expression : expr ( 'WHEN' expr 'THEN' expr )+ 
+
+ single_column_for_loop : 'FOR' dimension_column ( 'IN' '(' ( literal ( ',' literal )* | subquery ) ')' | ( 'LIKE' pattern )? 'FROM' literal 'TO' literal ( 'INCREMENT' | 'DECREMENT' ) literal )
+
+ single_table_insert : insert_into_clause ( values_clause ( returning_clause )? | subquery ) ( error_logging_clause )?
+
+ size_clause : integer ( 'K' | 'M' | 'G' | 'T' | 'P' | 'E' )?
+
+ split_index_partition : 'SPLIT' 'PARTITION' partition_name 'AT' '(' literal ( ',' literal )* ')' ( 'INTO' '(' index_partition_description ',' index_partition_description ')' )? ( parallel_clause )?
+
+ split_nested_table_part : 'NESTED' 'TABLE' column 'INTO' '(' 'PARTITION' partition ( segment_attributes_clause )? ',' subclauses 'PARTITION' partition ( segment_attributes_clause )? ( split_nested_table_part )? ')' ( split_nested_table_part )?
+
+ split_table_partition : 'SPLIT' partition_extended_name ( 'AT' '(' literal ( ',' literal )* ')' ( 'INTO' '(' range_partition_desc ',' range_partition_desc ')' )? | 'VALUES' '(' literal ( ',' literal )* ')' ( 'INTO' '(' list_partition_desc ',' list_partition_desc ')' )? ) ( split_nested_table_part )? ( dependent_tables_clause )? ( update_index_clauses )? ( parallel_clause )?
+
+ split_table_subpartition : 'SPLIT' subpartition_extended_name ( 'AT' '(' literal ( ',' literal )* ')' ( 'INTO' '(' range_subpartition_desc ',' range_subpartition_desc ')' )? | 'VALUES' '(' ( literal | 'NULL' ( ',' literal | 'NULL' )* ) ')' ( 'INTO' '(' list_subpartition_desc ',' list_subpartition_desc ')' )? ) ( dependent_tables_clause )? ( update_index_clauses )? ( parallel_clause )?
+
+ sql_format : ( + | - )? days hours ':' minutes ':' seconds ( '.' frac_secs )?
+
+ standby_database_clauses : ( activate_standby_db_clause | maximize_standby_db_clause | register_logfile_clause | commit_switchover_clause | start_standby_clause | stop_standby_clause | convert_database_clause ) ( parallel_clause )?
+
+ start_standby_clause : 'START' 'LOGICAL' 'STANDBY' 'APPLY' ( 'IMMEDIATE' )? ( 'NODELAY' )? ( 'NEW' 'PRIMARY' dblink | 'INITIAL' ( scn_value )? | ( 'SKIP' 'FAILED' 'TRANSACTION' | 'FINISH' ) )?
+
+ startup_clauses : ( 'MOUNT' ( ( 'STANDBY' | 'CLONE' ) 'DATABASE' )? | 'OPEN' ( ( 'READ' 'WRITE' )? ( 'RESETLOGS' | 'NORESETLOGS' )? ( 'UPGRADE' | 'DOWNGRADE' )? | 'READ' 'ONLY' ) )
+
+ still_image_object_types : ( si_still I mage | si_average C olor | si_positional C olor | si_colorhistogram | si_texture | si_feature L ist | si_color )
+
+ stop_standby_clause : ( 'STOP' | 'ABORT' ) 'LOGICAL' 'STANDBY' 'APPLY'
+
+ storage_clause : 'STORAGE' '(' ( 'INITIAL' size_clause | 'NEXT' size_clause | 'MINEXTENTS' integer | 'MAXEXTENTS' ( integer | 'UNLIMITED' ) | maxsize_clause | 'PCTINCREASE' integer | 'FREELISTS' integer | 'FREELIST' 'GROUPS' integer | 'OPTIMAL' ( size_clause | 'NULL' )? | 'BUFFER_POOL' ( 'KEEP' | 'RECYCLE' | 'DEFAULT' ) | 'FLASH_CACHE' ( 'KEEP' | 'NONE' | 'DEFAULT' ) | 'ENCRYPT' )+ ')'
+
+ storage_table_clause : 'WITH' ( 'SYSTEM' | 'USER') 'MANAGED' 'STORAGE' 'TABLES'
+
+ striping_clause : ( 'FINE' | 'COARSE' )?
+
+ subpartition_by_hash : 'SUBPARTITION' 'BY' 'HASH' column_list_paren ( 'SUBPARTITIONS' integer ( 'STORE' 'IN' '(' tablespace ( ',' tablespace )* ')' )? | subpartition_template )?
+
+ subpartition_by_list : 'SUBPARTITION' 'BY' 'LIST' '(' column ')' ( subpartition_template )?
+
+ subpartition_by_range : 'SUBPARTITION' 'BY' 'RANGE' column_list_paren ( subpartition_template )?
+
+ subpartition_extended_name : 'SUBPARTITION' subpartition | 'SUBPARTITION' 'FOR' '(' subpartition_key_value ( ',' subpartition_key_value )* ')'
+
+ subpartition_template : 'SUBPARTITION' 'TEMPLATE' subclauses '(' ( range_subpartition_desc ( ',' range_subpartition_desc )* | list_subpartition_desc ( ',' list_subpartition_desc )* | individual_hash_subparts ( ',' individual_hash_subparts )* ) ')' | hash_subpartition_quantity 
+
+ subquery : ( query_block | subquery ( 'UNION' ( 'ALL' )? | 'INTERSECT' | 'MINUS' ) subquery ( ( 'UNION' ( 'ALL' )? | 'INTERSECT' | 'MINUS' ) subquery )* | '(' subquery ')' ) ( order_by_clause )?
+
+ subquery_factoring_clause : 'WITH' query_name '(' ( alias ( ',' alias )* )? ')' 'AS' '(' subquery ')' ( search_clause )? ( cycle_clause )? ( ',' query_name '(' ( alias ( ',' alias )* )? ')' 'AS' '(' subquery ')' ( search_clause )? ( cycle_clause )? )* 
+
+ subquery_restriction_clause : 'WITH' ( 'READ' 'ONLY' | 'CHECK' 'OPTION' ) ( 'CONSTRAINT' constraint )?
+
+ substitutable_column_clause : ( ( 'ELEMENT' )? 'IS' 'OF' ( 'TYPE' )? '(' ( 'ONLY' )? type ')' | ( 'NOT' )? 'SUBSTITUTABLE' 'AT' 'ALL' 'LEVELS' )
+
+ supplemental_db_logging : ( 'ADD' | 'DROP' ) 'SUPPLEMENTAL' 'LOG' ( 'DATA' | supplemental_id_key_clause | supplemental_plsql_clause )
+
+ supplemental_id_key_clause : 'DATA' '(' ( 'ALL' | 'PRIMARY' 'KEY' | 'UNIQUE' | 'FOREIGN' 'KEY' ) ( ',' ( 'ALL' | 'PRIMARY' 'KEY' | 'UNIQUE' | 'FOREIGN' 'KEY' ) )* ')' 'COLUMNS'
+
+ supplemental_log_grp_clause : 'GROUP' log_group '(' column ( 'NO' 'LOG' )? ( ',' column ( 'NO' 'LOG' )? )* ')' ( 'ALWAYS' )?
+
+ supplemental_logging_props : 'SUPPLEMENTAL' 'LOG' ( supplemental_log_grp_clause | supplemental_id_key_clause )
+
+ supplemental_plsql_clause : 'DATA' 'FOR' 'PROCEDURAL' 'REPLICATION'
+
+ supplemental_table_logging : ( 'ADD' 'SUPPLEMENTAL' 'LOG' ( supplemental_log_grp_clause | supplemental_id_key_clause ) ( ',' 'SUPPLEMENTAL' 'LOG' ( supplemental_log_grp_clause | supplemental_id_key_clause ) )* | 'DROP' 'SUPPLEMENTAL' 'LOG' ( supplemental_id_key_clause | 'GROUP' log_group ) ( ',' 'SUPPLEMENTAL' 'LOG' ( supplemental_id_key_clause | 'GROUP' log_group ) )* )
+
+ switch_logfile_clause : 'SWITCH' 'ALL' 'LOGFILES' 'TO' 'BLOCKSIZE' integer 
+
+ system_partitioning : 'PARTITION' 'BY' 'SYSTEM' ( 'PARTITIONS' integer | reference_partition_desc ( ',' reference_partition_desc ... )? )?
+
+ table_collection_expression : 'TABLE' '(' collection_expression ')' ( '(' + ')' )?
+
+ table_compression : ( 'COMPRESS' ( 'BASIC' | 'FOR' ( 'OLTP' | ( 'QUERY' | 'ARCHIVE' ) ( 'LOW' | 'HIGH' )? ) )? | 'NOCOMPRESS' )
+
+ table_index_clause : table_fullname ( alias )? '(' index_expr ( 'ASC' | 'DESC' )? ( ',' index_expr ( 'ASC' | 'DESC' )? )* ')' ( index_properties )?
+
+ table_partition_description : ( deferred_segment_creation )? ( segment_attributes_clause )? ( table_compression | key_compression )? ( 'OVERFLOW' ( segment_attributes_clause )? )? ( ( lob_storage_clause | varray_col_properties | nested_table_col_properties )+ )?
+
+ table_partitioning_clauses : ( range_partitions | list_partitions | hash_partitions | composite_range_partitions | composite_list_partitions subclauses | composite_hash_partitions | reference_partitioning | system_partitioning )
+
+ table_properties : ( column_properties )? ( table_partitioning_clauses )? ( 'CACHE' | 'NOCACHE' )? ( 'RESULT_CACHE' '(' 'MODE' ( 'DEFAULT' | 'FORCE' ) ')' )? ( parallel_clause )? ( 'ROWDEPENDENCIES' | 'NOROWDEPENDENCIES' )? ( enable_disable_clause )* ( row_movement_clause )? ( flashback_archive_clause )? ( 'AS' subquery )?
+
+ table_reference : ( 'ONLY' '(' query_table_expression ')' | query_table_expression ( pivot_clause | unpivot_clause )? ) ( flashback_query_clause )? ( alias )?
+
+ tablespace_clauses : ( 'EXTENT' 'MANAGEMENT' 'LOCAL' | 'DATAFILE' file_specification ( ',' file_specification )* | 'SYSAUX' 'DATAFILE' file_specification ( ',' file_specification )* | default_tablespace | default_temp_tablespace | undo_tablespace )
+
+ tablespace_encryption_spec : ( 'USING' '"' encrypt_algorithm '"' )?
+
+ tablespace_group_clause : 'TABLESPACE' 'GROUP' ( tablespace_group_name | '"' '"' )
+
+ tablespace_logging_clauses : ( logging_clause | ( 'NO' )? 'FORCE' 'LOGGING' )
+
+ tablespace_retention_clause : 'RETENTION' ( 'GUARANTEE' | 'NOGUARANTEE' )
+
+ tablespace_state_clauses : ( ( 'ONLINE' | 'OFFLINE' ( 'NORMAL' | 'TEMPORARY' | 'IMMEDIATE' )? ) | 'READ' ( 'ONLY' | 'WRITE' ) | ( 'PERMANENT' | 'TEMPORARY' ) )
+
+ temporary_tablespace_clause : 'TEMPORARY' 'TABLESPACE' tablespace ( 'TEMPFILE' file_specification ( ',' file_specification )* )? ( tablespace_group_clause )? ( extent_management_clause )?
+
+ timeout_clause : 'DROP' 'AFTER' integer ( M | H )
+
+ trace_file_clause : 'TRACE' ( 'AS' '"' filename '"' ( 'REUSE' )? )? ( 'RESETLOGS' | 'NORESETLOGS' )?
+
+ truncate_partition_subpart : 'TRUNCATE' ( partition_extended_name | subpartition_extended_name ) ( ( 'DROP' ( 'ALL' )? | 'REUSE' ) 'STORAGE' )? ( update_index_clauses ( parallel_clause )? )?
+
+ undo_tablespace : ( 'BIGFILE' | 'SMALLFILE' )? 'UNDO' 'TABLESPACE' tablespace ( 'TABLESPACE' file_specification ( ',' file_specification )* )?
+
+ undo_tablespace_clause : 'UNDO' 'TABLESPACE' tablespace ( 'DATAFILE' file_specification ( ',' file_specification )* )? ( extent_management_clause )? ( tablespace_retention_clause )?
+
+ undrop_disk_clause : 'UNDROP' 'DISKS'
+
+ unpivot_clause : 'UNPIVOT' ( ( 'INCLUDE' | 'EXCLUDE') 'NULLS' )? '(' ( column | column_list_paren ) pivot_for_clause unpivot_in_clause ')'
+
+ unpivot_in_clause : 'IN' '(' ( column | column_list_paren ) ( 'AS' ( literal | '(' literal ( ',' literal )* ')' ) )? ( ',' ( column | column_list_paren ) ( 'AS' ( literal | '(' literal ( ',' literal )* ')' ) )? )* ')'
+
+ update_all_indexes_clause : 'UPDATE' 'INDEXES' ( '(' index '(' update_index_partition | update_index_subpartition ')' ( ',' '(' index '(' update_index_partition | update_index_subpartition ')' ')' subclauses )* ')'
+
+ update_global_index_clause : ( 'UPDATE' | 'INVALIDATE' ) 'GLOBAL' 'INDEXES'
+
+ update_index_clauses : ( update_global_index_clause | update_all_indexes_clause )
+
+ update_index_partition : index_partition_description ( index_subpartition_clause )? ( ',' index_partition_description ( index_subpartition_clause )* 
+
+ update_index_subpartition : 'SUBPARTITION' ( subpartition )? ( 'TABLESPACE' tablespace )? ( ',' 'SUBPARTITION' ( subpartition )? ( 'TABLESPACE' tablespace )? )* 
+
+ update_set_clause : 'SET' ( ( column_list_paren = '(' subquery ')' | column = ( expr | '(' subquery ')' | 'DEFAULT' ) ) ( ',' ( column_list_paren = '(' subquery ')' | column = ( expr | '(' subquery ')' | 'DEFAULT' ) ) )* | 'VALUE' '(' alias ')' = ( expr | '(' subquery ')' ) )
+
+ upgrade_table_clause : 'UPGRADE' ( ( 'NOT' )? 'INCLUDING' 'DATA' )? ( column_properties )?
+
+ user_clauses : ( 'ADD' 'USER' user ( ',' user )* | 'DROP' 'USER' user ( ',' user )* ( 'CASCADE' )? )
+
+ usergroup_clauses : ( 'ADD' 'USERGROUP' usergroup 'WITH' 'MEMBER' user ( ',' user )* | 'MODIFY' 'USERGROUP' usergroup ( 'ADD' | 'DROP' ) 'MEMBER' user ( ',' user )* | 'DROP' 'USERGROUP' usergroup )
+
+ using_function_clause : 'USING' ( schema_name '.' )? ( package '.' | type '.' )? function_name 
+
+ using_index_clause : 'USING' 'INDEX' ( index_fullname | '(' create_index ')' | index_properties )
+
+ using_statistics_type : 'USING' ( statistics_type_fullname | 'NULL' )
+
+ using_type_clause : 'USING' implementation_type_fullname ( array_dml_clause )? 
+ 
+ validation_clauses : ( 'VALIDATE' 'REF' 'UPDATE' ( 'SET' 'DANGLING' 'TO' 'NULL' )? | 'VALIDATE' 'STRUCTURE' ( 'CASCADE' ( 'FAST' | 'COMPLETE' ( 'OFFLINE' | 'ONLINE' ) ( into_clause )? ) )? )
+
+ values_clause : 'VALUES' '(' ( expr | 'DEFAULT' ) ( ',' ( expr | 'DEFAULT' ) )* ')'
+
+ varray_col_properties : 'VARRAY' varray_item ( ( substitutable_column_clause )? varray_storage_clause | substitutable_column_clause )
+
+ varray_storage_clause : 'STORE' 'AS' ( 'SECUREFILE' | 'BASICFILE' )? 'LOB' ( ( lob_segname )? '(' lob_storage_parameters ')' | lob_segname )
+
+ virtual_column_definition : column ( datatype )? ( 'GENERATED' 'ALWAYS' )? 'AS' '(' column_expression ')' ( 'VIRTUAL' )? ( inline_constraint ( inline_constraint )* )?
+
+ where_clause : 'WHERE' condition 
+
+ windowing_clause : ( 'ROWS' | 'RANGE' ) ( 'BETWEEN' ( 'UNBOUNDED' 'PRECEDING' | 'CURRENT' 'ROW' | value_expr ( 'PRECEDING' | 'FOLLOWING' ) ) 'AND' ( 'UNBOUNDED' 'FOLLOWING' | 'CURRENT' 'ROW' | value_expr ( 'PRECEDING' | 'FOLLOWING' ) ) | ( 'UNBOUNDED' 'PRECEDING' | 'CURRENT' 'ROW' | value_expr 'PRECEDING' ) ) subclauses 
+
+ xml_attributes_clause : 'XMLATTRIBUTES' ( 'ENTITYESCAPING' | 'NOENTITYESCAPING' )? ( 'SCHEMACHECK' | 'NOSCHEMACHECK' )? value_expr ( ( ( 'AS' )? alias ) | ( 'AS' 'EVALNAME' value_expr ) )? ( ',' value_expr ( ( ( 'AS' )? alias ) | ( 'AS' 'EVALNAME' value_expr ) )? )* 
+
+ xml_namespaces_clause : 'XMLNAMESPACES' '(' ( string 'AS' identifier )? ( ( ',' string 'AS' identifier )? )* ( 'DEFAULT' string )? ')'
+
+ xml_passing_clause : 'PASSING' ( 'BY' 'VALUE' )? expr ( 'AS' identifier )? ( ',' expr ( 'AS' identifier )? )* 
+
+ xml_table_column : column ( 'FOR' 'ORDINALITY' | datatype ( 'PATH' string )? ( 'DEFAULT' expr )? )
+
+ xmlindex_clause : ( 'XDB' '.' )? 'XMLINDEX' ( local_xmlindex_clause )? ( parallel_clause )? ( xmlindex_parameters_clause )?
+
+ xml_schema_spec : ( 'XMLSCHEMA' xmlschema_url )? 'ELEMENT' ( element | xmlschema_url '#' element ) ( ( 'ALLOW' | 'DISALLOW' ) 'NONSCHEMA' )? ( ( 'ALLOW' | 'DISALLOW' ) 'ANYSCHEMA' )?
+
+ xmltable_options : ( xml_passing_clause )? ( 'COLUMNS' xml_table_column ( ',' xml_table_column )* )?
+
+ xmltype_column_properties : 'XMLTYPE' ( 'COLUMN' )? column ( xmltype_storage )? ( xmlschema_spec )?
+
+ xmltype_storage : 'STORE' ( 'AS' ( 'OBJECT' 'RELATIONAL' | ( 'SECUREFILE' | 'BASICFILE' )? ( 'CLOB' | 'BINARY' 'XML' ) ( ( lob_segname ( '(' lob_parameters ')' )? | '(' lob_parameters ')' ) )? ) | ( 'ALL' 'VARRAYS' 'AS' ( 'LOBS' | 'TABLES' ) ) )
+
+ xmltype_table : 'OF' 'XMLTYPE' ( '(' object_properties ')' )? ( 'XMLTYPE' xmltype_storage )? ( xmlschema_spec )? ( xmltype_virtual_columns )? ( 'ON' 'COMMIT' ( 'DELETE' | 'PRESERVE' ) 'ROWS' )? ( oid_clause )? ( oid_index_clause )? ( physical_properties )? ( table_properties )?
+
+ xmltype_view_clause : 'OF' 'XMLTYPE' ( xmlschema_spec )? 'WITH' 'OBJECT' 'IDENTIFIER' ( 'DEFAULT' | '(' expr ( ',' expr )* ')' )
+
+ xmltype_virtual_columns : 'VIRTUAL' 'COLUMNS' '(' column 'AS' '(' expr ')' ( ',' column 'AS' '(' expr ')' )* ')'
+
+ ym_iso_format : ( - )? P ( years Y )? ( months M )? ( days D )? ( T ( hours H )? ( minutes M )? ( seconds ( '.' frac_secs )? S )? )? subclauses 
+
+ ansi_supported_data_types : ( 'CHARACTER' ( 'VARYING' )? '(' size ')' | ( 'CHAR' | 'NCHAR' ) 'VARYING' '(' size ')' | 'VARCHAR' '(' size ')' | 'NATIONAL' ( 'CHARACTER' | 'CHAR' ) ( 'VARYING' )? '(' size ')' | ( 'NUMERIC' | 'DECIMAL' | 'DEC' ) ( '(' precision ( ',' scale )? ')' )? | ( 'INTEGER' | 'INT' | 'SMALLINT' ) | 'FLOAT' ( '(' size ')' )? | 'DOUBLE' 'PRECISION' | 'REAL' )
+
+ oracle_built-in_data_types : ( character_datatypes | number_datatypes | long_and_raw_datatypes | datetime_datatypes | large_object_datatypes | rowid_datatypes )
+
+ oracle_supplied_data_types : ( any_types | xml_types | spatial_types | media_types | expression_filter_type )
+
+ character_datatypes : ( 'CHAR' ( '(' size ( 'BYTE' | 'CHAR' )? ')' )? | 'VARCHAR2' '(' size ( 'BYTE' | 'CHAR' )? ')' | 'NCHAR' ( '(' size ')' )? | 'NVARCHAR2' '(' size ')' )
+
+ datetime_datatypes : ( 'DATE' | 'TIMESTAMP' ( '(' fractional_second_precision ')' )? ( 'WITH' ( 'LOCAL' )? 'TIME' 'ZONE' )? | 'INTERVAL' 'YEAR' ( '(' year_precision ')' )? 'TO' 'MONTH' | 'INTERVAL' 'DAY' ( '(' day_precision ')' )? 'TO' 'SECOND' ( '(' fractional_second_precision ')' )? )
+
+ large_object_datatypes : ( 'BLOB' | 'CLOB' | 'NCLOB' | 'BFILE' )
+
+ long_and_raw_datatypes : ( 'LONG' | 'LONG' 'RAW' | 'RAW' '(' size ')' )
+
+ number_datatypes : ( 'NUMBER' ( '(' precision ( ',' scale )? ')' )? | 'FLOAT' ( '(' precision ')' )? | 'BINARY_FLOAT' | 'BINARY_DOUBLE' )
+
+ rowid_datatypes : ( 'ROWID' | 'UROWID' ( '(' size ) )? )
+
+ any_types : ( 'SYS'.A ny D ata | 'SYS'.A ny T ype | 'SYS'.A ny D ata S et )
+
+ xml_types : ( xmltype | uritype )
+
+ spatial_types : ( sdo_geometry | do_topo_geometry | sdo_georaster )
+
+ media_types : ( ordaudio | ordimage | ordvideo | orddoc | orddicom | still_image_object_types )
+
+ hierarchy : identifier 
+ diskgroup_name : identifier 
+ asm_volume : identifier 
+ directory : identifier 
+ profile : identifier 
+ namespace : identifier 
+ measure_column : identifier 
+ incarnation_number : identifier 
+ database : identifier 
+ domain : identifier 
+ partition : identifier 
+ partition_key_value : identifier 
+ subpartition : identifier 
+ subpartition_key_value : identifier 
+ restore_point : identifier 
+ alias : identifier 
+ hint : identifier 
+ materialized_view : identifier 
+ view_name : identifier 
+ query_name : identifier 
+ schema_name : identifier 
+ table : identifier 
+ connection_qualifier : identifier 
+ trigger : identifier 
+ constraint_name : identifier 
+ nested_table : identifier 
+ type : identifier 
+ index : identifier 
+ cluster : identifier 
+ tablespace : identifier 
+ lob_segname : identifier 
+ varray_item : identifier 
+ indextype : identifier 
+ scope_table : identifier 
+ ref_col : identifier 
+ ref_attr : identifier 
+ collection_expression : identifier 
+ reference_model_name : identifier 
+ main_model_name : identifier 
+ table_alias : identifier 
+ object_table_alias : identifier 
+ attribute : identifier 
+ identifier : identifier 
+ variable_expression : identifier 
+ column_name : identifier 
+ access_driver_type : identifier 
+ opaque_format_spec : identifier 
+ parameter : identifier 
+ nested_item : identifier 
+ certificate_dn : identifier 
+ synonym : identifier 
+ role : identifier 
+ storage_table : identifier 
+ flashback_archive : identifier 
+ object_type : identifier 
+ edition : identifier 
+ name : identifier 
+ log_group : identifier 
+ partition_name : identifier 
+ type_name : identifier 
+ filename : identifier 
+ db_name : identifier 
+ template_name : identifier 
+ alias_name : identifier 
+ instance_name : identifier 
+ logminer_session_name : identifier 
+ tablespace_group_name : identifier 
+ failgroup_name : identifier 
+ disk_name : identifier 
+ old_dir_name : identifier 
+ new_dir_name : identifier 
+ mountpath_name : identifier 
+ usage_name : identifier 
+ tablespace_name : identifier 
+ object_name : identifier 
+ library_name : identifier 
+ scope_table_name : identifier 
+ function_name : identifier 
+ new_outline_name : identifier 
+ target_db_name : identifier 
+ dispatcher_name : identifier 
+ category_name : identifier 
+ old_name : identifier 
+ new_name : identifier 
+ new_tablespace_name : identifier 
+ kerberos_principal_name : identifier 
+ role_name : identifier 
+ package : identifier 
+ file_type : identifier 
+ file_type_tag : identifier 
+ dimension : identifier 
+ level_table : identifier 
+ level_column : identifier 
+ parent_level : identifier 
+ operator : identifier 
+ primary_operator : identifier 
+ implementation_type : identifier 
+ varray_type : identifier 
+ primary_name : identifier 
+ directory_object_name : identifier 
+ server_file_name : identifier 
+ key_for_blob : identifier 
+ ref_column : identifier 
+ ref_attribute : identifier 
+ column_alias : identifier 
+ segment : identifier 
+ object_privilege : identifier 
+ system_privilege : identifier 
+ usergroup : identifier 
+ db_user_proxy : identifier 
+

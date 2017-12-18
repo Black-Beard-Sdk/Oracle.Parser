@@ -5,7 +5,7 @@ namespace Bb.Oracle.Models
     /// <summary>
     /// 
     /// </summary>
-    public partial class ProcedureCollection : ItemBaseCollection<ProcedureModel>
+    public partial class ProcedureCollection : IndexedCollection<ProcedureModel>
     {
 
         /// <summary>
@@ -13,7 +13,7 @@ namespace Bb.Oracle.Models
         /// </summary>
         static ProcedureCollection()
         {
-            ProcedureCollection.Key = ItemBaseCollection<ProcedureModel>.GetMethodKey(c => c.Key);
+            ProcedureCollection.Key = IndexedCollection<ProcedureModel>.GetMethodKey(c => c.Key);
         }
 
     }

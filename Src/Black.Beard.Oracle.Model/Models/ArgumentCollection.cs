@@ -5,7 +5,7 @@ namespace Bb.Oracle.Models
     /// <summary>
     /// 
     /// </summary>
-    public partial class ArgumentCollection : ItemBaseCollection<ArgumentModel>
+    public partial class ArgumentCollection : IndexedCollection<ArgumentModel>
     {
 
         /// <summary>
@@ -13,7 +13,7 @@ namespace Bb.Oracle.Models
         /// </summary>
         static ArgumentCollection()
         {
-            ArgumentCollection.Key = ItemBaseCollection<ArgumentModel>.GetMethodKey(c => c.Key);
+            ArgumentCollection.Key = IndexedCollection<ArgumentModel>.GetMethodKey(c => c.Key);
         }
 
     }

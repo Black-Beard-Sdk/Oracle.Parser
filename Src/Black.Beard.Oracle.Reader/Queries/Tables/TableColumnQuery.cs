@@ -56,7 +56,6 @@ ORDER BY tt.TABLE_NAME,tt.COLUMN_ID
                         {
                             table = new TableModel() { Key = key, SchemaName = t.SchemaName, Name = t.TableName };
                             db.Tables.Add(table);
-                            db.Tables.Add(table);
                         }
                       
                         //if (!table.Columns.Contains(t.ColumnName))
@@ -142,6 +141,9 @@ ORDER BY tt.TABLE_NAME,tt.COLUMN_ID
                 var _db = this.OracleContext.database;
                 foreach (TableModel table in _db.Tables)
                 {
+
+                    table.codeView = string.Empty;
+
                     if (table.IsMatrializedView)
                     {
 

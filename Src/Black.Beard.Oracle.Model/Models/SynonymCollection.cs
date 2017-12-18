@@ -5,7 +5,7 @@ namespace Bb.Oracle.Models
     /// <summary>
     /// Synonym
     /// </summary>
-    public partial class SynonymCollection : ItemBaseCollection<SynonymModel>
+    public partial class SynonymCollection : IndexedCollection<SynonymModel>
     {
 
         /// <summary>
@@ -13,7 +13,7 @@ namespace Bb.Oracle.Models
         /// </summary>
         static SynonymCollection()
         {
-            SynonymCollection.Key = ItemBaseCollection<SynonymModel>.GetMethodKey(c => c.Key);
+            SynonymCollection.Key = IndexedCollection<SynonymModel>.GetMethodKey(c => c.Key);
         }
 
     }

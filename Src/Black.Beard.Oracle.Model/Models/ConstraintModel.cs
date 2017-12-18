@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace Bb.Oracle.Models
 {
@@ -17,11 +18,13 @@ namespace Bb.Oracle.Models
         /// <summary>
         /// Rel_ Constraint_ Name
         /// </summary>
+        [DefaultValue("")]
         public string Rel_Constraint_Name { get; set; }
 
         /// <summary>
         /// Index Name
         /// </summary>
+        [DefaultValue("")]
         public string IndexName { get; set; }
 
         /// <summary>
@@ -32,56 +35,67 @@ namespace Bb.Oracle.Models
         /// <summary>
         /// Delete Rule
         /// </summary>
+        [DefaultValue("")]
         public string DeleteRule { get; set; }
 
         /// <summary>
         /// Generated
         /// </summary>
+        [DefaultValue("")]
         public string Generated { get; set; }
 
         /// <summary>
         /// Deferrable
         /// </summary>
+        [DefaultValue("")]
         public string Deferrable { get; set; }
 
         /// <summary>
         /// Deferred
         /// </summary>
+        [DefaultValue("")]
         public string Deferred { get; set; }
 
         /// <summary>
         /// Validated
         /// </summary>
+        [DefaultValue("")]
         public string Validated { get; set; }
 
         /// <summary>
         /// Rely
         /// </summary>
+        [DefaultValue("")]
         public string Rely { get; set; }
 
         /// <summary>
         /// Rel_ Constraint_ Owner
         /// </summary>
+        [DefaultValue("")]
         public string Rel_Constraint_Owner { get; set; }
 
         /// <summary>
         /// Search_ Condition
         /// </summary>
+        [DefaultValue("")]
         public string Search_Condition { get; set; }
 
         /// <summary>
         /// View Related
         /// </summary>
+        [DefaultValue("")]
         public string ViewRelated { get; set; }
 
         /// <summary>
         /// Invalid
         /// </summary>
+        [DefaultValue("")]
         public string Invalid { get; set; }
 
         /// <summary>
         /// Status
         /// </summary>
+        [DefaultValue("")]
         public string Status { get; set; }
 
         /// <summary>

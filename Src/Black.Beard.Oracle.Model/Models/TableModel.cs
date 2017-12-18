@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 namespace Bb.Oracle.Models
@@ -36,6 +37,7 @@ namespace Bb.Oracle.Models
         /// <summary>
         /// Comment
         /// </summary>
+        [DefaultValue("")]
         public string Comment { get; set; }
 
         /// <summary>
@@ -221,6 +223,7 @@ namespace Bb.Oracle.Models
         /// <summary>
         /// code View
         /// </summary>
+        [DefaultValue("")]
         public string codeView { get; set; }
 
         /// <summary>

@@ -5,7 +5,7 @@ namespace Bb.Oracle.Models
     /// <summary>
     /// 
     /// </summary>
-    public partial class TypeCollection : ItemBaseCollection<TypeItem>
+    public partial class TypeCollection : IndexedCollection<TypeItem>
     {
 
         /// <summary>
@@ -13,7 +13,7 @@ namespace Bb.Oracle.Models
         /// </summary>
         static TypeCollection()
         {
-            TypeCollection.Key = ItemBaseCollection<TypeItem>.GetMethodKey(c => c.Key);
+            TypeCollection.Key = IndexedCollection<TypeItem>.GetMethodKey(c => c.Key);
         }
 
     }

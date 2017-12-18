@@ -5,7 +5,7 @@ namespace Bb.Oracle.Models
     /// <summary>
     /// 
     /// </summary>
-    public partial class FileCollection : ItemBaseCollection<FileElement>
+    public partial class FileCollection : IndexedCollection<FileElement>
     {
 
         /// <summary>
@@ -13,7 +13,7 @@ namespace Bb.Oracle.Models
         /// </summary>
         static FileCollection()
         {
-            FileCollection.Key = ItemBaseCollection<FileElement>.GetMethodKey(c => c.Path);
+            FileCollection.Key = IndexedCollection<FileElement>.GetMethodKey(c => c.Path);
         }
 
     }

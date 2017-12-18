@@ -5,7 +5,7 @@ namespace Bb.Oracle.Models
     /// <summary>
     /// Index
     /// </summary>
-    public partial class IndexCollection : ItemBaseCollection<IndexModel>
+    public partial class IndexCollection : IndexedCollection<IndexModel>
     {
 
         /// <summary>
@@ -13,7 +13,7 @@ namespace Bb.Oracle.Models
         /// </summary>
         static IndexCollection()
         {
-            IndexCollection.Key = ItemBaseCollection<IndexModel>.GetMethodKey(c => c.Name);
+            IndexCollection.Key = IndexedCollection<IndexModel>.GetMethodKey(c => c.Name);
         }
 
     }

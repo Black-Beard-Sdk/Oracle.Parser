@@ -5,7 +5,7 @@ namespace Bb.Oracle.Models
     /// <summary>
     /// 
     /// </summary>
-    public partial class PartitionColumnCollection : ItemBaseCollection<PartitionColumnModel>
+    public partial class PartitionColumnCollection : IndexedCollection<PartitionColumnModel>
     {
 
         /// <summary>
@@ -13,7 +13,7 @@ namespace Bb.Oracle.Models
         /// </summary>
         static PartitionColumnCollection()
         {
-            PartitionColumnCollection.Key = ItemBaseCollection<PartitionColumnModel>.GetMethodKey(c => c.ColumnName);
+            PartitionColumnCollection.Key = IndexedCollection<PartitionColumnModel>.GetMethodKey(c => c.ColumnName);
         }
 
     }

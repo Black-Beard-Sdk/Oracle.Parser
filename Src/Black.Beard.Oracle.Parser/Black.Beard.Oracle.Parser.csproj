@@ -40,9 +40,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Ude, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\UDE.CSharp.1.1.0\lib\Ude.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="grammar\PlSqlLexer.cs" />
@@ -65,6 +62,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Black.Beard.Oracle.Helpers\Black.Beard.Oracle.Helpers.csproj">
+      <Project>{4002EF43-21B1-473A-A055-C5FEC837A75D}</Project>
+      <Name>Black.Beard.Oracle.Helpers</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Black.Beard.Oracle.Model\Black.Beard.Oracle.Models.csproj">
       <Project>{1FB97F0D-8E91-4557-AB73-F4DAE05B1582}</Project>
       <Name>Black.Beard.Oracle.Models</Name>

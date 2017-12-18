@@ -45,7 +45,7 @@ namespace Bb.Oracle.Models
         /// <returns>		
         /// Objet <see cref="OracleType" />.");
         /// </returns>
-        public OracleType Type { get; set; }
+        public OracleType Type { get; set; } = new OracleType();
 
 
         public KindModelEnum KindModel { get { return KindModelEnum.Property; } }

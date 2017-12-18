@@ -7,7 +7,7 @@ namespace Bb.Oracle.Models
     /// Trigger
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("{TriggerName}")]
-    public partial class TriggerModel : ItemBase
+    public partial class TriggerModel : ItemBase, Ichangable
     {
 
         /// <summary>

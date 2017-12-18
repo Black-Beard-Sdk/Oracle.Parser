@@ -5,7 +5,7 @@ namespace Bb.Oracle.Models
     /// <summary>
     /// 
     /// </summary>
-    public partial class ConstraintColumnCollection : ItemBaseCollection<ConstraintColumnModel>
+    public partial class ConstraintColumnCollection : IndexedCollection<ConstraintColumnModel>
     {
 
         /// <summary>
@@ -13,7 +13,7 @@ namespace Bb.Oracle.Models
         /// </summary>
         static ConstraintColumnCollection()
         {
-            ConstraintColumnCollection.Key = ItemBaseCollection<ConstraintColumnModel>.GetMethodKey(c => c.ColumnName);
+            ConstraintColumnCollection.Key = IndexedCollection<ConstraintColumnModel>.GetMethodKey(c => c.ColumnName);
         }
 
     }

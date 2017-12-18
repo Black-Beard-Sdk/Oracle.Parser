@@ -654,8 +654,8 @@ revoke_system_privileges
 	;
 
 revoke_object_privileges
-	: ( ','? (role_name | object_privilege)) 
-	  ON (','? grantee_name | PUBLIC | role_name)+
+	: ( ','? (role_name | object_privilege))+ 
+	  (ON grant_object_name)
 	  FROM (','? grantee_name | PUBLIC | role_name)+
 	  (CASCADE CONSTRAINTS | FORCE)?
 	;
@@ -681,11 +681,11 @@ container_clause
     ;
 
 create_view
-    : CREATE (OR REPLACE)? (OR? FORCE)? EDITIONING? VIEW
+    : CREATE (OR REPLACE)? (NO? FORCE)? (EDITIONING	| EDITIONABLE EDITIONING? | NOEDITIONABLE)? VIEW
       tableview_name view_options?
       AS subquery subquery_restriction_clause?
     ;
-
+ 
 view_options
     : ( view_alias_constraint 
       | object_view_clause
@@ -694,7 +694,7 @@ view_options
     ;
 
 view_alias_constraint
-    : '(' ( ','? (table_alias inline_constraint* | out_of_line_constraint) )+ ')'
+    : '(' ( ','? (table_alias (VISIBLE | INVISIBLE)? inline_constraint* | out_of_line_constraint) )+ ')'
     ;
 
 object_view_clause
@@ -731,10 +731,177 @@ constraint_state
     : ( NOT? DEFERRABLE
       | INITIALLY (IMMEDIATE|DEFERRED)
       | (RELY|NORELY)
+	  | using_index_clause
       | (ENABLE|DISABLE)
       | (VALIDATE|NOVALIDATE)
+	  | exceptions_clause
       )+
     ;
+
+using_index_clause
+	: 'USING' 'INDEX' ( index_name | '(' create_index ')' | index_properties )
+	;
+
+index_properties 
+	: ( ( ( (global_partitioned_index | local_partitioned_index) | index_attributes )+ | 'INDEXTYPE' 'IS' ( domain_index_clause | xmltable_index_clause | xmlindex_clause) )?
+	;
+
+global_partitioned_index
+	: 'GLOBAL' 'PARTITION' 'BY' 
+		( 'RANGE' column_list_paren '(' index_partitioning_clause ')' 
+		| 'HASH'  column_list_paren ( individual_hash_partitions | hash_partitions_by_quantity ))
+	;
+	
+index_partitioning_clause 
+	: PARTITION partition? VALUES LESS THAN '(' literal ( ',' literal )* ')' segment_attributes_clause?
+	;
+
+segment_attributes_clause 
+	: ( physical_attributes_clause | 'TABLESPACE' tablespace | logging_clause )+ 
+	;
+
+physical_attributes_clause 
+	: ( ( PCTFREE integer | PCTUSED integer | INITRANS integer | storage_clause )+ )?
+	;
+
+
+individual_hash_partitions
+	: '(' ( ','? (PARTITION partition indexing_clause? partitioning_storage_clause) )+ ')'
+	;
+
+indexing_clause
+	: EMPTY
+	;
+
+partitioning_storage_clause
+	: (
+		(
+		  tablespace_clause 
+		| OVERFLOW tablespace_clause? 
+		| table_compression 
+		| key_compression 
+		| lob_partitioning_storage 
+		| VARRAY varray_item STORE AS ( SECUREFILE | BASICFILE )? LOB lob_segname 
+	   )+ 
+	  )?
+	;
+
+table_compression 
+	: ( COMPRESS ( BASIC | FOR ( OLTP | ( QUERY | ARCHIVE ) ( LOW | HIGH )? ) )? | NOCOMPRESS )
+	;
+
+key_compression 
+	: COMPRESS integer? 
+	| NOCOMPRESS
+	;
+
+advanced_index_compression
+	: key_compression
+	| COMPRESS ADVANCED LOW
+	;
+
+lob_partitioning_storage 
+	: LOB '(' lob_item ')' 
+	  STORE AS ( BASICFILE | SECUREFILE )? ( lob_segname ( '(' tablespace_clause ')' )? | '(' tablespace_clause ')' )?
+	;
+
+hash_partitions_by_quantity 
+	: PARTITIONS hash_partition_quantity ( STORE IN '(' tablespace ( ',' tablespace )* ')' )? ( table_compression | key_compression )? ( OVERFLOW STORE IN '(' tablespace ( ',' tablespace )* ')' )?
+	;
+
+lob_segname
+	: id_expression
+	;
+ 
+local_partitioned_index 
+	: 'LOCAL' ( on_range_partitioned_table | on_list_partitioned_table | on_hash_partitioned_table | on_comp_partitioned_table )?
+	;
+
+ on_range_partitioned_table 
+	: '(' PARTITION partition? ( (segment_attributes_clause | key_compression )+ )? ( 'UNUSABLE' )? ( ',' 'PARTITION' ( partition )? ( ( segment_attributes_clause | key_compression )+ )? ( 'UNUSABLE' )? )* ')'
+	;
+	
+on_list_partitioned_table 
+	: '(' PARTITION partition? 
+	( ( segment_attributes_clause | key_compression )+ )? 
+	( 'USABLE' | 'UNUSABLE' )? 
+	( ',' PARTITION partition? ( ( segment_attributes_clause | key_compression )+ )? usable_clause? )* 
+	')'
+	;
+
+on_hash_partitioned_table 
+	: ( 
+		  'STORE' 'IN' '(' tablespace ( ',' tablespace )* ')' 
+		| '(' 
+				PARTITION partition? tablespace_clause? advanced_index_compression? usable_clause? 
+		  ( ',' PARTITION partition? tablespace_clause? advanced_index_compression? usable_clause? )* 
+		  ')' 
+	  ) 
+		  subclauses 
+	;
+
+on_comp_partitioned_table : ( STORE IN '(' tablespace ( ',' tablespace )* ')' )? 
+'(' 
+      PARTITION partition? ( ( segment_attributes_clause | advanced_index_compression )+ )? usable_clause? index_subpartition_clause? 
+( ',' PARTITION partition? ( ( segment_attributes_clause | advanced_index_compression )+ )? usable_clause? index_subpartition_clause? )* 
+')'
+	;
+
+index_subpartition_clause
+	: 'STORE' 'IN' '(' tablespace ( ',' tablespace )* ')' 
+		| '(' 
+				PARTITION partition? tablespace_clause? advanced_index_compression? usable_clause? 
+		  ( ',' PARTITION partition? tablespace_clause? advanced_index_compression? usable_clause? )* 
+		  ')' 
+	;
+
+usable_clause
+	: USABLE 
+	| UNUSABLE
+	;
+
+index_attributes
+	: (physicial_attributes_clause | logging_clause | ONLINE | TABLESPACE (tablespace | DEFAULT) | advanced_index_compression | (SORT | NOSORT) | REVERSE | (VISIBLE | INVISIBLE) | partial_index_clause | parallel_clause)*
+	;
+
+hash_partition_quantity
+	: UNSIGNED_INTEGER
+	;
+
+varray_item
+	:
+	;
+
+partial_index_clause
+	: EMPTY
+	;
+
+parallel_clause
+	: EMPTY
+	;
+
+tablespace
+	: id_expression
+	;
+
+domain_index_clause 
+	: EMPTY // indextype ( local_domain_index_clause )? ( parallel_clause )? ( 'PARAMETERS' '(' '"' odci_parameters '"' ')' )?
+	;
+
+xmltable_index_clause 
+	: EMPTY
+	;
+
+xmlindex_clause
+	: EMPTY
+	;
+
+physicial_attributes_clause
+	: EMPTY
+	;
+
+exceptions_clause 
+	: 'EXCEPTIONS' 'INTO' table_fullname
 
 create_tablespace
     : CREATE (BIGFILE | SMALLFILE)? 
@@ -746,7 +913,7 @@ create_tablespace
     ;
 
 permanent_tablespace_clause
-    : TABLESPACE REGULAR_ID datafile_specification? 
+    : tablespace_clause datafile_specification? 
         ( MINIMUM EXTENT size_clause
         | BLOCKSIZE size_clause
         | logging_clause
@@ -765,10 +932,10 @@ tablespace_encryption_spec
     ;
 
 logging_clause
-    : ( LOGGING
+    :   LOGGING
       | NOLOGGING
       | FILESYSTEM_LIKE_LOGGING
-      )
+      
     ;
 
 extent_management_clause
@@ -878,6 +1045,12 @@ create_table
            )?
         | NOCOMPRESS
         )?
+
+
+tablespace_clause
+	: TABLESPACE tablespace
+	;
+
 // Column_properties clause goes here
 // Partition clause goes here
          table_range_partition_by_clause?
@@ -1011,7 +1184,7 @@ foreign_key_clause
     ;
 
 references_clause
-    : REFERENCES tableview_name paren_column_list
+    : REFERENCES tableview_name paren_column_list (ON DELETE (CASCADE | SET NULL))?
     ;
 
 on_delete_clause
@@ -2741,6 +2914,7 @@ regular_id
     | BOOLEAN
     | BOTH
     // | BREADTH
+    | BUILD
     | BULK
     // | BY
     | BYTE
