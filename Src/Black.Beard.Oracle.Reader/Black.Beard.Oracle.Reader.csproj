@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArgumentContext.cs" />
+    <Compile Include="ContentHelper.cs" />
     <Compile Include="ContextLoader.cs" />
     <Compile Include="Database.cs" />
     <Compile Include="DbContextBase.cs" />
@@ -92,7 +93,9 @@
     <Compile Include="Queries\TypeQuery.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

@@ -1,8 +1,8 @@
-﻿using Bb.Beard.Oracle.Reader.Dao;
+﻿using Bb.Oracle.Reader.Dao;
 using System;
 using System.Data.Common;
 
-namespace Bb.Beard.Oracle.Reader
+namespace Bb.Oracle.Reader
 {
 
 

@@ -1,11 +1,11 @@
-﻿using Bb.Beard.Oracle.Reader.Dao;
+﻿using Bb.Oracle.Reader.Dao;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bb.Beard.Oracle.Reader
+namespace Bb.Oracle.Reader
 {
 
     public static class ContextLoader

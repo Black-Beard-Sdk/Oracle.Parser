@@ -36,5 +36,7 @@ namespace Bb.Oracle.Models
 
         IEnumerable<Anomaly> Evaluate(PropertyModel p);
 
+        IEnumerable<Anomaly> Evaluate(PrivilegeModel privilegeModel);
+
     }
 }

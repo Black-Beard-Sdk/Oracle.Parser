@@ -1,8 +1,8 @@
-﻿using Bb.Beard.Oracle.Reader.Dao;
+﻿using Bb.Oracle.Reader.Dao;
 using Bb.Oracle.Models;
 using System;
 
-namespace Bb.Beard.Oracle.Reader
+namespace Bb.Oracle.Reader
 {
 
     public class DbContextOracle : DbContextBase

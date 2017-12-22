@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Bb.Beard.Oracle.Reader.Dao.Exceptions
+namespace Bb.Oracle.Reader.Dao.Exceptions
 {
 
     [Serializable]

@@ -31,6 +31,7 @@
         Function,
         Column,
         Property,
+        Privilege,
     }
 
 }

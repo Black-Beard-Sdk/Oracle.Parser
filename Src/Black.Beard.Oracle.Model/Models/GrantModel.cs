@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Bb.Oracle.Models
 {
 
-    [System.Diagnostics.DebuggerDisplay("grant {Privileges} {FullObjectName} to {Role}")]
+    [System.Diagnostics.DebuggerDisplay("grant {PrivilegesToText} {FullObjectName} to {Role}")]
     public partial class GrantModel : ItemBase, Ichangable
     {
 
@@ -64,7 +64,7 @@ namespace Bb.Oracle.Models
         /// <summary>
         /// Privilege
         /// </summary>
-        public HashSet<string> Privileges { get; set; } = new HashSet<string>();
+        public PrivilegeCollection Privileges { get; set; } = new PrivilegeCollection();
 
         /// <summary>
         /// Grantable
@@ -90,6 +90,9 @@ namespace Bb.Oracle.Models
         /// Column Object Name
         /// </summary>
         public string ColumnObjectName { get; set; }
+
+
+        public string PrivilegesToText {  get { return string.Join(", ", this.Privileges); } }
 
     }
 }

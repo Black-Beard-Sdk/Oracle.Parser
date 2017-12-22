@@ -52,7 +52,7 @@ namespace Bb.Oracle.Parser
         /// <returns></returns>
         public static StringBuilder LoadContent(string rootSource)
         {
-            StringBuilder result = new StringBuilder(ContentLoader.LoadContent(rootSource));
+            StringBuilder result = new StringBuilder(ContentHelper.LoadContentFromFile(rootSource));
             StringBuilder _result = ToUpper(result);
             return _result;
         }
@@ -121,7 +121,7 @@ namespace Bb.Oracle.Parser
         {
 
             if (visitor is IFile f)
-                f.File = this.File;
+                f.Filename = this.File;
 
             visitor.Visit(this.context);
 

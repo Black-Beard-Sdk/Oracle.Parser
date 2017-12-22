@@ -1,5 +1,5 @@
-using Bb.Beard.Oracle.Reader;
-using Bb.Beard.Oracle.Reader.Dao;
+using Bb.Oracle.Reader;
+using Bb.Oracle.Reader.Dao;
 using Bb.Oracle.Models;
 using System;
 using System.Collections.Generic;

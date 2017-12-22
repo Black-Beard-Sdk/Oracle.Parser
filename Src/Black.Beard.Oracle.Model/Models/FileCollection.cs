@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Bb.Oracle.Models
 {
@@ -16,8 +17,13 @@ namespace Bb.Oracle.Models
             FileCollection.Key = IndexedCollection<FileElement>.GetMethodKey(c => c.Path);
         }
 
+        public override string ToString()
+        {
+            return string.Join(", ", this.Select(c => c.Path));
+        }
+
     }
 
-
+    
 
 }

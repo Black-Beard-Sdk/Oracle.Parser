@@ -1,4 +1,4 @@
-﻿using Bb.Beard.Oracle.Reader.Dao;
+﻿using Bb.Oracle.Reader.Dao;
 using Bb.Oracle.Models;
 using Bb.Oracle.Models.Configurations;
 using Bb.Oracle.Reader.Queries;
@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace Bb.Beard.Oracle.Reader
+namespace Bb.Oracle.Reader
 {
 
     public partial class Database

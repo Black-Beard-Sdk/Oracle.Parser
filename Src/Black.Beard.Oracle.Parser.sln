@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Black.Beard.Antlr.Visualize
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Black.Beard.Oracle.DdlReader", "Black.Beard.Oracle.DdlReader\Black.Beard.Oracle.DdlReader.csproj", "{96061953-2592-4BF8-A956-F0E2A37DC465}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Black.Beard.Oracle.Models.Comparer", "Black.Beard.Oracle.Models.Comparer\Black.Beard.Oracle.Models.Comparer.csproj", "{D6DC915B-84D6-472A-89A3-83BD9DA1480B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{96061953-2592-4BF8-A956-F0E2A37DC465}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{96061953-2592-4BF8-A956-F0E2A37DC465}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{96061953-2592-4BF8-A956-F0E2A37DC465}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6DC915B-84D6-472A-89A3-83BD9DA1480B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6DC915B-84D6-472A-89A3-83BD9DA1480B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6DC915B-84D6-472A-89A3-83BD9DA1480B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6DC915B-84D6-472A-89A3-83BD9DA1480B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

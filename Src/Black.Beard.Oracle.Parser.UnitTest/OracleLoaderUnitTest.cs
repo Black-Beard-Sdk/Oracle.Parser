@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Bb.Beard.Oracle.Reader;
+using Bb.Oracle.Reader;
 using System.IO;
 using Bb.Oracle.Models;
 

@@ -4,7 +4,7 @@ using System.Data;
 using System.Data.Common;
 using System.Text;
 
-namespace Bb.Beard.Oracle.Reader.Dao
+namespace Bb.Oracle.Reader.Dao
 {
 
 

@@ -35,15 +35,17 @@
         void Create(TriggerModel t);
 
         void Drop(TriggerModel t);
-
         void Alter(TriggerModel t, TriggerModel source, string propertyName);
 
+
+        void Create(PrivilegeModel privilegeModel);
+        void Drop(PrivilegeModel privilegeModel);
+        void Alter(PrivilegeModel Ichangable, Ichangable privilegeModel2, string propertyName);
 
 
         void Create(IndexModel i);
 
         void Drop(IndexModel i);
-
 
 
         void Create(SequenceModel s);

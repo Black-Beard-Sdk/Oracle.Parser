@@ -572,7 +572,7 @@ identified_by
     ;
 
 identified_other_clause
-    : IDENTIFIED (EXTERNALLY | GLOBALLY) (AS quoted_string)?
+    : IDENTIFIED (EXTERNALLY | GLOBALLY) (AS string)?
     ;
 
 user_tablespace_clause
@@ -1130,7 +1130,7 @@ drop_table
     ;
 
 comment_on_column
-    : COMMENT ON COLUMN tableview_name PERIOD column_name IS quoted_string
+    : COMMENT ON COLUMN tableview_name PERIOD column_name IS string
     ;
 
 // Synonym DDL Clauses
@@ -1142,7 +1142,7 @@ create_synonym
     ;
 
 comment_on_table
-    : COMMENT ON TABLE tableview_name IS quoted_string
+    : COMMENT ON TABLE tableview_name IS string
     ;
 
 alter_table
@@ -1531,7 +1531,7 @@ transaction_control_statements
 set_transaction_command
     : SET TRANSACTION
       (READ (ONLY | WRITE) | ISOLATION LEVEL (SERIALIZABLE | READ COMMITTED) | USE ROLLBACK SEGMENT rollback_segment_name)?
-      (NAME quoted_string)?
+      (NAME string)?
     ;
 
 set_constraint_command
@@ -1549,7 +1549,7 @@ write_clause
     ;
 
 rollback_statement
-    : ROLLBACK WORK? (TO SAVEPOINT? savepoint_name | FORCE quoted_string)?
+    : ROLLBACK WORK? (TO SAVEPOINT? savepoint_name | FORCE string)?
     ;
 
 savepoint_statement
@@ -1578,7 +1578,7 @@ seq_of_statements
 */
 
 explain_statement
-    : EXPLAIN PLAN (SET STATEMENT_ID '=' quoted_string)? (INTO tableview_name)?
+    : EXPLAIN PLAN (SET STATEMENT_ID '=' string)? (INTO tableview_name)?
       FOR (select_statement | update_statement | delete_statement | insert_statement | merge_statement)
     ;
 
@@ -2157,12 +2157,12 @@ quantified_expression
 string_function
     : SUBSTR '(' expression ',' expression (',' expression)? ')'
     | TO_CHAR '(' (table_element | standard_function | expression)
-                  (',' quoted_string)? (',' quoted_string)? ')'
+                  (',' string)? (',' string)? ')'
     | DECODE '(' expressions  ')'
     | CHR '(' concatenation USING NCHAR_CS ')'
     | NVL '(' expression ',' expression ')'
-    | TRIM '(' ((LEADING | TRAILING | BOTH)? quoted_string? FROM)? concatenation ')'
-    | TO_DATE '(' expression (',' quoted_string)? ')'
+    | TRIM '(' ((LEADING | TRAILING | BOTH)? string? FROM)? concatenation ')'
+    | TO_DATE '(' expression (',' string)? ')'
     ;
 
 standard_function
@@ -2190,7 +2190,7 @@ other_function
     | /*TODO stantard_function_enabling_using*/ regular_id function_argument_modeling using_clause?
     | COUNT '(' ( '*' | (DISTINCT | UNIQUE | ALL)? concatenation) ')' over_clause?
     | (CAST | XMLCAST) '(' (MULTISET '(' subquery ')' | concatenation) AS type_spec ')'
-    | COALESCE '(' table_element (',' (numeric | quoted_string))? ')'
+    | COALESCE '(' table_element (',' (numeric | string))? ')'
     | COLLECT '(' (DISTINCT | UNIQUE)? concatenation collect_order_by_part? ')'
     | within_or_over_clause_keyword function_argument within_or_over_part+
     | cursor_name ( PERCENT_ISOPEN | PERCENT_FOUND | PERCENT_NOTFOUND | PERCENT_ROWCOUNT )
@@ -2201,7 +2201,7 @@ other_function
       '(' expressions cost_matrix_clause? using_clause? ')'
     | TRANSLATE '(' expression (USING (CHAR_CS | NCHAR_CS))? (',' expression)* ')'
     | TREAT '(' expression AS REF? type_spec ')'
-    | TRIM '(' ((LEADING | TRAILING | BOTH)? quoted_string? FROM)? concatenation ')'
+    | TRIM '(' ((LEADING | TRAILING | BOTH)? string? FROM)? concatenation ')'
     | XMLAGG '(' expression order_by_clause? ')' ('.' general_element_part)?
     | (XMLCOLATTVAL | XMLFOREST)
       '(' (','? xml_multiuse_expression_element)+ ')' ('.' general_element_part)?
@@ -2383,13 +2383,13 @@ partition_extension_clause
     ;
 
 column_alias
-    : AS? (identifier | quoted_string)
+    : AS? (identifier | string)
     | AS
     ;
 
 table_alias
     : identifier
-    | quoted_string
+    | string
     ;
 
 where_clause
@@ -2404,7 +2404,7 @@ into_clause
 
 xml_column_name
     : identifier
-    | quoted_string
+    | string
     ;
 
 cost_class_name
@@ -2831,14 +2831,14 @@ system_privilege
 // $<Lexer Mappings
 
 constant
-    : TIMESTAMP (quoted_string | bind_variable) (AT TIME ZONE quoted_string)?
-    | INTERVAL (quoted_string | bind_variable | general_element_part)
+    : TIMESTAMP (string | bind_variable) (AT TIME ZONE string)?
+    | INTERVAL (string | bind_variable | general_element_part)
       (YEAR | MONTH | DAY | HOUR | MINUTE | SECOND)
       ('(' (UNSIGNED_INTEGER | bind_variable) (',' (UNSIGNED_INTEGER | bind_variable) )? ')')?
       (TO ( DAY | HOUR | MINUTE | SECOND ('(' (UNSIGNED_INTEGER | bind_variable) ')')?))?
     | numeric
-    | DATE quoted_string
-    | quoted_string
+    | DATE string
+    | string
     | NULL
     | TRUE
     | FALSE
@@ -2849,20 +2849,6 @@ constant
     | DEFAULT
     ;
 
-numeric
-    : UNSIGNED_INTEGER
-    | APPROXIMATE_NUM_LIT
-    ;
-
-numeric_negative
-    : MINUS_SIGN numeric
-    ;
-
-quoted_string
-    : CHAR_STRING
-    //| CHAR_STRING_PERL
-    | NATIONAL_CHAR_STRING_LIT
-    ;
 
 identifier
     : (INTRODUCER char_set_name)? id_expression
@@ -3385,3 +3371,24 @@ numeric_function_name
     | ROUND
     | SUM
     ;
+
+integer
+	: numeric
+	| numeric_negative
+	;
+
+numeric
+    : UNSIGNED_INTEGER
+    | APPROXIMATE_NUM_LIT
+    ;
+
+numeric_negative
+    : MINUS_SIGN numeric
+    ;
+
+string
+    : CHAR_STRING
+    //| CHAR_STRING_PERL
+    | NATIONAL_CHAR_STRING_LIT
+    ;
+

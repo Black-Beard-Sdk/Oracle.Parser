@@ -76,6 +76,16 @@ namespace Bb.Oracle.Models
 
         public abstract void Alter(GrantModel g, GrantModel grantSource, string propertyName);
 
+        #region privileges
+
+        public abstract void Create(PrivilegeModel privilegeModel);
+
+        public abstract void Drop(PrivilegeModel privilegeModel);
+
+        public abstract void Alter(PrivilegeModel Ichangable, Ichangable privilegeModel2, string propertyName);
+
+        #endregion privileges
+
         #endregion Grants
 
         #region Packages

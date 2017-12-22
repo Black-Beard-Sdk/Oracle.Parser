@@ -1,5 +1,5 @@
-﻿using Bb.Beard.Oracle.Reader;
-using Bb.Beard.Oracle.Reader.Dao;
+﻿using Bb.Oracle.Reader;
+using Bb.Oracle.Reader.Dao;
 using Bb.Oracle.Models;
 using Bb.Oracle.Models.Configurations;
 using System;
@@ -129,17 +129,18 @@ ORDER BY ROLE, privilege
                                 Hierarchy = t.Hierarchy
                             };
 
-                            grant.Privileges.Add(t.Privilege);
                             grants.Add(grant);
 
                         }
                         else
                         {
                             grant = grants[key];
-                            grant.Privileges.Add(t.Privilege);
                             grant.Grantable = t.Grantable;
                             grant.Hierarchy = t.Hierarchy;
                         }
+
+                        var p = new PrivilegeModel() { PrivilegeName = t.Privilege };
+                        grant.Privileges.Add(p);
 
                     }
 

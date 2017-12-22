@@ -1,4 +1,4 @@
-﻿using Bb.Beard.Oracle.Reader;
+﻿using Bb.Oracle.Reader;
 using System;
 using System.Collections.Generic;
 using System.Data;

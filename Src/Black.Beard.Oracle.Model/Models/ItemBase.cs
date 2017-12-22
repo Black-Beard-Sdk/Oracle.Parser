@@ -12,14 +12,12 @@ namespace Bb.Oracle.Models
 
         public virtual string GetName() { return string.Empty; }
 
-        public FileElement File { get; set; }
-
-
         /// <summary>
         /// Valid
         /// </summary>
         public bool Valid { get; set; }
 
+        // TODO : A degager
         /// <summary>
         /// Associated To
         /// </summary>

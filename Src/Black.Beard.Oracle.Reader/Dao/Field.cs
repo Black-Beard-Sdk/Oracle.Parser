@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
-namespace Bb.Beard.Oracle.Reader.Dao
+namespace Bb.Oracle.Reader.Dao
 {
 
         [DebuggerDisplay("{ColumnName} : {Type.FullName}")]

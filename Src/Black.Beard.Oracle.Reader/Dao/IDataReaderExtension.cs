@@ -6,7 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 
-namespace Bb.Beard.Oracle.Reader.Dao
+namespace Bb.Oracle.Reader.Dao
 {
 
     public static class IDataReaderExtension

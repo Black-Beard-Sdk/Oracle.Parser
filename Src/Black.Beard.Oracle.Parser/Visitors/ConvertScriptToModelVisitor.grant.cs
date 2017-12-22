@@ -24,8 +24,9 @@ namespace Bb.Oracle.Visitors
 
         public override object VisitRevoke_statment([NotNull] PlSqlParser.Revoke_statmentContext context)
         {
-            
+
             return base.VisitRevoke_statment(context);
+
         }
 
         public override object VisitRevoke_system_privileges([NotNull] PlSqlParser.Revoke_system_privilegesContext context)
@@ -53,7 +54,7 @@ namespace Bb.Oracle.Visitors
             var grant_object_name = context.grant_object_name();
 
             var tableView = grant_object_name.tableview_name();
-            var user_object = grant_object_name.user_object_name();
+            PlSqlParser.User_object_nameContext[] user_object = grant_object_name.user_object_name();
             var dir_object = grant_object_name.dir_object_name();
             var shema_object = grant_object_name.schema_object_name();
 
@@ -82,7 +83,6 @@ namespace Bb.Oracle.Visitors
             var current = container_clause?.CURRENT();
             var allt = container_clause?.ALL();
 
-
             HashSet<string> _privileges = new HashSet<string>();
 
             foreach (var system_privilege in system_privileges)
@@ -110,16 +110,16 @@ namespace Bb.Oracle.Visitors
                     Stop();
 
                     key = _schema + "." + _object + "_to_" + dir_object.GetText();
-                    CreateGrant(key, string.Empty, dir_object.GetText(), _privileges, _grantee_name, string.Empty, withHierarchy, withGrant, withDelegate, withAdmin, true, false, false, false, false, false, false);
+                    CreateGrant(dir_object.Start, key, string.Empty, dir_object.GetText(), _privileges, _grantee_name, string.Empty, withHierarchy, withGrant, withDelegate, withAdmin, true, false, false, false, false, false, false);
 
                 }
                 else if (user_object.Length > 0)
                 {
                     Stop();
-                    foreach (var user_object_name in user_object)
+                    foreach (PlSqlParser.User_object_nameContext user_object_name in user_object)
                     {
                         key = user_object_name.GetText() + "." + "_to_" + dir_object.GetText();
-                        CreateGrant(key, user_object_name.GetText(), string.Empty, _privileges, _grantee_name, string.Empty, withHierarchy, withGrant, withDelegate, withAdmin, false, true, false, false, false, false, false);
+                        CreateGrant(user_object_name.Start, key, user_object_name.GetText(), string.Empty, _privileges, _grantee_name, string.Empty, withHierarchy, withGrant, withDelegate, withAdmin, false, true, false, false, false, false, false);
                     }
                 }
                 else if (shema_object != null)
@@ -130,22 +130,22 @@ namespace Bb.Oracle.Visitors
                     if (grant_object_name.EDITION() != null)
                     {
                         Stop();
-                        CreateGrant(key, shema_object.GetText(), string.Empty, _privileges, _grantee_name, string.Empty, withHierarchy, withGrant, withDelegate, withAdmin, false, false, true, false, false, false, false);
+                        CreateGrant(grant_object_name.Start, key, shema_object.GetText(), string.Empty, _privileges, _grantee_name, string.Empty, withHierarchy, withGrant, withDelegate, withAdmin, false, false, true, false, false, false, false);
                     }
                     else if (grant_object_name.MINING() != null)
                     {
                         Stop();
-                        CreateGrant(key, shema_object.GetText(), string.Empty, _privileges, _grantee_name, string.Empty, withHierarchy, withGrant, withDelegate, withAdmin, false, false, false, true, false, false, false);
+                        CreateGrant(grant_object_name.Start, key, shema_object.GetText(), string.Empty, _privileges, _grantee_name, string.Empty, withHierarchy, withGrant, withDelegate, withAdmin, false, false, false, true, false, false, false);
                     }
                     else if (grant_object_name.JAVA() != null)
                     {
                         Stop();
-                        CreateGrant(key, shema_object.GetText(), string.Empty, _privileges, _grantee_name, string.Empty, withHierarchy, withGrant, withDelegate, withAdmin, false, false, false, false, grant_object_name.SOURCE() != null, grant_object_name.RESOURCE() != null, false);
+                        CreateGrant(grant_object_name.Start, key, shema_object.GetText(), string.Empty, _privileges, _grantee_name, string.Empty, withHierarchy, withGrant, withDelegate, withAdmin, false, false, false, false, grant_object_name.SOURCE() != null, grant_object_name.RESOURCE() != null, false);
                     }
                     else if (grant_object_name.SQL() != null && grant_object_name.TRANSLATION() != null && grant_object_name.PROFILE() != null)
                     {
                         Stop();
-                        CreateGrant(key, shema_object.GetText(), string.Empty, _privileges, _grantee_name, string.Empty, withHierarchy, withGrant, withDelegate, withAdmin, false, false, false, false, false, false, true);
+                        CreateGrant(grant_object_name.Start, key, shema_object.GetText(), string.Empty, _privileges, _grantee_name, string.Empty, withHierarchy, withGrant, withDelegate, withAdmin, false, false, false, false, false, false, true);
                     }
                     else
                     {
@@ -165,27 +165,25 @@ namespace Bb.Oracle.Visitors
 
             string key;
 
-            var c = context.paren_column_list();
+            PlSqlParser.Paren_column_listContext[] c = context.paren_column_list();
             if (c.Length > 0)
             {
-                foreach (var item in c)
+                foreach (PlSqlParser.Paren_column_listContext item in c)
                 {
                     string col = item.GetText();
                     key = _schema + "." + _object + "." + col + "_to_" + _grantee_name;
-                    CreateGrant(key, _schema, _object, privileges, _grantee_name, col, withHierarchy, withGrant, withDelegate, withAdmin, false, false, false, false, false, false, false);
+                    CreateGrant(item.Start, key, _schema, _object, privileges, _grantee_name, col, withHierarchy, withGrant, withDelegate, withAdmin, false, false, false, false, false, false, false);
                 }
             }
             else
             {
-
                 key = _schema + "." + _object + "_to_" + _grantee_name;
-
-                CreateGrant(key, _schema, _object, privileges, _grantee_name, string.Empty, withHierarchy, withGrant, withDelegate, withAdmin, false, false, false, false, false, false, false);
+                CreateGrant(context.Start, key, _schema, _object, privileges, _grantee_name, string.Empty, withHierarchy, withGrant, withDelegate, withAdmin, false, false, false, false, false, false, false);
 
             }
         }
 
-        private GrantModel CreateGrant(string key, string objectSchema, string objectName, HashSet<string> privileges, string role, string columnObjectName, bool withHierarchy, bool withGrant, bool withDelegate, bool withAdmin, bool withDirectory, bool withUser, bool withEdition, bool withMiningModel, bool withJavaSource, bool JavaResource, bool withSqlTranslationProfile)
+        private GrantModel CreateGrant(IToken token, string key, string objectSchema, string objectName, HashSet<string> privileges, string role, string columnObjectName, bool withHierarchy, bool withGrant, bool withDelegate, bool withAdmin, bool withDirectory, bool withUser, bool withEdition, bool withMiningModel, bool withJavaSource, bool JavaResource, bool withSqlTranslationProfile)
         {
 
             GrantModel grant;
@@ -247,18 +245,40 @@ namespace Bb.Oracle.Visitors
             //JavaResource = withJavaResource,
             //SqlTranslationProfile = withSqlTranslationProfile,
 
-            if (!string.IsNullOrEmpty(this.File))
-                grant.Files.AddIfNotExist(new FileElement() { Path = this.File });
+            //if (!string.IsNullOrEmpty(this.File))
+            //    grant.Files.AddIfNotExist(new FileElement() { Path = this.File });
 
-            if (grant.Files.Count > 0)
-                grant.File = grant.Files.FirstOrDefault();
+            var fileElement = GetFileElement(token);
 
             foreach (var privilege in privileges)
-                grant.Privileges.Add(privilege);
+            {
+
+                PrivilegeModel _privilege;
+                if (!grant.Privileges.TryGet(privilege, out _privilege))
+                {
+
+                    _privilege = new PrivilegeModel()
+                    {
+                        PrivilegeName = privilege
+                    };
+
+                    _privilege.Files.Add(fileElement);
+                    grant.Privileges.Add(_privilege);
+
+                }
+                else
+                {
+                    var o = privilege + " " + grant.Key;
+                    string message = $"Duplicated grant privilege '{privilege}' on object {objectSchema}.{objectName} TO {role}";
+                    var eventParser = GetEventParser(message, o, SqlKind.UserObjectPrivilege, fileElement, _privilege.Files.FirstOrDefault());
+                    AppendEventParser(eventParser);
+                }
+            }
 
             return grant;
 
         }
+
     }
 
 }

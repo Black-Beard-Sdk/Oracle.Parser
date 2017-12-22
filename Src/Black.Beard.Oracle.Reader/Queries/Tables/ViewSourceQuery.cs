@@ -1,5 +1,5 @@
-﻿using Bb.Beard.Oracle.Reader;
-using Bb.Beard.Oracle.Reader.Dao;
+﻿using Bb.Oracle.Reader;
+using Bb.Oracle.Reader.Dao;
 using Bb.Oracle.Models;
 using System;
 using System.Collections.Generic;
@@ -20,9 +20,7 @@ namespace Bb.Oracle.Reader.Queries
 @"SELECT  t.OWNER, t.OBJECT_NAME, dbms_metadata.get_ddl(object_type => t.OBJECT_TYPE ,name => t.OBJECT_NAME , schema=> t.OWNER) SOURCE
 FROM    DBA_OBJECTS t
 {0} 
-AND t.OBJECT_TYPE = 'VIEW'
-  --and   t.owner in ( select p.GRANTEE USERNAME from DBA_ROLE_PRIVS p where p.granted_role like 'PICKUP_USER' )
-  --AND   ROWNUM <= 10 
+AND t.OBJECT_TYPE = 'VIEW' 
 ";
         public override List<ViewSourceQueryTable> Resolve(DbContextOracle context, Action<ViewSourceQueryTable> action)
         {

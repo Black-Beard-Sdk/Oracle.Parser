@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bb.Beard.Oracle.Reader.Dao
+namespace Bb.Oracle.Reader.Dao
 {
 
     internal static class FilterHelper

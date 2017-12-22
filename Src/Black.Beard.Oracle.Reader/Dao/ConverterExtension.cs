@@ -6,7 +6,7 @@ using System.Data;
 using System.Globalization;
 using System.Data.Common;
 
-namespace Bb.Beard.Oracle.Reader.Dao
+namespace Bb.Oracle.Reader.Dao
 {
 
     /// <summary>

@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 using System.Text;
 
-namespace Bb.Beard.Oracle.Reader.Dao
+namespace Bb.Oracle.Reader.Dao
 {
 
     public static class TypeMatchExtension

@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using Oracle.ManagedDataAccess.Client;
-using Bb.Beard.Oracle.Reader.Dao.Exceptions;
+using Bb.Oracle.Reader.Dao.Exceptions;
 
-namespace Bb.Beard.Oracle.Reader.Dao
+namespace Bb.Oracle.Reader.Dao
 {
 
     /// <summary>
@@ -554,7 +554,7 @@ namespace Bb.Beard.Oracle.Reader.Dao
         /// <exception cref="System.ArgumentNullException">
         /// Tablename cannot be empty. It corresponds to sql table target.
         /// </exception>
-        /// <exception cref="Pssa.Sdk.DataAccess.Dao.Contracts.Exceptions.DBExecProcedureException">Erreur lors de l'exécution de la commande de type  + CommandType.Text.ToString() +  sur la base Oracle :  + ex.Message</exception>
+        /// <exception cref="DBExecProcedureException">Erreur lors de l'exécution de la commande de type  + CommandType.Text.ToString() +  sur la base Oracle :  + ex.Message</exception>
         public void InsertInBulk(DataTable table, Dictionary<string, OracleDbType> mappingTypes = null, Dictionary<string,string> extraColumnsDefinition = null)
         {
             if (table == null) throw new ArgumentNullException();

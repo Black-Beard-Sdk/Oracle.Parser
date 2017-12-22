@@ -10,7 +10,7 @@ namespace Bb.Oracle.Visitors
     public interface IFile
     {
 
-        string File { get; set; }
+        string Filename { get; set; }
 
     }
 

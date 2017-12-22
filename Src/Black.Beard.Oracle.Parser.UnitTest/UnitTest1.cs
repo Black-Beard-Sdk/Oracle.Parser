@@ -44,20 +44,24 @@ namespace Black.Beard.Oracle.Parser.UnitTest
 
             var db = new OracleDatabase();
 
-            db.Grants.Add(new GrantModel()
+            var g = new GrantModel()
             {
                 Key = "toto",
                 ColumnObjectName = "col",
                 FullObjectName = "",
-                Files = new FileCollection() { new FileElement()  { Path = "toto.sql" } },
+                Files = new FileCollection() { new FileElement() { Path = "toto.sql" } },
                 Grantable = true,
                 Hierarchy = true,
                 ObjectName = "obj",
                 ObjectSchema = "schema",
-                Privileges = new HashSet<string>() { "SELECT", "DELETE" },
                 Role = "role",
                 Valid = true,
-            });
+            };
+
+            g.Privileges.Add(new PrivilegeModel() { PrivilegeName = "SELECT" });
+            g.Privileges.Add(new PrivilegeModel() { PrivilegeName = "DELETE" });
+
+            db.Grants.Add(g);
 
         }
 

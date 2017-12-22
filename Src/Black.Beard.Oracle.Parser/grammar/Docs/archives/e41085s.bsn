@@ -1138,8 +1138,6 @@
 
  db_user_proxy_clauses : ( 'WITH' ( 'ROLE' ( role_name ( ',' role_name )* | 'ALL' 'EXCEPT' role_name ( ',' role_name )* ) | 'NO' 'ROLES' ) )? ( 'AUTHENTICATION' 'REQUIRED' )?
 
- dblink : database ( '.' domain ( '.' domain )* )? ( '@' connection_qualifier )?
-
  dblink_authentication : 'AUTHENTICATED' 'BY' user 'IDENTIFIED' 'BY' password 
 
  deallocate_unused_clause : 'DEALLOCATE' 'UNUSED' ( 'KEEP' size_clause )?
@@ -1311,10 +1309,6 @@
  instance_clauses : ( 'ENABLE' | 'DISABLE' ) 'INSTANCE' '"' instance_name "
 
  integer : ( + | - )? digit ( digit )* 
-
- interval_day_to_second : 'INTERVAL' '"' ( integer | integer time_expr | time_expr ) '"' ( ( 'DAY' | 'HOUR' | 'MINUTE' ) ( '(' leading_precision ')' )? | 'SECOND' ( '(' leading_precision ( ',' fractional_second_precision )? ')' )? ) ( 'TO' ( 'DAY' | 'HOUR' | 'MINUTE' | 'SECOND' ( '(' fractional_second_precision ')' )? ) )?
-
- interval_year_to_month : 'INTERVAL' '"' integer ( - integer )? '"' ( 'YEAR' | 'MONTH' ) ( '(' precision ')' )? ( 'TO' ( 'YEAR' | 'MONTH' ) )?
 
  into_clause : 'INTO' table_fullname 
 
@@ -1656,8 +1650,6 @@
 
  startup_clauses : ( 'MOUNT' ( ( 'STANDBY' | 'CLONE' ) 'DATABASE' )? | 'OPEN' ( ( 'READ' 'WRITE' )? ( 'RESETLOGS' | 'NORESETLOGS' )? ( 'UPGRADE' | 'DOWNGRADE' )? | 'READ' 'ONLY' ) )
 
- still_image_object_types : ( si_still I mage | si_average C olor | si_positional C olor | si_colorhistogram | si_texture | si_feature L ist | si_color )
-
  stop_standby_clause : ( 'STOP' | 'ABORT' ) 'LOGICAL' 'STANDBY' 'APPLY'
 
  storage_clause : 'STORAGE' '(' ( 'INITIAL' size_clause | 'NEXT' size_clause | 'MINEXTENTS' integer | 'MAXEXTENTS' ( integer | 'UNLIMITED' ) | maxsize_clause | 'PCTINCREASE' integer | 'FREELISTS' integer | 'FREELIST' 'GROUPS' integer | 'OPTIMAL' ( size_clause | 'NULL' )? | 'BUFFER_POOL' ( 'KEEP' | 'RECYCLE' | 'DEFAULT' ) | 'FLASH_CACHE' ( 'KEEP' | 'NONE' | 'DEFAULT' ) | 'ENCRYPT' )+ ')'
@@ -1810,31 +1802,138 @@
 
  ym_iso_format : ( - )? P ( years Y )? ( months M )? ( days D )? ( T ( hours H )? ( minutes M )? ( seconds ( '.' frac_secs )? S )? )? subclauses 
 
- ansi_supported_data_types : ( 'CHARACTER' ( 'VARYING' )? '(' size ')' | ( 'CHAR' | 'NCHAR' ) 'VARYING' '(' size ')' | 'VARCHAR' '(' size ')' | 'NATIONAL' ( 'CHARACTER' | 'CHAR' ) ( 'VARYING' )? '(' size ')' | ( 'NUMERIC' | 'DECIMAL' | 'DEC' ) ( '(' precision ( ',' scale )? ')' )? | ( 'INTEGER' | 'INT' | 'SMALLINT' ) | 'FLOAT' ( '(' size ')' )? | 'DOUBLE' 'PRECISION' | 'REAL' )
 
- oracle_built-in_data_types : ( character_datatypes | number_datatypes | long_and_raw_datatypes | datetime_datatypes | large_object_datatypes | rowid_datatypes )
+datatypes 
+  : oracle_built_in_data_types 
+  | ansi_supported_data_types 
+  | user_defined_types
+  | oracle_supplied_data_types
+  ;
 
- oracle_supplied_data_types : ( any_types | xml_types | spatial_types | media_types | expression_filter_type )
+ oracle_built_in_data_types 
+  : character_datatypes 
+  | number_datatypes 
+  | long_and_raw_datatypes 
+  | datetime_datatypes 
+  | large_object_datatypes 
+  | rowid_datatypes
+  ;
+  
+character_datatypes 
+  : CHAR ( '(' size (BYTE|CHAR)? ')' )? 
+  | VARCHAR2 '(' size (BYTE|CHAR)? ')' 
+  | NCHAR ( '(' size ')' )? 
+  | 'NVARCHAR2' '(' size ')'
+  ;
+  
+number_datatypes 
+  : NUMBER ( '(' precision (',' scale )? ')' )? 
+  | FLOAT  ( '(' precision ')' )? 
+  | BINARY_FLOAT 
+  | 'BINARY_DOUBLE'
+  ;
+  
+long_and_raw_datatypes 
+  : LONG 
+  | LONG RAW 
+  | RAW '(' size ')'
+  ;
+  
+datetime_datatypes 
+  : 'DATE' 
+  | TIMESTAMP ( '(' fractional_second_precision ')' )? (WITH LOCAL? TIME ZONE)? 
+  | INTERVAL YEAR ( '(' year_precision ')' )? TO MONTH 
+  | INTERVAL DAY  ( '(' day_precision  ')' )? TO SECOND ( '(' fractional_second_precision ')' )? 
+  ;
+  
+large_object_datatypes 
+  : BLOB | CLOB | NCLOB | BFILE;
 
- character_datatypes : ( 'CHAR' ( '(' size ( 'BYTE' | 'CHAR' )? ')' )? | 'VARCHAR2' '(' size ( 'BYTE' | 'CHAR' )? ')' | 'NCHAR' ( '(' size ')' )? | 'NVARCHAR2' '(' size ')' )
+rowid_datatypes 
+  : ROWID 
+  | UROWID ( '(' size ')' )? 
+  ;
 
- datetime_datatypes : ( 'DATE' | 'TIMESTAMP' ( '(' fractional_second_precision ')' )? ( 'WITH' ( 'LOCAL' )? 'TIME' 'ZONE' )? | 'INTERVAL' 'YEAR' ( '(' year_precision ')' )? 'TO' 'MONTH' | 'INTERVAL' 'DAY' ( '(' day_precision ')' )? 'TO' 'SECOND' ( '(' fractional_second_precision ')' )? )
+ansi_supported_data_types 
+  : CHARACTER ( VARYING )? '(' size ')' 
+  | ( CHAR | NCHAR ) VARYING '(' size ')' 
+  | VARCHAR '(' size ')' 
+  | NATIONAL (CHARACTER|CHAR) VARYING? '(' size ')' 
+  | (NUMERIC | DECIMAL | DEC) ( '(' precision (',' scale )? ')' )? 
+  | (INTEGER | INT | SMALLINT) 
+  | FLOAT ( '(' size ')' )? 
+  | DOUBLE PRECISION 
+  | REAL
+  ;
 
- large_object_datatypes : ( 'BLOB' | 'CLOB' | 'NCLOB' | 'BFILE' )
+user_defined_types 
+  : 
+  ;
 
- long_and_raw_datatypes : ( 'LONG' | 'LONG' 'RAW' | 'RAW' '(' size ')' )
+oracle_supplied_data_types 
+  : any_types | xml_types | spatial_types | media_types | expression_filter_type
+  ;
 
- number_datatypes : ( 'NUMBER' ( '(' precision ( ',' scale )? ')' )? | 'FLOAT' ( '(' precision ')' )? | 'BINARY_FLOAT' | 'BINARY_DOUBLE' )
+ any_types 
+  // : 'SYS.'AnyData | 'SYS.'AnyType | 'SYS.'AnyDataSet
+  ;
 
- rowid_datatypes : ( 'ROWID' | 'UROWID' ( '(' size ) )? )
+ xml_types 
+  : xmltype 
+  | uritype
+  ;
 
- any_types : ( 'SYS'.A ny D ata | 'SYS'.A ny T ype | 'SYS'.A ny D ata S et )
+ spatial_types 
+  : sdo_geometry 
+  | do_topo_geometry 
+  | sdo_georaster 
+  ;
 
- xml_types : ( xmltype | uritype )
+ media_types 
+  : ordaudio 
+  | ordimage 
+  | ordvideo 
+  | orddoc 
+  | orddicom 
+  | still_image_object_types
+  ;
 
- spatial_types : ( sdo_geometry | do_topo_geometry | sdo_georaster )
+still_image_object_types 
+  : si_stillImage 
+  | si_averageColor 
+  | si_positionalColor 
+  | si_colorhistogram 
+  | si_texture 
+  | si_featureList 
+  | si_color
+  ;
 
- media_types : ( ordaudio | ordimage | ordvideo | orddoc | orddicom | still_image_object_types )
+interval_year_to_month 
+  : INTERVAL '\'' integer ( '-' integer )? '\'' (YEAR | MONTH) ( '(' precision ')' )? ( TO (YEAR | MONTH) )?
+
+interval_day_to_second 
+  : INTERVAL '\'' ( integer | integer time_expr | time_expr ) '\'' 
+    ( 
+      (DAY | HOUR | MINUTE) ( '(' leading_precision ')' )? 
+      | 'SECOND' ( '(' leading_precision ( ',' fractional_second_precision )? ')' )? 
+    ) 
+    ( 
+      'TO' ( DAY 
+           | HOUR 
+           | MINUTE 
+           | SECOND ( '(' fractional_second_precision ')' )? 
+           ) 
+    )?
+  ;
+
+database_object_or_part 
+  : schema=identifier '.' object=identifier '.' part=identifier '@' dblink
+  ;
+  
+dblink 
+  : database ( '.' domain ( '.' domain )* )? ( '@' connection_qualifier )?
+  ;
+  
 
  hierarchy : identifier 
  diskgroup_name : identifier 
