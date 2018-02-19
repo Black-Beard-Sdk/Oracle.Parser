@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using Bb.Oracle.Visitors;
 using Bb.Oracle.Models;
 using System.Linq;
-using Black.Beard.Oracle.Helpers;
 
 namespace Black.Beard.Oracle.Parser.UnitTest
 {
