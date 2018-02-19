@@ -8,6 +8,13 @@ namespace Bb.Oracle.Models
     public partial class GrantModel : ItemBase, Ichangable
     {
 
+        public GrantModel()
+        {
+
+            this.Privileges = new PrivilegeCollection() { Parent = this };
+
+        }
+
         public void Create(IchangeVisitor visitor)
         {
             visitor.Create(this);
@@ -23,7 +30,7 @@ namespace Bb.Oracle.Models
             visitor.Alter(this, source as GrantModel, propertyName);
         }
 
-        public KindModelEnum KindModel
+        public override KindModelEnum KindModel
         {
             get { return KindModelEnum.Grant; }
         }
@@ -37,9 +44,6 @@ namespace Bb.Oracle.Models
         {
             return this.ObjectSchema;
         }
-
-        [JsonIgnore]
-        public OracleDatabase Parent { get; internal set; }
 
         public IEnumerable<Anomaly> Evaluate(IEvaluateManager manager)
         {
@@ -64,7 +68,7 @@ namespace Bb.Oracle.Models
         /// <summary>
         /// Privilege
         /// </summary>
-        public PrivilegeCollection Privileges { get; set; } = new PrivilegeCollection();
+        public PrivilegeCollection Privileges { get; set; }
 
         /// <summary>
         /// Grantable
@@ -92,7 +96,7 @@ namespace Bb.Oracle.Models
         public string ColumnObjectName { get; set; }
 
 
-        public string PrivilegesToText {  get { return string.Join(", ", this.Privileges); } }
+        public string PrivilegesToText { get { return string.Join(", ", this.Privileges); } }
 
     }
 }

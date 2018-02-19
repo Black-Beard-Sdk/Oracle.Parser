@@ -5,11 +5,18 @@
     /// </summary>
     public partial class ExcludeSchemaElement
 	{
-			
-		/// <summary>
-		/// Name
-		/// </summary>
-		public System.String Name { get; set; }
+
+        public ExcludeSchemaElement()
+        {
+
+            this.Items = new ExcludingRules() { Parent = this };
+
+        }
+
+        /// <summary>
+        /// Name
+        /// </summary>
+        public System.String Name { get; set; }
 
         /// <summary>
         /// Items
@@ -17,7 +24,7 @@
         /// <returns>		
         /// Objet <see cref="ExcludingRules" />.");
         /// </returns>
-        public ExcludingRules Items { get; set; } = new ExcludingRules();
+        public ExcludingRules Items { get; set; } 
 
     }
 

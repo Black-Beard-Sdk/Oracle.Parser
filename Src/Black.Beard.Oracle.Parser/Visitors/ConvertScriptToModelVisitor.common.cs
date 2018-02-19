@@ -28,7 +28,7 @@ namespace Bb.Oracle.Visitors
 
             AppendEventParser(GetEventParser(error, string.Empty, SqlKind.Undefined));
 
-            Debug.WriteLine(message + " in " + this.Filename);
+            Trace.WriteLine(message + " in " + this.Filename);
 
         }
 
@@ -54,7 +54,7 @@ namespace Bb.Oracle.Visitors
             var t = context;
             string message = $"{exception.Message}. {t.GetText()} at line {t.Start.Line} column {t.Start.Column}, offset {t.Start.StartIndex}";
             _anomalies.Add(new Error() { Exception = exception, Message = message, File = GetFileElement(context.Start) });
-            System.Diagnostics.Debug.WriteLine(message + " in " + this.Filename);
+            Trace.WriteLine(message + " in " + this.Filename);
         }
 
         public override object VisitErrorNode(IErrorNode node)
@@ -69,7 +69,7 @@ namespace Bb.Oracle.Visitors
 
             //string message = $"{node.Symbol.Text} at line {node.Symbol.Line} column {node.Symbol.Column}, offset {node.Symbol.StartIndex}";
             //_anomalies.Add(new Error() { Exception = null, Message = message, File = this.File });
-            //System.Diagnostics.Debug.WriteLine(message + " in " + this.File);
+            //Trace.WriteLine(message + " in " + this.File);
             return null;
         }
 

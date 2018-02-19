@@ -1,10 +1,16 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace Bb.Oracle.Models
 {
 
-    public partial class ItemBase
+    public abstract partial class ItemBase
     {
+
+        public ItemBase()
+        {
+            this.Files = new FileCollection() { Parent = this};
+        }
 
         public object Tag { get; set; }
 
@@ -29,7 +35,38 @@ namespace Bb.Oracle.Models
         /// <returns>		
         /// Objet <see cref="FileCollection" />.");
         /// </returns>
-        public FileCollection Files { get; set; } = new FileCollection();
+        public FileCollection Files { get; set; } 
+
+        public virtual void Initialize()
+        {
+
+        }
+
+        [JsonIgnore]
+        public abstract KindModelEnum KindModel { get; }
+
+        [JsonIgnore]
+        public object Parent { get; set; }
+
+        [JsonIgnore]
+        public OracleDatabase Root
+        {
+            get
+            {
+
+                var r = this.Parent as OracleDatabase;
+                if (r != null)
+                    return r;
+
+                var i =this.Parent as ItemBase;
+                if (i != null)
+                    return i.Root;
+
+                return null;
+                    
+            }
+        }
+
 
     }
 }

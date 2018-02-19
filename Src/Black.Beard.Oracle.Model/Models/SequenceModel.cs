@@ -103,7 +103,7 @@ namespace Bb.Oracle.Models
             visitor.Alter(this, source as SequenceModel, propertyName);
         }
 
-        public KindModelEnum KindModel
+        public override KindModelEnum KindModel
         {
             get { return KindModelEnum.Sequence; }
         }
@@ -117,14 +117,6 @@ namespace Bb.Oracle.Models
         {
             return this.Owner;
         }
-
-        internal void Initialize()
-        {
-
-        }
-
-        [JsonIgnore]
-        public OracleDatabase Parent { get; internal set; }
 
         public IEnumerable<Anomaly> Evaluate(IEvaluateManager manager)
         {

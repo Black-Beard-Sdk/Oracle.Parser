@@ -2,11 +2,17 @@
 
 namespace Bb.Oracle.Models
 {
+
     /// <summary>
     /// 
     /// </summary>
     public partial class ArgumentCollection : IndexedCollection<ArgumentModel>
     {
+
+        public ArgumentCollection()
+        {
+
+        }
 
         /// <summary>
         /// Ctor
@@ -17,7 +23,5 @@ namespace Bb.Oracle.Models
         }
 
     }
-
-
 
 }

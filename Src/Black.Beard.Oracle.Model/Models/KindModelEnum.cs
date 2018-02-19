@@ -32,6 +32,18 @@
         Column,
         Property,
         Privilege,
+        BlocPartition,
+        Partition,
+        Argument,
+        ForeignKey,
+        ConstraintColumn,
+        IndexColumn,
+        OracleType,
+        PartitionColumn,
+        PartitionRef,
+        Schemas,
+        SubPartition,
+        Synonym,
     }
 
 }

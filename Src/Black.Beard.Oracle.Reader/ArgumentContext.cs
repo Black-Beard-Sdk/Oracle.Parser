@@ -1,5 +1,5 @@
 ﻿using Bb.Oracle.Helpers;
-using Black.Beard.Oracle.Helpers;
+using Bb.Beard.Oracle.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,7 +34,7 @@ namespace Bb.Oracle.Reader
         public string ExcludeFile { get; set; }
 
         public bool ExcludeCode { get; set; }
-      
+        public string ExcludedSchemas { get; set; }
     }
 
 }

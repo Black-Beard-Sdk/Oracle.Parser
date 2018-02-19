@@ -3,9 +3,11 @@ using System;
 
 namespace Bb.Oracle.Models
 {
+
     /// <summary>
     /// 
     /// </summary>
+    [System.Diagnostics.DebuggerDisplay("{ArgumentName}")]
     public partial class ArgumentModel : ItemBase
     {
 
@@ -57,13 +59,7 @@ namespace Bb.Oracle.Models
         /// </returns>
         public OracleType Type { get; set; } = new OracleType();
 
-        [JsonIgnore]
-        public ProcedureModel Parent { get; set; }
-
-        internal void Initialize()
-        {
-           
-        }
+        public override KindModelEnum KindModel => KindModelEnum.Argument;
 
     }
 

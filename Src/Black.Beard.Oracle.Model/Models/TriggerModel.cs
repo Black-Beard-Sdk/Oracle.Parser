@@ -61,7 +61,7 @@ namespace Bb.Oracle.Models
         public string Owner { get; set; }
 
 
-        internal void Initialize()
+        public override void Initialize()
         {
 
             //this.Constraints = new List<ConstraintModel>();
@@ -76,10 +76,6 @@ namespace Bb.Oracle.Models
             //}
 
         }
-
-        [JsonIgnore]
-        public TableModel Parent { get; set; }
-
 
         public void Create(IchangeVisitor visitor)
         {
@@ -96,7 +92,7 @@ namespace Bb.Oracle.Models
             visitor.Alter(this, source as TriggerModel, propertyName);
         }
 
-        public KindModelEnum KindModel
+        public override KindModelEnum KindModel
         {
             get { return KindModelEnum.Trigger; }
         }

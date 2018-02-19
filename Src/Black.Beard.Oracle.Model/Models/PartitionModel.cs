@@ -7,6 +7,12 @@ namespace Bb.Oracle.Models
     public partial class PartitionModel : ItemBase
     {
 
+        public PartitionModel()
+        {
+            this.SubPartitions = new SubPartitionCollection() { Parent = this };
+
+        }
+
         /// <summary>
         /// Partition Name
         /// </summary>   
@@ -183,7 +189,9 @@ namespace Bb.Oracle.Models
         /// <returns>		
         /// Objet <see cref="SubPartitionCollection" />.");
         /// </returns>   
-        public SubPartitionCollection SubPartitions { get; set; } = new SubPartitionCollection();
+        public SubPartitionCollection SubPartitions { get; set; }
+
+        public override KindModelEnum KindModel =>  KindModelEnum.Partition;
 
     }
 

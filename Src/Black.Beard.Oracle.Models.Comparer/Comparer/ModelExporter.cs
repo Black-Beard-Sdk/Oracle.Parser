@@ -96,7 +96,7 @@ namespace Bb.Oracle.Models.Comparer
             if (_buckets.Add(source))
             {
                 var d = base.AppendDifference(source, false);
-                Append(source.Parent, d);
+                Append(source.Parent as TypeItem, d);
             }
         }
 
@@ -209,7 +209,7 @@ namespace Bb.Oracle.Models.Comparer
             if (_buckets.Add(source))
             {
                 var d = base.AppendDifference(source, target, propertyName);
-                Append(source.Parent, d);
+                Append(source.Parent as GrantModel, d);
             }
         }
 

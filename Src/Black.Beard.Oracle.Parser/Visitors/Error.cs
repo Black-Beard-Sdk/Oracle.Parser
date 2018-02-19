@@ -4,7 +4,8 @@ using System;
 
 namespace Bb.Oracle.Visitors
 {
-    internal class Error
+
+    public class Error
     {
 
         public Exception Exception { get; internal set; }
@@ -14,4 +15,5 @@ namespace Bb.Oracle.Visitors
         public FileElement File { get; internal set; }
 
     }
+
 }

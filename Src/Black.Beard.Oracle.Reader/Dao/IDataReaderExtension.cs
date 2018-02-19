@@ -289,7 +289,7 @@ namespace Bb.Oracle.Reader.Dao
                 var t1 = this.reader.GetName(i);
                 if (ignorecase)
                     t1 = t1.ToLower();
-                Debug.WriteLine(t1);
+                Trace.WriteLine(t1);
                 SwitchCase c1 = Expression.SwitchCase(Expression.Assign(result, Expression.Constant(i)), Expression.Constant(t1, typeof(string)));
                 lst.Add(c1);
             }

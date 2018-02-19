@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace Bb.Oracle.Helpers
@@ -19,6 +20,208 @@ namespace Bb.Oracle.Helpers
         {
             string _path = System.IO.Path.Combine(rootSource);
             return LoadContentFromFile(_path);
+        }
+
+
+        public static List<CodeStructure> GetStructure(this StringBuilder source)
+        {
+
+            List<CodeStructure> result = new List<CodeStructure>();
+
+            int length = source.Length;
+            CodeStructure last;
+
+            bool inChar = false;
+            bool inCommentInLine = false;
+            bool inCommentOutLine = false;
+
+            var current = new CodeStructure(source, 0, KindCodeStructure.Undefined);
+            result.Add(current);
+
+            char lastChar = ' ';
+            for (int i = 0; i < length; i++)
+            {
+
+                var c = source[i];
+
+                if (inCommentOutLine)
+                {
+                    if (lastChar == '*' && c == '/')
+                    {
+                        current.End = i;
+                        inCommentOutLine = false;
+                        i++;
+                        if (i < length)
+                        {
+                            c = source[i];
+                            current = new CodeStructure(source, i, KindCodeStructure.Undefined);
+                            result.Add(current);
+                        }                       
+                    }
+                }
+
+                else if (inCommentInLine)
+                {
+                    if (c == '\n')
+                    {
+                        current.End = i;
+                        inCommentInLine = false;
+                        i++;
+                        if (i < length)
+                        {
+                            c = source[i];
+                            current = new CodeStructure(source, i, KindCodeStructure.Undefined);
+                            result.Add(current);
+                        }
+                       
+                    }
+                }
+
+                else if (inChar)
+                {
+                    if (c == '\'' && i + 1 < length)
+                    {
+                        var c2 = source[i + 1];
+                        if (c2 == '\\' || c2 == '\'')
+                            c = source[++i];
+
+                        else
+                        {
+                            current.End = i;
+                            inChar = false;
+                            i++;
+                            current = new CodeStructure(source, i, KindCodeStructure.Undefined);
+                            result.Add(current);
+                        }
+                    }
+                }
+
+                else if (c == '\'')
+                {
+                    inChar = true;
+                    current = new CodeStructure(source, i, KindCodeStructure.Text);
+                    result.Add(current);
+                }
+
+                else if (lastChar == '-' && c == '-')
+                {
+
+                    current.End--;
+
+                    inCommentInLine = true;
+
+                    if (current.End >= current.Start)
+                    {
+                        var cc = current.GetText().ToString();
+                        if (cc == "-" || string.IsNullOrEmpty(cc))
+                        {
+                            result.RemoveAt(result.Count - 1);
+                            last = result.LastOrDefault();
+                            if (last != null)
+                                last.End = i - 1;
+                        }
+                    }
+                    else
+                    {
+                        result.RemoveAt(result.Count - 1);
+                    }
+
+                    last = result.LastOrDefault();
+                    if (last != null && last.Kind == KindCodeStructure.Comment)
+                    {
+                        current = last;
+                    }
+                    else
+                    {
+                        current = new CodeStructure(source, i - 1, KindCodeStructure.Comment);
+                        result.Add(current);
+                    }
+                }
+
+                else if (lastChar == '/' && c == '*')
+                {
+                    current.End--;
+                    inCommentOutLine = true;
+
+                    last = result.LastOrDefault();
+                    if (last != null && last.Kind == KindCodeStructure.Comment)
+                    {
+                        current = last;
+                    }
+                    else
+                    {
+                        current = new CodeStructure(source, i - 1, KindCodeStructure.Comment);
+                        result.Add(current);
+                    }
+
+                }
+
+                lastChar = c;
+                current.End = i;
+            }
+
+            return result;
+
+        }
+
+        public static StringBuilder ToUpper(this StringBuilder source)
+        {
+
+            int length = source.Length;
+
+            StringBuilder sb = new StringBuilder(length + 200);
+            bool inChar = false;
+            bool inCommentInLine = false;
+            bool inCommentOutLine = false;
+
+            char lastChar = ' ';
+            for (int i = 0; i < length; i++)
+            {
+
+                var c = source[i];
+
+                if (inCommentOutLine)
+                {
+                    if (lastChar == '*' && c == '/')
+                        inCommentOutLine = false;
+                }
+
+                else if (inCommentInLine)
+                {
+                    if (lastChar == '\r' && c == '\n')
+                        inCommentInLine = false;
+                }
+
+                else if (inChar)
+                {
+                    if (c == '\'' && i + 1 < length)
+                    {
+                        var c2 = source[i + 1];
+                        if (c2 != '\\' && c2 != '\'')
+                            inChar = false;
+                    }
+
+                }
+
+                else if (c == '\'')
+                    inChar = true;
+
+                else if (char.IsLower(c) && !inChar)
+                    c = char.ToUpper(c);
+
+                else if (lastChar == '-' && c == '-')
+                    inCommentInLine = true;
+
+                else if (lastChar == '/' && c == '*')
+                    inCommentOutLine = true;
+
+                sb.Append(c);
+                lastChar = c;
+
+            }
+
+            return sb;
+
         }
 
         public static string LoadContentFromFile(string _path)
@@ -79,9 +282,8 @@ namespace Bb.Oracle.Helpers
 
                 if (System.Diagnostics.Debugger.IsAttached)
                 {
-                    Debug.WriteLine(string.Empty);
-                    Debug.WriteLine(source);
-                    Debug.WriteLine(target);
+                    Trace.WriteLine(source);
+                    Trace.WriteLine(target);
                 }
 
             }
@@ -106,7 +308,7 @@ namespace Bb.Oracle.Helpers
                 char item = source[i];
 
                 deb:
-                #region comments
+                #region texts
 
                 if (item == '\'')
                 {
@@ -139,6 +341,10 @@ namespace Bb.Oracle.Helpers
                         continue;
                     }
                 }
+
+                #endregion texts
+
+                #region comments
 
                 if (item == '/')
                     if (i + 1 < src.Length && src[i + 1] == '*')

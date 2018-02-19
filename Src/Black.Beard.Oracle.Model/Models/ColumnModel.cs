@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System;
 
 namespace Bb.Oracle.Models
 {
@@ -11,6 +12,13 @@ namespace Bb.Oracle.Models
     [System.Diagnostics.DebuggerDisplay("{ColumnName}")]
     public partial class ColumnModel : ItemBase
     {
+
+        public ColumnModel()
+        {
+            this.ForeignKey = new ForeignKeyConstraintModel() { Parent = this };
+            this.Type = new OracleType() { Parent = this };
+
+        }
 
         /// <summary>
         /// Column Name
@@ -89,9 +97,9 @@ namespace Bb.Oracle.Models
         /// ForeignKey
         /// </summary>
         /// <returns>		
-        /// Objet <see cref="ForeignKeyConstraints" />.");
+        /// Objet <see cref="ForeignKeyConstraintModel" />.");
         /// </returns>
-        public ForeignKeyConstraints ForeignKey { get; set; } = new ForeignKeyConstraints();
+        public ForeignKeyConstraintModel ForeignKey { get; set; }
 
         /// <summary>
         /// Type
@@ -99,18 +107,15 @@ namespace Bb.Oracle.Models
         /// <returns>		
         /// Objet <see cref="OracleType" />.");
         /// </returns>
-        public OracleType Type { get; set; } = new OracleType();
+        public OracleType Type { get; set; }
 
-        [JsonIgnore]
-        public TableModel Parent { get; set; }
-
-
-        internal void Initialize()
+        public override void Initialize()
         {
 
             this.Constraints = new List<ConstraintModel>();
 
-            foreach (ConstraintModel c in this.Parent.Constraints.OfType<ConstraintModel>())
+            var t = this.Parent.AsTable();
+            foreach (ConstraintModel c in t.Constraints.OfType<ConstraintModel>())
             {
                 foreach (ConstraintColumnModel item in c.Columns)
                 {
@@ -138,7 +143,7 @@ namespace Bb.Oracle.Models
 
         public override string GetOwner()
         {
-            return this.Parent.Name;
+            return (this.Parent as ItemBase).GetOwner();
         }
 
         public override string GetName()
@@ -151,9 +156,10 @@ namespace Bb.Oracle.Models
             return manager.Evaluate(this);
         }
 
+        [JsonIgnore]
         public List<ConstraintModel> Constraints { get; private set; }
 
-        public KindModelEnum KindModel
+        public override KindModelEnum KindModel
         {
             get { return KindModelEnum.Column; }
         }

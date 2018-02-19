@@ -2,7 +2,7 @@
 using Antlr4.Runtime.Tree;
 using Bb.Oracle.Helpers;
 using Bb.Oracle.Visitors;
-using Black.Beard.Oracle.Helpers;
+using Bb.Beard.Oracle.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -25,7 +25,7 @@ namespace Bb.Oracle.Parser
         public static ScriptParser ParseString(string source, string sourceFile = "")
         {
 
-            ICharStream stream = CharStreams.fromstring(ToUpper(new StringBuilder(source)).ToString());
+            ICharStream stream = CharStreams.fromstring(ContentHelper.ToUpper(new StringBuilder(source)).ToString());
 
             var parser = new ScriptParser() { File = sourceFile ?? string.Empty };
             parser.ParseCharStream(stream);
@@ -53,62 +53,9 @@ namespace Bb.Oracle.Parser
         public static StringBuilder LoadContent(string rootSource)
         {
             StringBuilder result = new StringBuilder(ContentHelper.LoadContentFromFile(rootSource));
-            StringBuilder _result = ToUpper(result);
+            StringBuilder _result = ContentHelper.ToUpper(result);
             return _result;
         }
-
-        private static StringBuilder ToUpper(StringBuilder result)
-        {
-
-            int length = result.Length;
-
-            StringBuilder sb = new StringBuilder(length + 200);
-            bool inChar = false;
-
-            char lastChar = ' ';
-            for (int i = 0; i < length; i++)
-            {
-
-                var c = result[i];
-
-                if (c == '\'' && lastChar != '\\')
-                    inChar = !inChar;
-
-                else if (char.IsLower(c) && !inChar)
-                    c = char.ToUpper(c);
-
-                lastChar = c;
-
-                sb.Append(c);
-
-            }
-
-            return sb;
-
-        }
-
-        //public static ScriptParser ParseStream(Stream source, string sourceFile = "")
-        //{
-
-        //    ICharStream stream = CharStreams.fromStream(source);
-
-        //    var parser = new ScriptParser() { File = sourceFile ?? string.Empty };
-        //    parser.ParseCharStream(stream);
-        //    return parser;
-
-        //}
-
-        //public static ScriptParser ParseTextReader(TextReader source, string sourceFile = "")
-        //{
-
-        //    ICharStream stream = CharStreams.fromTextReader(source);
-
-        //    var parser = new ScriptParser() { File = sourceFile ?? string.Empty };
-        //    parser.ParseCharStream(stream);
-        //    return parser;
-
-        //}
-
 
         public static bool Trace { get; set; }
 

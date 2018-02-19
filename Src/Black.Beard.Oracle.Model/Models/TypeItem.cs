@@ -10,6 +10,10 @@ namespace Bb.Oracle.Models
     public partial class TypeItem : ItemBase, Ichangable
     {
 
+        public TypeItem()
+        {
+            this.Properties = new PropertyCollection() { Parent = this };
+        }
         /// <summary>
         /// Key
         /// </summary>
@@ -66,7 +70,7 @@ namespace Bb.Oracle.Models
         /// <returns>		
         /// Objet <see cref="PropertyCollection" />.");
         /// </returns>
-        public PropertyCollection Properties { get; set; } = new PropertyCollection();
+        public PropertyCollection Properties { get; set; }
 
         public void Create(IchangeVisitor visitor)
         {
@@ -83,7 +87,7 @@ namespace Bb.Oracle.Models
             visitor.Alter(this, source as TypeItem, propertyName);
         }
 
-        public KindModelEnum KindModel
+        public override KindModelEnum KindModel
         {
             get { return KindModelEnum.Type; }
         }
@@ -109,7 +113,7 @@ namespace Bb.Oracle.Models
 
         }
 
-        internal void Initialize()
+        public override void Initialize()
         {
             foreach (PropertyModel item in Properties)
             {

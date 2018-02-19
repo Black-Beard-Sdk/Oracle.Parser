@@ -10,6 +10,12 @@ namespace Bb.Oracle.Models
     public partial class ConstraintModel : ItemBase, Ichangable
     {
 
+        public ConstraintModel()
+        {
+            this.Columns = new ConstraintColumnCollection() { Parent = this };
+
+        }
+
         /// <summary>
         /// Name
         /// </summary>
@@ -114,7 +120,7 @@ namespace Bb.Oracle.Models
         /// <returns>		
         /// Objet <see cref="ConstraintColumnCollection" />.");
         /// </returns>
-        public ConstraintColumnCollection Columns { get; set; } = new ConstraintColumnCollection();
+        public ConstraintColumnCollection Columns { get; set; } 
 
         public void Create(IchangeVisitor visitor)
         {
@@ -132,18 +138,10 @@ namespace Bb.Oracle.Models
             visitor.Create(this);
         }
 
-
-        [JsonIgnore]
-        public TableModel Parent { get; set; }
-
-        internal void Initialize()
+        public override void Initialize()
         {
 
-            foreach (ConstraintColumnModel item in this.Columns)
-            {
-                item.Parent = this;
-                item.Initialize();
-            }
+            this.Columns.Initialize();
 
             if (this.Type == "F" || this.Type == "R")
             {
@@ -155,7 +153,7 @@ namespace Bb.Oracle.Models
 
                     ConstraintModel constraint;
 
-                    if (table.Constraints.TryGet(key, out constraint))
+                    if ((table as TableModel).Constraints.TryGet(key, out constraint))
                         this.Reference = constraint;
 
                 }
@@ -165,7 +163,7 @@ namespace Bb.Oracle.Models
 
         public ConstraintModel Reference { get; set; }
 
-        public KindModelEnum KindModel
+        public override KindModelEnum KindModel
         {
             get { return KindModelEnum.Constraint; }
         }
@@ -185,7 +183,6 @@ namespace Bb.Oracle.Models
         {
             return manager.Evaluate(this);
         }
-
 
         public string GetCodeSource()
         {

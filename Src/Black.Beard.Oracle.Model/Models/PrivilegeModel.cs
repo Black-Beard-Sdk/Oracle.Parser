@@ -16,16 +16,7 @@ namespace Bb.Oracle.Models
         /// Column Name
         /// </summary>
         public string PrivilegeName { get; set; }
-       
-        [JsonIgnore]
-        public GrantModel Parent { get; set; }
-
-
-        internal void Initialize()
-        {
-
-        }
-
+              
         public void Create(IchangeVisitor visitor)
         {
             visitor.Create(this);
@@ -51,7 +42,7 @@ namespace Bb.Oracle.Models
             return manager.Evaluate(this);
         }
 
-        public KindModelEnum KindModel
+        public override KindModelEnum KindModel
         {
             get { return KindModelEnum.Privilege; }
         }

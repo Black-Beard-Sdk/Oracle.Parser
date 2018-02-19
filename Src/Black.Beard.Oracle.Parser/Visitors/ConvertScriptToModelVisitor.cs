@@ -2654,6 +2654,10 @@ namespace Bb.Oracle.Visitors
 
         public OracleDatabase db { get; }
 
+        public List<EventParser> Events {  get { return this._events; } }
+
+        public List<Error> Errors {  get { return this._anomalies; } }
+
         public string Filename { get; set; }
         private Stack<IRuleNode> _models = new Stack<IRuleNode>();
         private List<Error> _anomalies = new List<Error>();

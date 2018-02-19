@@ -16,6 +16,7 @@ namespace Bb.Oracle.Models
 
 
         void CloseBlock(KindModelEnum kindModelEnum);
+
     }
 
 }

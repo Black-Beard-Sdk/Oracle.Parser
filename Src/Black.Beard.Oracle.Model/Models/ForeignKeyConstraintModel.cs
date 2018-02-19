@@ -3,7 +3,7 @@
     /// <summary>
     /// 
     /// </summary>
-    public partial class ForeignKeyConstraints : ItemBase
+    public partial class ForeignKeyConstraintModel : ItemBase
     {
 
         /// <summary>
@@ -25,6 +25,8 @@
         /// Is Foreign Key
         /// </summary>
         public bool IsForeignKey { get; set; }
+
+        public override KindModelEnum KindModel => KindModelEnum.ForeignKey;
 
     }
 

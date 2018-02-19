@@ -7,6 +7,13 @@ namespace Bb.Oracle.Models.Configurations
     public partial class ResponsabilitiesSection
     {
 
+
+        public ResponsabilitiesSection()
+        {
+            this.Teams = new TeamCollection() { Parent = this };
+            this.Schemas = new schemaCollection() { Parent = this };
+        }
+
         private static ResponsabilitiesSection _configuration;
         public static ResponsabilitiesSection Configuration
         {
@@ -26,7 +33,7 @@ namespace Bb.Oracle.Models.Configurations
         /// <returns>		
         /// Objet <see cref="schemaCollection" />.");
         /// </returns>
-        public schemaCollection Schemas { get; set; } = new schemaCollection();
+        public schemaCollection Schemas { get; set; }
 
         /// <summary>
         /// Teams
@@ -34,7 +41,7 @@ namespace Bb.Oracle.Models.Configurations
         /// <returns>		
         /// Objet <see cref="TeamCollection" />.");
         /// </returns>
-        public TeamCollection Teams { get; set; } = new TeamCollection();
+        public TeamCollection Teams { get; set; }
 
 
         public void WriteFile(string filename)

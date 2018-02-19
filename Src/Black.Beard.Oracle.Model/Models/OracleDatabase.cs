@@ -6,6 +6,23 @@ namespace Bb.Oracle.Models
     public partial class OracleDatabase
     {
 
+        public OracleDatabase()
+        {
+            this.Partitions = new PartitionCollection() { Parent = this };
+            this.Tablespaces = new TablespaceCollection() { Parent = this };
+            this.Packages = new PackageCollection() { Parent = this };
+            this.Sequences = new SequenceCollection() { Parent = this };
+            this.Types = new TypeCollection() { Parent = this };
+            this.Procedures = new ProcedureCollection() { Parent = this };
+            this.Tables = new TableCollection() { Parent = this };
+
+            this.Synonymes = new SynonymCollection() { Parent = this };
+
+            this.Grants = new GrantCollection() { Parent = this };
+
+
+        }
+
         public string Name { get; set; }
 
         /// <summary>
@@ -29,7 +46,7 @@ namespace Bb.Oracle.Models
         /// <returns>		
         /// Objet <see cref="TableCollection" />.");
         /// </returns>
-        public TableCollection Tables { get; set; } = new TableCollection();
+        public TableCollection Tables { get; set; }
 
         /// <summary>
         /// Procedures
@@ -37,7 +54,7 @@ namespace Bb.Oracle.Models
         /// <returns>		
         /// Objet <see cref="ProcedureCollection" />.");
         /// </returns>
-        public ProcedureCollection Procedures { get; set; } = new ProcedureCollection();
+        public ProcedureCollection Procedures { get; set; }
 
         /// <summary>
         /// Types
@@ -46,7 +63,7 @@ namespace Bb.Oracle.Models
         /// Objet <see cref="TypeCollection" />.");
         /// </returns>
 
-        public TypeCollection Types { get; set; } = new TypeCollection();
+        public TypeCollection Types { get; set; }
 
         /// <summary>
         /// Synonymes
@@ -54,7 +71,7 @@ namespace Bb.Oracle.Models
         /// <returns>		
         /// Objet <see cref="SynonymCollection" />.");
         /// </returns>
-        public SynonymCollection Synonymes { get; set; } = new SynonymCollection();
+        public SynonymCollection Synonymes { get; set; }
 
         /// <summary>
         /// Sequences
@@ -62,7 +79,8 @@ namespace Bb.Oracle.Models
         /// <returns>		
         /// Objet <see cref="SequenceCollection" />.");
         /// </returns>
-        public SequenceCollection Sequences { get; set; } = new SequenceCollection();
+        public SequenceCollection Sequences { get; set; }
+
 
         /// <summary>
         /// Grants
@@ -70,7 +88,7 @@ namespace Bb.Oracle.Models
         /// <returns>		
         /// Objet <see cref="GrantCollection" />.");
         /// </returns>
-        public GrantCollection Grants { get; set; } = new GrantCollection();
+        public GrantCollection Grants { get; set; }
 
         /// <summary>
         /// Packages
@@ -78,7 +96,7 @@ namespace Bb.Oracle.Models
         /// <returns>		
         /// Objet <see cref="PackageCollection" />.");
         /// </returns>
-        public PackageCollection Packages { get; set; } = new PackageCollection();
+        public PackageCollection Packages { get; set; }
 
         /// <summary>
         /// Tablespaces
@@ -86,7 +104,7 @@ namespace Bb.Oracle.Models
         /// <returns>		
         /// Objet <see cref="TablespaceCollection" />.");
         /// </returns>
-        public TablespaceCollection Tablespaces { get; set; } = new TablespaceCollection();
+        public TablespaceCollection Tablespaces { get; set; }
 
         /// <summary>
         /// Partitions
@@ -94,7 +112,7 @@ namespace Bb.Oracle.Models
         /// <returns>		
         /// Objet <see cref="PartitionCollection" />.");
         /// </returns>
-        public PartitionCollection Partitions { get; set; } = new PartitionCollection();
+        public PartitionCollection Partitions { get; set; }
 
         public bool ResolveIndex(string key, out IndexModel index)
         {
@@ -124,41 +142,12 @@ namespace Bb.Oracle.Models
 
         public void Initialize()
         {
-
-            foreach (TableModel item in Tables)
-            {
-                item.Parent = this;
-                item.Initialize();
-            }
-            
-            foreach (TypeItem item in this.Types)
-            {
-                item.Parent = this;
-                item.Initialize();
-            }
-
-            foreach (SequenceModel item in this.Sequences)
-            {
-                item.Parent = this;
-                item.Initialize();
-            }
-
-            foreach (ProcedureModel item in this.Procedures)
-            {
-                item.Parent = this;
-                item.Initialize();
-            }
-
-            foreach (GrantModel item in this.Grants)
-            {
-                item.Parent = this;
-            }
-
-            foreach (SynonymModel item in this.Synonymes)
-            {
-                item.Parent = this;                
-            }
-
+            Tables.Initialize();
+            this.Types.Initialize();
+            this.Sequences.Initialize();
+            this.Procedures.Initialize();
+            this.Grants.Initialize();
+            this.Synonymes.Initialize();
         }
 
         /// <summary>

@@ -9,6 +9,12 @@ namespace Bb.Oracle.Models
     public partial class PropertyModel : ItemBase, Ichangable
     {
 
+
+        public PropertyModel()
+        {
+            this.Type = new OracleType() { Parent = this };
+        }
+
         /// <summary>
         /// Name
         /// </summary>
@@ -45,13 +51,10 @@ namespace Bb.Oracle.Models
         /// <returns>		
         /// Objet <see cref="OracleType" />.");
         /// </returns>
-        public OracleType Type { get; set; } = new OracleType();
+        public OracleType Type { get; set; } 
 
 
-        public KindModelEnum KindModel { get { return KindModelEnum.Property; } }
-
-        [JsonIgnore]
-        public TypeItem Parent { get; internal set; }
+        public override KindModelEnum KindModel { get { return KindModelEnum.Property; } }
 
         public void Alter(IchangeVisitor visitor, Ichangable source, string propertyName)
         {
@@ -81,14 +84,10 @@ namespace Bb.Oracle.Models
 
         public override string GetOwner()
         {
-            return this.Parent.Name;
+            return (this.Parent as ItemBase).GetOwner();
         }
 
-        internal void Initialize()
-        {
-        }
-
-
+        
     }
 
 

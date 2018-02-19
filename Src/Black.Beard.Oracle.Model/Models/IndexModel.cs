@@ -10,6 +10,14 @@ namespace Bb.Oracle.Models
     public partial class IndexModel : ItemBase, Ichangable
     {
 
+        public IndexModel()
+        {
+            this.Columns = new IndexColumnCollection() { Parent = this };
+            this.BlocPartition = new BlocPartitionModel() { Parent = this };
+            this.Columns = new IndexColumnCollection() { Parent = this }; 
+
+        }
+
         /// <summary>
         /// Name
         /// </summary>
@@ -161,7 +169,7 @@ namespace Bb.Oracle.Models
         /// <returns>		
         /// Objet <see cref="IndexColumnCollection" />.");
         /// </returns>
-        public IndexColumnCollection Columns { get; set; } = new IndexColumnCollection();
+        public IndexColumnCollection Columns { get; set; } 
 
         /// <summary>
         /// BlocPartition
@@ -169,7 +177,7 @@ namespace Bb.Oracle.Models
         /// <returns>		
         /// Objet <see cref="BlocPartitionModel" />.");
         /// </returns>
-        public BlocPartitionModel BlocPartition { get; set; } = new BlocPartitionModel();
+        public BlocPartitionModel BlocPartition { get; set; }
 
         public void Create(IchangeVisitor visitor)
         {
@@ -187,21 +195,12 @@ namespace Bb.Oracle.Models
             visitor.Create(this);
         }
 
-        public void Initialize()
+        public override void Initialize()
         {
-
-            foreach (IndexColumnModel item in this.Columns)
-            {
-                item.Parent = this;
-                item.Initialize();
-            }
-
+            this.Columns.Initialize();
         }
 
-        [JsonIgnore]
-        public TableModel Parent { get; set; }
-
-        public KindModelEnum KindModel
+        public override KindModelEnum KindModel
         {
             get { return KindModelEnum.Index; }
         }

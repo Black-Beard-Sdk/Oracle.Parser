@@ -5,14 +5,6 @@ using System.Text;
 namespace Bb.Oracle.Models
 {
 
-
-    public enum StatusKind
-    {
-        Information,
-        Warning,
-        Error
-    }
-
     public class Anomaly
     {
 

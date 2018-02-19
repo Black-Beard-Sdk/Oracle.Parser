@@ -5,6 +5,7 @@ namespace Bb.Oracle.Models
     /// <summary>
     /// Synonym
     /// </summary>
+    [System.Diagnostics.DebuggerDisplay("{Key} -> {ObjectTarget}")]
     public partial class SynonymModel : ItemBase
     {
 
@@ -37,8 +38,7 @@ namespace Bb.Oracle.Models
         /// </summary>
         public string SynonymOwner { get; set; }
 
-        [JsonIgnore]
-        public OracleDatabase Parent { get; internal set; }
+        public override KindModelEnum KindModel => KindModelEnum.Synonym;
 
     }
 

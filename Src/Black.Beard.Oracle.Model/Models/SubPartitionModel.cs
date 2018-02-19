@@ -166,5 +166,7 @@
         /// </summary>   
         public string CellFlashCache { get; set; }
 
+        public override KindModelEnum KindModel => KindModelEnum.SubPartition;
+
     }
 }

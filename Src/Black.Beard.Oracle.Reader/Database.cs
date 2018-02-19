@@ -158,8 +158,8 @@ namespace Bb.Oracle.Reader
             if (!string.IsNullOrEmpty(ctx.ExcludeFile))
                 ExcludeSection.Configuration = ExcludeSection.LoadFile(ctx.ExcludeFile);
 
-            if (ctx.OwnerFilter == "*")
-                ctx.OwnerFilter = ContextLoader.GetOwners(connectionString);
+            if (ctx.OwnerFilter == null || ctx.OwnerFilter == "*")
+                ctx.OwnerFilter = ContextLoader.GetOwners(connectionString, ctx);
 
             SetFilter(Database.OwnerNames, ctx.OwnerFilter);
             SetFilter(Database.ProcedureNames, ctx.Procedures);

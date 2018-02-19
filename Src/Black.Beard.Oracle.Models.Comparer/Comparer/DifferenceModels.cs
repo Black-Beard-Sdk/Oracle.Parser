@@ -186,7 +186,7 @@ namespace Bb.Oracle.Models.Comparer
                 {
                     string p = BuildPath(Path.Combine(this.folderForSource, source.ObjectSchema), "UserObjectPrivileges", source.Role);
                     string p2 = BuildPath(Path.Combine(this.folderForSource, source.ObjectSchema), @"UserObjectPrivileges\AdvancedQueue", source.Role);
-                    var lst = source.Parent.Grants.OfType<GrantModel>().Where(c => c.ObjectSchema == schema && c.Role == role).OrderBy(c => c.ObjectSchema + c.ObjectName).ToList();
+                    var lst = source.Root.Grants.OfType<GrantModel>().Where(c => c.ObjectSchema == schema && c.Role == role).OrderBy(c => c.ObjectSchema + c.ObjectName).ToList();
                     StringBuilder sbGrant = new StringBuilder();
                     StringBuilder sbGrant2 = new StringBuilder();
                     _doublons.Clear();
@@ -592,7 +592,7 @@ namespace Bb.Oracle.Models.Comparer
                 {
                     string p = BuildPath(Path.Combine(this.folderForSource, source.ObjectSchema), "UserObjectPrivileges", source.Role);
                     string p2 = BuildPath(Path.Combine(this.folderForSource, source.ObjectSchema), @"UserObjectPrivileges\AdvancedQueue", source.Role);
-                    var lst = source.Parent.Grants.OfType<GrantModel>().Where(c => c.ObjectSchema == schema && c.Role == role).OrderBy(c => c.ObjectSchema + c.ObjectName).ToList();
+                    var lst = source.Root.Grants.OfType<GrantModel>().Where(c => c.ObjectSchema == schema && c.Role == role).OrderBy(c => c.ObjectSchema + c.ObjectName).ToList();
                     StringBuilder sbGrant = new StringBuilder();
                     StringBuilder sbGrant2 = new StringBuilder();
                     _doublons.Clear();
@@ -620,7 +620,7 @@ namespace Bb.Oracle.Models.Comparer
                 {
                     string p = BuildPath(Path.Combine(this.folderForTarget, target.ObjectSchema), "UserObjectPrivileges", target.Role);
                     string p2 = BuildPath(Path.Combine(this.folderForTarget, target.ObjectSchema), @"UserObjectPrivileges\AdvancedQueue", target.Role);
-                    var lst = target.Parent.Grants.OfType<GrantModel>().Where(c => c.ObjectSchema == schema && c.Role == role).OrderBy(c => c.ObjectSchema + c.ObjectName).ToList();
+                    var lst = target.Root.Grants.OfType<GrantModel>().Where(c => c.ObjectSchema == schema && c.Role == role).OrderBy(c => c.ObjectSchema + c.ObjectName).ToList();
                     StringBuilder sbGrant = new StringBuilder();
                     StringBuilder sbGrant2 = new StringBuilder();
                     _doublons.Clear();

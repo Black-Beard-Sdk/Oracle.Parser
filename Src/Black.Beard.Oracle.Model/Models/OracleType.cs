@@ -9,6 +9,11 @@ namespace Bb.Oracle.Models
     public partial class OracleType : ItemBase
     {
 
+        public OracleType()
+        {
+
+        }
+
         /// <summary>
         /// Data Type
         /// </summary>   
@@ -51,6 +56,16 @@ namespace Bb.Oracle.Models
         /// </summary>   
         public string TypeName { get; set; }
 
+        public override string GetName()
+        {
+            return TypeName;
+        }
+
+        public override string GetOwner()
+        {
+            return TypeOwner;
+        }
+
         /// <summary>
         /// Data Level
         /// </summary>   
@@ -71,6 +86,8 @@ namespace Bb.Oracle.Models
         /// </summary>   
         [DefaultValue(false)]
         public bool IsRecord { get; set; }
+
+        public override KindModelEnum KindModel => KindModelEnum.OracleType;
 
     }
 }

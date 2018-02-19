@@ -84,11 +84,10 @@ namespace Bb.Oracle.Models
             visitor.Alter(this, source as PackageModel, propertyName);
         }
 
-        public KindModelEnum KindModel
+        public override KindModelEnum KindModel
         {
             get { return KindModelEnum.Package; }
         }
-
 
         public override string GetName()
         {

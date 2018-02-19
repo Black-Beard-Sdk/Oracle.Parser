@@ -18,13 +18,7 @@ namespace Bb.Oracle.Models
         /// </summary>
         public int Position { get; set; }
 
-        [JsonIgnore]
-        public ConstraintModel Parent { get; set; }
-
-        internal void Initialize()
-        {
-
-        }
+        public override KindModelEnum KindModel => KindModelEnum.ConstraintColumn;
 
     }
 

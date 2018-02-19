@@ -5,20 +5,25 @@ using System.IO;
 namespace Bb.Oracle.Models.Configurations
 {
     public partial class ExcludeSection
-	{
-        
-		private static ExcludeSection _configuration;
-		public static ExcludeSection Configuration 
-		{ 
-			get 
-			{
+    {
+
+        public ExcludeSection()
+        {
+            this.Schemas = new ExcludeSchemaCollection() { Parent = this };
+        }
+
+        private static ExcludeSection _configuration;
+        public static ExcludeSection Configuration
+        {
+            get
+            {
                 return _configuration ?? (_configuration = ReadFile("ExcludeSection.json"));
-            } 
-			set
-			{
-				_configuration = value;
-			}
-		}
+            }
+            set
+            {
+                _configuration = value;
+            }
+        }
 
         /// <summary>
         /// Schemas
@@ -26,7 +31,7 @@ namespace Bb.Oracle.Models.Configurations
         /// <returns>		
         /// Objet <see cref="ExcludeSchemaCollection" />.");
         /// </returns>
-        public ExcludeSchemaCollection Schemas { get; set; } = new ExcludeSchemaCollection();
+        public ExcludeSchemaCollection Schemas { get; set; }
 
         public static ExcludeSection LoadFile(string excludeFile)
         {
@@ -69,6 +74,6 @@ namespace Bb.Oracle.Models.Configurations
     }
 
 }
-		
+
 
 

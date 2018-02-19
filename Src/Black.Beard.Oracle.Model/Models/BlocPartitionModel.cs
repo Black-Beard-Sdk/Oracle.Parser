@@ -6,6 +6,13 @@
     public partial class BlocPartitionModel : ItemBase
     {
 
+
+        public BlocPartitionModel()
+        {
+            this.Columns = new PartitionColumnCollection() { Parent = this };
+            this.SubColumns = new PartitionColumnCollection() { Parent = this };
+        }
+
         /// <summary>
         /// Partitioning Type
         /// </summary>   
@@ -157,7 +164,7 @@
         /// <returns>		
         /// Objet <see cref="PartitionColumnCollection" />.");
         /// </returns>   
-        public PartitionColumnCollection Columns { get; set; } = new PartitionColumnCollection();
+        public PartitionColumnCollection Columns { get; set; }
 
         /// <summary>
         /// SubColumns
@@ -165,7 +172,9 @@
         /// <returns>		
         /// Objet <see cref="PartitionColumnCollection" />.");
         /// </returns>   
-        public PartitionColumnCollection SubColumns { get; set; } = new PartitionColumnCollection();
+        public PartitionColumnCollection SubColumns { get; set; }
+
+        public override KindModelEnum KindModel =>  KindModelEnum.BlocPartition;
 
     }
 }

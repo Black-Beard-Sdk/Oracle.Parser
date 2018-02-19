@@ -14,18 +14,14 @@ namespace Bb.Oracle.Models
         /// </summary>   
         public string PartitionName { get; set; }
 
-
-
-        [JsonIgnore]
-        public TableModel Parent { get; set; }
-
-        internal void Initialize()
+        public override void Initialize()
         {
-            this.Partition = Parent.Parent.Partitions[this.PartitionName];
+            this.Partition = this.Root.Partitions[this.PartitionName];
         }
 
         public PartitionModel Partition { get; private set; }
 
+        public override KindModelEnum KindModel => KindModelEnum.PartitionRef;
 
     }
 }

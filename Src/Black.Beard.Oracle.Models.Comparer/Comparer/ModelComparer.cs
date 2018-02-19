@@ -1335,7 +1335,7 @@ namespace Bb.Oracle.Models.Comparer
                 if (int.TryParse(target.Type.DataDefault, out r))
                     target.Type.DataDefault = r.ToString();
 
-                if (!source.Parent.Parent.SourceScript)
+                if (!source.Root.SourceScript)
                 {
                     if (!source.Nullable && source.Type.DataDefault == "NULL")
                     {
@@ -1344,7 +1344,7 @@ namespace Bb.Oracle.Models.Comparer
                     }
                 }
 
-                if (!target.Parent.Parent.SourceScript)
+                if (!target.Root.SourceScript)
                 {
                     if (!target.Nullable && target.Type.DataDefault == "NULL")
                     {
@@ -1573,7 +1573,7 @@ namespace Bb.Oracle.Models.Comparer
             object src = doublonModel;
 
             if (src is IndexModel)
-                name = (src as IndexModel).Parent.Key;
+                name = ((src as IndexModel).Parent as TableModel).Key;
 
             else if (src is TypeItem)
                 name = (src as TypeItem).Key;
@@ -1585,7 +1585,7 @@ namespace Bb.Oracle.Models.Comparer
                 name = (src as SynonymModel).Key;
 
             else if (src is ConstraintModel)
-                name = (src as ConstraintModel).Parent.Key;
+                name = ((src as ConstraintModel).Parent as TableModel).Key;
 
             else if (src is SequenceModel)
                 name = (src as SequenceModel).Name;

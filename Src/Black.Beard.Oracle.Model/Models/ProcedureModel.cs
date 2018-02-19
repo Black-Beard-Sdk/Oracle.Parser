@@ -11,6 +11,15 @@ namespace Bb.Oracle.Models
     public partial class ProcedureModel : ItemBase, Ichangable
     {
 
+        public ProcedureModel()
+        {
+
+            this.Arguments = new ArgumentCollection() { Parent = this};
+
+            this.ResultType = new ProcedureResult() { Parent = this };
+
+
+        }
         /// <summary>
         /// Name
         /// </summary>
@@ -62,7 +71,7 @@ namespace Bb.Oracle.Models
         /// <returns>		
         /// Objet <see cref="ArgumentCollection" />.");
         /// </returns>
-        public ArgumentCollection Arguments { get; set; } = new ArgumentCollection();
+        public ArgumentCollection Arguments { get; set; }
 
         /// <summary>
         /// ResultType
@@ -70,7 +79,7 @@ namespace Bb.Oracle.Models
         /// <returns>		
         /// Objet <see cref="ProcedureResult" />.");
         /// </returns>
-        public ProcedureResult ResultType { get; set; } = new ProcedureResult();
+        public ProcedureResult ResultType { get; set; } 
 
 
 
@@ -240,7 +249,7 @@ namespace Bb.Oracle.Models
             visitor.Alter(this, source as ProcedureModel, propertyName);
         }
 
-        public KindModelEnum KindModel
+        public override KindModelEnum KindModel
         {
             get
             {
@@ -250,14 +259,10 @@ namespace Bb.Oracle.Models
             }
         }
 
-        internal void Initialize()
+        public override void Initialize()
         {
 
-            foreach (ArgumentModel item in this.Arguments)
-            {
-                item.Parent = this;
-                item.Initialize();
-            }
+            this.Arguments.Initialize();
 
         }
 
@@ -270,9 +275,6 @@ namespace Bb.Oracle.Models
         {
             return this.SchemaName;
         }
-
-        [JsonIgnore]
-        public OracleDatabase Parent { get; internal set; }
 
         public IEnumerable<Anomaly> Evaluate(IEvaluateManager manager)
         {

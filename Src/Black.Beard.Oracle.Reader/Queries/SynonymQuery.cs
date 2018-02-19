@@ -52,7 +52,7 @@ from DBA_SYNONYMS t left outer join obj o on (t.TABLE_OWNER = o.OWNER and t.TABL
                     string ObjectName = string.Empty;
                     if (!string.IsNullOrEmpty(t.OBJECT_OWNER))
                     {
-                        if (!ContextLoader.exluded.Contains(t.OBJECT_OWNER))
+                        if (!ContextLoader.excluded.Contains(t.OBJECT_OWNER))
                         {
                             ObjectName = t.OBJECT_OWNER + ".";
                             ObjectName += t.OBJECT_NAME;

@@ -6,6 +6,11 @@
     public partial class SchemaElement
     {
 
+
+        public SchemaElement()
+        {
+            Objects  = new ObjectCollection() { Parent = this};
+        }
         /// <summary>
         /// Name
         /// </summary>
@@ -22,7 +27,7 @@
         /// <returns>		
         /// Objet <see cref="ObjectCollection" />.");
         /// </returns>
-        public ObjectCollection Objects { get; set; } = new ObjectCollection();
+        public ObjectCollection Objects { get; set; }
 
     }
 

@@ -17,5 +17,7 @@ namespace Bb.Oracle.Models
         /// </summary>   
         public int ColumnPosition { get; set; }
 
+        public override KindModelEnum KindModel => KindModelEnum.PartitionColumn;
+
     }
 }

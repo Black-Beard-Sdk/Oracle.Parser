@@ -12,6 +12,14 @@ namespace Bb.Oracle.Models
     public partial class TableModel : ItemBase, Ichangable
     {
 
+        public TableModel()
+        {
+            this.Constraints = new ConstraintCollection() { Parent = this };
+            this.Columns = new ColumnCollection() { Parent = this };
+            this.Indexes = new IndexCollection() { Parent = this };
+            this.Partitions = new PartitionRefCollection() { Parent = this };
+            this.BlocPartition = new BlocPartitionModel() { Parent = this };
+        }
         public string Name { get; set; }
 
         /// <summary>
@@ -242,7 +250,7 @@ namespace Bb.Oracle.Models
         /// <returns>		
         /// Objet <see cref="ColumnCollection" />.");
         /// </returns>
-        public ColumnCollection Columns { get; set; } = new ColumnCollection();
+        public ColumnCollection Columns { get; set; }
 
         /// <summary>
         /// Constraints
@@ -250,7 +258,8 @@ namespace Bb.Oracle.Models
         /// <returns>		
         /// Objet <see cref="ConstraintCollection" />.");
         /// </returns>
-        public ConstraintCollection Constraints { get; set; } = new ConstraintCollection();
+        public ConstraintCollection Constraints { get; set; }
+
 
         /// <summary>
         /// Indexes
@@ -258,7 +267,7 @@ namespace Bb.Oracle.Models
         /// <returns>		
         /// Objet <see cref="IndexCollection" />.");
         /// </returns>
-        public IndexCollection Indexes { get; set; } = new IndexCollection();
+        public IndexCollection Indexes { get; set; }
 
         /// <summary>
         /// Triggers
@@ -274,15 +283,14 @@ namespace Bb.Oracle.Models
         /// <returns>		
         /// Objet <see cref="PartitionRefCollection" />.");
         /// </returns>
-        public PartitionRefCollection Partitions { get; set; } = new PartitionRefCollection();
-
+        public PartitionRefCollection Partitions { get; set; }
         /// <summary>
         /// TablePartition
         /// </summary>
         /// <returns>		
         /// Objet <see cref="BlocPartitionModel" />.");
         /// </returns>
-        public BlocPartitionModel BlocPartition { get; set; }= new BlocPartitionModel();
+        public BlocPartitionModel BlocPartition { get; set; }
 
         public string CustomName
         {
@@ -330,46 +338,17 @@ namespace Bb.Oracle.Models
             visitor.Alter(this, source as TableModel, propertyName);
         }
 
-        public void Initialize()
+        public override void Initialize()
         {
 
-            foreach (ColumnModel item in this.Columns)
-            {
-                item.Parent = this;
-                item.Initialize();
-            }
-
-            foreach (IndexModel item in this.Indexes)
-            {
-                item.Parent = this;
-                item.Initialize();
-            }
-
-            foreach (ConstraintModel item in this.Constraints)
-            {
-                item.Parent = this;
-                item.Initialize();
-            }
-
-            foreach (PartitionRefModel item in this.Partitions)
-            {
-                item.Parent = this;
-                item.Initialize();
-            }
-
-            foreach (TriggerModel item in this.Triggers)
-            {
-                item.Parent = this;
-                item.Initialize();
-            }
-
-
+            this.Columns.Initialize();
+            this.Indexes.Initialize();
+            this.Constraints.Initialize();
+            this.Partitions.Initialize();
+            this.Triggers.Initialize();
         }
 
-        [JsonIgnore]
-        public OracleDatabase Parent { get; set; }
-
-        public KindModelEnum KindModel
+        public override KindModelEnum KindModel
         {
             get { return KindModelEnum.Table; }
         }
@@ -383,7 +362,7 @@ namespace Bb.Oracle.Models
         {
             return this.SchemaName;
         }
-     
+
         public IEnumerable<Anomaly> Evaluate(IEvaluateManager manager)
         {
             return manager.Evaluate(this);

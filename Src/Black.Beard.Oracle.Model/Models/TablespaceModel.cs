@@ -5,9 +5,7 @@
     /// </summary>
     public partial class TablespaceModel : ItemBase
     {
-
-
-
+        
         /// <summary>
         /// Tablespace Name
         /// </summary>
@@ -129,6 +127,8 @@
         /// Group Name
         /// </summary>   
         public string GroupName { get; set; }
+
+        public override KindModelEnum KindModel => KindModelEnum.Tablespace;
 
     }
 
