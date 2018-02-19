@@ -184,8 +184,8 @@ namespace Bb.Oracle.Models.Comparer
 
                 if (generateSource)
                 {
-                    string p = BuildPath(Path.Combine(this.folderForSource, source.ObjectSchema), "UserObjectPrivileges", source.Role);
-                    string p2 = BuildPath(Path.Combine(this.folderForSource, source.ObjectSchema), @"UserObjectPrivileges\AdvancedQueue", source.Role);
+                    string p = BuildPath(Path.Combine(this.folderForSource, source.ObjectSchema), "UserObjectPrivileges", source.Role.Replace(@"""", ""));
+                    string p2 = BuildPath(Path.Combine(this.folderForSource, source.ObjectSchema), @"UserObjectPrivileges\AdvancedQueue", source.Role.Replace(@"""", ""));
                     var lst = source.Root.Grants.OfType<GrantModel>().Where(c => c.ObjectSchema == schema && c.Role == role).OrderBy(c => c.ObjectSchema + c.ObjectName).ToList();
                     StringBuilder sbGrant = new StringBuilder();
                     StringBuilder sbGrant2 = new StringBuilder();
@@ -867,10 +867,20 @@ namespace Bb.Oracle.Models.Comparer
 
         protected string BuildPath(string root, string objectType, string filename, bool isRollback = false)
         {
-            if (isRollback)
-                return Path.Combine(root, objectType, filename + ".bak.sql");
-            else
-                return Path.Combine(root, objectType, filename + ".sql");
+            try
+            {
+                if (isRollback)
+                    return Path.Combine(root, objectType, filename + ".bak.sql");
+                else
+                    return Path.Combine(root, objectType, filename + ".sql");
+
+            }
+            catch (Exception)
+            {
+                string msg = $"invalid datas for build path root={root} objectType={objectType} filename={filename}";
+                Console.WriteLine(msg);
+                throw;
+            }
         }
 
     }
