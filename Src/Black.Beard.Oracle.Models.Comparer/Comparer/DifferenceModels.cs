@@ -73,6 +73,8 @@ namespace Bb.Oracle.Models.Comparer
         private void Delete(DirectoryInfo dirSource)
         {
 
+            dirSource.Refresh();
+
             foreach (var file in dirSource.GetFiles())
                 file.Delete();
 
@@ -214,8 +216,8 @@ namespace Bb.Oracle.Models.Comparer
 
                 if (generateTarget)
                 {
-                    string p = BuildPath(Path.Combine(this.folderForTarget, source.ObjectSchema), "UserObjectPrivileges", source.Role);
-                    string p2 = BuildPath(Path.Combine(this.folderForTarget, source.ObjectSchema), @"UserObjectPrivileges\AdvancedQueue", source.Role);
+                    string p = BuildPath(Path.Combine(this.folderForTarget, source.ObjectSchema), "UserObjectPrivileges", source.Role.Replace(@"""", ""));
+                    string p2 = BuildPath(Path.Combine(this.folderForTarget, source.ObjectSchema), @"UserObjectPrivileges\AdvancedQueue", source.Role.Replace(@"""", ""));
                     var lst = targetModel.Grants.OfType<GrantModel>().Where(c => c.ObjectSchema == schema && c.Role == role).OrderBy(c => c.ObjectSchema + c.ObjectName).ToList();
                     StringBuilder sbGrant = new StringBuilder();
                     StringBuilder sbGrant2 = new StringBuilder();

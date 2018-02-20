@@ -8,6 +8,7 @@ namespace Bb.Oracle.Models
     /// <summary>
     /// 
     /// </summary>
+    [System.Diagnostics.DebuggerDisplay("{Name}")]
     public partial class ProcedureModel : ItemBase, Ichangable
     {
 

@@ -25,7 +25,7 @@ namespace Bb.Oracle.Models.Comparer
         {
             this._changes = _changes;
             this.SourceScript = source.SourceScript || target.SourceScript;
-            this.SourceScript = true;
+            //this.SourceScript = true;
 
             CompareTables(source.Tables, target.Tables);
             CompareGrants(source.Grants, target.Grants, target);
@@ -242,6 +242,15 @@ namespace Bb.Oracle.Models.Comparer
 
         private void CompareProcedures(ProcedureCollection targets, List<ProcedureModel> src, bool toRemove)
         {
+
+            foreach (var item in targets)
+                if (item.PackageName == null)
+                    item.PackageName = string.Empty;
+
+            foreach (var item in src)
+                if (item.PackageName == null)
+                    item.PackageName = string.Empty;
+
             foreach (ProcedureModel source in src)
             {
 
@@ -252,7 +261,9 @@ namespace Bb.Oracle.Models.Comparer
                 {
 
                     // On requete sans s occuper des parametres
-                    lst = targets.OfType<ProcedureModel>().Where(c => c.Name == source.Name && c.SchemaName == source.SchemaName && source.PackageName == c.PackageName).ToList();
+                    lst = targets.OfType<ProcedureModel>().Where(c => c.SchemaName == source.SchemaName).ToList();
+                    lst = lst.OfType<ProcedureModel>().Where(c => source.PackageName == c.PackageName).ToList();
+                    lst = lst.OfType<ProcedureModel>().Where(c => c.Name == source.Name).ToList();
 
                     if (lst.Count == 0)
                     {
@@ -272,11 +283,6 @@ namespace Bb.Oracle.Models.Comparer
                             if (lst2.Count == 1)    // En fait non c est pas compliqué
                                 target = lst2.FirstOrDefault();
 
-                            else
-                            {
-
-                            }
-
                         }
                         else
                         {
@@ -285,11 +291,6 @@ namespace Bb.Oracle.Models.Comparer
 
                             if (lst2.Count == 1)    // En fait non c est pas compliqué
                                 target = lst2.FirstOrDefault();
-
-                            else
-                            {
-
-                            }
 
                         }
 
@@ -759,14 +760,14 @@ namespace Bb.Oracle.Models.Comparer
                     TableModel tableTarget;
 
                     if (targets.TryGet(tableSource.Key, out tableTarget))
-                        CompareTable(tableSource, tableTarget);
+                        CompareTable(tableSource, tableTarget, findToRemove);
                     else
                         _changes.AppendMissing(tableSource);
                 }
             }
         }
 
-        private void CompareTable(TableModel tableSource, TableModel tableTarget)
+        private void CompareTable(TableModel tableSource, TableModel tableTarget, bool toRemove)
         {
 
             if (!tableSource.IsView && tableSource.Valid && tableTarget.Valid)
@@ -775,164 +776,170 @@ namespace Bb.Oracle.Models.Comparer
                 CompareColumns(tableSource, tableTarget);
             }
 
-            CompareIndexes(tableSource, tableTarget);
+            CompareIndexes(tableSource, tableTarget, toRemove);
 
             CompareTriggers(tableSource, tableTarget);
 
             EvaluateFiles(tableSource);
             EvaluateFiles(tableTarget);
 
-            if (tableSource.codeView != tableTarget.codeView)
-            {
-
-                var s = Utils.Unserialize(tableSource.codeView, true).Replace(@"""", "");
-                s = CleanForCompare(s);
-
-                int index = s.ToUpper().IndexOf("VIEW " + tableSource.SchemaName.ToUpper() + "." + tableSource.Name.ToUpper());
-                if (index > 0)
-                    s = s.Substring(index);
-
-                var t = Utils.Unserialize(tableTarget.codeView, true).Replace(@"""", "");
-                t = CleanForCompare(t);
-
-                index = t.ToUpper().IndexOf("VIEW " + tableSource.SchemaName.ToUpper() + "." + tableSource.Name.ToUpper());
-                if (index > 0)
-                    t = t.Substring(index);
-
-                if (ContentHelper.CompareCodeSources(s, t))
-                    this._changes.AppendChange(tableSource, tableTarget, "CodeView");
-
-                else
+            if (tableSource.IsView)
+                if (tableSource.codeView != tableTarget.codeView)
                 {
 
+                    var s = Utils.Unserialize(tableSource.codeView, true).Replace(@"""", "");
+                    s = CleanForCompare(s);
+
+                    int index = s.ToUpper().IndexOf("VIEW " + tableSource.SchemaName.ToUpper() + "." + tableSource.Name.ToUpper());
+                    if (index > 0)
+                        s = s.Substring(index);
+
+                    var t = Utils.Unserialize(tableTarget.codeView, true).Replace(@"""", "");
+                    t = CleanForCompare(t);
+
+                    index = t.ToUpper().IndexOf("VIEW " + tableSource.SchemaName.ToUpper() + "." + tableSource.Name.ToUpper());
+                    if (index > 0)
+                        t = t.Substring(index);
+
+                    if (ContentHelper.CompareCodeSources(s, t))
+                        this._changes.AppendChange(tableSource, tableTarget, "CodeView");
+
+                    else
+                    {
+
+
+                    }
 
                 }
 
-            }
+            //if (!tableSource.IsView && !tableTarget.IsView)
+            //{
 
-            if (!tableSource.IsView && false)
-            {
-                if (tableSource.BlocPartition != tableTarget.BlocPartition)
-                    this._changes.AppendChange(tableSource, tableTarget, "BlocPartition");
+            //    //if (tableSource.BlocPartition != tableTarget.BlocPartition)
+            //    //    this._changes.AppendChange(tableSource, tableTarget, "BlocPartition");
 
-                if (tableSource.BufferPool != tableTarget.BufferPool)
-                    this._changes.AppendChange(tableSource, tableTarget, "BufferPool");
+            //    //if (tableTarget.BufferPool == null)
+            //    //    tableTarget.BufferPool = "DEFAULT";
 
-                if (tableSource.Cache != tableTarget.Cache)
-                    this._changes.AppendChange(tableSource, tableTarget, "Cache");
+            //    //if (tableSource.BufferPool != tableTarget.BufferPool)
+            //    //    this._changes.AppendChange(tableSource, tableTarget, "BufferPool");
 
-                if (tableSource.CellFlashCache != tableTarget.CellFlashCache)
-                    this._changes.AppendChange(tableSource, tableTarget, "CellFlashCache");
+            //    //if (tableSource.Cache != tableTarget.Cache)
+            //    //    this._changes.AppendChange(tableSource, tableTarget, "Cache");
 
-                if (tableSource.ClusterName != tableTarget.ClusterName)
-                    this._changes.AppendChange(tableSource, tableTarget, "ClusterName");
+            //    //if (tableSource.CellFlashCache != tableTarget.CellFlashCache)
+            //    //    this._changes.AppendChange(tableSource, tableTarget, "CellFlashCache");
 
-                if (tableSource.ClusterOwner != tableTarget.ClusterOwner)
-                    this._changes.AppendChange(tableSource, tableTarget, "ClusterOwner");
+            //    //if (tableSource.ClusterName != tableTarget.ClusterName)
+            //    //    this._changes.AppendChange(tableSource, tableTarget, "ClusterName");
 
-                if (tableSource.Comment != tableTarget.Comment)
-                    this._changes.AppendChange(tableSource, tableTarget, "Comment");
+            //    //if (tableSource.ClusterOwner != tableTarget.ClusterOwner)
+            //    //    this._changes.AppendChange(tableSource, tableTarget, "ClusterOwner");
 
-                if (tableSource.CompressFor != tableTarget.CompressFor)
-                    this._changes.AppendChange(tableSource, tableTarget, "CompressFor");
+            //    //if (tableSource.Comment != tableTarget.Comment)
+            //    //    this._changes.AppendChange(tableSource, tableTarget, "Comment");
 
-                if (tableSource.Compression != tableTarget.Compression)
-                    this._changes.AppendChange(tableSource, tableTarget, "Compression");
+            //    //if (tableSource.CompressFor != tableTarget.CompressFor)
+            //    //    this._changes.AppendChange(tableSource, tableTarget, "CompressFor");
 
-                if (tableSource.Dependencies != tableTarget.Dependencies)
-                    this._changes.AppendChange(tableSource, tableTarget, "Dependencies");
+            //    //if (tableSource.Compression != tableTarget.Compression)
+            //    //    this._changes.AppendChange(tableSource, tableTarget, "Compression");
 
-                if (tableSource.Description != tableTarget.Description)
-                    this._changes.AppendChange(tableSource, tableTarget, "Description");
+            //    //if (tableSource.Dependencies != tableTarget.Dependencies)
+            //    //    this._changes.AppendChange(tableSource, tableTarget, "Dependencies");
 
-                if (tableSource.Dropped != tableTarget.Dropped)
-                    this._changes.AppendChange(tableSource, tableTarget, "Dropped");
+            //    //if (tableSource.Description != tableTarget.Description)
+            //    //    this._changes.AppendChange(tableSource, tableTarget, "Description");
 
-                if (tableSource.Duration != tableTarget.Duration)
-                    this._changes.AppendChange(tableSource, tableTarget, "Duration");
+            //    //if (tableSource.Dropped != tableTarget.Dropped)
+            //    //    this._changes.AppendChange(tableSource, tableTarget, "Dropped");
 
-                if (tableSource.FlashCache != tableTarget.FlashCache)
-                    this._changes.AppendChange(tableSource, tableTarget, "FlashCache");
+            //    //if (tableSource.Duration != tableTarget.Duration)
+            //    //    this._changes.AppendChange(tableSource, tableTarget, "Duration");
 
-                if (tableSource.Generated != tableTarget.Generated)
-                    this._changes.AppendChange(tableSource, tableTarget, "Generated");
+            //    //if (tableSource.FlashCache != tableTarget.FlashCache)
+            //    //    this._changes.AppendChange(tableSource, tableTarget, "FlashCache");
 
-                if (tableSource.GlobalStats != tableTarget.GlobalStats)
-                    this._changes.AppendChange(tableSource, tableTarget, "GlobalStats");
+            //    //if (tableSource.Generated != tableTarget.Generated)
+            //    //    this._changes.AppendChange(tableSource, tableTarget, "Generated");
 
-                if (tableSource.InitialExtent != tableTarget.InitialExtent)
-                    this._changes.AppendChange(tableSource, tableTarget, "InitialExtent");
+            //    //if (tableSource.GlobalStats != tableTarget.GlobalStats)
+            //    //    this._changes.AppendChange(tableSource, tableTarget, "GlobalStats");
 
-                if (tableSource.IniTrans != tableTarget.IniTrans)
-                    this._changes.AppendChange(tableSource, tableTarget, "IniTrans");
+            //    //if (tableSource.InitialExtent != tableTarget.InitialExtent)
+            //    //    this._changes.AppendChange(tableSource, tableTarget, "InitialExtent");
 
-                if (tableSource.Logging != tableTarget.Logging)
-                    this._changes.AppendChange(tableSource, tableTarget, "Logging");
+            //    //if (tableSource.IniTrans != tableTarget.IniTrans)
+            //    //    this._changes.AppendChange(tableSource, tableTarget, "IniTrans");
 
-                if (tableSource.MaxExtents != tableTarget.MaxExtents)
-                    this._changes.AppendChange(tableSource, tableTarget, "MaxExtents");
+            //    //if (tableSource.Logging != tableTarget.Logging)
+            //    //    this._changes.AppendChange(tableSource, tableTarget, "Logging");
 
-                if (tableSource.MaxTrans != tableTarget.MaxTrans)
-                    this._changes.AppendChange(tableSource, tableTarget, "MaxTrans");
+            //    //if (tableSource.MaxExtents != tableTarget.MaxExtents)
+            //    //    this._changes.AppendChange(tableSource, tableTarget, "MaxExtents");
 
-                if (tableSource.MinExtents != tableTarget.MinExtents)
-                    this._changes.AppendChange(tableSource, tableTarget, "MinExtents");
+            //    //if (tableSource.MaxTrans != tableTarget.MaxTrans)
+            //    //    this._changes.AppendChange(tableSource, tableTarget, "MaxTrans");
 
-                if (tableSource.Monitoring != tableTarget.Monitoring)
-                    this._changes.AppendChange(tableSource, tableTarget, "Monitoring");
+            //    //if (tableSource.MinExtents != tableTarget.MinExtents)
+            //    //    this._changes.AppendChange(tableSource, tableTarget, "MinExtents");
 
-                if (tableSource.Nested != tableTarget.Nested)
-                    this._changes.AppendChange(tableSource, tableTarget, "Nested");
+            //    //if (tableSource.Monitoring != tableTarget.Monitoring)
+            //    //    this._changes.AppendChange(tableSource, tableTarget, "Monitoring");
 
-                if (tableSource.NextExtent != tableTarget.NextExtent)
-                    this._changes.AppendChange(tableSource, tableTarget, "NextExtent");
+            //    //if (tableSource.Nested != tableTarget.Nested)
+            //    //    this._changes.AppendChange(tableSource, tableTarget, "Nested");
 
-                if (tableSource.Partitioned != tableTarget.Partitioned)
-                    this._changes.AppendChange(tableSource, tableTarget, "Partitioned");
+            //    //if (tableSource.NextExtent != tableTarget.NextExtent)
+            //    //    this._changes.AppendChange(tableSource, tableTarget, "NextExtent");
 
-                //if (tableSource.Partitions != tableTarget.Partitions)
-                //    this._changes.AppendChange(tableSource, tableTarget, "Partitions");
+            //    //if (tableSource.Partitioned != tableTarget.Partitioned)
+            //    //    this._changes.AppendChange(tableSource, tableTarget, "Partitioned");
 
-                if (tableSource.PctFree != tableTarget.PctFree)
-                    this._changes.AppendChange(tableSource, tableTarget, "PctFree");
+            //    ////if (tableSource.Partitions != tableTarget.Partitions)
+            //    ////    this._changes.AppendChange(tableSource, tableTarget, "Partitions");
 
-                if (tableSource.PctUsed != tableTarget.PctUsed)
-                    this._changes.AppendChange(tableSource, tableTarget, "PctUsed");
+            //    //if (tableSource.PctFree != tableTarget.PctFree)
+            //    //    this._changes.AppendChange(tableSource, tableTarget, "PctFree");
 
-                if (tableSource.ReadOnly != tableTarget.ReadOnly)
-                    this._changes.AppendChange(tableSource, tableTarget, "ReadOnly");
+            //    //if (tableSource.PctUsed != tableTarget.PctUsed)
+            //    //    this._changes.AppendChange(tableSource, tableTarget, "PctUsed");
 
-                if (tableSource.ResultCache != tableTarget.ResultCache)
-                    this._changes.AppendChange(tableSource, tableTarget, "ResultCache");
+            //    //if (tableSource.ReadOnly != tableTarget.ReadOnly)
+            //    //    this._changes.AppendChange(tableSource, tableTarget, "ReadOnly");
 
-                if (tableSource.RowMovement != tableTarget.RowMovement)
-                    this._changes.AppendChange(tableSource, tableTarget, "RowMovement");
+            //    //if (tableSource.ResultCache != tableTarget.ResultCache)
+            //    //    this._changes.AppendChange(tableSource, tableTarget, "ResultCache");
 
-                if (tableSource.Secondary != tableTarget.Secondary)
-                    this._changes.AppendChange(tableSource, tableTarget, "Secondary");
+            //    //if (tableSource.RowMovement != tableTarget.RowMovement)
+            //    //    this._changes.AppendChange(tableSource, tableTarget, "RowMovement");
 
-                if (tableSource.SegmentCreated != tableTarget.SegmentCreated)
-                    this._changes.AppendChange(tableSource, tableTarget, "SegmentCreated");
+            //    //if (tableSource.Secondary != tableTarget.Secondary)
+            //    //    this._changes.AppendChange(tableSource, tableTarget, "Secondary");
 
-                if (tableSource.SkipCorrupt != tableTarget.SkipCorrupt)
-                    this._changes.AppendChange(tableSource, tableTarget, "SkipCorrupt");
+            //    //if (tableSource.SegmentCreated != tableTarget.SegmentCreated)
+            //    //    this._changes.AppendChange(tableSource, tableTarget, "SegmentCreated");
 
-                if (tableSource.Status != tableTarget.Status)
-                    this._changes.AppendChange(tableSource, tableTarget, "Status");
+            //    //if (tableSource.SkipCorrupt != tableTarget.SkipCorrupt)
+            //    //    this._changes.AppendChange(tableSource, tableTarget, "SkipCorrupt");
 
-                if (tableSource.TableLock != tableTarget.TableLock)
-                    this._changes.AppendChange(tableSource, tableTarget, "TableLock");
+            //    //if (tableSource.Status != tableTarget.Status)
+            //    //    this._changes.AppendChange(tableSource, tableTarget, "Status");
 
-                if (tableSource.TablespaceName != tableTarget.TablespaceName)
-                    this._changes.AppendChange(tableSource, tableTarget, "TablespaceName");
+            //    //if (tableSource.TableLock != tableTarget.TableLock)
+            //    //    this._changes.AppendChange(tableSource, tableTarget, "TableLock");
 
-                if (tableSource.Temporary != tableTarget.Temporary)
-                    this._changes.AppendChange(tableSource, tableTarget, "Temporary");
+            //    //if (tableSource.TablespaceName != tableTarget.TablespaceName)
+            //    //    this._changes.AppendChange(tableSource, tableTarget, "TablespaceName");
 
-                if (tableSource.UserStats != tableTarget.UserStats)
-                    this._changes.AppendChange(tableSource, tableTarget, "UserStats");
+            //    //if (tableSource.Temporary != tableTarget.Temporary)
+            //    //    this._changes.AppendChange(tableSource, tableTarget, "Temporary");
 
-            }
+            //    //if (tableSource.UserStats != tableTarget.UserStats)
+            //    //    this._changes.AppendChange(tableSource, tableTarget, "UserStats");
+
+            //}
+
             if (tableSource.IsView != tableTarget.IsView)
                 this._changes.AppendChange(tableSource, tableTarget, "IsView");
         }
@@ -988,9 +995,6 @@ namespace Bb.Oracle.Models.Comparer
 
             }
 
-            //if (source.Description != target.Description)
-            //    this._changes.AppendChange(source, target, "Description");
-
             if (!this.SourceScript)
             {
 
@@ -1004,12 +1008,6 @@ namespace Bb.Oracle.Models.Comparer
                     this._changes.AppendChange(source, target, "TriggerType");
             }
 
-        }
-
-        private void CompareIndexes(TableModel tableSource, TableModel tableTarget)
-        {
-            CompareIndexes(tableSource, tableTarget, false);
-            CompareIndexes(tableTarget, tableSource, true);
         }
 
         private void CompareIndexes(TableModel tableSource, TableModel tableTarget, bool toRemove)
@@ -1201,8 +1199,9 @@ namespace Bb.Oracle.Models.Comparer
                 if (source.DataUpgrated != target.DataUpgrated)
                     this._changes.AppendChange(source, target, "DataUpgrated");
 
-                if (source.Description != target.Description)
-                    this._changes.AppendChange(source, target, "Description");
+                if (!tableTarget.IsView)
+                    if (source.Description != target.Description)
+                        this._changes.AppendChange(source, target, "Description");
 
                 if (source.EncryptionAlg != target.EncryptionAlg)
                     this._changes.AppendChange(source, target, "EncryptionAlg");
