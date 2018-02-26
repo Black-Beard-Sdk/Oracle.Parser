@@ -55,7 +55,6 @@ ORDER BY o.OWNER, o.OBJECT_NAME
                         case "INDEX SUBPARTITION":
                         case "INDEXTYPE":
 
-                        case "FUNCTION":
                         case "TRIGGER":
 
                         case "CLUSTER":
@@ -95,6 +94,8 @@ ORDER BY o.OWNER, o.OBJECT_NAME
                         case "XML SCHEMA":
                             break;
 
+                        case "FUNCTION":
+                            break;
                         //case "SEQUENCE":
                         //    db.Add(new SequenceModel() { SequenceName = t.Name, Name = t.Owner + "." + t.Name, Owner = t.Owner, Comment = t.Comment, Generated = t.GENERATED, Status = t.STATUS, Temporary = t.TEMPORARY, Parsed = true });
                         //    break;

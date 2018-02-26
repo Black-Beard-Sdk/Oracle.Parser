@@ -13,10 +13,28 @@ namespace Bb.Oracle.Reader.Queries
     {
 
         string sql =@"
-SELECT t.subprogram_id, t.PACKAGE_NAME, t.OBJECT_NAME,t.ARGUMENT_NAME,t.POSITION,t.DATA_TYPE,t.DATA_LENGTH, t.DEFAULTED, t.in_out,t.DEFAULT_VALUE, t.DEFAULT_LENGTH, t.DATA_PRECISION, t.SEQUENCE, T.DATA_LEVEL, t.OWNER, t.TYPE_OWNER, t.TYPE_NAME, t.OBJECT_ID
-FROM dba_arguments t 
+SELECT 
+    t.subprogram_id, 
+    t.PACKAGE_NAME, 
+    t.OBJECT_NAME,
+    t.ARGUMENT_NAME, 
+    t.POSITION, 
+    t.DATA_TYPE, 
+    t.DATA_LENGTH, 
+    t.DEFAULTED, 
+    t.IN_OUT,
+    t.DEFAULT_VALUE, 
+    t.DEFAULT_LENGTH, 
+    t.DATA_PRECISION, 
+    t.SEQUENCE, 
+    T.DATA_LEVEL, 
+    t.OWNER, 
+    t.TYPE_OWNER, 
+    t.TYPE_NAME, 
+    t.OBJECT_ID
+FROM DBA_ARGUMENTS t 
 {0}
-ORDER BY t.subprogram_id, t.PACKAGE_NAME, t.OBJECT_NAME, t.SEQUENCE, t.IN_OUT
+ORDER BY t.SUBPROGRAM_ID, t.PACKAGE_NAME, t.OBJECT_NAME, t.SEQUENCE, t.IN_OUT
 ";
 
         public override List<ModelProcWithArgument> Resolve(DbContextOracle context, Action<ModelProcWithArgument> action)

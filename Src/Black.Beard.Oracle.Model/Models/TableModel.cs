@@ -19,7 +19,9 @@ namespace Bb.Oracle.Models
             this.Indexes = new IndexCollection() { Parent = this };
             this.Partitions = new PartitionRefCollection() { Parent = this };
             this.BlocPartition = new BlocPartitionModel() { Parent = this };
+            this.Triggers = new TriggerCollection() { Parent = this };
         }
+
         public string Name { get; set; }
 
         /// <summary>

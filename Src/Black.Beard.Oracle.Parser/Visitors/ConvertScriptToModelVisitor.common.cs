@@ -15,6 +15,121 @@ namespace Bb.Oracle.Visitors
     public partial class ConvertScriptToModelVisitor
     {
 
+        #region Resolvers
+
+        private void ResolveTable(string tableName)
+        {
+            var _tableName = CleanName(tableName.ToUpper());
+            var items = this.db.Tables.Where(c => c.Name == _tableName).ToList();
+
+            throw new NotImplementedException();
+
+        }
+
+        private void ResolveTable(string schema, string tableName)
+        {
+            var _schema = CleanName(schema.ToUpper());
+            var _tableName = CleanName(tableName.ToUpper());
+
+            var t = db.Tables[$"{_schema}.{_tableName}"];
+
+            throw new NotImplementedException();
+
+        }
+
+        private void ResolveColumn(string tableName, string columnName)
+        {
+            var _columnName = CleanName(columnName.ToUpper());
+            var _tableName = CleanName(tableName.ToUpper());
+            var items = this.db.Tables.Where(c => c.Name == _tableName).ToList();
+
+            throw new NotImplementedException();
+
+        }
+
+        private void ResolveColumn(string schema, string tableName, string columnName)
+        {
+            var _schema = CleanName(schema.ToUpper());
+            var _tableName = CleanName(tableName.ToUpper());
+            var _columnName = CleanName(columnName.ToUpper());
+
+            var t = db.Tables[$"{_schema}.{_tableName}"];
+
+            throw new NotImplementedException();
+
+        }
+
+
+        #endregion Resolvers
+
+
+
+        public override object VisitErrorNode(IErrorNode node)
+        {
+            if (node.Parent is ParserRuleContext n)
+            {
+                if (n.exception != null)
+                    AppendException(n.exception);
+
+                return null;
+            }
+
+            //string message = $"{node.Symbol.Text} at line {node.Symbol.Line} column {node.Symbol.Column}, offset {node.Symbol.StartIndex}";
+            //_anomalies.Add(new Error() { Exception = null, Message = message, File = this.File });
+            //Trace.WriteLine(message + " in " + this.File);
+            return null;
+        }
+
+        public IDisposable Enqueue(object item)
+        {
+            var s = new Trash(this._statck, item);
+            _statck.Push(s);
+            return s;
+        }
+
+        public T Current<T>()
+        {
+
+            T result = default(T);
+
+            if (this._statck.Count > 0)
+                result = (T)this._statck.Peek()._item;
+
+            if (object.Equals(result, default(T)))
+                Stop();
+
+            return result;
+        }
+
+
+        [System.Diagnostics.DebuggerStepThrough]
+        [System.Diagnostics.DebuggerNonUserCode]
+        private void Stop()
+        {
+            if (System.Diagnostics.Debugger.IsAttached)
+                System.Diagnostics.Debugger.Break();
+        }
+
+        public OracleDatabase db { get; }
+
+        public List<EventParser> Events { get { return this._events; } }
+
+        public List<Error> Errors { get { return this._anomalies; } }
+
+        public string Filename { get; set; }
+
+
+        private Stack<IRuleNode> _models = new Stack<IRuleNode>();
+        private List<Error> _anomalies = new List<Error>();
+        private List<EventParser> _events = new List<EventParser>();
+        private StringBuilder _initialSource;
+        private readonly Stack<Trash> _statck = new Stack<Trash>();
+
+        private void AppendEventParser(EventParser eventParser)
+        {
+            this._events.Add(eventParser);
+        }
+
         private void AppendException(RecognitionException exception)
         {
 
@@ -57,27 +172,6 @@ namespace Bb.Oracle.Visitors
             Trace.WriteLine(message + " in " + this.Filename);
         }
 
-        public override object VisitErrorNode(IErrorNode node)
-        {
-            if (node.Parent is ParserRuleContext n)
-            {
-                if (n.exception != null)
-                    AppendException(n.exception);
-
-                return null;
-            }
-
-            //string message = $"{node.Symbol.Text} at line {node.Symbol.Line} column {node.Symbol.Column}, offset {node.Symbol.StartIndex}";
-            //_anomalies.Add(new Error() { Exception = null, Message = message, File = this.File });
-            //Trace.WriteLine(message + " in " + this.File);
-            return null;
-        }
-
-        private void AppendEventParser(EventParser eventParser)
-        {
-            this._events.Add(eventParser);
-        }
-
         private EventParser GetEventParser(Error error, string objectName, SqlKind kind)
         {
             return GetEventParser(error.Message, objectName, kind, error.File);
@@ -90,7 +184,8 @@ namespace Bb.Oracle.Visitors
                 throw new ArgumentException("message is empty", nameof(message));
 
             if (string.IsNullOrEmpty(objectName))
-                throw new ArgumentException("objectName is empty", nameof(objectName));
+                objectName = string.Empty;
+            //throw new ArgumentException("objectName is empty", nameof(objectName));
 
             var eventParser = new EventParser()
             {
@@ -119,6 +214,25 @@ namespace Bb.Oracle.Visitors
                     Length = token.StopIndex - token.StartIndex,
                 }
             };
+        }
+
+        private class Trash : IDisposable
+        {
+
+            public Trash(Stack<Trash> statck, object item)
+            {
+                this._statck = statck;
+                this._item = item;
+            }
+
+            private readonly Stack<Trash> _statck;
+            public readonly object _item;
+
+            public void Dispose()
+            {
+                this._statck.Pop();
+            }
+
         }
 
     }

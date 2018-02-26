@@ -665,6 +665,10 @@ namespace Bb.Oracle.Models.Comparer
             foreach (GrantModel source in src)
             {
 
+                // default object
+                if (source.ObjectName.Contains("$"))
+                    continue;
+
                 var s = source.FullObjectName.Replace("\"", "");
                 string role = source.Role.ToUpper();
                 string schema = source.ObjectSchema.ToUpper();
@@ -749,6 +753,10 @@ namespace Bb.Oracle.Models.Comparer
         {
             foreach (TableModel tableSource in src)
             {
+
+                // default object
+                if (tableSource.Name.Contains("$"))
+                    continue;
 
                 if (findToRemove)
                 {

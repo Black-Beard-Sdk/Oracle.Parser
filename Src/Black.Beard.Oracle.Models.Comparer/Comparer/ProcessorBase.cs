@@ -35,40 +35,40 @@ namespace Bb.Oracle.Models.Comparer
             if (source is TypeItem)
                 Visit(source as TypeItem, target as TypeItem, kind, propertyName, item);
 
-            if (source is SynonymModel)
+            else if (source is SynonymModel)
                 Visit(source as SynonymModel, target as SynonymModel, kind, propertyName, item);
-            
-            if (source is ProcedureModel)
+
+            else if (source is ProcedureModel)
                 Visit(source as ProcedureModel, target as ProcedureModel, kind, propertyName, item);
 
-            if (source is SequenceModel)
+            else if (source is SequenceModel)
                 Visit(source as SequenceModel, target as SequenceModel, kind, propertyName, item);
 
-            if (source is PackageModel)
+            else if (source is PackageModel)
                 Visit(source as PackageModel, target as PackageModel, kind, propertyName, item);
 
-            if (source is GrantModel)
+            else if (source is GrantModel)
                 Visit(source as GrantModel, target as GrantModel, kind, propertyName, item);
 
-            if (source is ConstraintModel)
+            else if (source is ConstraintModel)
                 Visit(source as ConstraintModel, target as ConstraintModel, kind, propertyName, item);
 
-            if (source is PropertyModel)
+            else if (source is PropertyModel)
                 Visit(source as PropertyModel, target as PropertyModel, kind, propertyName, item);
 
-            if (source is ColumnModel)
+            else if (source is ColumnModel)
                 Visit(source as ColumnModel, target as ColumnModel, kind, propertyName, item);
 
-            if ( source is TableModel)
+            else if ( source is TableModel)
                 Visit(source as TableModel, target as TableModel, kind, propertyName, item);
 
-            if ( source is ArgumentModel)
+            else if ( source is ArgumentModel)
                 Visit(source as ArgumentModel, target as ArgumentModel, kind, propertyName, item);
 
-            if (source is IndexModel)
+            else if (source is IndexModel)
                 Visit(source as IndexModel, target as IndexModel, kind, propertyName, item);
 
-            if (source is TriggerModel)
+            else if (source is TriggerModel)
                 Visit(source as TriggerModel, target as TriggerModel, kind, propertyName, item);
 
 

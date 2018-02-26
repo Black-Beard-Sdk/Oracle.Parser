@@ -19,7 +19,6 @@ namespace Bb.Oracle.Models
 
             this.ResultType = new ProcedureResult() { Parent = this };
 
-
         }
         /// <summary>
         /// Name

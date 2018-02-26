@@ -25,7 +25,8 @@ namespace Bb.Oracle.Parser
         public static ScriptParser ParseString(string source, string sourceFile = "")
         {
 
-            ICharStream stream = CharStreams.fromstring(ContentHelper.ToUpper(new StringBuilder(source)).ToString());
+            var txt = ContentHelper.ToUpper(new StringBuilder(source)).ToString();
+            ICharStream stream = CharStreams.fromstring(txt);
 
             var parser = new ScriptParser() { File = sourceFile ?? string.Empty };
             parser.ParseCharStream(stream);

@@ -8,6 +8,7 @@ namespace Bb.Oracle.Models
 
         public OracleDatabase()
         {
+
             this.Partitions = new PartitionCollection() { Parent = this };
             this.Tablespaces = new TablespaceCollection() { Parent = this };
             this.Packages = new PackageCollection() { Parent = this };
@@ -15,11 +16,8 @@ namespace Bb.Oracle.Models
             this.Types = new TypeCollection() { Parent = this };
             this.Procedures = new ProcedureCollection() { Parent = this };
             this.Tables = new TableCollection() { Parent = this };
-
             this.Synonymes = new SynonymCollection() { Parent = this };
-
             this.Grants = new GrantCollection() { Parent = this };
-
 
         }
 
@@ -80,7 +78,6 @@ namespace Bb.Oracle.Models
         /// Objet <see cref="SequenceCollection" />.");
         /// </returns>
         public SequenceCollection Sequences { get; set; }
-
 
         /// <summary>
         /// Grants
@@ -153,6 +150,7 @@ namespace Bb.Oracle.Models
         /// <summary>
         /// Annotations for the debug. (this property is not serialized)
         /// </summary>
+        [JsonIgnore]
         public string Annotation { get; set; }
 
 

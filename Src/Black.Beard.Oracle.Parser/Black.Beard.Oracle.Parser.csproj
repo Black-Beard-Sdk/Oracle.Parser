@@ -39,6 +39,8 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\AmbiguousObjectException.cs" />
+    <Compile Include="Exceptions\OracleParserException.cs" />
     <Compile Include="grammar\PlSqlLexer.cs" />
     <Compile Include="grammar\PlSqlParser.cs" />
     <Compile Include="grammar\PlSqlParserBaseVisitor.cs" />
@@ -47,9 +49,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Visitors\ConvertScriptToModelVisitor.cs" />
     <Compile Include="Visitors\ConvertScriptToModelVisitor.common.cs" />
+    <Compile Include="Visitors\ConvertScriptToModelVisitor.procedure.cs" />
+    <Compile Include="Visitors\ConvertScriptToModelVisitor.package.cs" />
     <Compile Include="Visitors\ConvertScriptToModelVisitor.grant.cs" />
     <Compile Include="Visitors\Error.cs" />
     <Compile Include="Visitors\IFile.cs" />
+    <Compile Include="Visitors\ParseScriptVisitor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="grammar\generate.ps1" />

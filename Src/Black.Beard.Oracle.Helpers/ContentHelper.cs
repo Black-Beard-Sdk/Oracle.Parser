@@ -56,7 +56,7 @@ namespace Bb.Oracle.Helpers
                             c = source[i];
                             current = new CodeStructure(source, i, KindCodeStructure.Undefined);
                             result.Add(current);
-                        }                       
+                        }
                     }
                 }
 
@@ -73,7 +73,7 @@ namespace Bb.Oracle.Helpers
                             current = new CodeStructure(source, i, KindCodeStructure.Undefined);
                             result.Add(current);
                         }
-                       
+
                     }
                 }
 
@@ -188,7 +188,7 @@ namespace Bb.Oracle.Helpers
 
                 else if (inCommentInLine)
                 {
-                    if (lastChar == '\r' && c == '\n')
+                    if (c == '\n')
                         inCommentInLine = false;
                 }
 
