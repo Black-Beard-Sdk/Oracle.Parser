@@ -80,6 +80,7 @@ namespace Bb.Oracle.Visitors
             bool withHierarchy = context.HIERARCHY() != null;
             bool withGrant = context.GRANT().Length == 2 && context.OPTION().Length == 1;
 
+
             var current = container_clause?.CURRENT();
             var allt = container_clause?.ALL();
 
@@ -96,10 +97,12 @@ namespace Bb.Oracle.Visitors
 
             _privileges = new HashSet<string>(_privileges.OrderBy(c => c));
 
-            foreach (var grantee_name in grantee_names)
-            {
+            List<string> _grantees = grantee_names.Select(c => c.GetText()).ToList();
+            if (context.PUBLIC() != null)
+                _grantees.Add("PUBLIC");
 
-                string _grantee_name = grantee_name.GetText();
+            foreach (var _grantee_name in _grantees)
+            {
 
                 if (tableView != null)
                     ParseTableView(context, _schema, _object, _privileges, _grantee_name, withHierarchy, withGrant, withDelegate, withAdmin);

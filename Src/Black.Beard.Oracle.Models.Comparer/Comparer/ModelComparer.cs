@@ -727,8 +727,8 @@ namespace Bb.Oracle.Models.Comparer
             if (source.Privileges.Count != source.Privileges.Count)
                 return true;
 
-            var p1 = new HashSet<string>(source.Privileges.Select(c => c.PrivilegeName.ToUpper()));
-            var p2 = new HashSet<string>(target.Privileges.Select(c => c.PrivilegeName.ToUpper()));
+            var p1 = new HashSet<string>(source.Privileges.Select(c => c.PrivilegeName.ToUpper().Replace(" ", "")));
+            var p2 = new HashSet<string>(target.Privileges.Select(c => c.PrivilegeName.ToUpper().Replace(" ", "")));
 
             foreach (var item in p1)
                 if (!p2.Contains(item))

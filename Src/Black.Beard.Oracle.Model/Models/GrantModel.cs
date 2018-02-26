@@ -1,10 +1,11 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Bb.Oracle.Models
 {
 
-    [System.Diagnostics.DebuggerDisplay("grant {PrivilegesToText} {FullObjectName} to {Role}")]
+    [System.Diagnostics.DebuggerDisplay("grant {PrivilegesToText} ON {FullObjectName} TO {Role}")]
     public partial class GrantModel : ItemBase, Ichangable
     {
 
@@ -96,7 +97,7 @@ namespace Bb.Oracle.Models
         public string ColumnObjectName { get; set; }
 
 
-        public string PrivilegesToText { get { return string.Join(", ", this.Privileges); } }
+        public string PrivilegesToText { get { return string.Join(", ", this.Privileges.OfType<PrivilegeModel>().Select(c => c.PrivilegeName).ToArray()); } }
 
     }
 }

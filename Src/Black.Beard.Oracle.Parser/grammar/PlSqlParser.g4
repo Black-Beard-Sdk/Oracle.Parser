@@ -644,19 +644,16 @@ drop_index :
 	DROP INDEX index_name ';'
     ;
 
-revoke_statment
-	:
+revoke_statment :
 	REVOKE (revoke_system_privileges | revoke_object_privileges)';'
 	;
 
-revoke_system_privileges
-	:
+revoke_system_privileges :
 	( ','? (role_name | system_privilege)) 
 	  FROM (','? grantee_name | PUBLIC)+
 	;
 
-revoke_object_privileges
-	:
+revoke_object_privileges :
 	( ','? (role_name | object_privilege))+ 
 	  (ON grant_object_name)
 	  FROM (','? grantee_name | PUBLIC | role_name)+
