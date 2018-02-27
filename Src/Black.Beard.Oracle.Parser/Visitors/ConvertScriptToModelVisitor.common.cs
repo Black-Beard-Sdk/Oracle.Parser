@@ -17,45 +17,128 @@ namespace Bb.Oracle.Visitors
 
         #region Resolvers
 
-        private void ResolveTable(string tableName)
+        private ItemBase ResolveTable(ObjectReference ob)
         {
-            var _tableName = CleanName(tableName.ToUpper());
-            var items = this.db.Tables.Where(c => c.Name == _tableName).ToList();
 
-            throw new NotImplementedException();
+            if (ob.Path.Length == 1)
+            {
+                var items = ResolveTables(ob.Path[0]);
+                if (items.Count == 1)
+                    return items[0];
+                else
+                {
+                    Stop();
+
+                    items = ResolveTypes(ob.Path[0]);
+                    if (items.Count == 1)
+                        return items[0];
+                    else
+                    {
+                        Stop();
+
+                    }
+                }
+            }
+            else if (ob.Path.Length == 2)
+                return ResolveTable(ob.Path[0], ob.Path[1]);
+
+            Stop();
+            return null;
 
         }
 
-        private void ResolveTable(string schema, string tableName)
+        private List<ItemBase> ResolveTypes(string typeName)
+        {
+            var _tableName = CleanName(typeName.ToUpper());
+            var items = this.db.Types.Where(c => c.GetName() == _tableName).Cast<ItemBase>().ToList();
+            Debug.Assert(items.Count > 0);
+            return items;
+        }
+
+        private List<ItemBase> ResolveTables(string tableName)
+        {
+            var _tableName = CleanName(tableName.ToUpper());
+            var items = this.db.Tables.Where(c => c.GetName() == _tableName).Cast<ItemBase>().ToList();
+            Debug.Assert(items.Count > 0);
+            return items;
+        }
+
+        private ItemBase ResolveTable(string schema, string tableName)
         {
             var _schema = CleanName(schema.ToUpper());
             var _tableName = CleanName(tableName.ToUpper());
 
             var t = db.Tables[$"{_schema}.{_tableName}"];
 
-            throw new NotImplementedException();
+            if (t == null)
+            {
+                Stop();
+                // Search in type
+
+            }
+
+            Debug.Assert(t != null);
+
+            return t;
 
         }
 
-        private void ResolveColumn(string tableName, string columnName)
+        private ColumnModel ResolveColumn(ObjectReference ob)
+        {
+
+            if (ob.Path.Length == 2)
+            {
+                var items = ResolveColumns(ob.Path[0], ob.Path[1]);
+                if (items.Count == 1)
+                    return items[0];
+
+                else
+                {
+                    Stop();
+
+                    if (ob.Caller != null)
+                    {
+
+                        var syn = this.db.Synonymes.Where(c => c.SynonymOwner.ToUpper() == ob.Caller.SchemaName).ToList();
+
+                    }
+
+                }
+            }
+            else if (ob.Path.Length == 3)
+                return ResolveColumn(ob.Path[0], ob.Path[1], ob.Path[2]);
+
+            Stop();
+            return null;
+
+        }
+
+
+        private List<ColumnModel> ResolveColumns(string tableName, string columnName)
         {
             var _columnName = CleanName(columnName.ToUpper());
             var _tableName = CleanName(tableName.ToUpper());
             var items = this.db.Tables.Where(c => c.Name == _tableName).ToList();
+            var cols = items.SelectMany(c => c.Columns).Where(c => c.ColumnName == _columnName).ToList();
 
-            throw new NotImplementedException();
+            Debug.Assert(cols.Count > 0);
+
+            return cols;
 
         }
 
-        private void ResolveColumn(string schema, string tableName, string columnName)
+        private ColumnModel ResolveColumn(string schema, string tableName, string columnName)
         {
             var _schema = CleanName(schema.ToUpper());
             var _tableName = CleanName(tableName.ToUpper());
             var _columnName = CleanName(columnName.ToUpper());
 
             var t = db.Tables[$"{_schema}.{_tableName}"];
+            ColumnModel col = t.Columns.FirstOrDefault(c => c.ColumnName == _columnName);
 
-            throw new NotImplementedException();
+            Debug.Assert(col != null);
+
+            return col;
 
         }
 

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Antlr4.Runtime;
 using System;
+using System.Diagnostics;
 
 namespace Bb.Oracle.Visitors
 {
@@ -105,7 +106,12 @@ namespace Bb.Oracle.Visitors
             return base.VisitType_procedure_spec(context);
         }
 
-        public override object VisitFunction_spec([NotNull] PlSqlParser.Function_specContext context)
+        /// <summary>
+        /// PROCEDURE procedure_name '(' type_elements_parameter (',' type_elements_parameter)* ')' ((IS | AS) call_spec)?
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public override object VisitProcedure_spec([NotNull] PlSqlParser.Procedure_specContext context)
         {
 
             if (context.exception != null)
@@ -114,9 +120,49 @@ namespace Bb.Oracle.Visitors
                 return null;
             }
 
-            //var txt = GetText(context).ToString().Trim();
-            //if (txt.StartsWith("CREATE"))
-            //    txt = txt.Substring(6).Trim();
+            string schema_name = string.Empty;
+            string package_name = string.Empty;
+            var package = this.Current<PackageModel>();
+            if (package != null)
+            {
+                schema_name = package.GetOwner();
+                package_name = package.GetName();
+            }
+
+            var proc = new ProcedureModel()
+            {
+                Name = CleanName(context.identifier().GetText()),
+                IsFunction = false,
+                Key = "",
+                SchemaName = schema_name,
+                PackageName = package_name,
+                // Code = "",
+                // Description = "",
+                // ResultType = new ProcedureResult(),
+                // Files = new FileCollection(),
+            };
+
+            using (Enqueue(proc))
+            {
+
+                var r = base.VisitProcedure_spec(context);
+
+            }
+
+            proc.Key = "";
+
+            return proc;
+
+        }
+
+        public override object VisitFunction_spec([NotNull] PlSqlParser.Function_specContext context)
+        {
+
+            if (context.exception != null)
+            {
+                AppendException(context.exception);
+                return null;
+            }
 
             string schema_name = string.Empty;
             string package_name = string.Empty;
@@ -154,14 +200,26 @@ namespace Bb.Oracle.Visitors
 
         }
 
+        /// <summary>
+        /// parameter_name type_spec
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public override object VisitType_elements_parameter([NotNull] PlSqlParser.Type_elements_parameterContext context)
+        {
+            Stop();
+
+            var method = this.Current<ProcedureModel>();
+
+            return base.VisitType_elements_parameter(context);
+        }
+
         public override object VisitParameter([NotNull] PlSqlParser.ParameterContext context)
         {
 
             // : parameter_name(IN | OUT | INOUT | NOCOPY) * type_spec ? default_value_part ?
 
             var method = this.Current<ProcedureModel>();
-
-            Stop();
 
             bool _in = context.IN() != null;
             bool _out = context.OUT() != null;
@@ -200,35 +258,48 @@ namespace Bb.Oracle.Visitors
         public override object VisitType_spec([NotNull] PlSqlParser.Type_specContext context)
         {
 
+            var method = this.Current<ProcedureModel>();
+
+
+            OracleType resultType = null;
+
             var percent_type = context.PERCENT_TYPE() != null;
             var percent_rowtype = context.PERCENT_ROWTYPE() != null;
             var type_name = (string[])context.type_name().Accept(this);
 
-            int length = type_name[0].Length;
+            int length = type_name.Length;
             if (percent_type)
             {
 
-                Stop();
+                var col = ResolveColumn(new ObjectReference(type_name[0], type_name[1]) { Caller = method  });
+                if (col != null)
+                    resultType = col.Type.Clone();
 
-                if (length == 2)
-                    ResolveColumn(type_name[0], type_name[1]);
-                else if (length == 2)
-                    ResolveColumn(type_name[0], type_name[1], type_name[2]);
+                else
+                {
+                    Stop();
+                }
+
             }
             else if (percent_rowtype)
             {
+                var obj = ResolveTable(new ObjectReference(type_name[0]) { Caller = method });
+                if (obj is TableModel t)
+                {
+                    resultType = t.ExtractOracleType();
+                }
+                else
+                {
 
-                Stop();
+                    Stop();
 
-                if (length == 1)
-                    ResolveTable(type_name[0]);
-                else if (length == 2)
-                    ResolveTable(type_name[0], type_name[1]);
+                }
             }
 
-            return base.VisitType_spec(context);
+                Debug.Assert(resultType != null);
 
-        }
+                return resultType;
+            }
 
         /// <summary>
         /// datatype
@@ -286,18 +357,6 @@ namespace Bb.Oracle.Visitors
             return base.VisitProcedure_body(context);
         }
 
-        public override object VisitProcedure_name([NotNull] PlSqlParser.Procedure_nameContext context)
-        {
-            Stop();
-            return base.VisitProcedure_name(context);
-        }
-
-        public override object VisitProcedure_spec([NotNull] PlSqlParser.Procedure_specContext context)
-        {
-            Stop();
-            return base.VisitProcedure_spec(context);
-        }
-
         public override object VisitProc_decl_in_type([NotNull] PlSqlParser.Proc_decl_in_typeContext context)
         {
             Stop();
@@ -351,6 +410,12 @@ namespace Bb.Oracle.Visitors
     }
 
 }
+
+//public override object VisitProcedure_name([NotNull] PlSqlParser.Procedure_nameContext context)
+//{
+//    Stop();
+//    return base.VisitProcedure_name(context);
+//}
 
 
 //public override object VisitFunction_name([NotNull] PlSqlParser.Function_nameContext context)

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Bb.Beard.Oracle.Helpers
+namespace Bb.Oracle.Helpers
 {
     public class Writer
     {

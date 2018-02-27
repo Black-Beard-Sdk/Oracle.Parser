@@ -89,5 +89,26 @@ namespace Bb.Oracle.Models
 
         public override KindModelEnum KindModel => KindModelEnum.OracleType;
 
+
+        public OracleType Clone()
+        {
+            return new OracleType()
+            {
+                ArrayOfType = this.ArrayOfType,
+                DataDefault = this.DataDefault,
+                DataLength = this.DataLength,
+                DataLevel = this.DataLevel,
+                DataPrecision = this.DataPrecision,
+                DataType = this.DataType,
+                DbType = this.DbType,
+                defaultLength = this.defaultLength,
+                IsArray = this.IsArray,
+                IsRecord = this.IsRecord,
+                Tag = this.ArrayOfType,
+                TypeName = this.TypeName,
+                TypeOwner = this.TypeOwner,
+            };
+        }
+
     }
 }

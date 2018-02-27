@@ -94,7 +94,12 @@ namespace Bb.Oracle.Models.Comparer
             {
                 if (string.IsNullOrEmpty(source.PackageName))
                 {
-                    StringBuilder sb = new StringBuilder(source.Code.Length + source.CodeBody.Length + 100);
+                    int length 
+                        = source.Code?.Length ?? 0 
+                        + source.CodeBody?.Length ?? 0 
+                        + 100;
+
+                    StringBuilder sb = new StringBuilder(length);
                     if (!string.IsNullOrEmpty(source.Code))
                     {
                         sb.AppendLine(CreateOrReplace + Utils.Unserialize(source.Code, true));
@@ -792,7 +797,7 @@ namespace Bb.Oracle.Models.Comparer
             else if (item is GrantModel)
             {
                 var g = item as GrantModel;
-                result = string.Format("{0} {1} to {2}", string.Join(", ", g.Privileges), g.FullObjectName, g.Role);
+                result = string.Format("{0} {1} to {2}", string.Join(", ", g.PrivilegesToText), g.FullObjectName, g.Role);
             }
             else if (item is Ichangable)
             {

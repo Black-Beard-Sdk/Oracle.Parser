@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System;
 
 namespace Bb.Oracle.Models
 {
@@ -302,6 +303,25 @@ namespace Bb.Oracle.Models
                     return this.Name;
                 return this.SchemaName + "." + this.Name;
             }
+        }
+
+        public OracleType ExtractOracleType()
+        {
+            return new OracleType()
+            {
+                DataDefault = string.Empty,
+                ArrayOfType = string.Empty,
+                DataLength = 0,
+                DataLevel = 0,
+                DataType = "PL/SQL RECORD",
+                DbType = "Object",
+                DataPrecision = 0,
+                IsArray = false,
+                IsRecord = true,
+                defaultLength = 0,
+                TypeOwner = this.GetOwner(),
+                TypeName = this.GetName(),
+            };
         }
 
         public IEnumerable<ColumnModel> OrderedColumns

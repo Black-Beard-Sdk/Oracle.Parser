@@ -1,5 +1,4 @@
 ﻿using Bb.Oracle.Helpers;
-using Bb.Beard.Oracle.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +9,7 @@ namespace Bb.Oracle.Reader
 {
     public class ArgumentContext
     {
+
         public ArgumentContext(params string[] args)
         {
             string[] argsResult = ArgumentHelper.MapArguments(args, this);

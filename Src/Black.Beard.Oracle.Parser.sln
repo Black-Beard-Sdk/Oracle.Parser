@@ -13,11 +13,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Black.Beard.Oracle.Reader",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Black.Beard.Oracle.Helpers", "Black.Beard.Oracle.Helpers\Black.Beard.Oracle.Helpers.csproj", "{4002EF43-21B1-473A-A055-C5FEC837A75D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Black.Beard.Antlr.Visualizer", "Black.Beard.Antlr.Visualizer\Black.Beard.Antlr.Visualizer.csproj", "{40D043C9-C022-41C6-A80D-052FEAA75D27}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Black.Beard.Oracle.DdlReader", "Black.Beard.Oracle.DdlReader\Black.Beard.Oracle.DdlReader.csproj", "{96061953-2592-4BF8-A956-F0E2A37DC465}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Black.Beard.Oracle.Models.Comparer", "Black.Beard.Oracle.Models.Comparer\Black.Beard.Oracle.Models.Comparer.csproj", "{D6DC915B-84D6-472A-89A3-83BD9DA1480B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Black.Beard.Antlr.Visualizer", "Black.Beard.Antlr.Visualizer\Black.Beard.Antlr.Visualizer.csproj", "{FF149C48-1C51-4BA4-85E7-46C732B01AEE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,10 +45,6 @@ Global
 		{4002EF43-21B1-473A-A055-C5FEC837A75D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4002EF43-21B1-473A-A055-C5FEC837A75D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4002EF43-21B1-473A-A055-C5FEC837A75D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{40D043C9-C022-41C6-A80D-052FEAA75D27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{40D043C9-C022-41C6-A80D-052FEAA75D27}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{40D043C9-C022-41C6-A80D-052FEAA75D27}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{40D043C9-C022-41C6-A80D-052FEAA75D27}.Release|Any CPU.Build.0 = Release|Any CPU
 		{96061953-2592-4BF8-A956-F0E2A37DC465}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{96061953-2592-4BF8-A956-F0E2A37DC465}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{96061953-2592-4BF8-A956-F0E2A37DC465}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -57,6 +53,10 @@ Global
 		{D6DC915B-84D6-472A-89A3-83BD9DA1480B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D6DC915B-84D6-472A-89A3-83BD9DA1480B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D6DC915B-84D6-472A-89A3-83BD9DA1480B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF149C48-1C51-4BA4-85E7-46C732B01AEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF149C48-1C51-4BA4-85E7-46C732B01AEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF149C48-1C51-4BA4-85E7-46C732B01AEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF149C48-1C51-4BA4-85E7-46C732B01AEE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

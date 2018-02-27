@@ -2099,12 +2099,6 @@ namespace Bb.Oracle.Visitors
             return base.VisitType_definition(context);
         }
 
-        public override object VisitType_elements_parameter([NotNull] PlSqlParser.Type_elements_parameterContext context)
-        {
-            Stop();
-            return base.VisitType_elements_parameter(context);
-        }
-
         public override object VisitUnary_expression([NotNull] PlSqlParser.Unary_expressionContext context)
         {
             Stop();
