@@ -234,7 +234,7 @@ namespace Bb.Oracle.Visitors
                     //SqlTranslationProfile = withSqlTranslationProfile,
 
                 };
-
+                grant.Files.Add(this.GetFileElement(token));
                 this.db.Grants.Add(grant);
 
             }

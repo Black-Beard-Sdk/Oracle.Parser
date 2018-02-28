@@ -14,6 +14,9 @@ namespace Bb.Antlr.Visualizer.Trees
 
         public AntlrNodeTree(IParseTree item)
         {
+
+            this.ParseTree = item;
+
             this.Text = item.GetType().Name;
             int c = item.ChildCount;
             for (int i = 0; i < c; i++)
@@ -23,6 +26,8 @@ namespace Bb.Antlr.Visualizer.Trees
                 this.Nodes.Add(node);
             }
         }
+
+        public IParseTree ParseTree { get; }
 
     }
 

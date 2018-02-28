@@ -171,7 +171,7 @@ namespace Bb.Oracle.Reader
         {
             if (!string.IsNullOrEmpty(arg) && !string.IsNullOrEmpty(arg = arg.Trim()))
                 foreach (var item in arg.Split(';'))
-                    list.Add(item);
+                    list.Add(item.ToUpper());
         }
 
 

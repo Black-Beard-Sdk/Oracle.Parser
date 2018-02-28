@@ -5,3 +5,5 @@ XCOPY .\Black.Beard.Oracle.Parser\bin\Debug\*.* ..\..\tfs\SqlGenerator\Developpe
 XCOPY .\Black.Beard.Oracle.Models.Comparer\bin\Debug\*.* ..\..\tfs\SqlGenerator\Developpement\V10\ThirdParty /s /e /y
 
 XCOPY .\Black.Beard.Oracle.Reader\bin\Debug\*.* ..\..\tfs\SqlGenerator\Developpement\V10\ThirdParty /s /e /y
+
+XCOPY .\Black.Beard.Antlr.Visualizer\bin\Debug\*.* ..\..\tfs\SqlGenerator\Developpement\V10\ThirdParty /s /e /y

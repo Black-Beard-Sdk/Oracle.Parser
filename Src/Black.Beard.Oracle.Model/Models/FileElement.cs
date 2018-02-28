@@ -20,7 +20,14 @@ namespace Bb.Oracle.Models
 
         public string Path { get; set; }
 
+
         public Location Location { get; set; }
+
+        public override string ToString()
+        {
+            return $"({Path}, {Location?.ToString() ?? string.Empty})";
+        }
+
 
     }
 }

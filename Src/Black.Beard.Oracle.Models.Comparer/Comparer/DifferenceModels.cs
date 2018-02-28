@@ -94,9 +94,9 @@ namespace Bb.Oracle.Models.Comparer
             {
                 if (string.IsNullOrEmpty(source.PackageName))
                 {
-                    int length 
-                        = source.Code?.Length ?? 0 
-                        + source.CodeBody?.Length ?? 0 
+                    int length
+                        = source.Code?.Length ?? 0
+                        + source.CodeBody?.Length ?? 0
                         + 100;
 
                     StringBuilder sb = new StringBuilder(length);
@@ -259,7 +259,7 @@ namespace Bb.Oracle.Models.Comparer
             string privilegs = string.Join(", ", u);
             string sql = null;
 
-            if (u.Contains("DEQUEUE") ||  u.Contains("ENQUEUE"))
+            if (u.Contains("DEQUEUE") || u.Contains("ENQUEUE"))
             {
                 sql = string.Format(@"EXECUTE DBMS_AQADM.GRANT_QUEUE_PRIVILEGE (privilege => '{0}', queue_name => '{1}', grantee => '{2}', grant_option => {3});",
                         privilegs,
@@ -270,10 +270,10 @@ namespace Bb.Oracle.Models.Comparer
             }
             else
             {
-                sql = string.Format(@"GRANT {0} ON {1} TO {2}{3};", 
-                    privilegs, 
-                    t.FullObjectName.Replace(@"""", ""), 
-                    t.Role, 
+                sql = string.Format(@"GRANT {0} ON {1} TO {2}{3};",
+                    privilegs,
+                    t.FullObjectName.Replace(@"""", ""),
+                    t.Role,
                     t.Grantable ? " WITH GRANT OPTION" : string.Empty);
 
             }
@@ -737,7 +737,7 @@ namespace Bb.Oracle.Models.Comparer
 
         public virtual void AppendDoublons(string type, ItemBase[] item)
         {
-            var d = new DoublonModel() { Kind = TypeDifferenceEnum.DuplicatedIndex, Source = item, Type = type, Files = item.SelectMany( c => c.Files.OfType<FileElement>()).ToList()};
+            var d = new DoublonModel() { Kind = TypeDifferenceEnum.DuplicatedIndex, Source = item, Type = type, Files = item.SelectMany(c => c.Files.OfType<FileElement>()).ToList() };
             AppendDifference(d, false);
         }
 
@@ -753,15 +753,16 @@ namespace Bb.Oracle.Models.Comparer
             this._lst.Add(d);
 
             if (source is DoublonModel)
-                log(string.Format("item {0} is duplicated in the source", GetName(source)));
+                log(string.Format("item {0} is duplicated in the source. Files : {1}", GetName(source), GetFilename(source)));
 
             else
             {
                 if (ToRemove)
-                    log(string.Format("item {0} must be removed in the target", GetName(source)));
+                    log(string.Format("item {0} must be removed in the target. Files : {1}", GetName(source), GetFilename(source)));
                 else
-                    log(string.Format("item {0} is missing in the target", GetName(source)));
+                    log(string.Format("item {0} is missing in the target. Files : {1}", GetName(source), GetFilename(source)));
             }
+
             return d;
 
         }
@@ -784,6 +785,17 @@ namespace Bb.Oracle.Models.Comparer
             this._lst.Add(d);
             return d;
         }
+
+        internal static string GetFilename(object item)
+        {
+
+            if (item is ItemBase i)
+                return string.Join(", ", i.Files.Select(c => c.ToString()));
+
+            return string.Empty;
+
+        }
+
 
         internal static string GetName(object item)
         {

@@ -50,12 +50,12 @@ namespace Bb.Oracle.Reader
 
         }
 
-        public static HashSet<string> excluded = new HashSet<string>()
-        {   "MDSYS", "SYS", "XS$NULL", "ANONYMOUS", "APPQOSSYS", "AURORA$ORB$UNAUTHENTICATED", "CSMIG",
-            "CTXSYS", "DBSNMP", "DIP", "DMSYS", "DSSYS", "EXFSYS", "LBACSYS", "MGMT_VIEW", "ORACLE_OCM",
-            "ORDDATA", "ORDPLUGINS", "ORDSYS", "PERFSTAT", "OWBSYS_AUDIT", "SYSMAN", "SYSTEM", "TOAD",
-            "TRACESVR", "TSMSYS", "WKPROXY", "WKSYS", "WK_TEST", "WMSYS", "XDB", 
-        };
+        public static HashSet<string> excluded = new HashSet<string>();
+        //{   "MDSYS", "SYS", "XS$NULL", "ANONYMOUS", "APPQOSSYS", "AURORA$ORB$UNAUTHENTICATED", "CSMIG",
+        //    "CTXSYS", "DBSNMP", "DIP", "DMSYS", "DSSYS", "EXFSYS", "LBACSYS", "MGMT_VIEW", "ORACLE_OCM",
+        //    "ORDDATA", "ORDPLUGINS", "ORDSYS", "PERFSTAT", "OWBSYS_AUDIT", "SYSMAN", "SYSTEM", "TOAD",
+        //    "TRACESVR", "TSMSYS", "WKPROXY", "WKSYS", "WK_TEST", "WMSYS", "XDB", 
+        //};
 
     }
 }

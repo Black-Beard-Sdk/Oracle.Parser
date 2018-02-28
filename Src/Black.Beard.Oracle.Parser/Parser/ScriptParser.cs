@@ -24,10 +24,10 @@ namespace Bb.Oracle.Parser
         public static ScriptParser ParseString(string source, string sourceFile = "")
         {
 
-            var txt = ContentHelper.ToUpper(new StringBuilder(source)).ToString();
-            ICharStream stream = CharStreams.fromstring(txt);
+            var txt = ContentHelper.ToUpper(new StringBuilder(source));
+            ICharStream stream = CharStreams.fromstring(txt.ToString());
 
-            var parser = new ScriptParser() { File = sourceFile ?? string.Empty };
+            var parser = new ScriptParser() { File = sourceFile ?? string.Empty, Content = txt };
             parser.ParseCharStream(stream);
             return parser;
 
@@ -39,7 +39,7 @@ namespace Bb.Oracle.Parser
             var payload = LoadContent(source);
             ICharStream stream = CharStreams.fromstring(payload.ToString());
 
-            var parser = new ScriptParser() { File = source };
+            var parser = new ScriptParser() { File = source, Content = payload };
             parser.ParseCharStream(stream);
             return parser;
 
@@ -62,6 +62,8 @@ namespace Bb.Oracle.Parser
         public PlSqlParser.Sql_scriptContext Tree { get { return this.context; } }
 
         public string File { get; private set; }
+
+        public StringBuilder Content { get; private set; }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Visit<Result>(IParseTreeVisitor<Result> visitor)
