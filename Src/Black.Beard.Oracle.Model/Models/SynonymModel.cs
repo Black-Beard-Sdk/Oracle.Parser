@@ -40,6 +40,7 @@ namespace Bb.Oracle.Models
 
         public override KindModelEnum KindModel => KindModelEnum.Synonym;
 
+        public bool IsPublic { get; set; }
     }
 
 }

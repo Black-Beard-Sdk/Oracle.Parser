@@ -12,8 +12,8 @@ namespace Bb.Oracle.Models.Comparer
     public class ModelComparer
     {
 
+        private CompareContext _context;
         private DifferenceModels _changes;
-        private TypeItem source;
         private bool SourceScript;
 
         public ModelComparer()
@@ -21,20 +21,36 @@ namespace Bb.Oracle.Models.Comparer
 
         }
 
-        public void CompareModels(OracleDatabase source, OracleDatabase target, DifferenceModels _changes)
+        public void CompareModels(OracleDatabase source, OracleDatabase target, DifferenceModels _changes, CompareContext context)
         {
+
+            this._context = context ?? new CompareContext();
             this._changes = _changes;
             this.SourceScript = source.SourceScript || target.SourceScript;
-            //this.SourceScript = true;
 
-            CompareTables(source.Tables, target.Tables);
-            CompareGrants(source.Grants, target.Grants, target);
-            ComparePackages(source.Packages, target.Packages);
-            //ComparePartitions(source.Partitions, target.Partitions);
-            CompareProcedures(source.Procedures, target.Procedures);
-            CompareSequences(source.Sequences, target.Sequences);
-            CompareSynonyms(source.Synonymes, target.Synonymes);
-            CompareTypes(source.Types, target.Types);
+            if (!_context.IgnoreTables)
+                CompareTables(source.Tables, target.Tables);
+
+            if (!_context.IgnoreGrants)
+                CompareGrants(source.Grants, target.Grants, target);
+
+            if (!_context.IgnorePackages)
+                ComparePackages(source.Packages, target.Packages);
+
+            //if (!_context.IgnorePartitions)
+            //    ComparePartitions(source.Partitions, target.Partitions);
+
+            if (!_context.IgnoreProcedures)
+                CompareProcedures(source.Procedures, target.Procedures);
+
+            if (!_context.IgnoreSequences)
+                CompareSequences(source.Sequences, target.Sequences);
+
+            if (!_context.IgnoreSynonyms)
+                CompareSynonyms(source.Synonymes, target.Synonymes);
+
+            if (!_context.IgnoreTypes)
+                CompareTypes(source.Types, target.Types);
 
         }
 
@@ -42,7 +58,6 @@ namespace Bb.Oracle.Models.Comparer
         {
 
             var src = sources.OfType<TypeItem>().OrderBy(c => (c.SchemaName + c.PackageName)).ToList();
-
             foreach (TypeItem source in src)
             {
 
@@ -53,13 +68,15 @@ namespace Bb.Oracle.Models.Comparer
                     CompareType(source, target);
             }
 
-            src = targets.OfType<TypeItem>().OrderBy(c => (c.SchemaName + c.PackageName)).ToList();
-
-            foreach (TypeItem source in src)
+            if (!this._context.IgnoreRevert)
             {
-                TypeItem target = sources[source.Key];
-                if (target == null)
-                    _changes.AppendToRemove(source);
+                src = targets.OfType<TypeItem>().OrderBy(c => (c.SchemaName + c.PackageName)).ToList();
+                foreach (TypeItem source in src)
+                {
+                    TypeItem target = sources[source.Key];
+                    if (target == null)
+                        _changes.AppendToRemove(source);
+                }
             }
 
         }
@@ -175,8 +192,11 @@ namespace Bb.Oracle.Models.Comparer
             var src = sources.OfType<SynonymModel>().OrderBy(c => c.Name).ToList();
             CompareSynonyms(targets, src, false);
 
-            src = targets.OfType<SynonymModel>().OrderBy(c => c.Name).ToList();
-            CompareSynonyms(sources, src, true);
+            if (!this._context.IgnoreRevert)
+            {
+                src = targets.OfType<SynonymModel>().OrderBy(c => c.Name).ToList();
+                CompareSynonyms(sources, src, true);
+            }
 
         }
 
@@ -190,14 +210,7 @@ namespace Bb.Oracle.Models.Comparer
                 trg = trg.OfType<SynonymModel>().Where(c => c.ObjectTarget == source.ObjectTarget).ToList();
 
                 SynonymModel target = null;
-                //if (trg.Count == 1)
                 target = trg.FirstOrDefault();
-
-                //else
-                //{
-
-                //}
-
 
                 if (toRemove)
                 {
@@ -223,10 +236,13 @@ namespace Bb.Oracle.Models.Comparer
 
             if (source.SchemaName != target.SchemaName)
                 this._changes.AppendChange(source, target, "SchemaName");
-            //else if (source.ObjectType != target.ObjectType)
-            //    this._changes.AppendChange(source, target, "ObjectType");
+
             else if (source.ObjectTarget != target.ObjectTarget)
                 this._changes.AppendChange(source, target, "ObjectTarget");
+
+            if (source.IsPublic != target.IsPublic)
+                this._changes.AppendChange(source, target, "IsPublic");
+
         }
 
         private void CompareProcedures(ProcedureCollection sources, ProcedureCollection targets)
@@ -235,8 +251,11 @@ namespace Bb.Oracle.Models.Comparer
             var src = sources.OfType<ProcedureModel>().Where(c => string.IsNullOrEmpty(c.PackageName)).OrderBy(c => (c.SchemaName)).ToList();
             CompareProcedures(targets, src, false);
 
-            src = targets.OfType<ProcedureModel>().Where(c => string.IsNullOrEmpty(c.PackageName)).OrderBy(c => (c.SchemaName)).ToList();
-            CompareProcedures(sources, src, true);
+            if (!this._context.IgnoreRevert)
+            {
+                src = targets.OfType<ProcedureModel>().Where(c => string.IsNullOrEmpty(c.PackageName)).OrderBy(c => (c.SchemaName)).ToList();
+                CompareProcedures(sources, src, true);
+            }
 
         }
 
@@ -521,14 +540,17 @@ namespace Bb.Oracle.Models.Comparer
 
             }
 
-            src = targets.OfType<SequenceModel>().OrderBy(c => (c.Owner + c.Name)).ToList();
-
-            foreach (SequenceModel source in src)
+            if (!this._context.IgnoreRevert)
             {
-                SequenceModel target = sources[source.Name];
-                if (target == null)
-                    _changes.AppendToRemove(source);
+                src = targets.OfType<SequenceModel>().OrderBy(c => (c.Owner + c.Name)).ToList();
 
+                foreach (SequenceModel source in src)
+                {
+                    SequenceModel target = sources[source.Name];
+                    if (target == null)
+                        _changes.AppendToRemove(source);
+
+                }
             }
 
         }
@@ -582,13 +604,16 @@ namespace Bb.Oracle.Models.Comparer
                     ComparePackage(source, target);
             }
 
-            src = targets.OfType<PackageModel>().OrderBy(c => (c.PackageOwner + c.Name)).ToList();
-
-            foreach (PackageModel source in src)
+            if (!this._context.IgnoreRevert)
             {
-                PackageModel target = sources[source.Name];
-                if (target == null)
-                    _changes.AppendToRemove(source);
+                src = targets.OfType<PackageModel>().OrderBy(c => (c.PackageOwner + c.Name)).ToList();
+
+                foreach (PackageModel source in src)
+                {
+                    PackageModel target = sources[source.Name];
+                    if (target == null)
+                        _changes.AppendToRemove(source);
+                }
             }
 
         }
@@ -655,8 +680,11 @@ namespace Bb.Oracle.Models.Comparer
             var src = sources.OfType<GrantModel>().OrderBy(c => c.Role + c.FullObjectName).ToList();
             CompareGrants(targets, _target, src, false);
 
-            src = targets.OfType<GrantModel>().OrderBy(c => c.Role + c.FullObjectName).ToList();
-            CompareGrants(sources, _target, src, true);
+            if (!this._context.IgnoreRevert)
+            {
+                src = targets.OfType<GrantModel>().OrderBy(c => c.Role + c.FullObjectName).ToList();
+                CompareGrants(sources, _target, src, true);
+            }
 
         }
 
@@ -744,8 +772,11 @@ namespace Bb.Oracle.Models.Comparer
             var src = sources.OfType<TableModel>().OrderBy(c => (c.SchemaName + c.Name)).ToList();
             CompareTables(targets, src);
 
-            src = targets.OfType<TableModel>().OrderBy(c => (c.SchemaName + c.Name)).ToList();
-            CompareTables(sources, src, true);
+            if (!this._context.IgnoreRevert)
+            {
+                src = targets.OfType<TableModel>().OrderBy(c => (c.SchemaName + c.Name)).ToList();
+                CompareTables(sources, src, true);
+            }
 
         }
 
@@ -1125,22 +1156,22 @@ namespace Bb.Oracle.Models.Comparer
 
             }
 
-            if (source.Compress != target.Compress)
+            if ((source.Compress ?? string.Empty) != (target.Compress ?? string.Empty))
                 this._changes.AppendChange(source, target, "Compress");
 
-            if (source.Compression_Prefix != target.Compression_Prefix)
+            if ((source.Compression_Prefix ?? string.Empty) != (target.Compression_Prefix ?? string.Empty))
                 this._changes.AppendChange(source, target, "Compression_Prefix");
 
-            if (source.Deduplication != target.Deduplication)
+            if ((source.Deduplication ?? string.Empty) != (target.Deduplication ?? string.Empty))
                 this._changes.AppendChange(source, target, "Deduplication");
 
             if (source.FreeListGroups != target.FreeListGroups)
                 this._changes.AppendChange(source, target, "FreeListGroups");
 
-            if (source.FreePools != target.FreePools)
+            if ((source.FreePools ?? string.Empty) != (target.FreePools ?? string.Empty))
                 this._changes.AppendChange(source, target, "FreePools");
 
-            if (source.IndexType != target.IndexType)
+            if ((source.IndexType ?? string.Empty) != (target.IndexType ?? string.Empty))
                 this._changes.AppendChange(source, target, "IndexType");
 
             if (source.In_Row != target.In_Row)
@@ -1149,7 +1180,7 @@ namespace Bb.Oracle.Models.Comparer
             if (source.KindModel != target.KindModel)
                 this._changes.AppendChange(source, target, "KindModel");
 
-            if (source.PctIncrease != target.PctIncrease)
+            if ((source.PctIncrease ?? string.Empty) != (target.PctIncrease ?? string.Empty))
                 this._changes.AppendChange(source, target, "PctIncrease");
 
             if (source.PctVersion != target.PctVersion)
@@ -1158,10 +1189,10 @@ namespace Bb.Oracle.Models.Comparer
             if (source.SecureFile != target.SecureFile)
                 this._changes.AppendChange(source, target, "SecureFile");
 
-            if (source.SegmentName != target.SegmentName)
+            if ((source.SegmentName ?? string.Empty) != (target.SegmentName ?? string.Empty))
                 this._changes.AppendChange(source, target, "SegmentName");
 
-            if (source.TablespaceName != target.TablespaceName)
+            if ((source.TablespaceName ?? string.Empty) != (target.TablespaceName ?? string.Empty))
                 this._changes.AppendChange(source, target, "TablespaceName");
 
             if (source.Unique != target.Unique)

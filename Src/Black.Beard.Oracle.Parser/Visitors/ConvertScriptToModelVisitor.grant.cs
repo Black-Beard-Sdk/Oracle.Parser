@@ -97,9 +97,16 @@ namespace Bb.Oracle.Visitors
 
             _privileges = new HashSet<string>(_privileges.OrderBy(c => c));
 
-            List<string> _grantees = grantee_names.Select(c => c.GetText()).ToList();
-            if (context.PUBLIC() != null)
-                _grantees.Add("PUBLIC");
+            HashSet<string> _grantees = new HashSet<string>(grantee_names.Select(c => c.GetText()).ToList());
+            var _public = context.PUBLIC();
+            if (_public != null)
+            {
+                foreach (var item in _public)
+                {
+                    var ii = item.GetText();
+                    _grantees.Add(ii.ToUpper());
+                }
+            }
 
             foreach (var _grantee_name in _grantees)
             {

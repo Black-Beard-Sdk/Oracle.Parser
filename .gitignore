@@ -288,3 +288,5 @@ __pycache__/
 *.xsd.cs
 /Src/Black.Beard.Oracle.DdlReader/App.config
 /Src/Black.Beard.Oracle.Parser.UnitTest/OracleLoaderUnitTest.cs
+/Src/Black.Beard.Oracle.Powershell/test-load-from-script.ps1
+/Src/Black.Beard.Oracle.Powershell/test-load-from-db.ps1

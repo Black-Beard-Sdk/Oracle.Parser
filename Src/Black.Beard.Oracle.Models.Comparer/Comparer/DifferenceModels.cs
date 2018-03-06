@@ -743,6 +743,9 @@ namespace Bb.Oracle.Models.Comparer
 
         protected DifferenceModel AppendDifference(object source, bool ToRemove)
         {
+
+            var type = source.GetType().Name;
+
             var d = new DifferenceModel()
             {
                 Source = source,
@@ -753,14 +756,14 @@ namespace Bb.Oracle.Models.Comparer
             this._lst.Add(d);
 
             if (source is DoublonModel)
-                log(string.Format("item {0} is duplicated in the source. Files : {1}", GetName(source), GetFilename(source)));
+                log(string.Format("{2} {0} is duplicated in the source. Files : {1}", GetName(source), GetFilename(source), type));
 
             else
             {
                 if (ToRemove)
-                    log(string.Format("item {0} must be removed in the target. Files : {1}", GetName(source), GetFilename(source)));
+                    log(string.Format("{2} {0} must be removed in the target. Files : {1}", GetName(source), GetFilename(source), type));
                 else
-                    log(string.Format("item {0} is missing in the target. Files : {1}", GetName(source), GetFilename(source)));
+                    log(string.Format("{2} {0} is missing in the target. Files : {1}", GetName(source), GetFilename(source), type));
             }
 
             return d;
@@ -769,11 +772,12 @@ namespace Bb.Oracle.Models.Comparer
 
         protected DifferenceModel AppendDifference(object source, object target, string propertyName)
         {
+            var type = source.GetType().Name;
 
             if (propertyName == "Name")
-                log(string.Format("item {0} is renamed in {1} in the target", GetName(source), GetName(target)));
+                log(string.Format("{2} {0} is renamed in {1} in the target", GetName(source), GetName(target), type));
             else
-                log(string.Format("property '{1}' in '{0}' is changed in the target", GetName(source), propertyName));
+                log(string.Format("{2} property '{1}' in '{0}' is changed in the target", GetName(source), propertyName, type));
 
             var d = new DifferenceModel()
             {

@@ -549,10 +549,14 @@ namespace Bb.Oracle.Visitors
             return base.VisitDeclare_spec(context);
         }
 
+        /// <summary>
+        /// (ASSIGN_OP | DEFAULT) expression
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public override object VisitDefault_value_part([NotNull] PlSqlParser.Default_value_partContext context)
         {
-            Stop();
-            return base.VisitDefault_value_part(context);
+            return context.expression().Accept<object>(this);
         }
 
         public override object VisitDelete_statement([NotNull] PlSqlParser.Delete_statementContext context)
@@ -1014,6 +1018,7 @@ namespace Bb.Oracle.Visitors
         public override object VisitLogical_expression([NotNull] PlSqlParser.Logical_expressionContext context)
         {
             Stop();
+            var t = context.GetText();
             return base.VisitLogical_expression(context);
         }
 
@@ -1185,11 +1190,6 @@ namespace Bb.Oracle.Visitors
             return base.VisitMulti_table_insert(context);
         }
 
-        public override object VisitNative_datatype_element([NotNull] PlSqlParser.Native_datatype_elementContext context)
-        {
-            Stop();
-            return base.VisitNative_datatype_element(context);
-        }
 
         public override object VisitNested_table_type_def([NotNull] PlSqlParser.Nested_table_type_defContext context)
         {
@@ -1213,12 +1213,6 @@ namespace Bb.Oracle.Visitors
         {
             Stop();
             return base.VisitNull_statement(context);
-        }
-
-        public override object VisitNumeric([NotNull] PlSqlParser.NumericContext context)
-        {
-            Stop();
-            return base.VisitNumeric(context);
         }
 
         public override object VisitNumeric_function([NotNull] PlSqlParser.Numeric_functionContext context)
@@ -1535,7 +1529,7 @@ namespace Bb.Oracle.Visitors
 
         public override object VisitRef_cursor_type_def([NotNull] PlSqlParser.Ref_cursor_type_defContext context)
         {
-            Stop();
+            //Stop();
             return base.VisitRef_cursor_type_def(context);
         }
 
@@ -2089,7 +2083,7 @@ namespace Bb.Oracle.Visitors
         {
             Stop();
             var t = context.GetText();
-
+            // TYPE REF CURSOR IS REF CURSOR;
             return base.VisitType_declaration(context);
         }
 

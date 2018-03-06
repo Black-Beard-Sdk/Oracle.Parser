@@ -7,6 +7,7 @@ using System.Linq;
 using Antlr4.Runtime;
 using System;
 using System.Diagnostics;
+using System.Text;
 
 namespace Bb.Oracle.Visitors
 {
@@ -258,48 +259,60 @@ namespace Bb.Oracle.Visitors
         public override object VisitType_spec([NotNull] PlSqlParser.Type_specContext context)
         {
 
-            var method = this.Current<ProcedureModel>();
-
+            var method = this.Current<ItemBase>();
 
             OracleType resultType = null;
 
             var percent_type = context.PERCENT_TYPE() != null;
             var percent_rowtype = context.PERCENT_ROWTYPE() != null;
-            var type_name = (string[])context.type_name().Accept(this);
+            var typename = context.type_name();
 
-            int length = type_name.Length;
-            if (percent_type)
+            if (typename != null)
             {
 
-                var col = ResolveColumn(new ObjectReference(type_name[0], type_name[1]) { Caller = method  });
-                if (col != null)
-                    resultType = col.Type.Clone();
+                var type_name = (string[])typename.Accept(this);
 
-                else
-                {
-                    Stop();
-                }
-
-            }
-            else if (percent_rowtype)
-            {
-                var obj = ResolveTable(new ObjectReference(type_name[0]) { Caller = method });
-                if (obj is TableModel t)
-                {
-                    resultType = t.ExtractOracleType();
-                }
-                else
+                int length = type_name.Length;
+                if (percent_type)
                 {
 
-                    Stop();
+                    var col = ResolveColumn(new ObjectReference(type_name[0], type_name[1]) { SchemaCaller = method.GetOwner() });
+                    if (col != null)
+                        resultType = col.Type.Clone();
+
+                    else
+                    {
+                        Stop();
+                    }
 
                 }
-            }
+                else if (percent_rowtype)
+                {
+                    var obj = ResolveTable(new ObjectReference(type_name[0]) { SchemaCaller = method.GetOwner() });
+                    if (obj is TableModel t)
+                    {
+                        resultType = t.ExtractOracleType();
+                    }
+                    else
+                    {
+
+                        Stop();
+
+                    }
+                }
 
                 Debug.Assert(resultType != null);
 
-                return resultType;
             }
+            else
+            {
+                var dataType = context.datatype();
+                resultType = (OracleType)dataType.Accept(this);
+            } 
+
+            return resultType;
+
+        }
 
         /// <summary>
         /// datatype
@@ -310,8 +323,137 @@ namespace Bb.Oracle.Visitors
         /// <returns></returns>
         public override object VisitDatatype([NotNull] PlSqlParser.DatatypeContext context)
         {
-            Stop();
-            return base.VisitDatatype(context);
+
+            var result = new OracleType()
+            {
+
+            };
+
+            var native_datatype_element = context.native_datatype_element();
+            if (native_datatype_element != null)
+            {
+
+                result.DataType = (string)native_datatype_element.Accept<object>(this);
+
+                var precision_part = context.precision_part();
+                if (precision_part != null)
+                {
+                    
+                    //  '(' numeric (',' numeric)? (CHAR | BYTE)? ')'
+
+                    var values = precision_part.numeric().Select(c => c.Accept<object>(this)).Cast<int>().ToList();
+
+                    if (values.Count > 1)
+                        Stop();
+
+                    result.DataPrecision = values[0];
+
+                }
+
+                if (context.WITH() != null)
+                {
+                    Stop();
+
+                    var local = context.LOCAL() != null;
+                    var t = context.TIME() != null && context.ZONE() != null;
+
+                }
+                else if (context.CHARACTER() != null && context.SET() != null)
+                {
+                    Stop();
+                    context.char_set_name();
+                }
+
+            }
+            else
+            {
+
+                Stop();
+
+                if (context.INTERVAL() != null)
+                {
+                    var day = context.DAY() != null;
+                    var year = context.YEAR() != null;
+                }
+
+                PlSqlParser.ExpressionContext expression1 = null;
+                PlSqlParser.ExpressionContext expression2 = null;
+
+                var expressions = context.expression();
+
+                var to = context.TO();
+                var month = context.MONTH();
+                var second = context.SECOND();
+
+                if (expressions.Length == 2)
+                {
+                    Stop();
+                    expression1 = expressions[0];
+                    expression2 = expressions[1];
+                }
+                if (expressions.Length == 1)
+                {
+                    Stop();
+                    expression1 = expressions[0];
+                    if (expression1.Start.StartIndex > to.Symbol.StartIndex)
+                    {
+                        expression2 = expression1;
+                        expression1 = null;
+                    }
+                }
+                else
+                {
+                    Stop();
+                }
+
+            }
+
+            return result;
+
+        }
+
+        public override object VisitNative_datatype_element([NotNull] PlSqlParser.Native_datatype_elementContext context)
+        {
+
+            StringBuilder sb = new StringBuilder();
+
+            for (int i = 0; i < context.ChildCount; i++)
+            {
+                sb.Append(context.GetChild(i));
+                sb.Append(" ");
+            }
+
+            return sb.ToString().Trim();
+
+        }
+
+        /// <summary>
+        /// UNSIGNED_INTEGER | APPROXIMATE_NUM_LIT
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public override object VisitNumeric([NotNull] PlSqlParser.NumericContext context)
+        {
+
+            var unsigned = context.UNSIGNED_INTEGER();
+            if (unsigned != null)
+                return GetUnsignedInteger(unsigned);
+
+            else
+            {
+                // FLOAT_FRAGMENT ('E' ('+'|'-')? (FLOAT_FRAGMENT | [0-9]+))? ('D' | 'F')?;
+
+                var litt = context.APPROXIMATE_NUM_LIT().GetText();
+                Stop();
+            }
+
+            return base.VisitNumeric(context);
+
+        }
+
+        private static int GetUnsignedInteger(Antlr4.Runtime.Tree.ITerminalNode unsigned)
+        {
+            return int.Parse(unsigned.GetText());
         }
 
         public override object VisitParameter_spec([NotNull] PlSqlParser.Parameter_specContext context)

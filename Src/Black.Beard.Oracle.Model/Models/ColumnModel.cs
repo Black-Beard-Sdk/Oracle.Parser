@@ -6,6 +6,7 @@ using System;
 
 namespace Bb.Oracle.Models
 {
+
     /// <summary>
     /// Column
     /// </summary>
@@ -15,8 +16,14 @@ namespace Bb.Oracle.Models
 
         public ColumnModel()
         {
-            this.ForeignKey = new ForeignKeyConstraintModel() { Parent = this };
-            this.Type = new OracleType() { Parent = this };
+            this.ForeignKey = new ForeignKeyConstraintModel()
+            {
+                Parent = this
+            };
+            this.Type = new OracleType()
+            {
+                Parent = this
+            };
 
         }
 

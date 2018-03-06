@@ -41,12 +41,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Comparer\CompareContext.cs" />
     <Compile Include="Comparer\DifferenceModel.cs" />
     <Compile Include="Comparer\DifferenceModels.cs" />
     <Compile Include="Comparer\DoublonModel.cs" />
     <Compile Include="Comparer\ModelComparer.cs" />
     <Compile Include="Comparer\ModelExporter.cs" />
     <Compile Include="Comparer\ProcessorBase.cs" />
+    <Compile Include="Comparer\ScriptFileInfoComparer.cs" />
     <Compile Include="Comparer\TypeDifferenceEnum.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

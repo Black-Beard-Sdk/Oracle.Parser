@@ -14,16 +14,16 @@ namespace Bb.Oracle.Reader.Queries
 
         string sql =
 @"
-with obj as
+WITH obj AS
 (
-  select o.OBJECT_TYPE, o.OWNER, o.OBJECT_NAME
-  from DBA_OBJECTS o
-  where o.OBJECT_TYPE in ('SYNONYM', 'TABLE','VIEW', 'SEQUENCE','PROCEDURE', 'FUNCTION', 'PACKAGE', 'MATERIALIZED VIEW'/*, 'JAVA CLASS'*/, 'TYPE')
+  SELECT o.OBJECT_TYPE, o.OWNER, o.OBJECT_NAME
+  FROM DBA_OBJECTS o
+  where o.OBJECT_TYPE IN ('SYNONYM', 'TABLE', 'VIEW', 'SEQUENCE','PROCEDURE', 'FUNCTION', 'PACKAGE', 'MATERIALIZED VIEW'/*, 'JAVA CLASS'*/, 'TYPE')
 )
-select     t.OWNER SYNONYM_OWNER, t.SYNONYM_NAME
+SELECT     t.OWNER SYNONYM_OWNER, t.SYNONYM_NAME
          , o.OBJECT_TYPE, o.OWNER OBJECT_OWNER, o.OBJECT_NAME
          
-from DBA_SYNONYMS t left outer join obj o on (t.TABLE_OWNER = o.OWNER and t.TABLE_NAME = o.OBJECT_NAME)
+FROM DBA_SYNONYMS t LEFT OUTER JOIN obj o ON (t.TABLE_OWNER = o.OWNER AND t.TABLE_NAME = o.OBJECT_NAME)
 
 {0}
 
@@ -49,17 +49,22 @@ from DBA_SYNONYMS t left outer join obj o on (t.TABLE_OWNER = o.OWNER and t.TABL
                         synonymeName = t.SYNONYME_OWNER + ".";
                     synonymeName += t.SYNONYME_NAME;
 
-                    string ObjectName = string.Empty;
                     if (!string.IsNullOrEmpty(t.OBJECT_OWNER))
-                    {
                         if (!ContextLoader.excluded.Contains(t.OBJECT_OWNER))
                         {
-                            ObjectName = t.OBJECT_OWNER + ".";
-                            ObjectName += t.OBJECT_NAME;
-                            var syn = new SynonymModel() { Key = synonymeName, ObjectType = t.OBJECT_TYPE, ObjectTarget = ObjectName, Name = t.SYNONYME_NAME, SchemaName = t.OBJECT_OWNER, SynonymOwner = t.SYNONYME_OWNER };
+                            var syn = new SynonymModel()
+                            {
+                                Key = synonymeName,
+                                ObjectType = t.OBJECT_TYPE,
+                                ObjectTarget = $"{t.OBJECT_OWNER}.{t.OBJECT_NAME}",
+                                Name = t.SYNONYME_NAME,
+                                SchemaName = t.OBJECT_OWNER,
+                                SynonymOwner = t.SYNONYME_OWNER,
+                                IsPublic = t.SYNONYME_OWNER.ToUpper() == "PUBLIC",
+                            };
                             db.Synonymes.Add(syn);
                         }
-                    }
+
                 };
 
 

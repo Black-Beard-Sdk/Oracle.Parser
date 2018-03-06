@@ -61,7 +61,7 @@ namespace Bb.Oracle.Parser
 
         public PlSqlParser.Sql_scriptContext Tree { get { return this.context; } }
 
-        public string File { get; private set; }
+        public string File { get; set; }
 
         public StringBuilder Content { get; private set; }
 

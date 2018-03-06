@@ -86,8 +86,12 @@ namespace Bb.Oracle.Visitors
         private ColumnModel ResolveColumn(ObjectReference ob)
         {
 
+            var tt = this;
             if (ob.Path.Length == 2)
             {
+                // CRM_CORE.SITE
+                // MASTER.SITE
+                // ROUTING_CORE.SITE
                 var items = ResolveColumns(ob.Path[0], ob.Path[1]);
                 if (items.Count == 1)
                     return items[0];
@@ -96,10 +100,10 @@ namespace Bb.Oracle.Visitors
                 {
                     Stop();
 
-                    if (ob.Caller != null)
+                    if (ob.SchemaCaller != null)
                     {
-
-                        var syn = this.db.Synonymes.Where(c => c.SynonymOwner.ToUpper() == ob.Caller.SchemaName).ToList();
+                        var schemaCaller = ob.SchemaCaller;
+                        var syn = this.db.Synonymes.Where(c => c.IsPublic || c.SchemaName.ToUpper() == schemaCaller || c.SynonymOwner.ToUpper() == schemaCaller).ToList();
 
                     }
 
@@ -176,12 +180,14 @@ namespace Bb.Oracle.Visitors
             T result = default(T);
 
             if (this._statck.Count > 0)
-                result = (T)this._statck.Peek()._item;
-
-            if (object.Equals(result, default(T)))
-                Stop();
+            {
+                var _result = this._statck.Peek()._item;
+                if (_result is T s)
+                    result = s;
+            }
 
             return result;
+
         }
 
 

@@ -147,7 +147,6 @@ ORDER BY ROLE, privilege
 
                 };
 
-
             GrantQueryDescriptor Grant = new GrantQueryDescriptor(context.Manager.ConnectionString);
             sql = string.Format(sql, TableQueryWhereCondition("t"), TableQueryWhereCondition("r"));
 

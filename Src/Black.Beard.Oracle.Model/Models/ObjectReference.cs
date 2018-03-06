@@ -15,7 +15,9 @@ namespace Bb.Oracle.Models
         }
 
         public string[] Path { get; }
-        public ProcedureModel Caller { get; set; }
+
+        public string SchemaCaller { get; set; }
+
     }
 
 
