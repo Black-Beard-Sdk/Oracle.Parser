@@ -54,12 +54,10 @@ namespace Bb.Oracle.Models
             get
             {
 
-                var r = this.Parent as OracleDatabase;
-                if (r != null)
+                if (this.Parent is OracleDatabase r)
                     return r;
 
-                var i =this.Parent as ItemBase;
-                if (i != null)
+                if (this.Parent is ItemBase i)
                     return i.Root;
 
                 return null;

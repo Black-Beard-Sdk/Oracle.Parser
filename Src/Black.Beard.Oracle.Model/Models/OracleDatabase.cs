@@ -19,7 +19,13 @@ namespace Bb.Oracle.Models
             this.Synonymes = new SynonymCollection() { Parent = this };
             this.Grants = new GrantCollection() { Parent = this };
 
+            this.References = new ReferentialNames(this);
+
         }
+
+        [JsonIgnore]
+        public TextReferentials.ReferentialNames References { get; set; }
+
 
         public string Name { get; set; }
 
@@ -139,12 +145,18 @@ namespace Bb.Oracle.Models
 
         public void Initialize()
         {
-            Tables.Initialize();
+
+            //this.Partitions.Initialize();
+            this.Tables.Initialize();
             this.Types.Initialize();
             this.Sequences.Initialize();
             this.Procedures.Initialize();
             this.Grants.Initialize();
             this.Synonymes.Initialize();
+            //this.Tablespaces.Initialize();
+            //this.Packages.Initialize();
+
+
         }
 
         /// <summary>

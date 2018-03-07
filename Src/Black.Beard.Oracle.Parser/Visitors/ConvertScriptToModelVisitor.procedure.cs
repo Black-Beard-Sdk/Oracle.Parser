@@ -8,6 +8,7 @@ using Antlr4.Runtime;
 using System;
 using System.Diagnostics;
 using System.Text;
+using Bb.Oracle.Helpers;
 
 namespace Bb.Oracle.Visitors
 {
@@ -132,7 +133,7 @@ namespace Bb.Oracle.Visitors
 
             var proc = new ProcedureModel()
             {
-                Name = CleanName(context.identifier().GetText()),
+                Name = context.identifier().GetCleanedName(),
                 IsFunction = false,
                 Key = "",
                 SchemaName = schema_name,
@@ -177,7 +178,7 @@ namespace Bb.Oracle.Visitors
 
             var fnc = new ProcedureModel()
             {
-                Name = CleanName(context.identifier().GetText()),
+                Name = context.identifier().GetCleanedName(),
                 IsFunction = true,
                 Key = "",
                 SchemaName = schema_name,
@@ -233,7 +234,7 @@ namespace Bb.Oracle.Visitors
             var arg = new ArgumentModel()
             {
                 Key = method.Arguments.Count().ToString(),
-                ArgumentName = CleanName(context.parameter_name().GetText()),
+                ArgumentName = context.parameter_name().GetCleanedName(),
                 In = _in,
                 Out = _out,
                 Description = "",

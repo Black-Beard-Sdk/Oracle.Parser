@@ -8,6 +8,7 @@ using System;
 using Antlr4.Runtime.Tree;
 using System.Text;
 using System.Diagnostics;
+using Bb.Oracle.Helpers;
 
 namespace Bb.Oracle.Visitors
 {
@@ -49,7 +50,7 @@ namespace Bb.Oracle.Visitors
 
         private List<ItemBase> ResolveTypes(string typeName)
         {
-            var _tableName = CleanName(typeName.ToUpper());
+            var _tableName = typeName.CleanName();
             var items = this.db.Types.Where(c => c.GetName() == _tableName).Cast<ItemBase>().ToList();
             Debug.Assert(items.Count > 0);
             return items;
@@ -57,7 +58,7 @@ namespace Bb.Oracle.Visitors
 
         private List<ItemBase> ResolveTables(string tableName)
         {
-            var _tableName = CleanName(tableName.ToUpper());
+            var _tableName = tableName.CleanName();
             var items = this.db.Tables.Where(c => c.GetName() == _tableName).Cast<ItemBase>().ToList();
             Debug.Assert(items.Count > 0);
             return items;
@@ -65,8 +66,8 @@ namespace Bb.Oracle.Visitors
 
         private ItemBase ResolveTable(string schema, string tableName)
         {
-            var _schema = CleanName(schema.ToUpper());
-            var _tableName = CleanName(tableName.ToUpper());
+            var _schema = schema.CleanName();
+            var _tableName = tableName.CleanName();
 
             var t = db.Tables[$"{_schema}.{_tableName}"];
 
@@ -120,8 +121,8 @@ namespace Bb.Oracle.Visitors
 
         private List<ColumnModel> ResolveColumns(string tableName, string columnName)
         {
-            var _columnName = CleanName(columnName.ToUpper());
-            var _tableName = CleanName(tableName.ToUpper());
+            var _columnName = columnName.CleanName();
+            var _tableName = tableName.CleanName();
             var items = this.db.Tables.Where(c => c.Name == _tableName).ToList();
             var cols = items.SelectMany(c => c.Columns).Where(c => c.ColumnName == _columnName).ToList();
 
@@ -133,9 +134,9 @@ namespace Bb.Oracle.Visitors
 
         private ColumnModel ResolveColumn(string schema, string tableName, string columnName)
         {
-            var _schema = CleanName(schema.ToUpper());
-            var _tableName = CleanName(tableName.ToUpper());
-            var _columnName = CleanName(columnName.ToUpper());
+            var _schema = schema.CleanName();
+            var _tableName = tableName.CleanName();
+            var _columnName = columnName.CleanName();
 
             var t = db.Tables[$"{_schema}.{_tableName}"];
             ColumnModel col = t.Columns.FirstOrDefault(c => c.ColumnName == _columnName);
@@ -222,9 +223,14 @@ namespace Bb.Oracle.Visitors
         private void AppendException(RecognitionException exception)
         {
 
-            StringBuilder txt = GetText(exception.Context.Parent);
-
             var t = exception.OffendingToken;
+            StringBuilder txt;
+
+            if (exception.Context.Parent != null)
+                txt = GetText(exception.Context.Parent);
+            else
+                txt = GetText(t.StartIndex, t.StopIndex + 1);
+
             string message = $"'{exception.Message}' at line '{t.Line} {txt.ToString()}' with token '{t.Text}' column {t.Column}, offset {t.StartIndex}";
 
             var error = new Error() { Exception = exception, Message = message, File = GetFileElement(exception.OffendingToken) };
@@ -239,17 +245,25 @@ namespace Bb.Oracle.Visitors
         private StringBuilder GetText(RuleContext context)
         {
             if (context is ParserRuleContext s)
-            {
-                char[] ar = new char[s.Stop.StopIndex - s.Start.StartIndex];
-                _initialSource.CopyTo(s.Start.StartIndex, ar, 0, ar.Length);
-                StringBuilder sb2 = new StringBuilder(ar.Length);
-                sb2.Append(ar);
+                return GetText(s.Start.StartIndex, s.Stop.StopIndex + 1);
+            return new StringBuilder();
+        }
 
-                return sb2;
+        private StringBuilder GetText(int startIndex, int stopIndex)
+        {
+
+            int length = stopIndex - startIndex;
+
+            StringBuilder sb2 = new StringBuilder(length > 0 ? length : 0);
+
+            if (length > 0)
+            {
+                char[] ar = new char[length];
+                _initialSource.CopyTo(startIndex, ar, 0, length);
+                sb2.Append(ar);
             }
 
-            Stop();
-            return new StringBuilder();
+            return sb2;
 
         }
 

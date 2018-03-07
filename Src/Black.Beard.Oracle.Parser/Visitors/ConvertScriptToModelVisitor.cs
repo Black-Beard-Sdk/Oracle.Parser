@@ -6,6 +6,7 @@ using Antlr4.Runtime;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Bb.Oracle.Helpers;
 
 namespace Bb.Oracle.Visitors
 {
@@ -54,12 +55,6 @@ namespace Bb.Oracle.Visitors
         {
             Stop();
             return base.VisitAdd_rem_container_data(context);
-        }
-
-        public override object VisitAggregate_function_name([NotNull] PlSqlParser.Aggregate_function_nameContext context)
-        {
-            Stop();
-            return base.VisitAggregate_function_name(context);
         }
 
         public override object VisitAlter_attribute_definition([NotNull] PlSqlParser.Alter_attribute_definitionContext context)
@@ -159,12 +154,6 @@ namespace Bb.Oracle.Visitors
             return base.VisitAttribute_definition(context);
         }
 
-        public override object VisitAttribute_name([NotNull] PlSqlParser.Attribute_nameContext context)
-        {
-            Stop();
-            return base.VisitAttribute_name(context);
-        }
-
         public override object VisitAutoextend_clause([NotNull] PlSqlParser.Autoextend_clauseContext context)
         {
             Stop();
@@ -237,12 +226,6 @@ namespace Bb.Oracle.Visitors
             return base.VisitCell_reference_options(context);
         }
 
-        public override object VisitChar_set_name([NotNull] PlSqlParser.Char_set_nameContext context)
-        {
-            Stop();
-            return base.VisitChar_set_name(context);
-        }
-
         public override object VisitCheck_constraint([NotNull] PlSqlParser.Check_constraintContext context)
         {
             Stop();
@@ -255,11 +238,6 @@ namespace Bb.Oracle.Visitors
             return base.VisitClose_statement(context);
         }
 
-        public override object VisitCollection_name([NotNull] PlSqlParser.Collection_nameContext context)
-        {
-            Stop();
-            return base.VisitCollection_name(context);
-        }
 
         public override object VisitCollect_order_by_part([NotNull] PlSqlParser.Collect_order_by_partContext context)
         {
@@ -285,11 +263,6 @@ namespace Bb.Oracle.Visitors
             return base.VisitColumn_list(context);
         }
 
-        public override object VisitColumn_name([NotNull] PlSqlParser.Column_nameContext context)
-        {
-            Stop();
-            return base.VisitColumn_name(context);
-        }
 
         public override object VisitComment_on_column([NotNull] PlSqlParser.Comment_on_columnContext context)
         {
@@ -375,12 +348,6 @@ namespace Bb.Oracle.Visitors
             return base.VisitConstant(context);
         }
 
-        public override object VisitConstraint_name([NotNull] PlSqlParser.Constraint_nameContext context)
-        {
-            Stop();
-            return base.VisitConstraint_name(context);
-        }
-
         public override object VisitConstraint_state([NotNull] PlSqlParser.Constraint_stateContext context)
         {
             Stop();
@@ -411,28 +378,12 @@ namespace Bb.Oracle.Visitors
             return base.VisitContainer_data_clause(context);
         }
 
-        public override object VisitContainer_names([NotNull] PlSqlParser.Container_namesContext context)
-        {
-            Stop();
-            return base.VisitContainer_names(context);
-        }
 
-        public override object VisitContainer_tableview_name([NotNull] PlSqlParser.Container_tableview_nameContext context)
-        {
-            Stop();
-            return base.VisitContainer_tableview_name(context);
-        }
 
         public override object VisitContinue_statement([NotNull] PlSqlParser.Continue_statementContext context)
         {
             Stop();
             return base.VisitContinue_statement(context);
-        }
-
-        public override object VisitCost_class_name([NotNull] PlSqlParser.Cost_class_nameContext context)
-        {
-            Stop();
-            return base.VisitCost_class_name(context);
         }
 
         public override object VisitCost_matrix_clause([NotNull] PlSqlParser.Cost_matrix_clauseContext context)
@@ -895,17 +846,6 @@ namespace Bb.Oracle.Visitors
             return base.VisitIf_statement(context);
         }
 
-        public override object VisitImplementation_type_name([NotNull] PlSqlParser.Implementation_type_nameContext context)
-        {
-            Stop();
-            return base.VisitImplementation_type_name(context);
-        }
-
-        public override object VisitIndex_name([NotNull] PlSqlParser.Index_nameContext context)
-        {
-            Stop();
-            return base.VisitIndex_name(context);
-        }
 
         public override object VisitInline_constraint([NotNull] PlSqlParser.Inline_constraintContext context)
         {
@@ -979,18 +919,6 @@ namespace Bb.Oracle.Visitors
             return base.VisitLabel_declaration(context);
         }
 
-        public override object VisitLabel_name([NotNull] PlSqlParser.Label_nameContext context)
-        {
-            Stop();
-            return base.VisitLabel_name(context);
-        }
-
-        public override object VisitLink_name([NotNull] PlSqlParser.Link_nameContext context)
-        {
-            Stop();
-            return base.VisitLink_name(context);
-        }
-
         public override object VisitLock_mode([NotNull] PlSqlParser.Lock_modeContext context)
         {
             Stop();
@@ -1040,11 +968,6 @@ namespace Bb.Oracle.Visitors
             return base.VisitMain_model(context);
         }
 
-        public override object VisitMain_model_name([NotNull] PlSqlParser.Main_model_nameContext context)
-        {
-            Stop();
-            return base.VisitMain_model_name(context);
-        }
 
         public override object VisitMap_order_function_spec([NotNull] PlSqlParser.Map_order_function_specContext context)
         {
@@ -1219,12 +1142,6 @@ namespace Bb.Oracle.Visitors
         {
             Stop();
             return base.VisitNumeric_function(context);
-        }
-
-        public override object VisitNumeric_function_name([NotNull] PlSqlParser.Numeric_function_nameContext context)
-        {
-            Stop();
-            return base.VisitNumeric_function_name(context);
         }
 
         public override object VisitNumeric_function_wrapper([NotNull] PlSqlParser.Numeric_function_wrapperContext context)
@@ -1449,12 +1366,6 @@ namespace Bb.Oracle.Visitors
             return base.VisitQuery_block(context);
         }
 
-        public override object VisitQuery_name([NotNull] PlSqlParser.Query_nameContext context)
-        {
-            Stop();
-            return base.VisitQuery_name(context);
-        }
-
         public override object VisitQuery_partition_clause([NotNull] PlSqlParser.Query_partition_clauseContext context)
         {
             Stop();
@@ -1467,22 +1378,10 @@ namespace Bb.Oracle.Visitors
             return base.VisitQuota_clause(context);
         }
 
-        public override object VisitQuoted_string([NotNull] PlSqlParser.Quoted_stringContext context)
-        {
-            Stop();
-            return base.VisitQuoted_string(context);
-        }
-
         public override object VisitRaise_statement([NotNull] PlSqlParser.Raise_statementContext context)
         {
             Stop();
             return base.VisitRaise_statement(context);
-        }
-
-        public override object VisitRecord_name([NotNull] PlSqlParser.Record_nameContext context)
-        {
-            Stop();
-            return base.VisitRecord_name(context);
         }
 
         public override object VisitRecord_type_def([NotNull] PlSqlParser.Record_type_defContext context)
@@ -1509,11 +1408,6 @@ namespace Bb.Oracle.Visitors
             return base.VisitReference_model(context);
         }
 
-        public override object VisitReference_model_name([NotNull] PlSqlParser.Reference_model_nameContext context)
-        {
-            Stop();
-            return base.VisitReference_model_name(context);
-        }
 
         public override object VisitReferencing_clause([NotNull] PlSqlParser.Referencing_clauseContext context)
         {
@@ -1587,18 +1481,6 @@ namespace Bb.Oracle.Visitors
             return base.VisitRole_clause(context);
         }
 
-        public override object VisitRole_name([NotNull] PlSqlParser.Role_nameContext context)
-        {
-            Stop();
-            return base.VisitRole_name(context);
-        }
-
-        public override object VisitRollback_segment_name([NotNull] PlSqlParser.Rollback_segment_nameContext context)
-        {
-            Stop();
-            return base.VisitRollback_segment_name(context);
-        }
-
         public override object VisitRollback_statement([NotNull] PlSqlParser.Rollback_statementContext context)
         {
             Stop();
@@ -1617,34 +1499,16 @@ namespace Bb.Oracle.Visitors
             return base.VisitRoutine_clause(context);
         }
 
-        public override object VisitRoutine_name([NotNull] PlSqlParser.Routine_nameContext context)
-        {
-            Stop();
-            return base.VisitRoutine_name(context);
-        }
-
         public override object VisitSample_clause([NotNull] PlSqlParser.Sample_clauseContext context)
         {
             Stop();
             return base.VisitSample_clause(context);
         }
 
-        public override object VisitSavepoint_name([NotNull] PlSqlParser.Savepoint_nameContext context)
-        {
-            Stop();
-            return base.VisitSavepoint_name(context);
-        }
-
         public override object VisitSavepoint_statement([NotNull] PlSqlParser.Savepoint_statementContext context)
         {
             Stop();
             return base.VisitSavepoint_statement(context);
-        }
-
-        public override object VisitSchema_name([NotNull] PlSqlParser.Schema_nameContext context)
-        {
-            Stop();
-            return base.VisitSchema_name(context);
         }
 
         public override object VisitSearched_case_statement([NotNull] PlSqlParser.Searched_case_statementContext context)
@@ -1699,12 +1563,6 @@ namespace Bb.Oracle.Visitors
         {
             Stop();
             return base.VisitSelect_statement(context);
-        }
-
-        public override object VisitSequence_name([NotNull] PlSqlParser.Sequence_nameContext context)
-        {
-            Stop();
-            return base.VisitSequence_name(context);
         }
 
         public override object VisitSequence_spec([NotNull] PlSqlParser.Sequence_specContext context)
@@ -1857,12 +1715,6 @@ namespace Bb.Oracle.Visitors
             return base.VisitString_function(context);
         }
 
-        public override object VisitString_function_name([NotNull] PlSqlParser.String_function_nameContext context)
-        {
-            Stop();
-            return base.VisitString_function_name(context);
-        }
-
         public override object VisitSubprogram_spec([NotNull] PlSqlParser.Subprogram_specContext context)
         {
             Stop();
@@ -1911,12 +1763,6 @@ namespace Bb.Oracle.Visitors
             return base.VisitSwallow_to_semi(context);
         }
 
-        public override object VisitSynonym_name([NotNull] PlSqlParser.Synonym_nameContext context)
-        {
-            Stop();
-            return base.VisitSynonym_name(context);
-        }
-
         public override object VisitTablespace_encryption_spec([NotNull] PlSqlParser.Tablespace_encryption_specContext context)
         {
             Stop();
@@ -1957,12 +1803,6 @@ namespace Bb.Oracle.Visitors
         {
             Stop();
             return base.VisitTable_indexed_by_part(context);
-        }
-
-        public override object VisitTable_range_partition_by_clause([NotNull] PlSqlParser.Table_range_partition_by_clauseContext context)
-        {
-            Stop();
-            return base.VisitTable_range_partition_by_clause(context);
         }
 
         public override object VisitTable_ref([NotNull] PlSqlParser.Table_refContext context)
@@ -2007,11 +1847,6 @@ namespace Bb.Oracle.Visitors
             return base.VisitTable_type_def(context);
         }
 
-        public override object VisitTable_var_name([NotNull] PlSqlParser.Table_var_nameContext context)
-        {
-            Stop();
-            return base.VisitTable_var_name(context);
-        }
 
         public override object VisitTempfile_specification([NotNull] PlSqlParser.Tempfile_specificationContext context)
         {
@@ -2053,12 +1888,6 @@ namespace Bb.Oracle.Visitors
         {
             Stop();
             return base.VisitTrigger_follows_clause(context);
-        }
-
-        public override object VisitTrigger_name([NotNull] PlSqlParser.Trigger_nameContext context)
-        {
-            Stop();
-            return base.VisitTrigger_name(context);
         }
 
         public override object VisitTrigger_when_clause([NotNull] PlSqlParser.Trigger_when_clauseContext context)
@@ -2303,12 +2132,6 @@ namespace Bb.Oracle.Visitors
             return base.VisitXml_attributes_clause(context);
         }
 
-        public override object VisitXml_column_name([NotNull] PlSqlParser.Xml_column_nameContext context)
-        {
-            Stop();
-            return base.VisitXml_column_name(context);
-        }
-
         public override object VisitXml_general_default_part([NotNull] PlSqlParser.Xml_general_default_partContext context)
         {
             Stop();
@@ -2326,6 +2149,8 @@ namespace Bb.Oracle.Visitors
             Stop();
             return base.VisitXml_namespaces_clause(context);
         }
+
+
 
         public override object VisitXml_passing_clause([NotNull] PlSqlParser.Xml_passing_clauseContext context)
         {
@@ -2352,6 +2177,177 @@ namespace Bb.Oracle.Visitors
             //}
         }
 
+
+        public override object VisitAggregate_function_name([NotNull] PlSqlParser.Aggregate_function_nameContext context)
+        {
+            Stop();
+            return base.VisitAggregate_function_name(context);
+        }
+
+        public override object VisitImplementation_type_name([NotNull] PlSqlParser.Implementation_type_nameContext context)
+        {
+            Stop();
+            return base.VisitImplementation_type_name(context);
+        }
+
+        public override object VisitReference_model_name([NotNull] PlSqlParser.Reference_model_nameContext context)
+        {
+            Stop();
+            return base.VisitReference_model_name(context);
+        }
+
+        public override object VisitString_function_name([NotNull] PlSqlParser.String_function_nameContext context)
+        {
+            Stop();
+            return base.VisitString_function_name(context);
+        }
+
+        public override object VisitSchema_name([NotNull] PlSqlParser.Schema_nameContext context)
+        {
+            Stop();
+            return base.VisitSchema_name(context);
+        }
+
+        public override object VisitSavepoint_name([NotNull] PlSqlParser.Savepoint_nameContext context)
+        {
+            Stop();
+            return base.VisitSavepoint_name(context);
+        }
+
+        public override object VisitRoutine_name([NotNull] PlSqlParser.Routine_nameContext context)
+        {
+            Stop();
+            return base.VisitRoutine_name(context);
+        }
+
+        public override object VisitRole_name([NotNull] PlSqlParser.Role_nameContext context)
+        {
+            Stop();
+            return base.VisitRole_name(context);
+        }
+
+        public override object VisitRollback_segment_name([NotNull] PlSqlParser.Rollback_segment_nameContext context)
+        {
+            Stop();
+            return base.VisitRollback_segment_name(context);
+        }
+
+        public override object VisitRecord_name([NotNull] PlSqlParser.Record_nameContext context)
+        {
+            Stop();
+            return base.VisitRecord_name(context);
+        }
+
+        public override object VisitQuery_name([NotNull] PlSqlParser.Query_nameContext context)
+        {
+            Stop();
+            return base.VisitQuery_name(context);
+        }
+
+        public override object VisitNumeric_function_name([NotNull] PlSqlParser.Numeric_function_nameContext context)
+        {
+            Stop();
+            return base.VisitNumeric_function_name(context);
+        }
+
+        public override object VisitMain_model_name([NotNull] PlSqlParser.Main_model_nameContext context)
+        {
+            Stop();
+            return base.VisitMain_model_name(context);
+        }
+
+        public override object VisitLabel_name([NotNull] PlSqlParser.Label_nameContext context)
+        {
+            Stop();
+            return base.VisitLabel_name(context);
+        }
+
+        public override object VisitLink_name([NotNull] PlSqlParser.Link_nameContext context)
+        {
+            Stop();
+            return base.VisitLink_name(context);
+        }
+
+
+        public override object VisitIndex_name([NotNull] PlSqlParser.Index_nameContext context)
+        {
+            Stop();
+            return base.VisitIndex_name(context);
+        }
+
+        public override object VisitCost_class_name([NotNull] PlSqlParser.Cost_class_nameContext context)
+        {
+            Stop();
+            return base.VisitCost_class_name(context);
+        }
+
+
+        public override object VisitContainer_tableview_name([NotNull] PlSqlParser.Container_tableview_nameContext context)
+        {
+            Stop();
+            return base.VisitContainer_tableview_name(context);
+        }
+
+        public override object VisitContainer_names([NotNull] PlSqlParser.Container_namesContext context)
+        {
+            Stop();
+            return base.VisitContainer_names(context);
+        }
+
+        public override object VisitConstraint_name([NotNull] PlSqlParser.Constraint_nameContext context)
+        {
+            Stop();
+            return base.VisitConstraint_name(context);
+        }
+
+        public override object VisitColumn_name([NotNull] PlSqlParser.Column_nameContext context)
+        {
+            Stop();
+            return base.VisitColumn_name(context);
+        }
+
+        public override object VisitCollection_name([NotNull] PlSqlParser.Collection_nameContext context)
+        {
+            Stop();
+            return base.VisitCollection_name(context);
+        }
+
+        public override object VisitAttribute_name([NotNull] PlSqlParser.Attribute_nameContext context)
+        {
+            Stop();
+            return base.VisitAttribute_name(context);
+        }
+
+        public override object VisitTable_var_name([NotNull] PlSqlParser.Table_var_nameContext context)
+        {
+            Stop();
+            return base.VisitTable_var_name(context);
+        }
+
+
+        public override object VisitXml_column_name([NotNull] PlSqlParser.Xml_column_nameContext context)
+        {
+            Stop();
+            return base.VisitXml_column_name(context);
+        }
+
+        public override object VisitSynonym_name([NotNull] PlSqlParser.Synonym_nameContext context)
+        {
+            Stop();
+            return context.identifier().GetCleanedName();
+        }
+
+        public override object VisitTrigger_name([NotNull] PlSqlParser.Trigger_nameContext context)
+        {
+            var _names = context.full_identifier().GetCleanedText();
+            return _names;
+        }
+
+        public override object VisitChar_set_name([NotNull] PlSqlParser.Char_set_nameContext context)
+        {
+            return context.id_expressions().GetCleanedText();
+        }
+
         /// <summary>
         /// type_name : id_expression('.' id_expression)*
         /// </summary>
@@ -2359,20 +2355,23 @@ namespace Bb.Oracle.Visitors
         /// <returns></returns>
         public override object VisitType_name([NotNull] PlSqlParser.Type_nameContext context)
         {
+            return context.id_expressions().GetCleanedText();
+        }
 
-            List<string> _type = new List<string>();
-
-            foreach (var item in context.id_expression())
-                _type.Add(item.GetText());
-
-            return _type.ToArray();
-
+        public override object VisitSequence_name([NotNull] PlSqlParser.Sequence_nameContext context)
+        {
+            return context.id_expressions().GetCleanedText();
         }
 
 
     }
 
 }
+
+//public override object VisitPackage_name([NotNull] PlSqlParser.Package_nameContext context)
+//{
+//    return CleanName(context.identifier().GetText());
+//}
 
 //public override object VisitIdentifier([NotNull] PlSqlParser.IdentifierContext context)
 //{

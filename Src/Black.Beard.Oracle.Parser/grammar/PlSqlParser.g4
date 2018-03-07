@@ -44,31 +44,31 @@ unit_statement :
 
     | create_index
     | create_table
-    | create_tablespace
-    | create_view //TODO
+    // | create_tablespace
+    // | create_view //TODO
 //  | create_directory //TODO
 //  | create_materialized_view //TODO
-    | create_user
+    // | create_user
 
-    | create_sequence
-    | create_trigger
-    | create_type
-    | create_synonym
+    // | create_sequence
+    // | create_trigger
+    // | create_type
+    // | create_synonym
 
-    | drop_function
-    | drop_package
-    | drop_procedure
-    | drop_sequence
-    | drop_trigger
-    | drop_type
-    | data_manipulation_language_statements
-    | drop_table
-    | drop_index
+    // | drop_function
+    // | drop_package
+    // | drop_procedure
+    // | drop_sequence
+    // | drop_trigger
+    // | drop_type
+    // | data_manipulation_language_statements
+    // | drop_table
+    // | drop_index
 
-    | comment_on_column
-    | comment_on_table
+    // | comment_on_column
+    // | comment_on_table
 
-    | anonymous_block
+    // | anonymous_block
 
     | grant_statement
 	| revoke_statment
@@ -731,26 +731,26 @@ constraint_state :
 	( NOT? DEFERRABLE
       | INITIALLY (IMMEDIATE|DEFERRED)
       | (RELY|NORELY)
-	  | using_index_clause
+	//   | using_index_clause
       | (ENABLE|DISABLE)
       | (VALIDATE|NOVALIDATE)
 	  | exceptions_clause
       )+
     ;
 
-using_index_clause :
-	USING INDEX ( index_name | '(' create_index ')' | index_properties )
-	;
+// using_index_clause :
+// 	USING INDEX ( index_name | '(' create_index ')' | index_properties )
+// 	;
 
-index_properties :
-    ( 
-        ( 
-              (global_partitioned_index | local_partitioned_index) 
-            | index_attributes 
-        )+ 
-        //| 'INDEXTYPE' 'IS' ( domain_index_clause /*| xmltable_index_clause */| xmlindex_clause) 
-    )?
-	;
+// index_properties :
+//     ( 
+//         ( 
+//               (global_partitioned_index | local_partitioned_index) 
+//             | index_attributes 
+//         )+ 
+//         //| 'INDEXTYPE' 'IS' ( domain_index_clause /*| xmltable_index_clause */| xmlindex_clause) 
+//     )?
+// 	;
 
 
 xmltable_index_clause :
@@ -765,31 +765,31 @@ physicial_attributes_clause :
 	EMPTY
 	;
 
-global_partitioned_index :
-	GLOBAL PARTITION BY
-		( 'RANGE' paren_column_list '(' index_partitioning_clause ')' 
-		| 'HASH'  paren_column_list ( individual_hash_partitions | hash_partitions_by_quantity ))
-	;
+// global_partitioned_index :
+// 	GLOBAL PARTITION BY
+// 		( 'RANGE' paren_column_list '(' index_partitioning_clause ')' 
+// 		| 'HASH'  paren_column_list ( individual_hash_partitions | hash_partitions_by_quantity ))
+// 	;
 	
-index_partitioning_clause :
-	partition_clause_optional VALUES LESS THAN '(' literal ( ',' literal )* ')' segment_attributes_clause?
-	;
+// index_partitioning_clause :
+// 	partition_clause_optional VALUES LESS THAN '(' literal ( ',' literal )* ')' segment_attributes_clause?
+// 	;
 
-partition_clause : PARTITION partition;
-partition_clause_optional : PARTITION partition?;
+partition_clause : PARTITION partition_name;
+partition_clause_optional : PARTITION partition_name?;
 
-segment_attributes_clause :
-	( physical_attributes_clause | tablespace_clause | logging_clause )+ 
-	;
+// segment_attributes_clause :
+// 	( physical_attributes_clause | tablespace_clause | logging_clause )+ 
+// 	;
 
-physical_attributes_clause :
-	( ( PCTFREE integer | PCTUSED integer | INITRANS integer | storage_clause )+ )?
-	;
+// physical_attributes_clause :
+// 	( ( PCTFREE integer | PCTUSED integer | INITRANS integer | storage_clause )+ )?
+// 	;
 
 
-individual_hash_partitions :
-	'(' ( ','? (partition_clause indexing_clause? partitioning_storage_clause) )+ ')'
-	;
+// individual_hash_partitions :
+// 	'(' ( ','? (partition_clause indexing_clause? partitioning_storage_clause) )+ ')'
+// 	;
 
 indexing_clause :
 	INDEXING (ON |OFF)
@@ -863,48 +863,48 @@ advanced_index_compression :
 	;
 
 lob_partitioning_storage :
-	LOB '(' lob_item ')' 
+	LOB '(' lob_item_name ')' 
 	STORE AS ( BASICFILE | SECUREFILE )? ( lob_segname ( '(' tablespace_clause ')' )? | '(' tablespace_clause ')' )?
 	;
 
-hash_partitions_by_quantity :
-	PARTITIONS hash_partition_quantity ( STORE IN '(' tablespace ( ',' tablespace )* ')' )? ( table_compression | index_compression )? ( 'OVERFLOW' 'STORE' 'IN' '(' tablespace ( ',' tablespace )* ')' )?
-	;
+// hash_partitions_by_quantity :
+// 	PARTITIONS hash_partition_quantity ( STORE IN '(' tablespace ( ',' tablespace )* ')' )? ( table_compression | index_compression )? ( 'OVERFLOW' 'STORE' 'IN' '(' tablespace ( ',' tablespace )* ')' )?
+// 	;
  
-local_partitioned_index :
-	LOCAL ( on_range_partitioned_table | on_list_partitioned_table | on_hash_partitioned_table | on_comp_partitioned_table )?
-	;
+// local_partitioned_index :
+// 	LOCAL ( on_range_partitioned_table | on_list_partitioned_table | on_hash_partitioned_table | on_comp_partitioned_table )?
+// 	;
 
- on_range_partitioned_table :
-	'(' partition_clause_optional ( (segment_attributes_clause | index_compression )+ )? ( UNUSABLE )? ( ',' PARTITION ( partition )? ( ( segment_attributes_clause | index_compression )+ )? ( 'UNUSABLE' )? )* ')'
-	;
+// on_range_partitioned_table :
+// 	'(' partition_clause_optional ( (segment_attributes_clause | index_compression )+ )? ( UNUSABLE )? ( ',' PARTITION ( partition )? ( ( segment_attributes_clause | index_compression )+ )? ( 'UNUSABLE' )? )* ')'
+// 	;
 	
-on_list_partitioned_table :
-	'(' partition_clause_optional 
-	( ( segment_attributes_clause | index_compression )+ )? 
-	usable_clause? 
-	( ',' partition_clause_optional ( ( segment_attributes_clause | index_compression )+ )? usable_clause? )* 
-	')'
-	;
+// on_list_partitioned_table :
+// 	'(' partition_clause_optional 
+// 	( ( segment_attributes_clause | index_compression )+ )? 
+// 	usable_clause? 
+// 	( ',' partition_clause_optional ( ( segment_attributes_clause | index_compression )+ )? usable_clause? )* 
+// 	')'
+// 	;
 
-on_hash_partitioned_table :
-	( 
-		  'STORE' 'IN' '(' tablespace ( ',' tablespace )* ')' 
-		| '(' 
-				partition_clause_optional tablespace_clause? advanced_index_compression? usable_clause? 
-		  ( ',' partition_clause_optional tablespace_clause? advanced_index_compression? usable_clause? )* 
-		  ')' 
-	  ) 
-		  // subclauses  -> Je ne sais pas d'ou il sort ...
-	;
+// on_hash_partitioned_table :
+// 	( 
+// 		  STORE IN '(' tablespace ( ',' tablespace )* ')' 
+// 		| '(' 
+// 				partition_clause_optional tablespace_clause? advanced_index_compression? usable_clause? 
+// 		  ( ',' partition_clause_optional tablespace_clause? advanced_index_compression? usable_clause? )* 
+// 		  ')' 
+// 	  ) 
+// 		  // subclauses  -> Je ne sais pas d'ou il sort ...
+// 	;
 
-on_comp_partitioned_table :
-	store_in? 
-	'(' 
-		  partition_clause_optional ( ( segment_attributes_clause | advanced_index_compression )+ )? usable_clause? index_subpartition_clause? 
-	( ',' partition_clause_optional ( ( segment_attributes_clause | advanced_index_compression )+ )? usable_clause? index_subpartition_clause? )* 
-	')'
-	;
+// on_comp_partitioned_table :
+// 	store_in? 
+// 	'(' 
+// 		  partition_clause_optional ( ( segment_attributes_clause | advanced_index_compression )+ )? usable_clause? index_subpartition_clause? 
+// 	( ',' partition_clause_optional ( ( segment_attributes_clause | advanced_index_compression )+ )? usable_clause? index_subpartition_clause? )* 
+// 	')'
+// 	;
 
 index_subpartition_clause :
 	store_in
@@ -919,7 +919,7 @@ usable_clause :
 	;
 
 index_attributes :
-	(physicial_attributes_clause | logging_clause | ONLINE | TABLESPACE (tablespace | DEFAULT) | advanced_index_compression | (SORT | NOSORT) | REVERSE | (VISIBLE | INVISIBLE) | partial_index_clause | parallel_clause)*
+	(physicial_attributes_clause | logging_clause | ONLINE | TABLESPACE (tablespace_name | DEFAULT) | advanced_index_compression | (SORT | NOSORT) | REVERSE | (VISIBLE | INVISIBLE) | partial_index_clause | parallel_clause)*
 	;
 
 hash_partition_quantity :
@@ -1064,7 +1064,7 @@ create_table :
         ')' )?
         (ON COMMIT (DELETE | PRESERVE) ROWS)?
         (SEGMENT CREATION (IMMEDIATE | DEFERRED))?
-        physical_attributes_clause?
+        // physical_attributes_clause?
         tablespace_clause?
         (LOGGING | NOLOGGING | FILESYSTEM_LIKE_LOGGING)?
         (COMPRESS
@@ -1077,37 +1077,30 @@ create_table :
         )?
         ;
 
-tablespace_clause : TABLESPACE tablespace;
+tablespace_clause : TABLESPACE tablespace_name;
 
 store_in : 
-    STORE IN '(' tablespace ( ',' tablespace )* ')'
+    STORE IN '(' tablespace_name ( ',' tablespace_name )* ')'
     ;
 
-table_range_partition_by_clause :
-	'PARTITION' 'BY' 'RANGE'
-        paren_column_list
-          (
-            INTERVAL '(' expression ')'
-            store_in?
-          )?
-        '('
-            (COMMA? partition_clause
-                 VALUES LESS THAN
-// Supposed to be literal in here, will need to refine this                      
-                     '('
-                        (','? CHAR_STRING
-                        | ','? string_function
-                        | ','? numeric
-                        | ','? MAXVALUE
-                        )+
-                     ')'
-                (TABLESPACE partition_tablespace=REGULAR_ID)?
+// table_range_partition_by_clause :
+// 	PARTITION BY RANGE
+//         paren_column_list
+//           (
+//             INTERVAL '(' expression ')'
+//             store_in?
+//           )?
+//         '('
+//             (COMMA? partition_clause
+//                  VALUES LESS THAN // Supposed to be literal in here, will need to refine this                      
+//                      '(' literal+ ')'
+//                 (TABLESPACE partition_tablespace=REGULAR_ID)?
 
-                (ON COMMIT (DELETE | PRESERVE) ROWS)?
-                physical_attributes_clause?
-            )+
-        ')'
-    ;
+//                 (ON COMMIT (DELETE | PRESERVE) ROWS)?
+//                 physical_attributes_clause?
+//             )+
+//         ')'
+//     ;
 
 
 storage_clause :
@@ -2464,12 +2457,12 @@ tableview_name :
 	table_fullname ('@' link_name | /*TODO{!(input.LA(2) == BY)}?*/ partition_extension_clause)?
     ;
 
-lob_item            : id_expression;
+lob_item_name       : id_expression;
 dir_object_name     : id_expression;
 user_object_name    : id_expression;
-tablespace          : id_expression;
+tablespace_name     : id_expression;
 label_name          : id_expression;
-partition           : id_expression;
+partition_name      : id_expression;
 schema_object_name  : id_expression;
 lob_segname         : id_expression;
 

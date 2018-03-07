@@ -1712,12 +1712,6 @@ namespace Bb.Oracle.Visitors
             return base.VisitQuota_clause(context);
         }
 
-        public override object VisitQuoted_string([NotNull] PlSqlParser.Quoted_stringContext context)
-        {
-            Stop();
-            return base.VisitQuoted_string(context);
-        }
-
         public override object VisitRaise_statement([NotNull] PlSqlParser.Raise_statementContext context)
         {
             Stop();
@@ -2210,11 +2204,11 @@ namespace Bb.Oracle.Visitors
             return base.VisitTable_indexed_by_part(context);
         }
 
-        public override object VisitTable_range_partition_by_clause([NotNull] PlSqlParser.Table_range_partition_by_clauseContext context)
-        {
-            Stop();
-            return base.VisitTable_range_partition_by_clause(context);
-        }
+        //public override object VisitTable_range_partition_by_clause([NotNull] PlSqlParser.Table_range_partition_by_clauseContext context)
+        //{
+        //    Stop();
+        //    return base.VisitTable_range_partition_by_clause(context);
+        //}
 
         public override object VisitTable_ref([NotNull] PlSqlParser.Table_refContext context)
         {

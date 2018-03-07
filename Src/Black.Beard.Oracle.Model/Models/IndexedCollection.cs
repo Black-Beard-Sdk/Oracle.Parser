@@ -16,8 +16,20 @@ namespace Bb.Oracle.Models
     public abstract class IndexedCollection : INotifyCollectionChanged
     {
 
-        public event NotifyCollectionChangedEventHandler CollectionChanged;
 
+        public IndexedCollection()
+        {
+
+            this.CollectionChanged += changes;
+
+        }
+
+        public void changes(object instance, NotifyCollectionChangedEventArgs args)
+        {
+            //this.Parent
+        }
+
+        public event NotifyCollectionChangedEventHandler CollectionChanged;
 
         protected void AppendChanges(NotifyCollectionChangedAction kind, IList changedItems, IList oldChangedItems)
         {

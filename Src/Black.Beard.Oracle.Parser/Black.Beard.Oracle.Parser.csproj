@@ -45,6 +45,7 @@
     <Compile Include="grammar\PlSqlParser.cs" />
     <Compile Include="grammar\PlSqlParserBaseVisitor.cs" />
     <Compile Include="grammar\PlSqlParserVisitor.cs" />
+    <Compile Include="Helpers\PlSqlParserExtensions.cs" />
     <Compile Include="Parser\ScriptParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Solutions\IFilePropertyResolver.cs" />

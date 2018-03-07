@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -114,7 +115,10 @@ namespace Bb.Oracle.Models
                 base.AppendChanges(System.Collections.Specialized.NotifyCollectionChangedAction.Add, new List<T>() { item }, this.EmptyList);
                 var v = item as ItemBase;
                 if (v != null)
+                {
                     v.Parent = this.Parent;
+                    v.Initialize();
+                }
             }
             else
                 throw new DuplicateWaitObjectException(key);
@@ -224,8 +228,8 @@ namespace Bb.Oracle.Models
 
             }
 
-        }
 
+        }
 
         private Dictionary<string, T> _datas = new Dictionary<string, T>();
         protected static Func<T, string> Key;

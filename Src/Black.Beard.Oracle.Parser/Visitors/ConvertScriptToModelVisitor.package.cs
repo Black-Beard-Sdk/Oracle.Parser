@@ -6,6 +6,7 @@ using System.Linq;
 using Antlr4.Runtime;
 using System;
 using Bb.Oracle.Exceptions;
+using Bb.Oracle.Helpers;
 
 namespace Bb.Oracle.Visitors
 {
@@ -46,8 +47,8 @@ namespace Bb.Oracle.Visitors
                 return null;
             }
 
-            var schema = CleanName(context.schema_object_name().GetText());
-            var package_name = CleanName(context.package_name().Select(c => c.GetText()).Last());
+            var schema = context.schema_object_name().GetCleanedName();
+            var package_name = context.package_name()[0].GetCleanedName();
             PackageModel package = this.db.Packages.FirstOrDefault(c => c.GetOwner() == schema && c.GetName() == package_name);
             if (package == null)
             {
@@ -85,17 +86,6 @@ namespace Bb.Oracle.Visitors
             }
         }
 
-
-
-        private string CleanName(string name)
-        {
-            if (string.IsNullOrEmpty(name))
-                name = string.Empty;
-            else
-                name = name.Trim().Trim('"').Trim();
-            return name;
-        }
-
         public override object VisitCreate_package_body([NotNull] PlSqlParser.Create_package_bodyContext context)
         {
             Stop();
@@ -119,9 +109,3 @@ namespace Bb.Oracle.Visitors
 //    return base.VisitPackage_obj_spec(context);
 //}
 
-
-//public override object VisitPackage_name([NotNull] PlSqlParser.Package_nameContext context)
-//{
-//    Stop();
-//    return base.VisitPackage_name(context);
-//}
