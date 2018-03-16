@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Bb.Oracle.Models;
+using System.Collections.Generic;
 
-namespace Bb.Oracle.Models
+namespace Bb.Oracle.Contracts
 {
     public interface IEvaluateManager
     {

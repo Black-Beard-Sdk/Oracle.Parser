@@ -15,7 +15,7 @@ namespace Bb.Oracle.Models
         /// </summary>
         static SubPartitionCollection()
         {
-            SubPartitionCollection.Key = IndexedCollection<SubPartitionModel>.GetMethodKey(c => c.SubpartitionName);
+            SubPartitionCollection.Key = IndexedCollection<SubPartitionModel>.GetMethodKey(c => c.Name);
         }
 
     }

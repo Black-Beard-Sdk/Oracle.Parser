@@ -13,7 +13,7 @@ namespace Bb.Oracle.Models
         /// </summary>
         static TriggerCollection()
         {
-            TriggerCollection.Key = IndexedCollection<TriggerModel>.GetMethodKey(c => c.Name);
+            TriggerCollection.Key = IndexedCollection<TriggerModel>.GetMethodKey(c => c.Key);
         }
 
     }

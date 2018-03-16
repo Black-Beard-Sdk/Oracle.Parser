@@ -37,7 +37,7 @@ namespace Bb.Oracle.Models
                 foreach (string item in t)
                     _schemas.Add(item);
 
-                t = model.Synonymes.OfType<SynonymModel>().Select(c => c.ObjectTarget.Split('.')[0]).Where(c => fnc(c));
+                t = model.Synonymes.OfType<SynonymModel>().Select(c => c.ObjectTargetName.Split('.')[0]).Where(c => fnc(c));
                 foreach (string item in t)
                     _schemas.Add(item);
 

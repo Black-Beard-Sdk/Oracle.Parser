@@ -54,7 +54,7 @@ ORDER BY tt.TABLE_NAME,tt.COLUMN_ID
 
                         if (!db.Tables.TryGet(key, out table))
                         {
-                            table = new TableModel() { Key = key, SchemaName = t.SchemaName, Name = t.TableName };
+                            table = new TableModel() { Key = key, Owner = t.SchemaName, Name = t.TableName };
                             db.Tables.Add(table);
                         }
                       
@@ -69,7 +69,7 @@ ORDER BY tt.TABLE_NAME,tt.COLUMN_ID
                                 Key = index.ToString(),
                                 CharactereSetName = t.CharactereSetName,
                                 ColumnId = t.ColumnId,
-                                ColumnName = t.ColumnName,
+                                Name = t.ColumnName,
                                 Description = t.Comments,
                                 Nullable = t.Nullable,
                                 DataUpgrated = t.DataUpgraded,
@@ -152,12 +152,12 @@ ORDER BY tt.TABLE_NAME,tt.COLUMN_ID
 
                         if (!string.IsNullOrEmpty(table.Comment))
                         {
-                            sb.AppendLine(string.Format(@"COMMENT ON TABLE ""{0}"".""{1}"" is '{2}';", table.SchemaName, table.Name, table.Comment.Replace("'", "''")));
+                            sb.AppendLine(string.Format(@"COMMENT ON TABLE ""{0}"".""{1}"" is '{2}';", table.Owner, table.Name, table.Comment.Replace("'", "''")));
                         }
 
                         foreach (ColumnModel item in table.Columns.OfType<ColumnModel>().OrderBy(c => c.Key))
                             if (!string.IsNullOrEmpty(item.Description))
-                                sb.AppendLine(string.Format(@"COMMENT ON COLUMN ""{0}"".""{1}"".""{2}"" is '{3}';", table.SchemaName, table.Name, item.ColumnName, item.Description.Replace("'", "''")));
+                                sb.AppendLine(string.Format(@"COMMENT ON COLUMN ""{0}"".""{1}"".""{2}"" is '{3}';", table.Owner, table.Name, item.Name, item.Description.Replace("'", "''")));
 
                         table.codeView = Utils.Serialize(sb.ToString(), true);
                     }
@@ -169,12 +169,12 @@ ORDER BY tt.TABLE_NAME,tt.COLUMN_ID
 
                         if (!string.IsNullOrEmpty(table.Comment))
                         {
-                            sb.AppendLine(string.Format(@"COMMENT ON TABLE ""{0}"".""{1}"" is '{2}';", table.SchemaName, table.Name, table.Comment.Replace("'", "''")));
+                            sb.AppendLine(string.Format(@"COMMENT ON TABLE ""{0}"".""{1}"" is '{2}';", table.Owner, table.Name, table.Comment.Replace("'", "''")));
                         }
 
                         foreach (ColumnModel item in table.Columns.OfType<ColumnModel>().OrderBy(c => c.Key))
                             if (!string.IsNullOrEmpty(item.Description))
-                                sb.AppendLine(string.Format(@"COMMENT ON COLUMN ""{0}"".""{1}"".""{2}"" is '{3}';", table.SchemaName, table.Name, item.ColumnName, item.Description.Replace("'", "''")));
+                                sb.AppendLine(string.Format(@"COMMENT ON COLUMN ""{0}"".""{1}"".""{2}"" is '{3}';", table.Owner, table.Name, item.Name, item.Description.Replace("'", "''")));
 
                         table.codeView = Utils.Serialize(sb.ToString(), true);
                     }
@@ -190,7 +190,7 @@ ORDER BY tt.TABLE_NAME,tt.COLUMN_ID
         {
             foreach (ColumnModel column in table.Columns)
             {
-                if (column.ColumnName == columnName)
+                if (column.Name == columnName)
                     return true;
             }
             return false;

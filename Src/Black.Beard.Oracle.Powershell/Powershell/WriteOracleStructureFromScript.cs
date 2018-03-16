@@ -16,7 +16,6 @@ namespace Black.Beard.Oracle.Powershell
     public class WriteOracleStructureFromScript : Cmdlet
     {
 
-
         [Parameter(Mandatory = true, HelpMessage = "specify the script path folder")]
         public string SourcePath { get; set; }
 
@@ -29,7 +28,6 @@ namespace Black.Beard.Oracle.Powershell
 
         [Parameter(Mandatory = false, HelpMessage = "specify a custom name of the structure")]
         public string searchPattern { get; set; }
-
 
         protected override void ProcessRecord()
         {

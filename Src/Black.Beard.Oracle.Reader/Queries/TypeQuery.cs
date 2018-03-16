@@ -60,7 +60,7 @@ ORDER BY t1.OWNER,t1.TYPE_NAME,t1.ATTR_NO
                             Key = key,
                             Name = t.TYPE_NAME,
                             SuperType = superType,
-                            SchemaName = t.OWNER,
+                            Owner = t.OWNER,
                             TypeCode = t.TYPECODE,
                             CollectionSchemaName = t.COLLECTIONTYPE,
                             CollectionTypeName = t.COLLECTIONNAME

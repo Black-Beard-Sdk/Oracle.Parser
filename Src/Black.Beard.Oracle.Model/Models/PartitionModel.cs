@@ -16,7 +16,7 @@ namespace Bb.Oracle.Models
         /// <summary>
         /// Partition Name
         /// </summary>   
-        public string PartitionName { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Composite

@@ -102,7 +102,7 @@ ORDER BY o.OWNER, o.OBJECT_NAME
 
                         case "TABLE":
                             if (!t.Name.ExcludIfStartwith(t.Owner, Models.Configurations.ExcludeKindEnum.Table))
-                                db.Tables.Add(new TableModel() { Key = t.Owner + "." + t.Name, Name = t.Name, SchemaName = t.Owner, Comment = t.Comment, Generated = t.GENERATED, Status = t.STATUS, Temporary = t.TEMPORARY, Parsed = true });
+                                db.Tables.Add(new TableModel() { Key = t.Owner + "." + t.Name, Name = t.Name, Owner = t.Owner, Comment = t.Comment, Generated = t.GENERATED, Status = t.STATUS, Temporary = t.TEMPORARY, Parsed = true });
                             break;
 
                         //case "MATERIALIZED VIEW":
@@ -111,7 +111,7 @@ ORDER BY o.OWNER, o.OBJECT_NAME
 
                         case "VIEW":
                             if (!t.Name.ExcludIfStartwith(t.Owner, Models.Configurations.ExcludeKindEnum.View))
-                                db.Tables.Add(new TableModel() { Key = t.Owner + "." + t.Name, Name = t.Name, IsView = true, SchemaName = t.Owner, Comment = t.Comment, Generated = t.GENERATED, Status = t.STATUS, Temporary = t.TEMPORARY, Parsed = true });
+                                db.Tables.Add(new TableModel() { Key = t.Owner + "." + t.Name, Name = t.Name, IsView = true, Owner = t.Owner, Comment = t.Comment, Generated = t.GENERATED, Status = t.STATUS, Temporary = t.TEMPORARY, Parsed = true });
                             break;
                         default:
                             break;

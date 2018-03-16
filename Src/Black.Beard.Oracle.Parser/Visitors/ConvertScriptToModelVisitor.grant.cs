@@ -37,12 +37,6 @@ namespace Bb.Oracle.Visitors
         public override object VisitGrant_statement([NotNull] PlSqlParser.Grant_statementContext context)
         {
 
-            if (context.exception != null)
-            {
-                AppendException(context.exception);
-                return null;
-            }
-
             string _schema = string.Empty;
             string _object = string.Empty;
             string key;
@@ -197,7 +191,7 @@ namespace Bb.Oracle.Visitors
         {
 
             GrantModel grant;
-            if (!this.db.Grants.TryGet(key, out grant))
+            if (!this.Db.Grants.TryGet(key, out grant))
             {
 
                 string fullObjectName = !string.IsNullOrEmpty(columnObjectName) ? @"""" + columnObjectName + @"""" : string.Empty;
@@ -242,7 +236,7 @@ namespace Bb.Oracle.Visitors
 
                 };
                 grant.Files.Add(this.GetFileElement(token));
-                this.db.Grants.Add(grant);
+                this.Db.Grants.Add(grant);
 
             }
 
@@ -269,7 +263,7 @@ namespace Bb.Oracle.Visitors
 
                     _privilege = new PrivilegeModel()
                     {
-                        PrivilegeName = privilege
+                        Name = privilege
                     };
 
                     _privilege.Files.Add(fileElement);
@@ -280,7 +274,7 @@ namespace Bb.Oracle.Visitors
                 {
                     var o = privilege + " " + grant.Key;
                     string message = $"Duplicated grant privilege '{privilege}' on object {objectSchema}.{objectName} TO {role}";
-                    var eventParser = GetEventParser(message, o, SqlKind.UserObjectPrivilege, fileElement, _privilege.Files.FirstOrDefault());
+                    var eventParser = GetEventParser(message, o, KindModelEnum.UserObjectPrivilege, fileElement, _privilege.Files.FirstOrDefault());
                     AppendEventParser(eventParser);
                 }
             }

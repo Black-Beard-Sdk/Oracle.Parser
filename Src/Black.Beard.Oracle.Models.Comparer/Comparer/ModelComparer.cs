@@ -57,7 +57,7 @@ namespace Bb.Oracle.Models.Comparer
         private void CompareTypes(TypeCollection sources, TypeCollection targets)
         {
 
-            var src = sources.OfType<TypeItem>().OrderBy(c => (c.SchemaName + c.PackageName)).ToList();
+            var src = sources.OfType<TypeItem>().OrderBy(c => (c.Owner + c.PackageName)).ToList();
             foreach (TypeItem source in src)
             {
 
@@ -70,7 +70,7 @@ namespace Bb.Oracle.Models.Comparer
 
             if (!this._context.IgnoreRevert)
             {
-                src = targets.OfType<TypeItem>().OrderBy(c => (c.SchemaName + c.PackageName)).ToList();
+                src = targets.OfType<TypeItem>().OrderBy(c => (c.Owner + c.PackageName)).ToList();
                 foreach (TypeItem source in src)
                 {
                     TypeItem target = sources[source.Key];
@@ -99,10 +99,10 @@ namespace Bb.Oracle.Models.Comparer
             if (source.Code != target.Code)
             {
 
-                var s = Utils.Unserialize(source.Code, true).Replace(@"""", "");
+                var s = source.Code.GetSource().Replace(@"""", "");
                 s = CleanForCompare(s);
 
-                var t = Utils.Unserialize(target.Code, true).Replace(@"""", "");
+                var t = target.Code.GetSource().Replace(@"""", "");
                 t = CleanForCompare(t);
 
                 int index = s.ToUpper().IndexOf("TYPE ");
@@ -121,8 +121,8 @@ namespace Bb.Oracle.Models.Comparer
             if (source.CodeBody != target.CodeBody)
             {
 
-                var s = Utils.Unserialize(source.CodeBody, true).Replace(@"""", "");
-                var t = Utils.Unserialize(target.CodeBody, true).Replace(@"""", "");
+                var s = source.CodeBody.GetSource().Replace(@"""", "");
+                var t = target.CodeBody.GetSource().Replace(@"""", "");
 
                 s = CleanForCompare(s);
                 t = CleanForCompare(t);
@@ -181,7 +181,7 @@ namespace Bb.Oracle.Models.Comparer
             if (source.Type.IsRecord != target.Type.IsRecord)
                 this._changes.AppendChange(source, target, "IsRecord");
 
-            if (source.Type.TypeName != target.Type.TypeName)
+            if (source.Type.Name != target.Type.Name)
                 this._changes.AppendChange(source, target, "TypeName");
 
         }
@@ -205,9 +205,9 @@ namespace Bb.Oracle.Models.Comparer
             foreach (SynonymModel source in src)
             {
 
-                var trg = targets.OfType<SynonymModel>().Where(c => c.SchemaName == source.SchemaName).ToList();
+                var trg = targets.OfType<SynonymModel>().Where(c => c.ObjectTargetOwner == source.ObjectTargetOwner).ToList();
                 trg = trg.OfType<SynonymModel>().Where(c => c.Name == source.Name).ToList();
-                trg = trg.OfType<SynonymModel>().Where(c => c.ObjectTarget == source.ObjectTarget).ToList();
+                trg = trg.OfType<SynonymModel>().Where(c => c.ObjectTargetName == source.ObjectTargetName).ToList();
 
                 SynonymModel target = null;
                 target = trg.FirstOrDefault();
@@ -234,10 +234,10 @@ namespace Bb.Oracle.Models.Comparer
             EvaluateFiles(source);
             EvaluateFiles(target);
 
-            if (source.SchemaName != target.SchemaName)
+            if (source.ObjectTargetOwner != target.ObjectTargetOwner)
                 this._changes.AppendChange(source, target, "SchemaName");
 
-            else if (source.ObjectTarget != target.ObjectTarget)
+            else if (source.ObjectTargetName != target.ObjectTargetName)
                 this._changes.AppendChange(source, target, "ObjectTarget");
 
             if (source.IsPublic != target.IsPublic)
@@ -248,12 +248,12 @@ namespace Bb.Oracle.Models.Comparer
         private void CompareProcedures(ProcedureCollection sources, ProcedureCollection targets)
         {
 
-            var src = sources.OfType<ProcedureModel>().Where(c => string.IsNullOrEmpty(c.PackageName)).OrderBy(c => (c.SchemaName)).ToList();
+            var src = sources.OfType<ProcedureModel>().Where(c => string.IsNullOrEmpty(c.PackageName)).OrderBy(c => (c.Owner)).ToList();
             CompareProcedures(targets, src, false);
 
             if (!this._context.IgnoreRevert)
             {
-                src = targets.OfType<ProcedureModel>().Where(c => string.IsNullOrEmpty(c.PackageName)).OrderBy(c => (c.SchemaName)).ToList();
+                src = targets.OfType<ProcedureModel>().Where(c => string.IsNullOrEmpty(c.PackageName)).OrderBy(c => (c.Owner)).ToList();
                 CompareProcedures(sources, src, true);
             }
 
@@ -280,7 +280,7 @@ namespace Bb.Oracle.Models.Comparer
                 {
 
                     // On requete sans s occuper des parametres
-                    lst = targets.OfType<ProcedureModel>().Where(c => c.SchemaName == source.SchemaName).ToList();
+                    lst = targets.OfType<ProcedureModel>().Where(c => c.Owner == source.Owner).ToList();
                     lst = lst.OfType<ProcedureModel>().Where(c => source.PackageName == c.PackageName).ToList();
                     lst = lst.OfType<ProcedureModel>().Where(c => c.Name == source.Name).ToList();
 
@@ -349,7 +349,7 @@ namespace Bb.Oracle.Models.Comparer
                 var a = a1[i];
                 var b = a2[i];
 
-                if (a.ArgumentName != b.ArgumentName)
+                if (a.Name != b.Name)
                     return false;
 
                 if (a.In != b.In)
@@ -403,7 +403,7 @@ namespace Bb.Oracle.Models.Comparer
             if (source.IsRecord != target.IsRecord)
                 return false;
 
-            if (source.TypeName != target.TypeName)
+            if (source.Name != target.Name)
                 return false;
 
             return true;
@@ -519,7 +519,7 @@ namespace Bb.Oracle.Models.Comparer
             if (argSource.Type.IsRecord != argTarget.Type.IsRecord)
                 this._changes.AppendChange(argSource, argTarget, "IsRecord", source, target);
 
-            if (argSource.Type.TypeName != argTarget.Type.TypeName)
+            if (argSource.Type.Name != argTarget.Type.Name)
                 this._changes.AppendChange(argSource, argTarget, "TypeName", source, target);
 
 
@@ -528,11 +528,11 @@ namespace Bb.Oracle.Models.Comparer
         private void CompareSequences(SequenceCollection sources, SequenceCollection targets)
         {
 
-            var src = sources.OfType<SequenceModel>().OrderBy(c => (c.Owner + c.Name)).ToList();
+            var src = sources.OfType<SequenceModel>().OrderBy(c => (c.Owner + c.Key)).ToList();
 
             foreach (SequenceModel source in src)
             {
-                SequenceModel target = targets[source.Name];
+                SequenceModel target = targets[source.Key];
                 if (target == null)
                     _changes.AppendMissing(source);
                 else
@@ -542,11 +542,11 @@ namespace Bb.Oracle.Models.Comparer
 
             if (!this._context.IgnoreRevert)
             {
-                src = targets.OfType<SequenceModel>().OrderBy(c => (c.Owner + c.Name)).ToList();
+                src = targets.OfType<SequenceModel>().OrderBy(c => (c.Owner + c.Key)).ToList();
 
                 foreach (SequenceModel source in src)
                 {
-                    SequenceModel target = sources[source.Name];
+                    SequenceModel target = sources[source.Key];
                     if (target == null)
                         _changes.AppendToRemove(source);
 
@@ -593,11 +593,11 @@ namespace Bb.Oracle.Models.Comparer
         private void ComparePackages(PackageCollection sources, PackageCollection targets)
         {
 
-            var src = sources.OfType<PackageModel>().OrderBy(c => (c.PackageOwner + c.Name)).ToList();
+            var src = sources.OfType<PackageModel>().OrderBy(c => (c.Owner + c.Key)).ToList();
 
             foreach (PackageModel source in src)
             {
-                PackageModel target = targets[source.Name];
+                PackageModel target = targets[source.Key];
                 if (target == null)
                     _changes.AppendMissing(source);
                 else
@@ -606,11 +606,11 @@ namespace Bb.Oracle.Models.Comparer
 
             if (!this._context.IgnoreRevert)
             {
-                src = targets.OfType<PackageModel>().OrderBy(c => (c.PackageOwner + c.Name)).ToList();
+                src = targets.OfType<PackageModel>().OrderBy(c => (c.Owner + c.Key)).ToList();
 
                 foreach (PackageModel source in src)
                 {
-                    PackageModel target = sources[source.Name];
+                    PackageModel target = sources[source.Key];
                     if (target == null)
                         _changes.AppendToRemove(source);
                 }
@@ -627,17 +627,17 @@ namespace Bb.Oracle.Models.Comparer
             if (source.CodeBody != target.CodeBody)
             {
 
-                var s = Utils.Unserialize(source.CodeBody, true).Replace(@"""", "");
+                var s = source.CodeBody.GetSource().Replace(@"""", "");
                 s = CleanForCompare(s);
 
-                int index = s.ToUpper().IndexOf("PACKAGE BODY " + source.PackageOwner.ToUpper() + "." + source.PackageName.ToUpper());
+                int index = s.ToUpper().IndexOf("PACKAGE BODY " + source.Owner.ToUpper() + "." + source.Name.ToUpper());
                 if (index > 0)
                     s = s.Substring(index);
 
-                var t = Utils.Unserialize(target.CodeBody, true).Replace(@"""", "");
+                var t = target.CodeBody.GetSource().Replace(@"""", "");
                 t = CleanForCompare(t);
 
-                index = t.ToUpper().IndexOf("PACKAGE BODY " + source.PackageOwner.ToUpper() + "." + source.PackageName.ToUpper());
+                index = t.ToUpper().IndexOf("PACKAGE BODY " + source.Owner.ToUpper() + "." + source.Name.ToUpper());
                 if (index > 0)
                     t = t.Substring(index);
 
@@ -654,17 +654,17 @@ namespace Bb.Oracle.Models.Comparer
             if (source.Code != target.Code)
             {
 
-                var s = Utils.Unserialize(source.Code, true).Replace(@"""", "");
+                var s = source.Code.GetSource().Replace(@"""", "");
                 s = CleanForCompare(s);
 
-                int index = s.ToUpper().IndexOf("PACKAGE " + source.PackageOwner.ToUpper() + "." + source.PackageName.ToUpper());
+                int index = s.ToUpper().IndexOf("PACKAGE " + source.Owner.ToUpper() + "." + source.Name.ToUpper());
                 if (index > 0)
                     s = s.Substring(index);
 
-                var t = Utils.Unserialize(target.Code, true).Replace(@"""", "");
+                var t = target.Code.GetSource().Replace(@"""", "");
                 t = CleanForCompare(t);
 
-                index = t.ToUpper().IndexOf("PACKAGE " + source.PackageOwner.ToUpper() + "." + source.PackageName.ToUpper());
+                index = t.ToUpper().IndexOf("PACKAGE " + source.Owner.ToUpper() + "." + source.Name.ToUpper());
                 if (index > 0)
                     t = t.Substring(index);
 
@@ -755,8 +755,8 @@ namespace Bb.Oracle.Models.Comparer
             if (source.Privileges.Count != source.Privileges.Count)
                 return true;
 
-            var p1 = new HashSet<string>(source.Privileges.Select(c => c.PrivilegeName.ToUpper().Replace(" ", "")));
-            var p2 = new HashSet<string>(target.Privileges.Select(c => c.PrivilegeName.ToUpper().Replace(" ", "")));
+            var p1 = new HashSet<string>(source.Privileges.Select(c => c.Name.ToUpper().Replace(" ", "")));
+            var p2 = new HashSet<string>(target.Privileges.Select(c => c.Name.ToUpper().Replace(" ", "")));
 
             foreach (var item in p1)
                 if (!p2.Contains(item))
@@ -769,12 +769,12 @@ namespace Bb.Oracle.Models.Comparer
         private void CompareTables(TableCollection sources, TableCollection targets)
         {
 
-            var src = sources.OfType<TableModel>().OrderBy(c => (c.SchemaName + c.Name)).ToList();
+            var src = sources.OfType<TableModel>().OrderBy(c => (c.Owner + c.Name)).ToList();
             CompareTables(targets, src);
 
             if (!this._context.IgnoreRevert)
             {
-                src = targets.OfType<TableModel>().OrderBy(c => (c.SchemaName + c.Name)).ToList();
+                src = targets.OfType<TableModel>().OrderBy(c => (c.Owner + c.Name)).ToList();
                 CompareTables(sources, src, true);
             }
 
@@ -829,14 +829,14 @@ namespace Bb.Oracle.Models.Comparer
                     var s = Utils.Unserialize(tableSource.codeView, true).Replace(@"""", "");
                     s = CleanForCompare(s);
 
-                    int index = s.ToUpper().IndexOf("VIEW " + tableSource.SchemaName.ToUpper() + "." + tableSource.Name.ToUpper());
+                    int index = s.ToUpper().IndexOf("VIEW " + tableSource.Owner.ToUpper() + "." + tableSource.Name.ToUpper());
                     if (index > 0)
                         s = s.Substring(index);
 
                     var t = Utils.Unserialize(tableTarget.codeView, true).Replace(@"""", "");
                     t = CleanForCompare(t);
 
-                    index = t.ToUpper().IndexOf("VIEW " + tableSource.SchemaName.ToUpper() + "." + tableSource.Name.ToUpper());
+                    index = t.ToUpper().IndexOf("VIEW " + tableSource.Owner.ToUpper() + "." + tableSource.Name.ToUpper());
                     if (index > 0)
                         t = t.Substring(index);
 
@@ -988,10 +988,10 @@ namespace Bb.Oracle.Models.Comparer
             if (item is PackageModel)
             {
                 if (item.Files.Count > 2)
-                    this._changes.AppendDoublons(typeof(ItemBase).Name.Replace("Model", ""), item, GetName(item));
+                    this._changes.AppendDoublons(typeof(ItemBase).Name.Replace("Model", ""), item, item.GetItemName());
             }
             else if (item.Files.Count > 1)
-                this._changes.AppendDoublons(typeof(ItemBase).Name.Replace("Model", ""), item, GetName(item));
+                this._changes.AppendDoublons(typeof(ItemBase).Name.Replace("Model", ""), item, item.GetItemName());
         }
 
         private void CompareTriggers(TableModel tableSource, TableModel tableTarget)
@@ -1000,14 +1000,14 @@ namespace Bb.Oracle.Models.Comparer
             foreach (TriggerModel trigger in tableSource.Triggers)
             {
 
-                if (tableTarget.Triggers.TryGet(trigger.Name, out TriggerModel tTarget))
+                if (tableTarget.Triggers.TryGet(trigger.Key, out TriggerModel tTarget))
                     CompareTrigger(trigger, tTarget);
                 else
                     _changes.AppendMissing(trigger);
             }
 
             foreach (TriggerModel trigger in tableTarget.Triggers)
-                if (!tableSource.Triggers.Contains(trigger.Name))
+                if (!tableSource.Triggers.Contains(trigger.Key))
                     _changes.AppendToRemove(trigger);
 
         }
@@ -1205,7 +1205,7 @@ namespace Bb.Oracle.Models.Comparer
             foreach (ColumnModel col in tableSource.Columns)
             {
 
-                var colTarget = tableTarget.Columns.OfType<ColumnModel>().Where(c => c.ColumnName == col.ColumnName).FirstOrDefault();
+                var colTarget = tableTarget.Columns.OfType<ColumnModel>().Where(c => c.Name == col.Name).FirstOrDefault();
 
                 if (colTarget == null)
                     _changes.AppendMissing(col);
@@ -1327,7 +1327,7 @@ namespace Bb.Oracle.Models.Comparer
             if (source.Type.IsRecord != target.Type.IsRecord)
                 this._changes.AppendChange(source, target, "IsRecord");
 
-            if (source.Type.TypeName != target.Type.TypeName)
+            if (source.Type.Name != target.Type.Name)
                 this._changes.AppendChange(source, target, "TypeName");
 
         }
@@ -1455,7 +1455,7 @@ namespace Bb.Oracle.Models.Comparer
             EvaluateFiles(source);
             EvaluateFiles(target);
 
-            Debug.WriteLine(string.Empty);
+            
             if (GetIdentiferColumns(source) != GetIdentiferColumns(target))
                 this._changes.AppendChange(source, target, "Columns");
 
@@ -1560,7 +1560,7 @@ namespace Bb.Oracle.Models.Comparer
 
             string sr1 = s1.ToString().Trim('_');
 
-            Debug.WriteLine(constraint.Key + " => " + sr1);
+            Trace.WriteLine(constraint.Key + " => " + sr1);
 
             return sr1;
         }
@@ -1579,7 +1579,7 @@ namespace Bb.Oracle.Models.Comparer
 
             string sr1 = s1.ToString().Trim('_');
 
-            Debug.WriteLine(index.Name + " => " + sr1);
+            //Debug.WriteLine(index.Name + " => " + sr1);
 
             return sr1;
         }
@@ -1603,53 +1603,6 @@ namespace Bb.Oracle.Models.Comparer
             string sr1 = s1.ToString().Trim(',', ' ');
             return sr1;
 
-        }
-
-        private static string GetName(ItemBase doublonModel)
-        {
-            string name = string.Empty;
-            object src = doublonModel;
-
-            if (src is IndexModel)
-                name = ((src as IndexModel).Parent as TableModel).Key;
-
-            else if (src is TypeItem)
-                name = (src as TypeItem).Key;
-
-            else if (src is GrantModel)
-                name = (src as GrantModel).Key;
-
-            else if (src is SynonymModel)
-                name = (src as SynonymModel).Key;
-
-            else if (src is ConstraintModel)
-                name = ((src as ConstraintModel).Parent as TableModel).Key;
-
-            else if (src is SequenceModel)
-                name = (src as SequenceModel).Name;
-
-            else if (src is PackageModel)
-                name = (src as PackageModel).Name;
-
-            else if (src is ProcedureModel)
-                name = (src as ProcedureModel).Name;
-
-            else if (src is TriggerModel)
-                name = (src as TriggerModel).Name;
-
-            else if (src is TableModel)
-                name = (src as TableModel).Key;
-
-            else
-            {
-                if (System.Diagnostics.Debugger.IsAttached)
-                    System.Diagnostics.Debugger.Break();
-
-                else
-                    name = src.ToString() + " umanaged";
-            }
-
-            return name;
         }
 
     }

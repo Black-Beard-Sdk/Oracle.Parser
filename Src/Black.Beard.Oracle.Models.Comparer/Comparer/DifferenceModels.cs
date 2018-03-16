@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Bb.Oracle.Models;
+using Bb.Oracle.Contracts;
 
 namespace Bb.Oracle.Models.Comparer
 {
@@ -95,21 +96,21 @@ namespace Bb.Oracle.Models.Comparer
                 if (string.IsNullOrEmpty(source.PackageName))
                 {
                     int length
-                        = source.Code?.Length ?? 0
-                        + source.CodeBody?.Length ?? 0
+                        = source.Code.Length
+                        + source.CodeBody.Length
                         + 100;
 
                     StringBuilder sb = new StringBuilder(length);
-                    if (!string.IsNullOrEmpty(source.Code))
+                    if (!source.Code.IsEmpty)
                     {
-                        sb.AppendLine(CreateOrReplace + Utils.Unserialize(source.Code, true));
+                        sb.AppendLine(CreateOrReplace + source.Code.GetSource());
                         sb.AppendLine(string.Empty);
                         sb.AppendLine("/");
                     }
-                    if (!string.IsNullOrEmpty(source.CodeBody))
-                        sb.AppendLine(CreateOrReplace + Utils.Unserialize(source.CodeBody, true));
+                    if (!source.CodeBody.IsEmpty)
+                        sb.AppendLine(CreateOrReplace + source.CodeBody.GetSource());
 
-                    string p = BuildPath(Path.Combine(this.folderForSource, source.SchemaName), "Types", source.Name);
+                    string p = BuildPath(Path.Combine(this.folderForSource, source.Owner), "Types", source.Name);
                     WriteFile(p, sb.ToString());
                 }
             }
@@ -124,16 +125,16 @@ namespace Bb.Oracle.Models.Comparer
             if (generateSource)
             {
 
-                string p = BuildPath(Path.Combine(this.folderForSource, source.SchemaName), "Synonyms", source.Name);
+                string p = BuildPath(Path.Combine(this.folderForSource, source.ObjectTargetOwner), "Synonyms", source.Name);
 
                 if (!File.Exists(p))
                 {
 
                     string sql = string.Empty;
-                    if (source.SynonymOwner == "PUBLIC")
-                        sql = string.Format("CREATE OR REPLACE PUBLIC SYNONYM {0} FOR {1};", source.Name, source.ObjectTarget);
+                    if (source.Owner == "PUBLIC")
+                        sql = string.Format("CREATE OR REPLACE PUBLIC SYNONYM {0} FOR {1};", source.Name, source.ObjectTargetName);
                     else
-                        sql = string.Format("CREATE OR REPLACE SYNONYM {1}.{2} FOR {3};", p, source.SynonymOwner, source.Name, source.ObjectTarget);
+                        sql = string.Format("CREATE OR REPLACE SYNONYM {1}.{2} FOR {3};", p, source.Owner, source.Name, source.ObjectTargetName);
 
                     WriteFile(p, sql);
                 }
@@ -149,7 +150,7 @@ namespace Bb.Oracle.Models.Comparer
 
             if (generateSource)
             {
-                string p = BuildPath(Path.Combine(this.folderForSource, source.SchemaName), "Procedures", source.Name);
+                string p = BuildPath(Path.Combine(this.folderForSource, source.Owner), "Procedures", source.Name);
                 WriteFile(p, CreateOrReplace + Utils.Unserialize(source.Code, true));
             }
 
@@ -167,11 +168,11 @@ namespace Bb.Oracle.Models.Comparer
 
             if (generateSource)
             {
-                string p = BuildPath(Path.Combine(this.folderForSource, source.PackageOwner), "PackageBodies", source.PackageName);
-                WriteFile(p, CreateOrReplace + Utils.Unserialize(source.CodeBody, true));
+                string p = BuildPath(Path.Combine(this.folderForSource, source.Owner), "PackageBodies", source.Name);
+                WriteFile(p, CreateOrReplace + source.CodeBody.GetSource());
 
-                p = BuildPath(Path.Combine(this.folderForSource, source.PackageOwner), "Packages", source.PackageName);
-                WriteFile(p, CreateOrReplace + Utils.Unserialize(source.Code, true));
+                p = BuildPath(Path.Combine(this.folderForSource, source.Owner), "Packages", source.Name);
+                WriteFile(p, CreateOrReplace + source.Code.GetSource());
 
             }
         }
@@ -255,7 +256,7 @@ namespace Bb.Oracle.Models.Comparer
 
         private static string BuildGrant(GrantModel t)
         {
-            var u = t.Privileges.Select(c => c.PrivilegeName.ToUpper()).OrderBy(c => c).ToArray();
+            var u = t.Privileges.Select(c => c.Name.ToUpper()).OrderBy(c => c).ToArray();
             string privilegs = string.Join(", ", u);
             string sql = null;
 
@@ -310,7 +311,7 @@ namespace Bb.Oracle.Models.Comparer
 
             if (source.IsView)
             {
-                string p = BuildPath(Path.Combine(this.folderForSource, source.SchemaName), typeObject, source.Name);
+                string p = BuildPath(Path.Combine(this.folderForSource, source.Owner), typeObject, source.Name);
                 WriteFile(p, Utils.Unserialize(source.codeView, true));
             }
             else
@@ -328,13 +329,13 @@ namespace Bb.Oracle.Models.Comparer
 
             if (generateSource)
             {
-                string p = BuildPath(Path.Combine(this.folderForSource, source.SchemaName), "Procedures", source.Name);
+                string p = BuildPath(Path.Combine(this.folderForSource, source.Owner), "Procedures", source.Name);
                 WriteFile(p, CreateOrReplace + Utils.Unserialize(source.Code, true));
             }
 
             if (generateTarget)
             {
-                string p = BuildPath(Path.Combine(this.folderForTarget, target.SchemaName), "Procedures", target.Name);
+                string p = BuildPath(Path.Combine(this.folderForTarget, target.Owner), "Procedures", target.Name);
                 WriteFile(p, CreateOrReplace + Utils.Unserialize(target.Code, true));
             }
 
@@ -352,7 +353,7 @@ namespace Bb.Oracle.Models.Comparer
 
             if (generateSource)
             {
-                string p = BuildPath(Path.Combine(this.folderForSource, source.Owner), "Triggers", source.TriggerName);
+                string p = BuildPath(Path.Combine(this.folderForSource, source.Owner), "Triggers", source.Name);
                 WriteFile(p, CreateOrReplace + Utils.Unserialize(source.Code, true));
             }
 
@@ -431,31 +432,31 @@ namespace Bb.Oracle.Models.Comparer
                 if (generateSource)
                 {
                     StringBuilder sb = new StringBuilder(source.Code.Length + source.CodeBody.Length + 100);
-                    if (!string.IsNullOrEmpty(source.Code))
+                    if (!source.Code.IsEmpty)
                     {
-                        sb.AppendLine(CreateOrReplace + Utils.Unserialize(source.Code, true));
+                        sb.AppendLine(CreateOrReplace + source.Code.GetSource());
                         sb.AppendLine(string.Empty);
                         sb.AppendLine("/");
                     }
-                    if (!string.IsNullOrEmpty(source.CodeBody))
-                        sb.AppendLine(CreateOrReplace + Utils.Unserialize(source.CodeBody, true));
-                    string p = BuildPath(Path.Combine(this.folderForSource, source.SchemaName), "Types", source.Name);
+                    if (!source.CodeBody.IsEmpty)
+                        sb.AppendLine(CreateOrReplace + source.CodeBody.GetSource() );
+                    string p = BuildPath(Path.Combine(this.folderForSource, source.Owner), "Types", source.Name);
                     WriteFile(p, sb.ToString());
                 }
 
                 if (generateTarget)
                 {
                     StringBuilder sb = new StringBuilder(target.Code.Length + target.CodeBody.Length + 100);
-                    if (!string.IsNullOrEmpty(target.Code))
+                    if (!target.Code.IsEmpty)
                     {
-                        sb.AppendLine(CreateOrReplace + Utils.Unserialize(target.Code, true));
+                        sb.AppendLine(CreateOrReplace + target.Code.GetSource());
                         sb.AppendLine(string.Empty);
                         sb.AppendLine("/");
                     }
-                    if (!string.IsNullOrEmpty(target.CodeBody))
-                        sb.AppendLine(CreateOrReplace + Utils.Unserialize(target.CodeBody, true));
+                    if (!target.CodeBody.IsEmpty)
+                        sb.AppendLine(CreateOrReplace + target.CodeBody.GetSource());
 
-                    string p = BuildPath(Path.Combine(this.folderForTarget, target.SchemaName), "Types", target.Name);
+                    string p = BuildPath(Path.Combine(this.folderForTarget, target.Owner), "Types", target.Name);
                     WriteFile(p, sb.ToString());
                 }
             }
@@ -475,28 +476,28 @@ namespace Bb.Oracle.Models.Comparer
 
             if (generateSource)
             {
-                string p = BuildPath(Path.Combine(this.folderForSource, source.SchemaName), "Synonyms", source.Name);
+                string p = BuildPath(Path.Combine(this.folderForSource, source.ObjectTargetOwner), "Synonyms", source.Name);
                 if (!File.Exists(p))
                 {
                     string sql = string.Empty;
-                    if (source.SynonymOwner == "PUBLIC")
-                        sql = string.Format("CREATE OR REPLACE PUBLIC SYNONYM {0} FOR {1};", source.Name, source.ObjectTarget);
+                    if (source.Owner == "PUBLIC")
+                        sql = string.Format("CREATE OR REPLACE PUBLIC SYNONYM {0} FOR {1};", source.Name, source.ObjectTargetName);
                     else
-                        sql = string.Format("CREATE OR REPLACE SYNONYM {1}.{2} FOR {3};", p, source.SynonymOwner, source.Name, source.ObjectTarget);
+                        sql = string.Format("CREATE OR REPLACE SYNONYM {1}.{2} FOR {3};", p, source.Owner, source.Name, source.ObjectTargetName);
                     WriteFile(p, sql);
                 }
             }
 
             if (generateTarget)
             {
-                string p = BuildPath(Path.Combine(this.folderForTarget, target.SchemaName), "Synonyms", target.Name);
+                string p = BuildPath(Path.Combine(this.folderForTarget, target.ObjectTargetOwner), "Synonyms", target.Name);
                 if (!File.Exists(p))
                 {
                     string sql = string.Empty;
-                    if (source.SynonymOwner == "PUBLIC")
-                        sql = string.Format("CREATE OR REPLACE PUBLIC SYNONYM {0} FOR {1};", source.Name, source.ObjectTarget);
+                    if (source.Owner == "PUBLIC")
+                        sql = string.Format("CREATE OR REPLACE PUBLIC SYNONYM {0} FOR {1};", source.Name, source.ObjectTargetName);
                     else
-                        sql = string.Format("CREATE OR REPLACE SYNONYM {1}.{2} FOR {3};", p, source.SynonymOwner, source.Name, source.ObjectTarget);
+                        sql = string.Format("CREATE OR REPLACE SYNONYM {1}.{2} FOR {3};", p, source.Owner, source.Name, source.ObjectTargetName);
                     WriteFile(p, sql);
                 }
             }
@@ -510,13 +511,13 @@ namespace Bb.Oracle.Models.Comparer
 
             if (generateSource)
             {
-                string p = BuildPath(Path.Combine(this.folderForSource, source.SchemaName), "Procedures", source.Name);
+                string p = BuildPath(Path.Combine(this.folderForSource, source.Owner), "Procedures", source.Name);
                 WriteFile(p, CreateOrReplace + Utils.Unserialize(source.Code, true));
             }
 
             if (generateTarget)
             {
-                string p = BuildPath(Path.Combine(this.folderForTarget, target.SchemaName), "Procedures", target.Name);
+                string p = BuildPath(Path.Combine(this.folderForTarget, target.Owner), "Procedures", target.Name);
                 WriteFile(p, CreateOrReplace + Utils.Unserialize(target.Code, true));
             }
 
@@ -529,13 +530,13 @@ namespace Bb.Oracle.Models.Comparer
 
             if (generateSource)
             {
-                string p = BuildPath(Path.Combine(this.folderForSource, source.SchemaName), "Procedures", source.Name);
+                string p = BuildPath(Path.Combine(this.folderForSource, source.Owner), "Procedures", source.Name);
                 WriteFile(p, CreateOrReplace + Utils.Unserialize(source.Code, true));
             }
 
             if (generateTarget)
             {
-                string p = BuildPath(Path.Combine(this.folderForTarget, target.SchemaName), "Procedures", target.Name);
+                string p = BuildPath(Path.Combine(this.folderForTarget, target.Owner), "Procedures", target.Name);
                 WriteFile(p, CreateOrReplace + Utils.Unserialize(target.Code, true));
             }
 
@@ -555,28 +556,28 @@ namespace Bb.Oracle.Models.Comparer
             {
                 if (generateSource)
                 {
-                    string p = BuildPath(Path.Combine(this.folderForSource, source.PackageOwner), "PackageBodies", source.PackageName);
-                    WriteFile(p, CreateOrReplace + Utils.Unserialize(source.CodeBody, true));
+                    string p = BuildPath(Path.Combine(this.folderForSource, source.Owner), "PackageBodies", source.Name);
+                    WriteFile(p, CreateOrReplace + source.CodeBody.GetSource());
                 }
 
                 if (generateTarget)
                 {
-                    string p = BuildPath(Path.Combine(this.folderForTarget, target.PackageOwner), "PackageBodies", target.PackageName);
-                    WriteFile(p, CreateOrReplace + Utils.Unserialize(target.CodeBody, true));
+                    string p = BuildPath(Path.Combine(this.folderForTarget, target.Owner), "PackageBodies", target.Name);
+                    WriteFile(p, CreateOrReplace + target.CodeBody.GetSource());
                 }
             }
             else
             {
                 if (generateSource)
                 {
-                    string p = BuildPath(Path.Combine(this.folderForSource, source.PackageOwner), "Packages", source.PackageName);
-                    WriteFile(p, CreateOrReplace + Utils.Unserialize(source.Code, true));
+                    string p = BuildPath(Path.Combine(this.folderForSource, source.Owner), "Packages", source.Name);
+                    WriteFile(p, CreateOrReplace + source.Code.GetSource());
                 }
 
                 if (generateTarget)
                 {
-                    string p = BuildPath(Path.Combine(this.folderForTarget, target.PackageOwner), "Packages", target.PackageName);
-                    WriteFile(p, CreateOrReplace + Utils.Unserialize(target.Code, true));
+                    string p = BuildPath(Path.Combine(this.folderForTarget, target.Owner), "Packages", target.Name);
+                    WriteFile(p, CreateOrReplace + target.Code.GetSource());
                 }
             }
 
@@ -690,13 +691,13 @@ namespace Bb.Oracle.Models.Comparer
             {
                 if (generateSource)
                 {
-                    string p = BuildPath(Path.Combine(this.folderForSource, source.SchemaName), typeObject, source.Name);
+                    string p = BuildPath(Path.Combine(this.folderForSource, source.Owner), typeObject, source.Name);
                     WriteFile(p, Utils.Unserialize(source.codeView, true).Trim('\n', ' '));
                 }
 
                 if (generateTarget)
                 {
-                    string p = BuildPath(Path.Combine(this.folderForTarget, target.SchemaName), typeObject, target.Name);
+                    string p = BuildPath(Path.Combine(this.folderForTarget, target.Owner), typeObject, target.Name);
                     WriteFile(p, Utils.Unserialize(target.codeView, true).Trim('\n', ' '));
                 }
             }
@@ -716,13 +717,13 @@ namespace Bb.Oracle.Models.Comparer
 
             if (generateSource)
             {
-                string p = BuildPath(Path.Combine(this.folderForSource, source.Owner), "Triggers", source.TriggerName);
+                string p = BuildPath(Path.Combine(this.folderForSource, source.Owner), "Triggers", source.Name);
                 WriteFile(p, CreateOrReplace + Utils.Unserialize(source.Code, true));
             }
 
             if (generateTarget)
             {
-                string p = BuildPath(Path.Combine(this.folderForTarget, target.Owner), "Triggers", target.TriggerName);
+                string p = BuildPath(Path.Combine(this.folderForTarget, target.Owner), "Triggers", target.Name);
                 WriteFile(p, CreateOrReplace + Utils.Unserialize(target.Code, true));
             }
 
@@ -808,7 +809,7 @@ namespace Bb.Oracle.Models.Comparer
             if (item is ColumnModel)
             {
                 var c = item as ColumnModel;
-                result = string.Format("{0}.{1}", GetName(c.Parent), c.ColumnName);
+                result = string.Format("{0}.{1}", GetName(c.Parent), c.Name);
             }
             else if (item is GrantModel)
             {

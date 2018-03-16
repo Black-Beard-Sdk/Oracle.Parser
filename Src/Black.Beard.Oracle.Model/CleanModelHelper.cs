@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Bb.Oracle.Models;
+using System.Collections.Generic;
 using System.Linq;
 
-namespace Bb.Oracle.Models
+namespace Bb.Oracle
 {
 
     public class CleanModelHelper : IOracleModelVisitor

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Bb.Oracle.Contracts;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -33,7 +34,7 @@ namespace Bb.Oracle.Models
 
         public override KindModelEnum KindModel
         {
-            get { return KindModelEnum.Grant; }
+            get { return KindModelEnum.UserObjectPrivilege; }
         }
 
         public override string GetName()
@@ -97,7 +98,7 @@ namespace Bb.Oracle.Models
         public string ColumnObjectName { get; set; }
 
 
-        public string PrivilegesToText { get { return string.Join(", ", this.Privileges.OfType<PrivilegeModel>().Select(c => c.PrivilegeName).ToArray()); } }
+        public string PrivilegesToText { get { return string.Join(", ", this.Privileges.OfType<PrivilegeModel>().Select(c => c.Name).ToArray()); } }
 
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Bb.Oracle.Models
+﻿using Bb.Oracle.Models;
+
+namespace Bb.Oracle.Contracts
 {
 
     public enum policyEnum

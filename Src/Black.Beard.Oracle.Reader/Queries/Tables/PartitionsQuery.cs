@@ -38,7 +38,7 @@ ORDER BY l.PARTITION_POSITION
                         {
                             var partition = new PartitionModel()
                             {
-                                PartitionName = t.PartitionName,
+                                Name = t.PartitionName,
                                 Composite = t.Composite.ToBoolean(),
                                 HighValue = t.HighValue,
                                 HighValueLength = t.HighValueLength,

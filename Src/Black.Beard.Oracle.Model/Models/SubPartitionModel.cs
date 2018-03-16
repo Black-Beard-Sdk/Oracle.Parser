@@ -9,7 +9,7 @@
         /// <summary>
         /// Subpartition Name
         /// </summary>   
-        public string SubpartitionName { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// High Value

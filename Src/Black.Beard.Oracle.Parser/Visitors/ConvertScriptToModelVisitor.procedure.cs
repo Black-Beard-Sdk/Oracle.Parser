@@ -136,7 +136,7 @@ namespace Bb.Oracle.Visitors
                 Name = context.identifier().GetCleanedName(),
                 IsFunction = false,
                 Key = "",
-                SchemaName = schema_name,
+                Owner = schema_name,
                 PackageName = package_name,
                 // Code = "",
                 // Description = "",
@@ -181,7 +181,7 @@ namespace Bb.Oracle.Visitors
                 Name = context.identifier().GetCleanedName(),
                 IsFunction = true,
                 Key = "",
-                SchemaName = schema_name,
+                Owner = schema_name,
                 PackageName = package_name,
                 // Code = "",
                 // Description = "",
@@ -234,7 +234,7 @@ namespace Bb.Oracle.Visitors
             var arg = new ArgumentModel()
             {
                 Key = method.Arguments.Count().ToString(),
-                ArgumentName = context.parameter_name().GetCleanedName(),
+                Name = context.parameter_name().GetCleanedName(),
                 In = _in,
                 Out = _out,
                 Description = "",
@@ -461,13 +461,6 @@ namespace Bb.Oracle.Visitors
         {
             Stop();
             return base.VisitParameter_spec(context);
-        }
-
-
-        public override object VisitFunction_argument([NotNull] PlSqlParser.Function_argumentContext context)
-        {
-            Stop();
-            return base.VisitFunction_argument(context);
         }
 
         public override object VisitFunction_argument_analytic([NotNull] PlSqlParser.Function_argument_analyticContext context)

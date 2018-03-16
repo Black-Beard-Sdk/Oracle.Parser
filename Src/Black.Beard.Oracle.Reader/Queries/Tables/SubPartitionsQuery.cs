@@ -39,7 +39,7 @@ SELECT * FROM SYS.DBA_TAB_SUBPARTITIONS l
                             {
                                 var sub = new SubPartitionModel()
                                 {
-                                    SubpartitionName = t.SubpartitionName,
+                                    Name = t.SubpartitionName,
                                     HighValue = t.HighValue,
                                     HighValueLength = t.HighValueLength,
                                     SubpartitionPosition = t.SubpartitionPosition,

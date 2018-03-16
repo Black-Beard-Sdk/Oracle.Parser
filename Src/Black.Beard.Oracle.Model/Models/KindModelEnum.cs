@@ -2,17 +2,23 @@
 {
     public enum KindModelEnum
     {
+
+        Undefined,
+
         Sequence,
         Index,
-        Grant,
+        UserObjectPrivilege,
         Constraint,
         Package,
+        PackageBodies,
         Procedure,
         Table,
         Trigger,
         Type,
         View,
+        Jobs,
         MaterializedView,
+        MaterializedViewLog,
         Tablespace,
         Cluster,
         DatabaseLink,
@@ -44,6 +50,9 @@
         Schemas,
         SubPartition,
         Synonym,
+
+        NotImplemented,
+
     }
 
 }

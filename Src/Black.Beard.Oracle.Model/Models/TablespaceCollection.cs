@@ -13,7 +13,7 @@ namespace Bb.Oracle.Models
         /// </summary>
         static TablespaceCollection()
         {
-            TablespaceCollection.Key = IndexedCollection<TablespaceModel>.GetMethodKey(c => c.TablespaceName);
+            TablespaceCollection.Key = IndexedCollection<TablespaceModel>.GetMethodKey(c => c.Name);
         }
 
     }

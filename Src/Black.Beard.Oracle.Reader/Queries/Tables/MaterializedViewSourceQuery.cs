@@ -42,7 +42,7 @@ LEFT JOIN all_mview_comments c ON t.OWNER = c.OWNER AND t.MVIEW_NAME = c.MVIEW_N
                         TableModel table;
                         if (!db.Tables.TryGet(key, out table))
                         {
-                            table = new TableModel() { Key = key, Name = t.ObjectName, IsView = true, IsMatrializedView = true, SchemaName = t.SchemaName, Comment = "", Generated = false, Parsed = true };
+                            table = new TableModel() { Key = key, Name = t.ObjectName, IsView = true, IsMatrializedView = true, Owner = t.SchemaName, Comment = "", Generated = false, Parsed = true };
                             db.Tables.Add(table);
 
                         }

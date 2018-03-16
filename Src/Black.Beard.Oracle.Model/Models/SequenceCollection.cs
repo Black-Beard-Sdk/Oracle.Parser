@@ -13,7 +13,7 @@ namespace Bb.Oracle.Models
         /// </summary>
         static SequenceCollection()
         {
-            SequenceCollection.Key = IndexedCollection<SequenceModel>.GetMethodKey(c => c.Name);
+            SequenceCollection.Key = IndexedCollection<SequenceModel>.GetMethodKey(c => c.Key);
         }
 
     }

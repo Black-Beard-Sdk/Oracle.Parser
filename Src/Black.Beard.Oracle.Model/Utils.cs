@@ -1,14 +1,64 @@
-﻿using System;
+﻿using Bb.Oracle.Models;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Text;
 
-namespace Bb.Oracle.Models
+namespace Bb.Oracle
 {
 
     public static class Utils
     {
+
+
+        public static string GetItemName(this ItemBase item)
+        {
+            string name = string.Empty;
+            object src = item;
+
+            if (src is IndexModel)
+                name = ((src as IndexModel).Parent as TableModel).Key;
+
+            else if (src is TypeItem)
+                name = (src as TypeItem).Name;
+
+            else if (src is GrantModel)
+                name = (src as GrantModel).Key;
+
+            else if (src is SynonymModel)
+                name = (src as SynonymModel).Name;
+
+            else if (src is ConstraintModel)
+                name = ((src as ConstraintModel).Parent as TableModel).Key;
+
+            else if (src is SequenceModel)
+                name = (src as SequenceModel).Name;
+
+            else if (src is PackageModel)
+                name = (src as PackageModel).Name;
+
+            else if (src is ProcedureModel)
+                name = (src as ProcedureModel).Name;
+
+            else if (src is TriggerModel)
+                name = (src as TriggerModel).Key;
+
+            else if (src is TableModel)
+                name = (src as TableModel).Name;
+
+            else
+            {
+                if (System.Diagnostics.Debugger.IsAttached)
+                    System.Diagnostics.Debugger.Break();
+
+                else
+                    name = src.ToString() + " umanaged";
+            }
+
+            return name;
+
+        }
 
         public static string Serialize(string code, bool compress)
         {

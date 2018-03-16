@@ -67,9 +67,13 @@ namespace Bb.Oracle.Solutions
         public string ExpectedSchema { get; }
 
         public FileInfo File { get; }
+
         public string ExpectedName { get; }
+
         public int Priority { get; private set; }
-        public SqlKind ExpectedKind { get; private set; }
+
+        public KindModelEnum ExpectedKind { get; private set; }
+
         public bool Clean { get; private set; }
 
         private ScriptParser _script;

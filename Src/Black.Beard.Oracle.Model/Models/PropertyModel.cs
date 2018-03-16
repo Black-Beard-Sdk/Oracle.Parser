@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Bb.Oracle.Contracts;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace Bb.Oracle.Models

@@ -20,21 +20,23 @@ namespace Bb.Oracle.Models
         public IndexedCollection()
         {
 
-            this.CollectionChanged += changes;
 
-        }
-
-        public void changes(object instance, NotifyCollectionChangedEventArgs args)
-        {
-            //this.Parent
         }
 
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
         protected void AppendChanges(NotifyCollectionChangedAction kind, IList changedItems, IList oldChangedItems)
         {
+
+            var arg = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, changedItems, oldChangedItems);
+
             if (this.CollectionChanged != null)
-                this.CollectionChanged(this, new NotifyCollectionChangedEventArgs(kind, changedItems, oldChangedItems));
+                this.CollectionChanged(this, arg);
+
+            var root = this.Root;
+            if (root != null)
+                this.Root.Changes(this, arg);
+
         }
 
         public abstract void Clear();
@@ -45,6 +47,23 @@ namespace Bb.Oracle.Models
 
         [JsonIgnore]
         public object Parent { get; internal set; }
+
+        [JsonIgnore]
+        public OracleDatabase Root
+        {
+            get
+            {
+
+                if (this.Parent is OracleDatabase r)
+                    return r;
+
+                if (this.Parent is ItemBase i)
+                    return i.Root;
+
+                return null;
+
+            }
+        }
 
     }
 

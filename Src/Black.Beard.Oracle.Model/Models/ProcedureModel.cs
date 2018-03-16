@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Bb.Oracle.Contracts;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,15 +21,6 @@ namespace Bb.Oracle.Models
             this.ResultType = new ProcedureResult() { Parent = this };
 
         }
-        /// <summary>
-        /// Name
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Description
-        /// </summary>
-        public string Description { get; set; }
 
         /// <summary>
         /// Key
@@ -36,9 +28,9 @@ namespace Bb.Oracle.Models
         public string Key { get; set; }
 
         /// <summary>
-        /// Filename
+        /// Name
         /// </summary>
-        public string Filename { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Package Name
@@ -46,14 +38,19 @@ namespace Bb.Oracle.Models
         public string PackageName { get; set; }
 
         /// <summary>
+        /// Schema Name
+        /// </summary>
+        public string Owner { get; set; }
+
+        /// <summary>
+        /// Description
+        /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
         /// Sub Program Id
         /// </summary>
         public int SubProgramId { get; set; }
-
-        /// <summary>
-        /// Schema Name
-        /// </summary>
-        public string SchemaName { get; set; }
 
         /// <summary>
         /// Is Function
@@ -86,7 +83,7 @@ namespace Bb.Oracle.Models
         public bool IsValid(HashSet<string> list)
         {
 
-            if (list.Contains(PackageName) || list.Contains(SchemaName))
+            if (list.Contains(PackageName) || list.Contains(Owner))
                 return true;
 
             return false;
@@ -97,7 +94,7 @@ namespace Bb.Oracle.Models
         {
             get
             {
-                return this.ResultType.Columns.Count != 0 && this.ResultType.Columns.Cast<ColumnModel>().Where(c => c.ColumnName != "arg0").Any();
+                return this.ResultType.Columns.Count != 0 && this.ResultType.Columns.Cast<ColumnModel>().Where(c => c.Name != "arg0").Any();
             }
         }
 
@@ -146,32 +143,32 @@ namespace Bb.Oracle.Models
         //}
 
 
-        ArgumentsInfoModel _arg1;
-        public ArgumentsInfoModel GetArguments()
-        {
+        //ArgumentsInfoModel _arg1;
+        //public ArgumentsInfoModel GetArguments()
+        //{
 
-            if (_arg1 == null)
-            {
+        //    if (_arg1 == null)
+        //    {
 
-                var lst = this.Arguments.Cast<ArgumentModel>().Where(c => c.Type.DataLevel == 0 && !string.IsNullOrEmpty(c.Type.DataType)).Select(c => new ArgumentInfoModel(c) { }).OrderBy(c => c.Argument.Sequence).ToList();
+        //        var lst = this.Arguments.Cast<ArgumentModel>().Where(c => c.Type.DataLevel == 0 && !string.IsNullOrEmpty(c.Type.DataType)).Select(c => new ArgumentInfoModel(c) { }).OrderBy(c => c.Argument.Sequence).ToList();
 
-                var f = lst.Where(c => !c.Argument.In && string.IsNullOrEmpty(c.Argument.ArgumentName)).FirstOrDefault();
-                if (f != null)
-                    f.Argument.ArgumentName = "result";
+        //        var f = lst.Where(c => !c.Argument.In && string.IsNullOrEmpty(c.Argument.ArgumentName)).FirstOrDefault();
+        //        if (f != null)
+        //            f.Argument.ArgumentName = "result";
 
-                var l = lst.Where(c => c.Argument.In).LastOrDefault();
+        //        var l = lst.Where(c => c.Argument.In).LastOrDefault();
 
-                if (l != null)
-                    l.Comma = string.Empty;
+        //        if (l != null)
+        //            l.Comma = string.Empty;
 
-                //var istruct = lst.Where(c => !c.Argument.In).Any();
+        //        //var istruct = lst.Where(c => !c.Argument.In).Any();
 
-                _arg1 = new ArgumentsInfoModel() { Arguments = lst /*, Istruct = istruct*/ };
+        //        _arg1 = new ArgumentsInfoModel() { Arguments = lst /*, Istruct = istruct*/ };
 
-            }
+        //    }
 
-            return _arg1;
-        }
+        //    return _arg1;
+        //}
 
 
         private bool? _isComplexAccess;
@@ -182,8 +179,8 @@ namespace Bb.Oracle.Models
 
                 if (!this._isComplexAccess.HasValue)
                 {
-                    foreach (var item in GetArguments().Arguments)
-                        if (item.Argument.ArgumentName.Split(':').Length > 0)
+                    foreach (var item in Arguments)
+                        if (item.Name.Split(':').Length > 0)
                         {
                             this._isComplexAccess = true;
                             return this._isComplexAccess.Value;
@@ -191,7 +188,7 @@ namespace Bb.Oracle.Models
 
                     foreach (ColumnModel item in this.ResultType.Columns)
                     {
-                        if (item.ColumnName.Split(':').Length > 0)
+                        if (item.Name.Split(':').Length > 0)
                         {
                             this._isComplexAccess = true;
                             return this._isComplexAccess.Value;
@@ -215,9 +212,9 @@ namespace Bb.Oracle.Models
 
                 StringBuilder sb = new StringBuilder();
 
-                if (!string.IsNullOrEmpty(this.SchemaName))
+                if (!string.IsNullOrEmpty(this.Owner))
                 {
-                    sb.Append(this.SchemaName);
+                    sb.Append(this.Owner);
                     sb.Append(".");
                 }
 
@@ -273,7 +270,7 @@ namespace Bb.Oracle.Models
 
         public override string GetOwner()
         {
-            return this.SchemaName;
+            return this.Owner;
         }
 
         public IEnumerable<Anomaly> Evaluate(IEvaluateManager manager)

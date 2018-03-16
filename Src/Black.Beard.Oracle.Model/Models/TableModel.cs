@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System;
+using Bb.Oracle.Contracts;
 
 namespace Bb.Oracle.Models
 {
@@ -23,7 +24,17 @@ namespace Bb.Oracle.Models
             this.Triggers = new TriggerCollection() { Parent = this };
         }
 
+        /// <summary>
+        /// Key
+        /// </summary>
+        public string Key { get; set; }
+
         public string Name { get; set; }
+
+        /// <summary>
+        /// Schema Name
+        /// </summary>
+        public string Owner { get; set; }
 
         /// <summary>
         /// Is View
@@ -34,17 +45,7 @@ namespace Bb.Oracle.Models
         /// Description
         /// </summary>
         public string Description { get; set; }
-
-        /// <summary>
-        /// Schema Name
-        /// </summary>
-        public string SchemaName { get; set; }
-
-        /// <summary>
-        /// Key
-        /// </summary>
-        public string Key { get; set; }
-
+        
         /// <summary>
         /// Comment
         /// </summary>
@@ -263,7 +264,6 @@ namespace Bb.Oracle.Models
         /// </returns>
         public ConstraintCollection Constraints { get; set; }
 
-
         /// <summary>
         /// Indexes
         /// </summary>
@@ -299,9 +299,9 @@ namespace Bb.Oracle.Models
         {
             get
             {
-                if (string.IsNullOrEmpty(this.SchemaName))
+                if (string.IsNullOrEmpty(this.Owner))
                     return this.Name;
-                return this.SchemaName + "." + this.Name;
+                return this.Owner + "." + this.Name;
             }
         }
 
@@ -319,8 +319,8 @@ namespace Bb.Oracle.Models
                 IsArray = false,
                 IsRecord = true,
                 defaultLength = 0,
-                TypeOwner = this.GetOwner(),
-                TypeName = this.GetName(),
+                Owner = this.GetOwner(),
+                Name = this.GetName(),
             };
         }
 
@@ -337,7 +337,7 @@ namespace Bb.Oracle.Models
         public bool IsValid(HashSet<string> list)
         {
 
-            if (list.Contains(this.SchemaName))
+            if (list.Contains(this.Owner))
                 return true;
 
             return false;
@@ -382,7 +382,7 @@ namespace Bb.Oracle.Models
 
         public override string GetOwner()
         {
-            return this.SchemaName;
+            return this.Owner;
         }
 
         public IEnumerable<Anomaly> Evaluate(IEvaluateManager manager)

@@ -139,12 +139,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Powershell\CompareOracleStructure.cs" />
+    <Compile Include="Powershell\OpenOracleModel.cs" />
     <Compile Include="Powershell\WriteOracleStructureFromServer.cs" />
     <Compile Include="Powershell\WriteOracleStructureFromScript.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="test-load-from-File.ps1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="test-load-from-script.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

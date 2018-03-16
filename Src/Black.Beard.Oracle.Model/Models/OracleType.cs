@@ -49,21 +49,21 @@ namespace Bb.Oracle.Models
         /// <summary>
         /// Type Owner
         /// </summary>   
-        public string TypeOwner { get; set; }
+        public string Owner { get; set; }
 
         /// <summary>
         /// Type Name
         /// </summary>   
-        public string TypeName { get; set; }
+        public string Name { get; set; }
 
         public override string GetName()
         {
-            return TypeName;
+            return Name;
         }
 
         public override string GetOwner()
         {
-            return TypeOwner;
+            return Owner;
         }
 
         /// <summary>
@@ -105,8 +105,8 @@ namespace Bb.Oracle.Models
                 IsArray = this.IsArray,
                 IsRecord = this.IsRecord,
                 Tag = this.ArrayOfType,
-                TypeName = this.TypeName,
-                TypeOwner = this.TypeOwner,
+                Name = this.Name,
+                Owner = this.Owner,
             };
         }
 

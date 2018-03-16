@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Bb.Oracle.Contracts;
+using System.Collections.Generic;
 
 namespace Bb.Oracle.Models
 {
@@ -8,56 +9,47 @@ namespace Bb.Oracle.Models
     public partial class PackageModel : ItemBase, Ichangable
     {
 
+
+        public PackageModel()
+        {
+            this.Code = new CodeModel();
+            this.CodeBody = new CodeModel();
+        }
+        
+
         /// <summary>
         /// Name
         /// </summary>
-        public string Name { get; set; }
+        public string Key { get; set; }
 
         /// <summary>
         /// Code
         /// </summary>
-        public string Code { get; set; }
+        public CodeModel Code { get; set; }
 
         /// <summary>
         /// Code Body
         /// </summary>
-        public string CodeBody { get; set; }
+        public CodeModel CodeBody { get; set; }
 
         /// <summary>
         /// Package Owner
         /// </summary>
-        public string PackageOwner { get; set; }
+        public string Owner { get; set; }
 
         /// <summary>
         /// Package Name
         /// </summary>
-        public string PackageName { get; set; }
+        public string Name { get; set; }
 
-
-        public PackageModel()
-        {
-
-        }
-
-        public PackageModel(string name)
-        {
-
-            if (name.StartsWith("#"))
-            {
-                name = name.Substring(1);
-                Excluded = true;
-            }
-
-            this.Name = name;
-
-        }
 
         public bool Excluded { get; set; }
 
-        public static implicit operator PackageModel(string packageName)
-        {
-            return new PackageModel(packageName);
-        }
+
+        //public static implicit operator PackageModel(string packageName)
+        //{
+        //    return new PackageModel(packageName);
+        //}
 
         public byte[] Write()
         {
@@ -66,7 +58,7 @@ namespace Bb.Oracle.Models
 
         public override string ToString()
         {
-            return (Excluded ? "#" : string.Empty) + Name;
+            return (Excluded ? "#" : string.Empty) + Key;
         }
 
         public void Create(IchangeVisitor visitor)
@@ -91,27 +83,17 @@ namespace Bb.Oracle.Models
 
         public override string GetName()
         {
-            return this.PackageName;
+            return this.Name;
         }
 
         public override string GetOwner()
         {
-            return this.PackageOwner;
+            return this.Owner;
         }
 
         public IEnumerable<Anomaly> Evaluate(IEvaluateManager manager)
         {
             return manager.Evaluate(this);
-        }
-
-        public string GetCodeSource()
-        {
-            return Utils.Unserialize(this.Code, true);
-        }
-
-        public string GetCodeBodySource()
-        {
-            return Utils.Unserialize(this.CodeBody, true);
         }
 
     }

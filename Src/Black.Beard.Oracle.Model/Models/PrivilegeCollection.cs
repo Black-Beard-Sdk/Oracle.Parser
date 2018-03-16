@@ -13,7 +13,7 @@ namespace Bb.Oracle.Models
         /// </summary>
         static PrivilegeCollection()
         {
-            PrivilegeCollection.Key = IndexedCollection<PrivilegeModel>.GetMethodKey(c => c.PrivilegeName);
+            PrivilegeCollection.Key = IndexedCollection<PrivilegeModel>.GetMethodKey(c => c.Name);
         }
 
     }

@@ -12,7 +12,7 @@ namespace Bb.Oracle.Models
 
         static PackageCollection()
         {
-            PackageCollection.Key = IndexedCollection<PackageModel>.GetMethodKey(c => c.Name);
+            PackageCollection.Key = IndexedCollection<PackageModel>.GetMethodKey(c => c.Key);
         }
 
     }

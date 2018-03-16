@@ -23,7 +23,38 @@ namespace Bb.Oracle.Models.TextReferentials
 
             r.Append(item);
 
+            if (item is TableModel t)
+                foreach (ColumnModel column in t.Columns)
+                    Add(column);
 
+            else if (item is TypeItem type)
+                foreach (PropertyModel property in type.Properties)
+                    Add(property);
+
+            //else if (item is ColumnModel c)
+            //{
+            //}
+            //else if (item is ProcedureModel p)
+            //{
+            //}
+            //else if (item is SequenceModel seq)
+            //{
+            //}
+            //else if (item is GrantModel grant)
+            //{
+            //}
+            //else if (item is SynonymModel synonym)
+            //{
+            //}
+            //else if (item is PackageModel package)
+            //{
+            //}
+            //else if (item is PartitionModel partition)
+            //{
+            //}
+            //else
+            //{
+            //}
 
         }
 
@@ -60,7 +91,8 @@ namespace Bb.Oracle.Models.TextReferentials
 
         public void Append(ItemBase item)
         {
-            this._objects.Add(item);
+            if (!this._objects.Contains(item))
+                this._objects.Add(item);
         }
 
         public void Remove(ItemBase item)

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Bb.Oracle.Contracts;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace Bb.Oracle.Models
@@ -13,6 +14,8 @@ namespace Bb.Oracle.Models
         public TypeItem()
         {
             this.Properties = new PropertyCollection() { Parent = this };
+            this.Code = new CodeModel();
+            this.CodeBody = new CodeModel();
         }
         /// <summary>
         /// Key
@@ -22,7 +25,7 @@ namespace Bb.Oracle.Models
         /// <summary>
         /// Schema Name
         /// </summary>
-        public string SchemaName { get; set; }
+        public string Owner { get; set; }
 
         /// <summary>
         /// Name
@@ -57,12 +60,12 @@ namespace Bb.Oracle.Models
         /// <summary>
         /// Code
         /// </summary>
-        public string Code { get; set; }
+        public CodeModel Code { get; set; }
 
         /// <summary>
         /// Code Body
         /// </summary>
-        public string CodeBody { get; set; }
+        public CodeModel CodeBody { get; set; }
 
         /// <summary>
         /// Properties
@@ -99,7 +102,7 @@ namespace Bb.Oracle.Models
 
         public override string GetOwner()
         {
-            return this.SchemaName;
+            return this.Owner;
         }
 
         public IEnumerable<Anomaly> Evaluate(IEvaluateManager manager)
@@ -126,16 +129,7 @@ namespace Bb.Oracle.Models
         [JsonIgnore]
         public OracleDatabase Parent { get; internal set; }
 
-        public string GetCodeSource()
-        {
-            return Utils.Unserialize(this.Code, true);
-        }
-
-        public string GetCodeBodySource()
-        {
-            return Utils.Unserialize(this.CodeBody, true);
-        }
-
+        
     }
 
 

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Bb.Oracle.Contracts;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace Bb.Oracle.Models
@@ -13,7 +14,7 @@ namespace Bb.Oracle.Models
         /// <summary>
         /// Name
         /// </summary>
-        public string Name { get; set; }
+        public string Key { get; set; }
 
         /// <summary>
         /// Owner
@@ -23,7 +24,7 @@ namespace Bb.Oracle.Models
         /// <summary>
         /// Sequence Name
         /// </summary>
-        public string SequenceName { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Min Value
@@ -77,10 +78,10 @@ namespace Bb.Oracle.Models
         /// </summary>
         public string Status { get; set; }
 
-        /// <summary>
-        /// Parsed
-        /// </summary>
-        public bool Parsed { get; set; }
+        ///// <summary>
+        ///// Parsed
+        ///// </summary>
+        //public bool Parsed { get; set; }
 
         /// <summary>
         /// Max Value Is Specified
@@ -103,14 +104,11 @@ namespace Bb.Oracle.Models
             visitor.Alter(this, source as SequenceModel, propertyName);
         }
 
-        public override KindModelEnum KindModel
-        {
-            get { return KindModelEnum.Sequence; }
-        }
+        public override KindModelEnum KindModel { get { return KindModelEnum.Sequence; } }
 
         public override string GetName()
         {
-            return SequenceName;
+            return Name;
         }
 
         public override string GetOwner()

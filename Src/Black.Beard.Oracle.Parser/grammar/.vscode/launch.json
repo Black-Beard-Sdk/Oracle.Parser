@@ -1,0 +1,32 @@
+{
+    // Utilisez IntelliSense pour en savoir plus sur les attributs possibles.
+    // Pointez pour afficher la description des attributs existants.
+    // Pour plus d'informations, visitez : https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "antlr4-plsql",
+            "type": "antlr-debug",
+            "request": "launch",
+            "input": "${workspaceFolder}/${command:AskForTestInput}",
+            //"input": "input.sql",
+            "grammar": "PlSqlParser.g4",
+            "startRule": "query",
+            "printParseTree": true,
+            "visualParseTree": true
+        },
+        // {
+        //     "type": "antlr-debug",
+        //     "request": "launch",
+        //     "name": "Run Parser",
+        //     "input": "${workspaceFolder}/Input",
+        //     "visualParseTree": true
+        // },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Lancer le programme",
+            "program": "${file}"
+        }
+    ]
+}

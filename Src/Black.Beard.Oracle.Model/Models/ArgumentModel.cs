@@ -14,7 +14,7 @@ namespace Bb.Oracle.Models
         /// <summary>
         /// Argument Name
         /// </summary>
-        public string ArgumentName { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// In
@@ -60,6 +60,45 @@ namespace Bb.Oracle.Models
         public OracleType Type { get; set; } = new OracleType();
 
         public override KindModelEnum KindModel => KindModelEnum.Argument;
+
+
+        private string GetDefaultValue(System.Type p)
+        {
+            if (p.IsClass)
+                return "null";
+            if (p == typeof(string))
+                return "String.Empty";
+
+            if (p == typeof(sbyte)
+                || p == typeof(byte)
+                || p == typeof(short)
+                || p == typeof(ushort)
+                || p == typeof(int)
+                || p == typeof(uint)
+                || p == typeof(long)
+                || p == typeof(ulong)
+                || p == typeof(float)
+                || p == typeof(double)
+                || p == typeof(decimal))
+                return "0";
+
+            return "null";
+
+        }
+
+        //public string GetDefaultValue()
+        //{
+        //    return _defaultValue;
+        //}
+
+        public string Comma { get; set; }
+
+        //public string Type { get; set; }
+
+        //public override string ToString()
+        //{
+        //    return Type + " " + Argument.ArgumentName;
+        //}
 
     }
 

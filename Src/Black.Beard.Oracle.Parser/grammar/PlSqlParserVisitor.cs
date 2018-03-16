@@ -729,6 +729,12 @@ public interface IPlSqlParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitObject_view_clause([NotNull] PlSqlParser.Object_view_clauseContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.constraint"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitConstraint([NotNull] PlSqlParser.ConstraintContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="PlSqlParser.inline_constraint"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -747,6 +753,90 @@ public interface IPlSqlParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitConstraint_state([NotNull] PlSqlParser.Constraint_stateContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.using_index_clause"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitUsing_index_clause([NotNull] PlSqlParser.Using_index_clauseContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.index_properties"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitIndex_properties([NotNull] PlSqlParser.Index_propertiesContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.global_partitioned_index"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitGlobal_partitioned_index([NotNull] PlSqlParser.Global_partitioned_indexContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.individual_hash_partitions"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitIndividual_hash_partitions([NotNull] PlSqlParser.Individual_hash_partitionsContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.index_partitioning_clause"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitIndex_partitioning_clause([NotNull] PlSqlParser.Index_partitioning_clauseContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.segment_attributes_clause"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitSegment_attributes_clause([NotNull] PlSqlParser.Segment_attributes_clauseContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.index_attributes"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitIndex_attributes([NotNull] PlSqlParser.Index_attributesContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.physical_attributes_clause"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitPhysical_attributes_clause([NotNull] PlSqlParser.Physical_attributes_clauseContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.hash_partitions_by_quantity"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitHash_partitions_by_quantity([NotNull] PlSqlParser.Hash_partitions_by_quantityContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.local_partitioned_index"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitLocal_partitioned_index([NotNull] PlSqlParser.Local_partitioned_indexContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.on_range_partitioned_table"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitOn_range_partitioned_table([NotNull] PlSqlParser.On_range_partitioned_tableContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.on_list_partitioned_table"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitOn_list_partitioned_table([NotNull] PlSqlParser.On_list_partitioned_tableContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.on_hash_partitioned_table"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitOn_hash_partitioned_table([NotNull] PlSqlParser.On_hash_partitioned_tableContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.on_comp_partitioned_table"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitOn_comp_partitioned_table([NotNull] PlSqlParser.On_comp_partitioned_tableContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="PlSqlParser.xmltable_index_clause"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -758,12 +848,6 @@ public interface IPlSqlParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitXmlindex_clause([NotNull] PlSqlParser.Xmlindex_clauseContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="PlSqlParser.physicial_attributes_clause"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitPhysicial_attributes_clause([NotNull] PlSqlParser.Physicial_attributes_clauseContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="PlSqlParser.partition_clause"/>.
 	/// </summary>
@@ -788,6 +872,18 @@ public interface IPlSqlParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitPartitioning_storage_clause([NotNull] PlSqlParser.Partitioning_storage_clauseContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.inmemory_table_clause"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitInmemory_table_clause([NotNull] PlSqlParser.Inmemory_table_clauseContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.inmemory_column_clause"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitInmemory_column_clause([NotNull] PlSqlParser.Inmemory_column_clauseContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="PlSqlParser.inmemory_clause"/>.
 	/// </summary>
@@ -867,12 +963,6 @@ public interface IPlSqlParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitUsable_clause([NotNull] PlSqlParser.Usable_clauseContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="PlSqlParser.index_attributes"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitIndex_attributes([NotNull] PlSqlParser.Index_attributesContext context);
-	/// <summary>
 	/// Visit a parse tree produced by <see cref="PlSqlParser.hash_partition_quantity"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -902,6 +992,24 @@ public interface IPlSqlParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitDomain_index_clause([NotNull] PlSqlParser.Domain_index_clauseContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.local_domain_index_clause"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitLocal_domain_index_clause([NotNull] PlSqlParser.Local_domain_index_clauseContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.local_domain_index_parameters_clause"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitLocal_domain_index_parameters_clause([NotNull] PlSqlParser.Local_domain_index_parameters_clauseContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.odci_parameters"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitOdci_parameters([NotNull] PlSqlParser.Odci_parametersContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="PlSqlParser.exceptions_clause"/>.
 	/// </summary>
@@ -1023,6 +1131,366 @@ public interface IPlSqlParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitCreate_table([NotNull] PlSqlParser.Create_tableContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.relational_table"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitRelational_table([NotNull] PlSqlParser.Relational_tableContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.relational_properties"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitRelational_properties([NotNull] PlSqlParser.Relational_propertiesContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.table_properties"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitTable_properties([NotNull] PlSqlParser.Table_propertiesContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.flashback_archive_clause"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitFlashback_archive_clause([NotNull] PlSqlParser.Flashback_archive_clauseContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.row_movement_clause"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitRow_movement_clause([NotNull] PlSqlParser.Row_movement_clauseContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.attribute_clustering_clause"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitAttribute_clustering_clause([NotNull] PlSqlParser.Attribute_clustering_clauseContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.clustering_join"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitClustering_join([NotNull] PlSqlParser.Clustering_joinContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.cluster_clause"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitCluster_clause([NotNull] PlSqlParser.Cluster_clauseContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.clustering_columns"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitClustering_columns([NotNull] PlSqlParser.Clustering_columnsContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.clustering_columns_group"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitClustering_columns_group([NotNull] PlSqlParser.Clustering_columns_groupContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.clustering_when"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitClustering_when([NotNull] PlSqlParser.Clustering_whenContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.zonemap_clause"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitZonemap_clause([NotNull] PlSqlParser.Zonemap_clauseContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.enable_disable_clause"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitEnable_disable_clause([NotNull] PlSqlParser.Enable_disable_clauseContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.table_partitioning_clauses"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitTable_partitioning_clauses([NotNull] PlSqlParser.Table_partitioning_clausesContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.range_partitions"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitRange_partitions([NotNull] PlSqlParser.Range_partitionsContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.hash_partitions"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitHash_partitions([NotNull] PlSqlParser.Hash_partitionsContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.column_properties"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitColumn_properties([NotNull] PlSqlParser.Column_propertiesContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.xmltype_column_properties"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitXmltype_column_properties([NotNull] PlSqlParser.Xmltype_column_propertiesContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.xmltype_storage"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitXmltype_storage([NotNull] PlSqlParser.Xmltype_storageContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.xmlschema_spec"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitXmlschema_spec([NotNull] PlSqlParser.Xmlschema_specContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.list_partitions"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitList_partitions([NotNull] PlSqlParser.List_partitionsContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.composite_range_partitions"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitComposite_range_partitions([NotNull] PlSqlParser.Composite_range_partitionsContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.composite_hash_partitions"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitComposite_hash_partitions([NotNull] PlSqlParser.Composite_hash_partitionsContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.composite_list_partitions"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitComposite_list_partitions([NotNull] PlSqlParser.Composite_list_partitionsContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.range_partition_desc"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitRange_partition_desc([NotNull] PlSqlParser.Range_partition_descContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.list_partition_desc"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitList_partition_desc([NotNull] PlSqlParser.List_partition_descContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.range_subpartition_desc"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitRange_subpartition_desc([NotNull] PlSqlParser.Range_subpartition_descContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.list_subpartition_desc"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitList_subpartition_desc([NotNull] PlSqlParser.List_subpartition_descContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.individual_hash_subparts"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitIndividual_hash_subparts([NotNull] PlSqlParser.Individual_hash_subpartsContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.hash_subparts_by_quantity"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitHash_subparts_by_quantity([NotNull] PlSqlParser.Hash_subparts_by_quantityContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.table_partition_description"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitTable_partition_description([NotNull] PlSqlParser.Table_partition_descriptionContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.range_values_clause"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitRange_values_clause([NotNull] PlSqlParser.Range_values_clauseContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.list_values_clause"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitList_values_clause([NotNull] PlSqlParser.List_values_clauseContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.subpartition_by_range"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitSubpartition_by_range([NotNull] PlSqlParser.Subpartition_by_rangeContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.subpartition_by_list"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitSubpartition_by_list([NotNull] PlSqlParser.Subpartition_by_listContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.subpartition_by_hash"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitSubpartition_by_hash([NotNull] PlSqlParser.Subpartition_by_hashContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.subpartition_template"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitSubpartition_template([NotNull] PlSqlParser.Subpartition_templateContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.reference_partitioning"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitReference_partitioning([NotNull] PlSqlParser.Reference_partitioningContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.reference_partition_desc"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitReference_partition_desc([NotNull] PlSqlParser.Reference_partition_descContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.object_type_col_properties"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitObject_type_col_properties([NotNull] PlSqlParser.Object_type_col_propertiesContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.substituable_column_clause"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitSubstituable_column_clause([NotNull] PlSqlParser.Substituable_column_clauseContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.nested_table_col_properties"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitNested_table_col_properties([NotNull] PlSqlParser.Nested_table_col_propertiesContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.object_properties"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitObject_properties([NotNull] PlSqlParser.Object_propertiesContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.varray_col_properties"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitVarray_col_properties([NotNull] PlSqlParser.Varray_col_propertiesContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.varray_storage_clause"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitVarray_storage_clause([NotNull] PlSqlParser.Varray_storage_clauseContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.lob_storage_clause"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitLob_storage_clause([NotNull] PlSqlParser.Lob_storage_clauseContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.lob_storage_parameters"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitLob_storage_parameters([NotNull] PlSqlParser.Lob_storage_parametersContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.paren_lob_parameters"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitParen_lob_parameters([NotNull] PlSqlParser.Paren_lob_parametersContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.lob_parameters"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitLob_parameters([NotNull] PlSqlParser.Lob_parametersContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.lob_retention_clause"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitLob_retention_clause([NotNull] PlSqlParser.Lob_retention_clauseContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.lob_deduplicate_clause"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitLob_deduplicate_clause([NotNull] PlSqlParser.Lob_deduplicate_clauseContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.lob_compresssion_clause"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitLob_compresssion_clause([NotNull] PlSqlParser.Lob_compresssion_clauseContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.physical_properties"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitPhysical_properties([NotNull] PlSqlParser.Physical_propertiesContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.external_table_clause"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitExternal_table_clause([NotNull] PlSqlParser.External_table_clauseContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.external_data_properties"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitExternal_data_properties([NotNull] PlSqlParser.External_data_propertiesContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.external_data_properties_location"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitExternal_data_properties_location([NotNull] PlSqlParser.External_data_properties_locationContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.index_org_table_clause"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitIndex_org_table_clause([NotNull] PlSqlParser.Index_org_table_clauseContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.mapping_table_clause"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitMapping_table_clause([NotNull] PlSqlParser.Mapping_table_clauseContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.index_org_overflow_clause"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitIndex_org_overflow_clause([NotNull] PlSqlParser.Index_org_overflow_clauseContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.deferred_segment_creation"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitDeferred_segment_creation([NotNull] PlSqlParser.Deferred_segment_creationContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="PlSqlParser.tablespace_clause"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -1035,17 +1503,125 @@ public interface IPlSqlParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitStore_in([NotNull] PlSqlParser.Store_inContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.ilm_clause"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitIlm_clause([NotNull] PlSqlParser.Ilm_clauseContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.ilm_policy_clause"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitIlm_policy_clause([NotNull] PlSqlParser.Ilm_policy_clauseContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.ilm_compression_policy"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitIlm_compression_policy([NotNull] PlSqlParser.Ilm_compression_policyContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.ilm_tiering_policy"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitIlm_tiering_policy([NotNull] PlSqlParser.Ilm_tiering_policyContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.ilm_time_period"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitIlm_time_period([NotNull] PlSqlParser.Ilm_time_periodContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="PlSqlParser.storage_clause"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitStorage_clause([NotNull] PlSqlParser.Storage_clauseContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="PlSqlParser.datatype_null_enable"/>.
+	/// Visit a parse tree produced by <see cref="PlSqlParser.column_definition"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitDatatype_null_enable([NotNull] PlSqlParser.Datatype_null_enableContext context);
+	Result VisitColumn_definition([NotNull] PlSqlParser.Column_definitionContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.virtual_column_definition"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitVirtual_column_definition([NotNull] PlSqlParser.Virtual_column_definitionContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.period_definition"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitPeriod_definition([NotNull] PlSqlParser.Period_definitionContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.supplemental_logging_props"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitSupplemental_logging_props([NotNull] PlSqlParser.Supplemental_logging_propsContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.supplemental_log_grp_clause"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitSupplemental_log_grp_clause([NotNull] PlSqlParser.Supplemental_log_grp_clauseContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.supplemental_id_key_clause"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitSupplemental_id_key_clause([NotNull] PlSqlParser.Supplemental_id_key_clauseContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.column_logged"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitColumn_logged([NotNull] PlSqlParser.Column_loggedContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.evaluation_edition_clause"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitEvaluation_edition_clause([NotNull] PlSqlParser.Evaluation_edition_clauseContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.edition_name"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitEdition_name([NotNull] PlSqlParser.Edition_nameContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.unusable_editions_clause"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitUnusable_editions_clause([NotNull] PlSqlParser.Unusable_editions_clauseContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.identity_options"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitIdentity_options([NotNull] PlSqlParser.Identity_optionsContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.encryption_spec"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitEncryption_spec([NotNull] PlSqlParser.Encryption_specContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.inline_ref_constraint"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitInline_ref_constraint([NotNull] PlSqlParser.Inline_ref_constraintContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.out_of_line_ref_constraint"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitOut_of_line_ref_constraint([NotNull] PlSqlParser.Out_of_line_ref_constraintContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="PlSqlParser.size_clause"/>.
 	/// </summary>
@@ -2448,17 +3024,41 @@ public interface IPlSqlParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitSql_plus_command([NotNull] PlSqlParser.Sql_plus_commandContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="PlSqlParser.whenever_command"/>.
+	/// Visit a parse tree produced by <see cref="PlSqlParser.sqlplus_execute_command"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitWhenever_command([NotNull] PlSqlParser.Whenever_commandContext context);
+	Result VisitSqlplus_execute_command([NotNull] PlSqlParser.Sqlplus_execute_commandContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="PlSqlParser.set_command"/>.
+	/// Visit a parse tree produced by <see cref="PlSqlParser.sqlplus_whenever_command"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitSet_command([NotNull] PlSqlParser.Set_commandContext context);
+	Result VisitSqlplus_whenever_command([NotNull] PlSqlParser.Sqlplus_whenever_commandContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.function_arguments"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitFunction_arguments([NotNull] PlSqlParser.Function_argumentsContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.arguments"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitArguments([NotNull] PlSqlParser.ArgumentsContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.argument"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitArgument([NotNull] PlSqlParser.ArgumentContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.sqlplus_set_command"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitSqlplus_set_command([NotNull] PlSqlParser.Sqlplus_set_commandContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="PlSqlParser.partition_extension_clause"/>.
 	/// </summary>
@@ -2501,6 +3101,12 @@ public interface IPlSqlParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitRoutine_name([NotNull] PlSqlParser.Routine_nameContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.indextype"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitIndextype([NotNull] PlSqlParser.IndextypeContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="PlSqlParser.grantee_name"/>.
 	/// </summary>
@@ -2550,6 +3156,30 @@ public interface IPlSqlParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitTableview_name([NotNull] PlSqlParser.Tableview_nameContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.element_name"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitElement_name([NotNull] PlSqlParser.Element_nameContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.flashback_archive_name"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitFlashback_archive_name([NotNull] PlSqlParser.Flashback_archive_nameContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.zonemap_name"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitZonemap_name([NotNull] PlSqlParser.Zonemap_nameContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.subpartition_name"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitSubpartition_name([NotNull] PlSqlParser.Subpartition_nameContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="PlSqlParser.lob_item_name"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -2597,6 +3227,18 @@ public interface IPlSqlParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitLob_segname([NotNull] PlSqlParser.Lob_segnameContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.ilm_policy_name"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitIlm_policy_name([NotNull] PlSqlParser.Ilm_policy_nameContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.directory_name"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitDirectory_name([NotNull] PlSqlParser.Directory_nameContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="PlSqlParser.full_identifier"/>.
 	/// </summary>
@@ -2676,12 +3318,6 @@ public interface IPlSqlParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitKeep_clause([NotNull] PlSqlParser.Keep_clauseContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="PlSqlParser.function_argument"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitFunction_argument([NotNull] PlSqlParser.Function_argumentContext context);
-	/// <summary>
 	/// Visit a parse tree produced by <see cref="PlSqlParser.function_argument_analytic"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -2699,12 +3335,6 @@ public interface IPlSqlParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitRespect_or_ignore_nulls([NotNull] PlSqlParser.Respect_or_ignore_nullsContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="PlSqlParser.argument"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitArgument([NotNull] PlSqlParser.ArgumentContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="PlSqlParser.type_spec"/>.
 	/// </summary>
@@ -2771,6 +3401,12 @@ public interface IPlSqlParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitLiteral([NotNull] PlSqlParser.LiteralContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.literal_datetime"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitLiteral_datetime([NotNull] PlSqlParser.Literal_datetimeContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="PlSqlParser.constant"/>.
 	/// </summary>
@@ -2855,6 +3491,12 @@ public interface IPlSqlParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitQuery_name([NotNull] PlSqlParser.Query_nameContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.log_group_name"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitLog_group_name([NotNull] PlSqlParser.Log_group_nameContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="PlSqlParser.identifiers"/>.
 	/// </summary>

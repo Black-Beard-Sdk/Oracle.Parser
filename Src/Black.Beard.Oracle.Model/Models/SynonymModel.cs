@@ -22,25 +22,26 @@ namespace Bb.Oracle.Models
         /// <summary>
         /// Object Target
         /// </summary>
-        public string ObjectTarget { get; set; }
+        public string ObjectTargetName { get; set; }
+
+        /// <summary>
+        /// Schema Name
+        /// </summary>
+        public string ObjectTargetOwner { get; set; }
 
         /// <summary>
         /// Name
         /// </summary>
         public string Name { get; set; }
 
-        /// <summary>
-        /// Schema Name
-        /// </summary>
-        public string SchemaName { get; set; }
-
         /// Synonym Owner
         /// </summary>
-        public string SynonymOwner { get; set; }
+        public string Owner { get; set; }
 
         public override KindModelEnum KindModel => KindModelEnum.Synonym;
 
         public bool IsPublic { get; set; }
+
     }
 
 }

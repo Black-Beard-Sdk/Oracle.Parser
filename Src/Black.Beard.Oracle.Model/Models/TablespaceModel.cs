@@ -9,7 +9,7 @@
         /// <summary>
         /// Tablespace Name
         /// </summary>
-        public string TablespaceName { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Block Size
@@ -31,7 +31,6 @@
         /// </summary>   
         public decimal NextExtent { get; set; }
 
-
         /// <summary>
         /// Max Size
         /// </summary>   
@@ -41,7 +40,6 @@
         /// Max Extents
         /// </summary>   
         public decimal MaxExtents { get; set; }
-
 
         /// <summary>
         /// Pct Increase

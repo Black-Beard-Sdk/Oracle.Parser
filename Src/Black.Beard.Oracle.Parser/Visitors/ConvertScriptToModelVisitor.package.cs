@@ -49,7 +49,7 @@ namespace Bb.Oracle.Visitors
 
             var schema = context.schema_object_name().GetCleanedName();
             var package_name = context.package_name()[0].GetCleanedName();
-            PackageModel package = this.db.Packages.FirstOrDefault(c => c.GetOwner() == schema && c.GetName() == package_name);
+            PackageModel package = this.Db.Packages.FirstOrDefault(c => c.GetOwner() == schema && c.GetName() == package_name);
             if (package == null)
             {
 
@@ -59,15 +59,15 @@ namespace Bb.Oracle.Visitors
 
                 package = new PackageModel()
                 {
-                    Name = schema + "." + package_name,
-                    PackageOwner = schema,
-                    PackageName = package_name,
-                    Code = txt,
-                    CodeBody = string.Empty,
+                    Key = schema + "." + package_name,
+                    Owner = schema,
+                    Name = package_name,
                 };
 
+                package.Code.Code = txt;
+
                 package.Files.Add(GetFileElement(context.Start));
-                this.db.Packages.Add(package);
+                this.Db.Packages.Add(package);
 
             }
             else

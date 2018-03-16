@@ -59,9 +59,9 @@ INNER JOIN dba_objects o ON t.owner = o.owner AND t.trigger_name = o.object_name
                             BaseObjectType = t.base_object_type,
                             Code = string.Empty,
                             Description = t.DESCRIPTION,
-                            Name = t.owner + "." + t.trigger_name,
+                            Key = t.owner + "." + t.trigger_name,
                             Status = t.status,
-                            TriggerName = t.trigger_name,
+                            Name = t.trigger_name,
                             TriggerStatus = t.trigger_status,
                             TriggerType = t.TRIGGER_TYPE,
                             Owner = t.owner

@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
+﻿//using System.Collections.Generic;
 
-namespace Bb.Oracle.Models
-{
+//namespace Bb.Oracle.Models
+//{
 
 
-    public class ArgumentsInfoModel
-    {
-        public List<ArgumentInfoModel> Arguments { get; set; }
+//    public class ArgumentsInfoModel
+//    {
+//        public List<ArgumentInfoModel> Arguments { get; set; }
 
-    }
+//    }
 
-}
+//}

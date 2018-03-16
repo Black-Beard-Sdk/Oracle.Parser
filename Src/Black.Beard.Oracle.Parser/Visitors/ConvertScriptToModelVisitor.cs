@@ -17,7 +17,7 @@ namespace Bb.Oracle.Visitors
 
         public ConvertScriptToModelVisitor(OracleDatabase db)
         {
-            this.db = db;
+            this.Db = db;
         }
 
         public override object Visit(IParseTree tree)
@@ -33,15 +33,16 @@ namespace Bb.Oracle.Visitors
 
             if (context.exception != null)
             {
-
+                AppendException(context.exception);
+                return null;
             }
+            else
+                return base.VisitSql_script(context);
 
-            return base.VisitSql_script(context);
         }
 
         public override object VisitUnit_statement([NotNull] PlSqlParser.Unit_statementContext context)
         {
-            //Stop();
             return base.VisitUnit_statement(context);
         }
 
@@ -480,12 +481,6 @@ namespace Bb.Oracle.Visitors
         {
             Stop();
             return base.VisitDatafile_tempfile_spec(context);
-        }
-
-        public override object VisitDatatype_null_enable([NotNull] PlSqlParser.Datatype_null_enableContext context)
-        {
-            Stop();
-            return base.VisitDatatype_null_enable(context);
         }
 
         public override object VisitData_manipulation_language_statements([NotNull] PlSqlParser.Data_manipulation_language_statementsContext context)
@@ -1589,12 +1584,6 @@ namespace Bb.Oracle.Visitors
             return base.VisitSeq_of_statements(context);
         }
 
-        public override object VisitSet_command([NotNull] PlSqlParser.Set_commandContext context)
-        {
-            Stop();
-            return base.VisitSet_command(context);
-        }
-
         public override object VisitSet_constraint_command([NotNull] PlSqlParser.Set_constraint_commandContext context)
         {
             Stop();
@@ -2048,10 +2037,22 @@ namespace Bb.Oracle.Visitors
             return base.VisitWait_nowait_part(context);
         }
 
-        public override object VisitWhenever_command([NotNull] PlSqlParser.Whenever_commandContext context)
+        public override object VisitSqlplus_execute_command([NotNull] PlSqlParser.Sqlplus_execute_commandContext context)
         {
             Stop();
-            return base.VisitWhenever_command(context);
+            return base.VisitSqlplus_execute_command(context);
+        }
+
+        public override object VisitSqlplus_set_command([NotNull] PlSqlParser.Sqlplus_set_commandContext context)
+        {
+            Stop();
+            return base.VisitSqlplus_set_command(context);
+        }
+
+        public override object VisitSqlplus_whenever_command([NotNull] PlSqlParser.Sqlplus_whenever_commandContext context)
+        {
+            Stop();
+            return base.VisitSqlplus_whenever_command(context);
         }
 
         public override object VisitWhere_clause([NotNull] PlSqlParser.Where_clauseContext context)

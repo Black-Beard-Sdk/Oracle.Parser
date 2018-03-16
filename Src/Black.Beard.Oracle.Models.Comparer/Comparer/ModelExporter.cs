@@ -284,7 +284,7 @@ namespace Bb.Oracle.Models.Comparer
 
         private void Append(SequenceModel source, DifferenceModel d)
         {
-            string p = BuildPath(Path.Combine(this.folderForTarget, source.Owner), "Sequences", source.Name);
+            string p = BuildPath(Path.Combine(this.folderForTarget, source.Owner), "Sequences", source.Key);
 
             if (!File.Exists(p))
             {
@@ -323,7 +323,7 @@ namespace Bb.Oracle.Models.Comparer
             else
                 typeObject = "Tables";
 
-            string p = BuildPath(Path.Combine(this.folderForTarget, source.SchemaName), typeObject, source.Name);
+            string p = BuildPath(Path.Combine(this.folderForTarget, source.Owner), typeObject, source.Name);
 
             if (!File.Exists(p))
             {
@@ -367,7 +367,7 @@ namespace Bb.Oracle.Models.Comparer
 
         private void Append(TriggerModel source, DifferenceModel d)
         {
-            string p = BuildPath(Path.Combine(this.folderForTarget, source.Owner), "Triggers", source.TriggerName);
+            string p = BuildPath(Path.Combine(this.folderForTarget, source.Owner), "Triggers", source.Name);
             StringBuilder sb = new StringBuilder();
             if (!File.Exists(p))
             {
@@ -393,7 +393,7 @@ namespace Bb.Oracle.Models.Comparer
 
         private void Append(SynonymModel source, DifferenceModel d)
         {
-            string p = BuildPath(Path.Combine(this.folderForTarget, source.SchemaName), "Synonyms", source.Name);
+            string p = BuildPath(Path.Combine(this.folderForTarget, source.ObjectTargetOwner), "Synonyms", source.Name);
             StringBuilder sb = new StringBuilder();
 
             if (!File.Exists(p))
@@ -403,7 +403,7 @@ namespace Bb.Oracle.Models.Comparer
                     sb = new StringBuilder(Helpers.ContentHelper.LoadContentFromFile(this.rootFolderSource, file.Path));
 
                 else
-                    sb.Append(string.Format("CREATE OR REPLACE {0} SYNONYM {1}.{2} FOR {3};", "PUBLIC", source.SchemaName, source.Name, source.ObjectTarget));
+                    sb.Append(string.Format("CREATE OR REPLACE {0} SYNONYM {1}.{2} FOR {3};", "PUBLIC", source.ObjectTargetOwner, source.Name, source.ObjectTargetName));
 
                 if (sb.Length > 0)
                 {
@@ -415,7 +415,7 @@ namespace Bb.Oracle.Models.Comparer
 
         private void Append(TypeItem source, DifferenceModel d)
         {
-            string p = BuildPath(Path.Combine(this.folderForTarget, source.SchemaName), "Types", source.Name);
+            string p = BuildPath(Path.Combine(this.folderForTarget, source.Owner), "Types", source.Name);
             StringBuilder sb = new StringBuilder();
 
             if (!File.Exists(p))
@@ -429,9 +429,9 @@ namespace Bb.Oracle.Models.Comparer
                 {
                     sb = new StringBuilder(Helpers.ContentHelper.LoadContentFromFile(this.rootFolderSource, file.Path));
                     sb.Append(CreateOrReplace);
-                    sb.Append(Utils.Unserialize(source.Code, true));
+                    sb.Append(source.Code.GetSource());
                     sb.AppendLine("\r\n");
-                    sb.Append(Utils.Unserialize(source.CodeBody, true));
+                    sb.Append(source.CodeBody.GetSource());
                 }
 
                 if (sb.Length > 0)
@@ -446,7 +446,7 @@ namespace Bb.Oracle.Models.Comparer
         private void Append(ProcedureModel source, DifferenceModel d, ProcedureModel target)
         {
 
-            string p = BuildPath(Path.Combine(this.folderForTarget, source.SchemaName), "Procedures", source.Name);
+            string p = BuildPath(Path.Combine(this.folderForTarget, source.Owner), "Procedures", source.Name);
             StringBuilder sb = new StringBuilder();
 
             if (!File.Exists(p))
@@ -468,7 +468,7 @@ namespace Bb.Oracle.Models.Comparer
             if (target != null)
             {
 
-                p = BuildPath(Path.Combine(this.folderForTarget, source.SchemaName), "Procedures", source.Name, true);
+                p = BuildPath(Path.Combine(this.folderForTarget, source.Owner), "Procedures", source.Name, true);
                 sb = new StringBuilder();
 
                 if (!File.Exists(p))
@@ -496,13 +496,13 @@ namespace Bb.Oracle.Models.Comparer
         private void Append(PackageModel source, DifferenceModel d, PackageModel target)
         {
 
-            string p = BuildPath(Path.Combine(this.folderForTarget, source.PackageOwner), "PackageBodies", source.PackageName);
+            string p = BuildPath(Path.Combine(this.folderForTarget, source.Owner), "PackageBodies", source.Name);
 
             if (d.PropertyName == "CodeBody")
             {
                 if (!File.Exists(p))
                 {
-                    string txt = CreateOrReplace + Utils.Unserialize(source.CodeBody, true).Trim();
+                    string txt = CreateOrReplace + source.CodeBody.GetSource().Trim();
                     if (!txt.EndsWith(@"\"))
                         txt = txt+ Environment.NewLine + @"\";
                     WriteFile(p, txt);
@@ -511,10 +511,10 @@ namespace Bb.Oracle.Models.Comparer
             }
             else
             {
-                p = BuildPath(Path.Combine(this.folderForTarget, source.PackageOwner), "Packages", source.PackageName);
+                p = BuildPath(Path.Combine(this.folderForTarget, source.Owner), "Packages", source.Name);
                 if (!File.Exists(p))
                 {
-                    string txt = CreateOrReplace + Utils.Unserialize(source.Code, true).Trim();
+                    string txt = CreateOrReplace + source.Code.GetSource().Trim();
                     if (!txt.EndsWith(@"\"))
                         txt = txt + Environment.NewLine + @"\";
                     WriteFile(p, txt);
@@ -527,10 +527,10 @@ namespace Bb.Oracle.Models.Comparer
 
                 if (d.PropertyName == "CodeBody")
                 {
-                    p = BuildPath(Path.Combine(this.folderForTarget, target.PackageOwner), "PackageBodies", target.PackageName, true);
+                    p = BuildPath(Path.Combine(this.folderForTarget, target.Owner), "PackageBodies", target.Name, true);
                     if (!File.Exists(p))
                     {
-                        string txt = CreateOrReplace + Utils.Unserialize(target.CodeBody, true).Trim();
+                        string txt = CreateOrReplace + target.CodeBody.GetSource().Trim();
                         if (!txt.EndsWith(@"\"))
                             txt = txt + Environment.NewLine + @"\"; WriteFile(p, txt);
                         d.Addfile(p);
@@ -538,10 +538,10 @@ namespace Bb.Oracle.Models.Comparer
                 }
                 else
                 {
-                    p = BuildPath(Path.Combine(this.folderForTarget, target.PackageOwner), "Packages", target.PackageName, true);
+                    p = BuildPath(Path.Combine(this.folderForTarget, target.Owner), "Packages", target.Name, true);
                     if (!File.Exists(p))
                     {
-                        string txt = CreateOrReplace + Utils.Unserialize(target.Code, true).Trim();
+                        string txt = CreateOrReplace + target.Code.GetSource().Trim();
                         if (!txt.EndsWith(@"\"))
                             txt = txt + Environment.NewLine + @"\"; WriteFile(p, txt);
                         d.Addfile(p);

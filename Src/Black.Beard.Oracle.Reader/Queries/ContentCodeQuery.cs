@@ -106,7 +106,7 @@ ORDER BY owner, s.type, s.name, s.line
                             item.Value.Add(new KeyValuePair<int, string>(++index, "\n"));
                         item.Value.Add(new KeyValuePair<int, string>(++index, "/\n"));
 
-                        var i = _p[k[2]].Where(c => c.SchemaName == k[1] && string.IsNullOrEmpty(c.PackageName)).ToList();
+                        var i = _p[k[2]].Where(c => c.Owner == k[1] && string.IsNullOrEmpty(c.PackageName)).ToList();
 
                         code = GetSource(item).ToString();
                         Sources.Add(new CodeSource() { Key = key, Code = code, Type = k[0] });
@@ -121,7 +121,7 @@ ORDER BY owner, s.type, s.name, s.line
 
                     case "PACKAGE":
                         if (!db.Packages.TryGet(key, out pck))
-                            db.Packages.Add(pck = new PackageModel() { Name = key, PackageOwner = k[1], PackageName = k[2] });
+                            db.Packages.Add(pck = new PackageModel() { Key = key, Owner = k[1], Name = k[2] });
 
                         index = item.Value.Select(c => c.Key).Max();
                         v = item.Value.LastOrDefault().Value;
@@ -130,12 +130,12 @@ ORDER BY owner, s.type, s.name, s.line
                         item.Value.Add(new KeyValuePair<int, string>(++index, "/\n"));
                         code = GetSource(item).ToString();
                         Sources.Add(new CodeSource() { Key = key, Code = code, Type = k[0] });
-                        pck.Code = code;
+                        pck.Code.Code = code;
                         break;
 
                     case "PACKAGE BODY":
                         if (!db.Packages.TryGet(key, out pck))
-                            db.Packages.Add(pck = new PackageModel() { Name = key, PackageOwner = k[1], PackageName = k[2] });
+                            db.Packages.Add(pck = new PackageModel() { Key = key, Owner = k[1], Name = k[2] });
 
                         index = item.Value.Select(c => c.Key).Max();
                         v = item.Value.LastOrDefault().Value;
@@ -144,11 +144,11 @@ ORDER BY owner, s.type, s.name, s.line
                         item.Value.Add(new KeyValuePair<int, string>(++index, "/\n"));
 
                         if (pck == null)
-                            db.Packages.Add(pck = new PackageModel() { Name = key, PackageOwner = k[1], PackageName = k[2] });
+                            db.Packages.Add(pck = new PackageModel() { Key = key, Owner = k[1], Name = k[2] });
 
                         code = GetSource(item).ToString();
                         Sources.Add(new CodeSource() { Key = key, Code = code, Type = k[0] });
-                        pck.CodeBody = code;
+                        pck.CodeBody.Code = code;
 
                         break;
 
@@ -177,7 +177,7 @@ ORDER BY owner, s.type, s.name, s.line
                         Sources.Add(new CodeSource() { Key = key, Code = code, Type = k[0] });
 
                         if (db.Types.TryGet(key, out type))
-                            type.Code = code;
+                            type.Code.Code = code;
 
                         break;
 
@@ -191,7 +191,7 @@ ORDER BY owner, s.type, s.name, s.line
                         Sources.Add(new CodeSource() { Key = key, Code = code, Type = k[0] });
 
                         if (db.Types.TryGet(key, out type))
-                            type.CodeBody = code;
+                            type.CodeBody.Code = code;
 
                         break;
 

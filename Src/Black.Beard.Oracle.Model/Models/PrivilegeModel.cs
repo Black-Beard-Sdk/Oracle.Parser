@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Bb.Oracle.Contracts;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -13,9 +14,9 @@ namespace Bb.Oracle.Models
     {
 
         /// <summary>
-        /// Column Name
+        /// Name
         /// </summary>
-        public string PrivilegeName { get; set; }
+        public string Name { get; set; }
               
         public void Create(IchangeVisitor visitor)
         {
@@ -34,7 +35,7 @@ namespace Bb.Oracle.Models
 
         public override string GetName()
         {
-            return this.PrivilegeName;
+            return this.Name;
         }
 
         public IEnumerable<Anomaly> Evaluate(IEvaluateManager manager)

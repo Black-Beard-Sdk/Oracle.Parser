@@ -94,7 +94,7 @@ ORDER BY t.OWNER, t.TABLE_NAME, t.CONSTRAINT_NAME
         {
             foreach (ColumnModel column in columns)
             {
-                if (column.ColumnName == columnName)
+                if (column.Name == columnName)
                 {
                     column.IsPrimaryKey = true;
                     break;
@@ -107,7 +107,7 @@ ORDER BY t.OWNER, t.TABLE_NAME, t.CONSTRAINT_NAME
         {
             foreach (ColumnModel column in columns)
             {
-                if (column.ColumnName == columnName)
+                if (column.Name == columnName)
                 {
                     column.ForeignKey.IsForeignKey = true;
                     break;

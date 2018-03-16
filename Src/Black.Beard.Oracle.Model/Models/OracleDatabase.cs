@@ -1,5 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System.IO;
+using System;
+using System.Collections.Specialized;
+using Bb.Oracle.Models.TextReferentials;
+using System.Collections;
 
 namespace Bb.Oracle.Models
 {
@@ -19,8 +23,45 @@ namespace Bb.Oracle.Models
             this.Synonymes = new SynonymCollection() { Parent = this };
             this.Grants = new GrantCollection() { Parent = this };
 
-            this.References = new ReferentialNames(this);
+            this.References = new ReferentialNames();
 
+        }
+
+        public event NotifyCollectionChangedEventHandler CollectionChanged;
+
+        internal void Changes(IndexedCollection indexedCollection, NotifyCollectionChangedEventArgs arg)
+        {
+
+            if (this.CollectionChanged != null)
+                this.CollectionChanged(indexedCollection, arg);
+
+            switch (arg.Action)
+            {
+                case NotifyCollectionChangedAction.Add:
+                    foreach (ItemBase item in arg.NewItems)
+                        this.References.Add(item);
+                    break;
+
+                case NotifyCollectionChangedAction.Remove:
+                    foreach (ItemBase item in arg.OldItems)
+                        this.References.Remove(item);
+                    break;
+
+                case NotifyCollectionChangedAction.Replace:
+                    foreach (ItemBase item in arg.OldItems)
+                        this.References.Remove(item);
+                    foreach (ItemBase item in arg.NewItems)
+                        this.References.Add(item);
+                    break;
+
+                case NotifyCollectionChangedAction.Move:
+                case NotifyCollectionChangedAction.Reset:
+                default:
+                    break;
+
+            }
+
+            
         }
 
         [JsonIgnore]

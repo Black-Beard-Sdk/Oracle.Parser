@@ -9,11 +9,12 @@ using Antlr4.Runtime.Tree;
 using System.Text;
 using System.Diagnostics;
 using Bb.Oracle.Helpers;
+using Bb.Oracle.Validators;
 
 namespace Bb.Oracle.Visitors
 {
 
-    public partial class ConvertScriptToModelVisitor
+    public partial class ConvertScriptToModelVisitor : IDbModelVisitor
     {
 
         #region Resolvers
@@ -51,7 +52,7 @@ namespace Bb.Oracle.Visitors
         private List<ItemBase> ResolveTypes(string typeName)
         {
             var _tableName = typeName.CleanName();
-            var items = this.db.Types.Where(c => c.GetName() == _tableName).Cast<ItemBase>().ToList();
+            var items = this.Db.Types.Where(c => c.GetName() == _tableName).Cast<ItemBase>().ToList();
             Debug.Assert(items.Count > 0);
             return items;
         }
@@ -59,7 +60,7 @@ namespace Bb.Oracle.Visitors
         private List<ItemBase> ResolveTables(string tableName)
         {
             var _tableName = tableName.CleanName();
-            var items = this.db.Tables.Where(c => c.GetName() == _tableName).Cast<ItemBase>().ToList();
+            var items = this.Db.Tables.Where(c => c.GetName() == _tableName).Cast<ItemBase>().ToList();
             Debug.Assert(items.Count > 0);
             return items;
         }
@@ -69,7 +70,7 @@ namespace Bb.Oracle.Visitors
             var _schema = schema.CleanName();
             var _tableName = tableName.CleanName();
 
-            var t = db.Tables[$"{_schema}.{_tableName}"];
+            var t = Db.Tables[$"{_schema}.{_tableName}"];
 
             if (t == null)
             {
@@ -104,7 +105,7 @@ namespace Bb.Oracle.Visitors
                     if (ob.SchemaCaller != null)
                     {
                         var schemaCaller = ob.SchemaCaller;
-                        var syn = this.db.Synonymes.Where(c => c.IsPublic || c.SchemaName.ToUpper() == schemaCaller || c.SynonymOwner.ToUpper() == schemaCaller).ToList();
+                        var syn = this.Db.Synonymes.Where(c => c.IsPublic || c.ObjectTargetOwner.ToUpper() == schemaCaller || c.Owner.ToUpper() == schemaCaller).ToList();
 
                     }
 
@@ -118,13 +119,12 @@ namespace Bb.Oracle.Visitors
 
         }
 
-
         private List<ColumnModel> ResolveColumns(string tableName, string columnName)
         {
             var _columnName = columnName.CleanName();
             var _tableName = tableName.CleanName();
-            var items = this.db.Tables.Where(c => c.Name == _tableName).ToList();
-            var cols = items.SelectMany(c => c.Columns).Where(c => c.ColumnName == _columnName).ToList();
+            var items = this.Db.Tables.Where(c => c.Name == _tableName).ToList();
+            var cols = items.SelectMany(c => c.Columns).Where(c => c.Name == _columnName).ToList();
 
             Debug.Assert(cols.Count > 0);
 
@@ -138,8 +138,8 @@ namespace Bb.Oracle.Visitors
             var _tableName = tableName.CleanName();
             var _columnName = columnName.CleanName();
 
-            var t = db.Tables[$"{_schema}.{_tableName}"];
-            ColumnModel col = t.Columns.FirstOrDefault(c => c.ColumnName == _columnName);
+            var t = Db.Tables[$"{_schema}.{_tableName}"];
+            ColumnModel col = t.Columns.FirstOrDefault(c => c.Name == _columnName);
 
             Debug.Assert(col != null);
 
@@ -200,20 +200,24 @@ namespace Bb.Oracle.Visitors
                 System.Diagnostics.Debugger.Break();
         }
 
-        public OracleDatabase db { get; }
+        public OracleDatabase Db { get; }
 
-        public List<EventParser> Events { get { return this._events; } }
+        public EventParsers Events { get { return this._events; } }
 
-        public List<Error> Errors { get { return this._anomalies; } }
+        public Errors Errors { get { return this._anomalies; } }
+
+
+        public List<ParserValidator> Validators { get { return this._validators; } }
 
         public string Filename { get; set; }
 
 
         private Stack<IRuleNode> _models = new Stack<IRuleNode>();
-        private List<Error> _anomalies = new List<Error>();
-        private List<EventParser> _events = new List<EventParser>();
+        private Errors _anomalies = new Errors();
+        private EventParsers _events = new EventParsers();
         private StringBuilder _initialSource;
         private readonly Stack<Trash> _statck = new Stack<Trash>();
+        private List<ParserValidator> _validators = new List<ParserValidator>();
 
         private void AppendEventParser(EventParser eventParser)
         {
@@ -236,7 +240,7 @@ namespace Bb.Oracle.Visitors
             var error = new Error() { Exception = exception, Message = message, File = GetFileElement(exception.OffendingToken) };
             _anomalies.Add(error);
 
-            AppendEventParser(GetEventParser(error, string.Empty, SqlKind.Undefined));
+            AppendEventParser(GetEventParser(error, string.Empty, KindModelEnum.Undefined));
 
             Trace.WriteLine(message + " in " + this.Filename);
 
@@ -275,12 +279,12 @@ namespace Bb.Oracle.Visitors
             Trace.WriteLine(message + " in " + this.Filename);
         }
 
-        private EventParser GetEventParser(Error error, string objectName, SqlKind kind)
+        private EventParser GetEventParser(Error error, string objectName, KindModelEnum kind)
         {
             return GetEventParser(error.Message, objectName, kind, error.File);
         }
 
-        private EventParser GetEventParser(string message, string objectName, SqlKind kind, params FileElement[] fileElements)
+        private EventParser GetEventParser(string message, string objectName, KindModelEnum kind, params FileElement[] fileElements)
         {
 
             if (string.IsNullOrEmpty(message))

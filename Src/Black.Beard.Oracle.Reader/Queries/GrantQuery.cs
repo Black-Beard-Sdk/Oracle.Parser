@@ -139,7 +139,7 @@ ORDER BY ROLE, privilege
                             grant.Hierarchy = t.Hierarchy;
                         }
 
-                        var p = new PrivilegeModel() { PrivilegeName = t.Privilege };
+                        var p = new PrivilegeModel() { Name = t.Privilege };
                         // AddIfNotExist -> can be duplicated because same privilege can given by many grantor
                         grant.Privileges.AddIfNotExist(p);
 

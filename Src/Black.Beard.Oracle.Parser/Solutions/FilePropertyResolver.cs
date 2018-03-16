@@ -12,13 +12,13 @@ namespace Bb.Oracle.Solutions
     public class FilePropertyResolver : IFilePropertyResolver
     {
 
-        public SqlKind ResolveKind(FileInfo file)
+        public KindModelEnum ResolveKind(FileInfo file)
         {
             var type = file.Directory.Name;
             return GetKind(type);
         }
 
-        public int ResolvePriority(SqlKind kind)
+        public int ResolvePriority(KindModelEnum kind)
         {
             return ResolvePriority_Impl(kind);
         }
@@ -28,64 +28,64 @@ namespace Bb.Oracle.Solutions
             return file.Directory.Parent.Name?.ToUpper() ?? string.Empty;
         }
 
-        private SqlKind GetKind(string expectedType)
+        private KindModelEnum GetKind(string expectedType)
         {
 
             switch (expectedType.ToUpper())
             {
                 case Constants.Functions:
-                    return SqlKind.Function;
+                    return KindModelEnum.Function;
 
                 case Constants.Indexes:
-                    return SqlKind.Index;
+                    return KindModelEnum.Index;
 
                 case Constants.PackageBodies:
-                    return SqlKind.PackageBodies;
+                    return KindModelEnum.PackageBodies;
 
                 case Constants.Packages:
-                    return SqlKind.Package;
+                    return KindModelEnum.Package;
 
                 case Constants.Procedures:
-                    return SqlKind.Procedure;
+                    return KindModelEnum.Procedure;
 
                 case Constants.Synonyms:
                 case Constants.PublicSynonyms:
-                    return SqlKind.Synonym;
+                    return KindModelEnum.Synonym;
 
                 case Constants.Sequences:
-                    return SqlKind.Sequence;
+                    return KindModelEnum.Sequence;
 
                 case Constants.Tables:
-                    return SqlKind.Table;
+                    return KindModelEnum.Table;
 
                 case Constants.Triggers:
-                    return SqlKind.Trigger;
+                    return KindModelEnum.Trigger;
                     
                 case Constants.AdvancedQueue:
                 case Constants.UserObjectPrivileges:
-                    return SqlKind.UserObjectPrivilege;
+                    return KindModelEnum.UserObjectPrivilege;
 
                 case Constants.Views:
-                    return SqlKind.View;
+                    return KindModelEnum.View;
 
                 case Constants.Types:
-                    return SqlKind.Type;
+                    return KindModelEnum.Type;
 
                 case Constants.MaterializedViews:
-                    return SqlKind.MaterializedView;
+                    return KindModelEnum.MaterializedView;
 
                 case Constants.Jobs:
-                    return SqlKind.Jobs;
+                    return KindModelEnum.Jobs;
 
                 default:
                     if (System.Diagnostics.Debugger.IsAttached)
                         System.Diagnostics.Debugger.Break();
-                    return SqlKind.NotImplemented;
+                    return KindModelEnum.NotImplemented;
             }
 
         }
 
-        protected virtual int ResolvePriority_Impl(SqlKind expectedKind)
+        protected virtual int ResolvePriority_Impl(KindModelEnum expectedKind)
         {
 
             int priority = 1000;
@@ -93,31 +93,31 @@ namespace Bb.Oracle.Solutions
             switch (expectedKind)
             {
 
-                case SqlKind.Table:
-                case SqlKind.Sequence:
+                case KindModelEnum.Table:
+                case KindModelEnum.Sequence:
                     priority = 0;
                     break;
 
-                case SqlKind.Index:
-                case SqlKind.Trigger:
-                case SqlKind.Package:
-                case SqlKind.Function:
-                case SqlKind.Procedure:
-                case SqlKind.View:
+                case KindModelEnum.Index:
+                case KindModelEnum.Trigger:
+                case KindModelEnum.Package:
+                case KindModelEnum.Function:
+                case KindModelEnum.Procedure:
+                case KindModelEnum.View:
                     priority = 10;
                     break;
 
-                case SqlKind.PackageBodies:
+                case KindModelEnum.PackageBodies:
                     priority = 20;
                     break;
 
-                case SqlKind.MaterializedView:
+                case KindModelEnum.MaterializedView:
                     break;
-                case SqlKind.MaterializedViewLog:
+                case KindModelEnum.MaterializedViewLog:
                     break;
-                case SqlKind.UserObjectPrivilege:
+                case KindModelEnum.UserObjectPrivilege:
                     break;
-                case SqlKind.Synonym:
+                case KindModelEnum.Synonym:
                     break;
 
             }

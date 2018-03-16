@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Bb.Oracle.Contracts;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace Bb.Oracle.Models
@@ -13,12 +14,12 @@ namespace Bb.Oracle.Models
         /// <summary>
         /// Name
         /// </summary>
-        public string Name { get; set; }
+        public string Key { get; set; }
 
         /// <summary>
         /// Trigger Name
         /// </summary>
-        public string TriggerName { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Base Object Type
@@ -99,7 +100,7 @@ namespace Bb.Oracle.Models
 
         public override string GetName()
         {
-            return this.TriggerName;
+            return this.Name;
         }
 
         public override string GetOwner()

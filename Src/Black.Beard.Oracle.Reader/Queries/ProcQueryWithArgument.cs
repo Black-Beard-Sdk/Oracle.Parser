@@ -69,17 +69,16 @@ ORDER BY t.SUBPROGRAM_ID, t.PACKAGE_NAME, t.OBJECT_NAME, t.SEQUENCE, t.IN_OUT
 
                         proc = new ProcedureModel()
                         {
-                            SchemaName = t.Owner,
+                            Owner = t.Owner,
                             SubProgramId = t.subprogram_id,
                             PackageName = t.PackageName,
                             Name = t.ObjectName,
                             Key = key,
-                            Filename = string.Empty,
                             IsFunction = false,
                         };
 
-                        proc.ResultType.Type.TypeOwner = t.TypeOwner;
-                        proc.ResultType.Type.TypeName = t.TypeName;
+                        proc.ResultType.Type.Owner = t.TypeOwner;
+                        proc.ResultType.Type.Name = t.TypeName;
 
                         db.Procedures.Add(proc);
 
@@ -95,7 +94,7 @@ ORDER BY t.SUBPROGRAM_ID, t.PACKAGE_NAME, t.OBJECT_NAME, t.SEQUENCE, t.IN_OUT
                         var arg = new ArgumentModel()
                         {
                             Key = (proc.Arguments.Count + 1).ToString(),
-                            ArgumentName = colName,
+                            Name = colName,
                             In = t.In,
                             Out = t.Out,
                             Position = t.Position,
@@ -115,7 +114,7 @@ ORDER BY t.SUBPROGRAM_ID, t.PACKAGE_NAME, t.OBJECT_NAME, t.SEQUENCE, t.IN_OUT
                             var c = new ColumnModel()
                             {
                                 Key = (proc.ResultType.Columns.Count + 1).ToString(),
-                                ColumnName = colName,
+                                Name = colName,
                                 ColumnId = t.Position,
                             };
                             _type = c.Type;
@@ -134,8 +133,8 @@ ORDER BY t.SUBPROGRAM_ID, t.PACKAGE_NAME, t.OBJECT_NAME, t.SEQUENCE, t.IN_OUT
                         _type.DataType = t.DataType;
                         _type.defaultLength = t.DefaultLength;
                         _type.DataLevel = t.Data_Level;
-                        _type.TypeOwner = t.TypeOwner;
-                        _type.TypeName = t.TypeName;
+                        _type.Owner = t.TypeOwner;
+                        _type.Name = t.TypeName;
 
                         if (_type.DataType != null)
                         {
@@ -152,7 +151,7 @@ ORDER BY t.SUBPROGRAM_ID, t.PACKAGE_NAME, t.OBJECT_NAME, t.SEQUENCE, t.IN_OUT
 
                     }
 
-                    proc.IsFunction = proc.ResultType.Columns.Count > 0 && (proc.ResultType.Columns.OfType<ColumnModel>().Count(col => col.ColumnName == "arg0") == proc.ResultType.Columns.Count);
+                    proc.IsFunction = proc.ResultType.Columns.Count > 0 && (proc.ResultType.Columns.OfType<ColumnModel>().Count(col => col.Name == "arg0") == proc.ResultType.Columns.Count);
 
                 };
 

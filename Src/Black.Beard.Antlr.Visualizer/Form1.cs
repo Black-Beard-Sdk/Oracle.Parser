@@ -47,6 +47,9 @@ namespace Black.Beard.Antlr.Visualizer
         {
             if (e.Node is FileTreeNode f)
             {
+
+                //ScriptParser.Trace = true;
+
                 // A abstraire pour rendre le dev générique
                 var script = ScriptParser.ParsePath(f.File.FullName);
                 ParserRuleContext tree = script.Tree;
@@ -82,7 +85,8 @@ namespace Black.Beard.Antlr.Visualizer
                 {
                     int _start = t.Symbol.StartIndex;
                     int _end = t.Symbol.StopIndex;
-                    richTextBox1.Select(_start, _end - _start + 1);
+                    int length = Math.Max((int)(_end - _start + 1), (int)0);
+                    richTextBox1.Select(Math.Max(_start, 0), length);
                 }
                 else
                 {

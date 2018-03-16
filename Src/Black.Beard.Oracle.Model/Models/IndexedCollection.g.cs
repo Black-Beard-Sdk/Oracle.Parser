@@ -112,13 +112,13 @@ namespace Bb.Oracle.Models
             if (!this._datas.ContainsKey(key))
             {
                 this._datas.Add(key, item);
+
                 base.AppendChanges(System.Collections.Specialized.NotifyCollectionChangedAction.Add, new List<T>() { item }, this.EmptyList);
+
                 var v = item as ItemBase;
                 if (v != null)
-                {
                     v.Parent = this.Parent;
-                    v.Initialize();
-                }
+
             }
             else
                 throw new DuplicateWaitObjectException(key);

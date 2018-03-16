@@ -13,7 +13,7 @@ namespace Bb.Oracle.Models
         /// </summary>
         static PartitionCollection()
         {
-            PartitionCollection.Key = IndexedCollection<PartitionModel>.GetMethodKey(c => c.PartitionName);
+            PartitionCollection.Key = IndexedCollection<PartitionModel>.GetMethodKey(c => c.Name);
         }
 
     }

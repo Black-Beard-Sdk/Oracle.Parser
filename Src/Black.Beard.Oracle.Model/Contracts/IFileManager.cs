@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Bb.Oracle.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Bb.Oracle.Models
+namespace Bb.Oracle.Contracts
 {
 
     public interface IFileManager

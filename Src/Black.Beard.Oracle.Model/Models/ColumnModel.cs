@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System;
+using Bb.Oracle.Contracts;
 
 namespace Bb.Oracle.Models
 {
@@ -30,7 +31,7 @@ namespace Bb.Oracle.Models
         /// <summary>
         /// Column Name
         /// </summary>
-        public string ColumnName { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Nullable
@@ -126,7 +127,7 @@ namespace Bb.Oracle.Models
             {
                 foreach (ConstraintColumnModel item in c.Columns)
                 {
-                    if (item.ColumnName == this.ColumnName)
+                    if (item.ColumnName == this.Name)
                         this.Constraints.Add(c);
                 }
             }
@@ -155,7 +156,7 @@ namespace Bb.Oracle.Models
 
         public override string GetName()
         {
-            return this.ColumnName;
+            return this.Name;
         }
 
         public IEnumerable<Anomaly> Evaluate(IEvaluateManager manager)

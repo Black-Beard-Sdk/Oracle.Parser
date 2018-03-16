@@ -63,7 +63,7 @@ WHERE t.DATA_DEFAULT is not NULL {0}
                                 if (table != null)
                                 {
 
-                                    var c = table.Columns.OfType<ColumnModel>().FirstOrDefault(d => d.ColumnName == t.ColumnName);
+                                    var c = table.Columns.OfType<ColumnModel>().FirstOrDefault(d => d.Name == t.ColumnName);
                                     if (c != null)
                                     {
                                         var d = t.DefaultValue;

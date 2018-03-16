@@ -38,7 +38,7 @@ LEFT JOIN SYS.DBA_TABLESPACE_GROUPS g ON t.TABLESPACE_NAME = g.TABLESPACE_NAME
 
                     var obj = new TablespaceModel()
                     {
-                        TablespaceName = t.TablespaceName,
+                        Name = t.TablespaceName,
                         BlockSize = t.BlockSize,
                         InitialExtent = t.InitialExtent,
                         NextExtent = t.NextExtent,

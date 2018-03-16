@@ -53,13 +53,16 @@
     <Compile Include="Solutions\ISolutionEvaluator.cs" />
     <Compile Include="Solutions\ScriptFileInfo.cs" />
     <Compile Include="Solutions\ScriptParserContext.cs" />
+    <Compile Include="Solutions\ScriptParsers.cs" />
     <Compile Include="Solutions\SolutionFolder.cs" />
+    <Compile Include="Validators\CheckLocationFolderParserValidator.cs" />
+    <Compile Include="Validators\ParserValidator.cs" />
     <Compile Include="Visitors\ConvertScriptToModelVisitor.cs" />
     <Compile Include="Visitors\ConvertScriptToModelVisitor.common.cs" />
     <Compile Include="Visitors\ConvertScriptToModelVisitor.procedure.cs" />
     <Compile Include="Visitors\ConvertScriptToModelVisitor.package.cs" />
     <Compile Include="Visitors\ConvertScriptToModelVisitor.grant.cs" />
-    <Compile Include="Visitors\Error.cs" />
+    <Compile Include="Visitors\IDbModelVisitor.cs" />
     <Compile Include="Visitors\IFile.cs" />
     <Compile Include="Visitors\ParseScriptVisitor.cs" />
   </ItemGroup>

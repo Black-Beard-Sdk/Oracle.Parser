@@ -1,4 +1,6 @@
-﻿namespace Bb.Oracle.Models
+﻿using Bb.Oracle.Contracts;
+
+namespace Bb.Oracle.Models
 {
     public interface IScriptChangeEvaluator
     {

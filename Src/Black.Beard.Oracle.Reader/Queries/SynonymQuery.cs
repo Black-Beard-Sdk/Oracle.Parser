@@ -56,10 +56,10 @@ FROM DBA_SYNONYMS t LEFT OUTER JOIN obj o ON (t.TABLE_OWNER = o.OWNER AND t.TABL
                             {
                                 Key = synonymeName,
                                 ObjectType = t.OBJECT_TYPE,
-                                ObjectTarget = $"{t.OBJECT_OWNER}.{t.OBJECT_NAME}",
+                                ObjectTargetName = $"{t.OBJECT_OWNER}.{t.OBJECT_NAME}",
                                 Name = t.SYNONYME_NAME,
-                                SchemaName = t.OBJECT_OWNER,
-                                SynonymOwner = t.SYNONYME_OWNER,
+                                ObjectTargetOwner = t.OBJECT_OWNER,
+                                Owner = t.SYNONYME_OWNER,
                                 IsPublic = t.SYNONYME_OWNER.ToUpper() == "PUBLIC",
                             };
                             db.Synonymes.Add(syn);

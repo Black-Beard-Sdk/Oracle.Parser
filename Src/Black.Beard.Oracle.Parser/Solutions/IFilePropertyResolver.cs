@@ -6,8 +6,8 @@ namespace Bb.Oracle.Solutions
     public interface IFilePropertyResolver
     {
         string ResolveSchema(FileInfo c);
-        SqlKind ResolveKind(FileInfo c);
-        int ResolvePriority(SqlKind file);
+        KindModelEnum ResolveKind(FileInfo c);
+        int ResolvePriority(KindModelEnum file);
     }
 
 }

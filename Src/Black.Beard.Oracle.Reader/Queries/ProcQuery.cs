@@ -54,11 +54,10 @@ WHERE NOT EXISTS(SELECT 1 FROM dba_arguments a WHERE a.OBJECT_ID = t.OBJECT_ID) 
 
                         proc = new ProcedureModel()
                         {
-                            SchemaName = t.OWNER,
+                            Owner = t.OWNER,
                             PackageName = string.IsNullOrEmpty(t.PROCEDURE_NAME) ? string.Empty : t.OBJECT_NAME,
                             Name = string.IsNullOrEmpty(t.PROCEDURE_NAME) ? t.OBJECT_NAME : t.PROCEDURE_NAME,
                             Key = key,
-                            Filename = string.Empty,
                             IsFunction = false,
                         };
 

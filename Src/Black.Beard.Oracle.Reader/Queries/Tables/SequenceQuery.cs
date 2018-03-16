@@ -76,9 +76,9 @@ ORDER BY s.sequence_owner, s.sequence_name
                         {
                             s = new SequenceModel()
                             {
-                                Name = name,
+                                Key = name,
                                 Owner = t.Owner,
-                                SequenceName = t.Sequence_name,
+                                Name = t.Sequence_name,
                                 MinValue = t.Min_value,
                                 MaxValue = t.Max_value,
                                 IncrementBy = t.Increment_by,

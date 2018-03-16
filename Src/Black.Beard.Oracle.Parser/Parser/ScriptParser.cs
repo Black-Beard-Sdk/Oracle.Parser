@@ -16,30 +16,33 @@ namespace Bb.Oracle.Parser
     public class ScriptParser
     {
 
-        private ScriptParser()
+        private ScriptParser(TextWriter output, TextWriter outputError)
         {
+
+            this.Output = output ?? Console.Out;
+            this.OutputError = outputError ?? Console.Error;
 
         }
 
-        public static ScriptParser ParseString(string source, string sourceFile = "")
+        public static ScriptParser ParseString(string source, string sourceFile = "", TextWriter output = null, TextWriter outputError = null)
         {
 
             var txt = ContentHelper.ToUpper(new StringBuilder(source));
             ICharStream stream = CharStreams.fromstring(txt.ToString());
 
-            var parser = new ScriptParser() { File = sourceFile ?? string.Empty, Content = txt };
+            var parser = new ScriptParser(output, outputError) { File = sourceFile ?? string.Empty, Content = txt };
             parser.ParseCharStream(stream);
             return parser;
 
         }
 
-        public static ScriptParser ParsePath(string source)
+        public static ScriptParser ParsePath(string source, TextWriter output = null, TextWriter outputError = null)
         {
 
             var payload = LoadContent(source);
             ICharStream stream = CharStreams.fromstring(payload.ToString());
 
-            var parser = new ScriptParser() { File = source, Content = payload };
+            var parser = new ScriptParser(output, outputError) { File = source, Content = payload };
             parser.ParseCharStream(stream);
             return parser;
 
@@ -59,11 +62,13 @@ namespace Bb.Oracle.Parser
 
         public static bool Trace { get; set; }
 
-        public PlSqlParser.Sql_scriptContext Tree { get { return this.context; } }
+        public PlSqlParser.Sql_scriptContext Tree { get { return this._context; } }
 
         public string File { get; set; }
 
         public StringBuilder Content { get; private set; }
+        public TextWriter Output { get; private set; }
+        public TextWriter OutputError { get; private set; }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Visit<Result>(IParseTreeVisitor<Result> visitor)
@@ -72,7 +77,15 @@ namespace Bb.Oracle.Parser
             if (visitor is IFile f)
                 f.Filename = this.File;
 
-            visitor.Visit(this.context);
+            if (System.Diagnostics.Debugger.IsAttached)
+                Console.WriteLine(this.File);
+
+            var context = this._context;
+            if (this._parser.ErrorListeners.Count > 0)
+            {
+
+            }
+            visitor.Visit(context);
 
         }
 
@@ -83,15 +96,15 @@ namespace Bb.Oracle.Parser
             //try
             //{
 
-            var lexer = new PlSqlLexer(stream);
+            var lexer = new PlSqlLexer(stream, this.Output, this.OutputError);
             var token = new CommonTokenStream(lexer);
-            var parser = new PlSqlParser(token)
+            this._parser = new PlSqlParser(token)
             {
                 BuildParseTree = true,
                 Trace = ScriptParser.Trace,
             };
 
-            context = parser.sql_script();
+            _context = _parser.sql_script();
 
             //}
             //catch (Exception e)
@@ -103,7 +116,8 @@ namespace Bb.Oracle.Parser
 
         }
 
-        private PlSqlParser.Sql_scriptContext context;
+        private PlSqlParser _parser;
+        private PlSqlParser.Sql_scriptContext _context;
 
     }
 

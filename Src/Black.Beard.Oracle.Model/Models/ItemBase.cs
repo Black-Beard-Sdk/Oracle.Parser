@@ -10,6 +10,7 @@ namespace Bb.Oracle.Models
         public ItemBase()
         {
             this.Files = new FileCollection() { Parent = this};
+            this.ParserInformations = new ParserInformations();
         }
 
         public object Tag { get; set; }
@@ -23,11 +24,11 @@ namespace Bb.Oracle.Models
         /// </summary>
         public bool Valid { get; set; }
 
-        // TODO : A degager
-        /// <summary>
-        /// Associated To
-        /// </summary>
-        public string AssociatedTo { get; set; }
+        //// TODO : A degager
+        ///// <summary>
+        ///// Associated To
+        ///// </summary>
+        //public string AssociatedTo { get; set; }
 
         /// <summary>
         /// Files
@@ -35,7 +36,8 @@ namespace Bb.Oracle.Models
         /// <returns>		
         /// Objet <see cref="FileCollection" />.");
         /// </returns>
-        public FileCollection Files { get; set; } 
+        public FileCollection Files { get; set; }
+        internal ParserInformations ParserInformations { get; private set; }
 
         public virtual void Initialize()
         {
@@ -67,4 +69,5 @@ namespace Bb.Oracle.Models
 
 
     }
+
 }
