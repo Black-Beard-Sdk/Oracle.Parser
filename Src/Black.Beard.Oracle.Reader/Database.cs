@@ -5,6 +5,7 @@ using Bb.Oracle.Reader.Queries;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Bb.Oracle.Structures.Models;
 
 namespace Bb.Oracle.Reader
 {

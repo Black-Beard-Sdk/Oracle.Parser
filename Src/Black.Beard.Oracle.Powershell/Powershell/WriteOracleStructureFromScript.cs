@@ -1,5 +1,6 @@
 ﻿using Bb.Oracle.Models;
 using Bb.Oracle.Solutions;
+using Bb.Oracle.Structures.Models;
 using Bb.Oracle.Visitors;
 using System;
 using System.Collections.Generic;

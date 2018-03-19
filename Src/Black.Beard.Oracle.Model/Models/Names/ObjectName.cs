@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Bb.Oracle.Structures.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -19,6 +20,20 @@ namespace Bb.Oracle.Models.Names
         public string Schema { get; set; }
 
         public string Name { get; set; }
+        public string Package { get; internal set; }
+
+        public static MethodName ProcedureName(List<string> items)
+        {
+
+            if (items == null)
+                throw new ArgumentNullException(nameof(items));
+
+            return new MethodName(items);
+
+        }
 
     }
+
+
+
 }

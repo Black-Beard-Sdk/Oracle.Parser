@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Bb.Oracle.Solutions;
 using Bb.Oracle.Models;
 using Bb.Oracle.Visitors;
+using Bb.Oracle.Structures.Models;
 
 namespace Black.Beard.Oracle.Parser.UnitTests
 {

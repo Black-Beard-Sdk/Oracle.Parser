@@ -1,4 +1,5 @@
 ﻿using Bb.Oracle.Models;
+using Bb.Oracle.Structures.Models;
 using Bb.Oracle.Validators;
 using Bb.Oracle.Visitors;
 using System;

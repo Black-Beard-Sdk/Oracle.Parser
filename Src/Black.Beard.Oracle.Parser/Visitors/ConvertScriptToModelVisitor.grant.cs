@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Antlr4.Runtime;
 using System;
+using Bb.Oracle.Structures.Models;
 
 namespace Bb.Oracle.Visitors
 {
@@ -36,6 +37,13 @@ namespace Bb.Oracle.Visitors
 
         public override object VisitGrant_statement([NotNull] PlSqlParser.Grant_statementContext context)
         {
+
+            if (context.exception != null)
+            {
+                //this._initialSource = new StringBuilder(context.Start.InputStream.ToString());
+                AppendException(context.exception);
+                return null;
+            }
 
             string _schema = string.Empty;
             string _object = string.Empty;
@@ -282,6 +290,16 @@ namespace Bb.Oracle.Visitors
             return grant;
 
         }
+
+
+        public bool ttoto()
+        {
+
+
+            return true;
+
+        }
+
 
     }
 

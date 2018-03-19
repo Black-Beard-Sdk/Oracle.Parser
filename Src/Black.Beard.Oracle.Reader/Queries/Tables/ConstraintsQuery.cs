@@ -4,6 +4,7 @@ using Bb.Oracle.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Bb.Oracle.Structures.Models;
 
 namespace Bb.Oracle.Reader.Queries
 {

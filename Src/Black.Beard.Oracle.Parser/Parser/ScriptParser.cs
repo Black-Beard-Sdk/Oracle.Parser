@@ -67,7 +67,9 @@ namespace Bb.Oracle.Parser
         public string File { get; set; }
 
         public StringBuilder Content { get; private set; }
+
         public TextWriter Output { get; private set; }
+
         public TextWriter OutputError { get; private set; }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -81,13 +83,11 @@ namespace Bb.Oracle.Parser
                 Console.WriteLine(this.File);
 
             var context = this._context;
-            if (this._parser.ErrorListeners.Count > 0)
-            {
-
-            }
             visitor.Visit(context);
 
         }
+
+        public bool InError { get => this._parser.ErrorListeners.Count > 0; }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void ParseCharStream(ICharStream stream)
@@ -101,7 +101,7 @@ namespace Bb.Oracle.Parser
             this._parser = new PlSqlParser(token)
             {
                 BuildParseTree = true,
-                Trace = ScriptParser.Trace,
+                //Trace = ScriptParser.Trace, // Ca plante sur un null, pourquoi ?
             };
 
             _context = _parser.sql_script();

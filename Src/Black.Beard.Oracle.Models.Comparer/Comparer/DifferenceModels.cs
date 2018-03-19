@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using Bb.Oracle.Models;
 using Bb.Oracle.Contracts;
+using Bb.Oracle.Structures.Models;
 
 namespace Bb.Oracle.Models.Comparer
 {

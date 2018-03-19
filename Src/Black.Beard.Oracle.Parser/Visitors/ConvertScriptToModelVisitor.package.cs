@@ -7,6 +7,7 @@ using Antlr4.Runtime;
 using System;
 using Bb.Oracle.Exceptions;
 using Bb.Oracle.Helpers;
+using Bb.Oracle.Structures.Models;
 
 namespace Bb.Oracle.Visitors
 {

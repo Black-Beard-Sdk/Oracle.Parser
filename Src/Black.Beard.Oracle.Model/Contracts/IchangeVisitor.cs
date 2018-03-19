@@ -1,4 +1,4 @@
-﻿using Bb.Oracle.Models;
+﻿using Bb.Oracle.Structures.Models;
 
 namespace Bb.Oracle.Contracts
 {

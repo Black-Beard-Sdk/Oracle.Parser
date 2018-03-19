@@ -1,6 +1,7 @@
 ﻿using Bb.Oracle.Reader.Dao;
 using Bb.Oracle.Models;
 using System;
+using Bb.Oracle.Structures.Models;
 
 namespace Bb.Oracle.Reader
 {

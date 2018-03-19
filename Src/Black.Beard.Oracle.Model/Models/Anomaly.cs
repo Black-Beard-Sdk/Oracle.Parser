@@ -1,4 +1,5 @@
 ﻿using Bb.Oracle.Contracts;
+using Bb.Oracle.Structures.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;

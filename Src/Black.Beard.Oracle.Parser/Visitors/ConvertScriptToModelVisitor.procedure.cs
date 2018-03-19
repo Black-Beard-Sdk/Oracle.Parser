@@ -9,12 +9,47 @@ using System;
 using System.Diagnostics;
 using System.Text;
 using Bb.Oracle.Helpers;
+using Bb.Oracle.Models.Names;
+using Bb.Oracle.Models.Codes;
+using Bb.Oracle.Structures.Models;
 
 namespace Bb.Oracle.Visitors
 {
 
     public partial class ConvertScriptToModelVisitor
     {
+
+        public override object VisitFunction_call([NotNull] PlSqlParser.Function_callContext context)
+        {
+
+            var names = ObjectName.ProcedureName(context.routine_name().GetCleanedTexts());
+
+            var method = new OCallMethodReference()
+            {
+                Name = names
+            };
+
+            var function_arguments = context.function_arguments();
+            if (function_arguments != null)
+            {
+                var arguments = function_arguments.arguments();
+                foreach (PlSqlParser.ArgumentContext argument in arguments.argument())
+                {
+
+                    var arg = VisitArgument(argument) as OMethodArgument;
+
+                    //string name = string.Empty;
+                    //if (argument.BIND_VAR() != null)
+                    //    name = argument.regular_id().GetCleanedName();
+
+                    //var value = VisitExpression(argument.expression());
+
+                }
+
+            }
+
+            return method;
+        }
 
         public override object VisitVariable_declaration([NotNull] PlSqlParser.Variable_declarationContext context)
         {
@@ -131,9 +166,11 @@ namespace Bb.Oracle.Visitors
                 package_name = package.GetName();
             }
 
+            string procName = context.identifier().GetCleanedTexts().Join();
+
             var proc = new ProcedureModel()
             {
-                Name = context.identifier().GetCleanedName(),
+                Name = procName,
                 IsFunction = false,
                 Key = "",
                 Owner = schema_name,
@@ -175,10 +212,11 @@ namespace Bb.Oracle.Visitors
                 package_name = package.GetName();
             }
 
+            string funcName = context.identifier().GetCleanedTexts().Join();
 
             var fnc = new ProcedureModel()
             {
-                Name = context.identifier().GetCleanedName(),
+                Name = funcName,
                 IsFunction = true,
                 Key = "",
                 Owner = schema_name,
@@ -309,7 +347,7 @@ namespace Bb.Oracle.Visitors
             {
                 var dataType = context.datatype();
                 resultType = (OracleType)dataType.Accept(this);
-            } 
+            }
 
             return resultType;
 
@@ -339,7 +377,7 @@ namespace Bb.Oracle.Visitors
                 var precision_part = context.precision_part();
                 if (precision_part != null)
                 {
-                    
+
                     //  '(' numeric (',' numeric)? (CHAR | BYTE)? ')'
 
                     var values = precision_part.numeric().Select(c => c.Accept<object>(this)).Cast<int>().ToList();
@@ -479,12 +517,6 @@ namespace Bb.Oracle.Visitors
         {
             Stop();
             return base.VisitFunction_body(context);
-        }
-
-        public override object VisitFunction_call([NotNull] PlSqlParser.Function_callContext context)
-        {
-            Stop();
-            return base.VisitFunction_call(context);
         }
 
         public override object VisitProcedure_body([NotNull] PlSqlParser.Procedure_bodyContext context)

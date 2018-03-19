@@ -1,6 +1,7 @@
 ﻿using Bb.Oracle.Models;
 using Bb.Oracle.Models.Comparer;
 using Bb.Oracle.Reader;
+using Bb.Oracle.Structures.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;

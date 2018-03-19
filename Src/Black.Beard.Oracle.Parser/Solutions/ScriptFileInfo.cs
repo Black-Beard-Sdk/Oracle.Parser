@@ -1,5 +1,6 @@
 ﻿using Bb.Oracle.Models;
 using Bb.Oracle.Parser;
+using Bb.Oracle.Structures.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -46,13 +47,22 @@ namespace Bb.Oracle.Solutions
             var script = this.Script();
             script.File = this.File.FullName.Substring(cut).Trim(' ', '\\');
 
-            if (script.Content.Length > 0)
-                script.Visit<T>(visitor);
+            //if (script.InError)
+            //{
 
-            else
-            {
+            //}
+            //else
+            //{
 
-            }
+                if (script.Content.Length > 0)
+                    script.Visit<T>(visitor);
+
+                else
+                {
+
+                }
+
+            //}
 
         }
 

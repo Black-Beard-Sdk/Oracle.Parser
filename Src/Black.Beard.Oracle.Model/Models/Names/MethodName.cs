@@ -1,0 +1,45 @@
+﻿using System.Collections.Generic;
+
+namespace Bb.Oracle.Models.Names
+{
+    public class MethodName : ObjectName
+    {
+       
+
+        public MethodName(List<string> items) : base()
+        {
+
+            if (items == null)
+                throw new System.ArgumentNullException(nameof(items));
+
+            switch (items.Count)
+            {
+
+                case 1:
+                    base.Schema = string.Empty;
+                    base.Package = string.Empty;
+                    base.Name = items[0];
+                    break;
+
+                case 2:
+                    base.Schema = items[0];
+                    base.Package = string.Empty;
+                    base.Name = items[1];
+                    break;
+
+                case 3:
+                    base.Schema = items[0];
+                    base.Package = items[1];
+                    base.Name = items[2];
+                    break;
+
+                default:
+                    if (System.Diagnostics.Debugger.IsAttached)
+                        System.Diagnostics.Debugger.Break();
+                    break;
+            }
+
+        }
+
+    }
+}

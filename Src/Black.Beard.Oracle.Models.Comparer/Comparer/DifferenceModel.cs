@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Bb.Oracle.Models;
+using Bb.Oracle.Structures.Models;
 
 namespace Bb.Oracle.Models.Comparer
 {

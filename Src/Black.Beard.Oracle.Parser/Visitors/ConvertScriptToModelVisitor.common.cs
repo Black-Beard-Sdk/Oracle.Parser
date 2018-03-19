@@ -10,6 +10,7 @@ using System.Text;
 using System.Diagnostics;
 using Bb.Oracle.Helpers;
 using Bb.Oracle.Validators;
+using Bb.Oracle.Structures.Models;
 
 namespace Bb.Oracle.Visitors
 {
@@ -345,3 +346,14 @@ namespace Bb.Oracle.Visitors
     }
 
 }
+
+/*
+ 
+     if (context.exception != null)
+     {
+        // this._initialSource = new StringBuilder(context.Start.InputStream.ToString());
+        AppendException(context.exception);
+        return null;
+    }
+
+     */

@@ -1,5 +1,6 @@
 ﻿using Bb.Oracle.Models;
 using Bb.Oracle.Reader.Queries;
+using Bb.Oracle.Structures.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

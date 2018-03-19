@@ -1,3 +1,5 @@
+using Bb.Oracle.Structures.Models;
+
 namespace Bb.Oracle.Models.Configurations
 {
 

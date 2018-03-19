@@ -8,6 +8,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml.Linq;
+using Bb.Oracle.Structures.Models;
 
 namespace Bb.Oracle.Models.Configurations
 {

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Bb.Oracle.Models;
+using Bb.Oracle.Structures.Models;
 
 namespace Bb.Oracle.Solutions
 {
