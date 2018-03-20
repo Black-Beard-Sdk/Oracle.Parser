@@ -246,7 +246,7 @@ trigger_body :
     ;
 
 routine_clause :
-	function_arguments?
+	function_arguments? keep_clause?
     ;
 
 compound_trigger_block :
@@ -1927,7 +1927,7 @@ return_statement :
     ;
 
 function_call :
-	CALL? routine_name function_arguments?
+	CALL? routine_name function_arguments? keep_clause?
     ;
 
 pipe_row_statement :
@@ -2493,7 +2493,7 @@ expressions :
     ;
 
 expression :
-	cursor_expression
+	  cursor_expression
     | logical_expression
 	| VARIABLE_SESSION
     ;
@@ -2503,9 +2503,7 @@ cursor_expression :
     ;
 
 logical_expression :
-	multiset_expression (IS NOT?
-        (NULL | NAN | PRESENT | INFINITE | A_LETTER SET | EMPTY | OF TYPE?
-        LEFT_PAREN ONLY? type_spec (COMMA type_spec)* RIGHT_PAREN ))*
+	  multiset_expression (IS NOT? (NULL | NAN | PRESENT | INFINITE | A_LETTER SET | EMPTY | OF TYPE? LEFT_PAREN ONLY? type_spec1=type_spec (COMMA type_spec)* RIGHT_PAREN ))*
     | NOT logical_expression
     | logical_expression AND logical_expression
     | logical_expression OR logical_expression
@@ -2516,15 +2514,19 @@ multiset_expression :
     ;
 
 relational_expression :
-	relational_expression relational_operator relational_expression
+	  relational_expression op=relational_operator relational_expression
     | compound_expression
     ;
 
 compound_expression :
-	concatenation
-      (NOT? ( IN in_elements
+	concatenation1=concatenation
+       (
+           NOT? 
+           (  IN in_elements
             | BETWEEN between_elements
-            | like_type=(LIKE | LIKEC | LIKE2 | LIKE4) concatenation (ESCAPE concatenation)?))?
+            | like_type=(LIKE | LIKEC | LIKE2 | LIKE4) concatenation2=concatenation (ESCAPE concatenation3=concatenation)?
+           )
+        )?
     ;
 
 relational_operator :
@@ -2546,8 +2548,7 @@ between_elements :
     ;
 
 concatenation :
-	model_expression
-        (AT (LOCAL | TIME ZONE concatenation) | interval_expression)?
+	  model_expression (AT (LOCAL | TIME ZONE concatenation) | interval_expression)?
     | concatenation op=(ASTERISK | SOLIDUS) concatenation
     | concatenation op=(PLUS_SIGN | MINUS_SIGN) concatenation
     | concatenation BAR BAR concatenation
@@ -2683,7 +2684,7 @@ other_function :
     | (CAST | XMLCAST) LEFT_PAREN (MULTISET LEFT_PAREN subquery RIGHT_PAREN | concatenation) AS type_spec RIGHT_PAREN 
     | COALESCE LEFT_PAREN table_element (COMMA (numeric | string))? RIGHT_PAREN 
     | COLLECT LEFT_PAREN (DISTINCT | UNIQUE)? concatenation collect_order_by_part? RIGHT_PAREN 
-    | within_or_over_clause_keyword (LEFT_PAREN function_arguments RIGHT_PAREN keep_clause?) within_or_over_part+
+    | within_or_over_clause_keyword (function_arguments keep_clause?) within_or_over_part+
     | cursor_name ( PERCENT_ISOPEN | PERCENT_FOUND | PERCENT_NOTFOUND | PERCENT_ROWCOUNT )
     | DECOMPOSE LEFT_PAREN concatenation (CANONICAL | COMPATIBILITY)? RIGHT_PAREN 
     | EXTRACT LEFT_PAREN regular_id FROM concatenation RIGHT_PAREN 
@@ -2978,7 +2979,7 @@ sqlplus_undefine : EMPTY;
 sqlplus_variable : EMPTY;
  */
 
-function_arguments : LEFT_PAREN arguments RIGHT_PAREN keep_clause?;
+function_arguments : LEFT_PAREN arguments RIGHT_PAREN;
     //|  /*TODO{(input.LA(1) == CASE || input.LA(2) == CASE)}?*/ case_statement/*[false]*/
 
 arguments :
@@ -3221,7 +3222,7 @@ general_element :
     ;
 
 general_element_part :
-	(INTRODUCER char_set_name)? id_expressions ('@' link_name)? function_arguments?
+	(INTRODUCER char_set_name)? id_expressions ('@' link_name)? function_arguments? keep_clause?
     ;
 
 table_element :

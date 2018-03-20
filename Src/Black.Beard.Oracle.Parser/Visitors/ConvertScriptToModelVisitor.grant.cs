@@ -292,13 +292,13 @@ namespace Bb.Oracle.Visitors
         }
 
 
-        public bool ttoto()
-        {
+        //public bool ttoto()
+        //{
 
 
-            return true;
+        //    return true;
 
-        }
+        //}
 
 
     }

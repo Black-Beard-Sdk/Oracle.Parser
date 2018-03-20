@@ -1,11 +1,13 @@
 ﻿using Bb.Oracle.Models.Names;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace Bb.Oracle.Models.Codes
 {
 
+    [DebuggerDisplay("{Name.ToString()} ()")]
     public class OCallMethodReference
     {
 

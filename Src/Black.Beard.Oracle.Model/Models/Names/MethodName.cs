@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Bb.Oracle.Models.Names
 {
+
     public class MethodName : ObjectName
     {
-       
+
 
         public MethodName(List<string> items) : base()
         {
@@ -39,6 +41,21 @@ namespace Bb.Oracle.Models.Names
                     break;
             }
 
+        }
+
+        public override string ToString()
+        {
+            if (string.IsNullOrEmpty(Schema))
+            {
+                if (string.IsNullOrEmpty(Package))
+                    return Name;
+                else
+                    return $"{Package}.{Name}";
+            }
+            else if (string.IsNullOrEmpty(Package))
+                return $"{Schema}.{Name}";
+            else
+                return $"{Schema}.{Package}.{Name}";
         }
 
     }

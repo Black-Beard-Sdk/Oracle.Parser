@@ -1,6 +1,8 @@
-﻿using Antlr4.Runtime.Misc;
+﻿using Antlr4.Runtime;
+using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
 using Bb.Oracle.Models;
+using Bb.Oracle.Models.Codes;
 using Bb.Oracle.Parser;
 using System;
 using System.Collections.Generic;
@@ -12,8 +14,64 @@ namespace Bb.Oracle.Helpers
 {
 
 
+ 
     public static class PlSqlParserExtensions
     {
+
+        public static OperatorEnum ConvertToOperator(this IToken token)
+        {
+            switch (token.Text)
+            {
+
+                //case "^=":
+                //    return OperatorBinaryEnum;
+                //case "~=":
+                //    return OperatorBinaryEnum;
+
+                case "<>":
+                    return OperatorEnum.NotEqual;
+                case "!=":
+                    return OperatorEnum.AddNot;
+                case "<":
+                    return OperatorEnum.LessThan;
+                case ">":
+                    return OperatorEnum.GreatThan;
+                case "<=":
+                    return OperatorEnum.LessOrEqualThan;
+                case ">=":
+                    return OperatorEnum.GreatOrEqualThan;
+                case "=":
+                    return OperatorEnum.Equal;
+                case "LIKE":
+                    return OperatorEnum.Like;
+                case "LIKEC":
+                    return OperatorEnum.LikeC;
+                case "LIKE2":
+                    return OperatorEnum.Like2;
+                case "LIKE4":
+                    return OperatorEnum.Like4;
+                case "OR":
+                    return OperatorEnum.Or;
+                case "AND":
+                    return OperatorEnum.And;
+                case "||":
+                    return OperatorEnum.StringConcatenation;
+                case "-":
+                    return OperatorEnum.Substract;
+                case "+":
+                    return OperatorEnum.Add;
+                case "/":
+                    return OperatorEnum.Divider;
+                case "*":
+                    return OperatorEnum.Time;
+
+                default:
+                    if (System.Diagnostics.Debugger.IsAttached)
+                        System.Diagnostics.Debugger.Break();
+                    return OperatorEnum.Unmanaged;
+
+            }
+        }
 
         //public static string GetReference(this IEnumerable<string> items)
         //{

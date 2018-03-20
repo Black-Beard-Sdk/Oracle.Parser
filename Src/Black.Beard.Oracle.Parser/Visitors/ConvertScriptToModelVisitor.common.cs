@@ -150,9 +150,7 @@ namespace Bb.Oracle.Visitors
 
 
         #endregion Resolvers
-
-
-
+        
         public override object VisitErrorNode(IErrorNode node)
         {
             if (node.Parent is ParserRuleContext n)

@@ -32,23 +32,68 @@ namespace Bb.Oracle.Visitors
             var function_arguments = context.function_arguments();
             if (function_arguments != null)
             {
-                var arguments = function_arguments.arguments();
-                foreach (PlSqlParser.ArgumentContext argument in arguments.argument())
-                {
+                method.Arguments = VisitFunction_arguments(function_arguments) as List<OMethodArgument>;
+            }
 
-                    var arg = VisitArgument(argument) as OMethodArgument;
-
-                    //string name = string.Empty;
-                    //if (argument.BIND_VAR() != null)
-                    //    name = argument.regular_id().GetCleanedName();
-
-                    //var value = VisitExpression(argument.expression());
-
-                }
-
+            var keep_clause = context.keep_clause();
+            if (keep_clause != null)
+            {
+                Stop();
+                var tt = VisitKeep_clause(keep_clause);
+                //method.Keep = tt;
             }
 
             return method;
+
+        }
+
+        public override object VisitKeep_clause([NotNull] PlSqlParser.Keep_clauseContext context)
+        {
+            Stop();
+            var result = base.VisitKeep_clause(context);
+            Debug.Assert(result != null);
+            return result;
+        }
+
+        public override object VisitFunction_arguments([NotNull] PlSqlParser.Function_argumentsContext context)
+        {
+            var arguments = VisitArguments(context.arguments());
+            return arguments;
+        }
+
+
+        public override object VisitArguments([NotNull] PlSqlParser.ArgumentsContext context)
+        {
+            List<OMethodArgument> _result = new List<OMethodArgument>();
+            foreach (PlSqlParser.ArgumentContext argument in context.argument())
+            {
+                var arg = VisitArgument(argument) as OMethodArgument;
+                _result.Add(arg);
+            }
+            return _result;
+        }
+
+
+        /// <summary>
+        /// argument :
+        ///       regular_id BIND_VAR /*EQUALS_OP GREATER_THAN_OP*/ expression
+        ///     | expression
+        ///     ;
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public override object VisitArgument([NotNull] PlSqlParser.ArgumentContext context)
+        {
+
+            var value = VisitExpression(context.expression());
+            var arg = new OMethodArgument()
+            {
+                ParameterName = context.BIND_VAR() != null ? context.regular_id().GetCleanedName() : string.Empty,
+                Value = value as OCodeExpression,
+            };
+                       
+            return arg;
+
         }
 
         public override object VisitVariable_declaration([NotNull] PlSqlParser.Variable_declarationContext context)
