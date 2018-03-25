@@ -138,6 +138,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LogInitializer.cs" />
     <Compile Include="Powershell\CompareOracleStructure.cs" />
     <Compile Include="Powershell\OpenOracleModel.cs" />
     <Compile Include="Powershell\WriteOracleStructureFromServer.cs" />

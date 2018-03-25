@@ -1,6 +1,6 @@
 ﻿namespace Bb.Oracle.Models.Codes
 {
-    public class OCodeExpression : OCodeObject
+    public abstract class OCodeExpression : OCodeObject
     {
 
     }

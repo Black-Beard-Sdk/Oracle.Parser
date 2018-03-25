@@ -1,4 +1,5 @@
 ﻿
+using Bb.Oracle.Models;
 using System.ComponentModel;
 
 namespace Bb.Oracle.Structures.Models

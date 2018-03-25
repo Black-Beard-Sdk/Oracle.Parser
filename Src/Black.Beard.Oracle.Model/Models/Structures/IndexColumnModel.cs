@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Bb.Oracle.Models;
+using Newtonsoft.Json;
 
 namespace Bb.Oracle.Structures.Models
 {

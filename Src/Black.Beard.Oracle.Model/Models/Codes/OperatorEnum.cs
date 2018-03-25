@@ -27,7 +27,7 @@ namespace Bb.Oracle.Models.Codes
         Like4,
         Equal,
         NotEqual,
-        AddNot,
+        //AddNot,
         LessThan,
         GreatThan,
         LessOrEqualThan,

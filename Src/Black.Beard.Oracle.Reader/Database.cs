@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Bb.Oracle.Structures.Models;
+using System.Diagnostics;
 
 namespace Bb.Oracle.Reader
 {
@@ -43,7 +44,7 @@ namespace Bb.Oracle.Reader
             
             var manager = new OracleManager(builder.ConnectionString);
             if (System.Diagnostics.Debugger.IsAttached)
-                Console.WriteLine("{0} Success", builder.ConnectionString);
+                Trace.WriteLine("{0} Success", builder.ConnectionString.Replace(ctx.Pwd, "".PadLeft(ctx.Pwd.Length, '*')));
 
             if (use == null)
                 use = shema => true;
@@ -63,6 +64,12 @@ namespace Bb.Oracle.Reader
 
             Filtre(ctx, builder.ConnectionString);
 
+            var version = new OracleVersionQuery().GetVersion(dbContext);
+
+            dbContext.Version = version;
+
+            Trace.WriteLine($"server version {version}");
+
             Run(dbContext);
 
             if (!string.IsNullOrEmpty(ctx.Filename))
@@ -72,11 +79,11 @@ namespace Bb.Oracle.Reader
                 if (!f.Directory.Exists)
                     f.Directory.Create();
 
-                Console.WriteLine("Writing file at " + ctx.Filename);
+                Trace.WriteLine("Writing file at " + ctx.Filename);
                 dbContext.database.WriteFile(ctx.Filename);
             }
 
-            Console.WriteLine("the end");
+            Trace.WriteLine("the end");
 
             return dbContext.database;
 
@@ -86,58 +93,84 @@ namespace Bb.Oracle.Reader
         {
             if (!exclude)
             {
-                Console.WriteLine(text);
+                Trace.WriteLine(text);
                 query.Resolve(dbContext, null);
             }
             else
-                Console.WriteLine("exclude " + text);
+                Trace.WriteLine("exclude " + text);
 
         }
-
 
         private static void Run(DbContextOracle dbContext)
         {
 
-            Run(dbContext, new OwnerNameQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "collect of schema");
-
-            Run(dbContext, new ObjectQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve objects");
-
-            Run(dbContext, new SequenceQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve sequences");
-
-            Run(dbContext, new TableQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve tables");
-            //Run(dbContext, new ViewSourceQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve code views");
-            Run(dbContext, new MaterializedViewSourceQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve code materialized views");
-            Run(dbContext, new TableColumnQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve columns of tables");
-
-            Run(dbContext, new IndexColumnQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve indexes of tables");
-            Run(dbContext, new ConstraintsQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve constraints tables");
-            Run(dbContext, new ConstraintColumnQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve IndexColumnQuery columns");
-            Run(dbContext, new TableDefaultValueQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve columns default values");
-            Run(dbContext, new EncryptedTableColumnQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve Encrypted columns");
-
+            switch (dbContext.Version.Major)
+            {
             
+                case 11:
+                    Run(dbContext, new OwnerNameQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "collect of schema");
+                    Run(dbContext, new ObjectQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve objects");
+                    Run(dbContext, new SequenceQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve sequences");
+                    Run(dbContext, new TableQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve tables");
+                    //Run(dbContext, new ViewSourceQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve code views");
+                    Run(dbContext, new MaterializedViewSourceQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve code materialized views");
+                    Run(dbContext, new TableColumnQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve columns of tables");
+                    Run(dbContext, new IndexColumnQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve indexes of tables");
+                    Run(dbContext, new ConstraintsQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve constraints tables");
+                    Run(dbContext, new ConstraintColumnQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve IndexColumnQuery columns");
+                    Run(dbContext, new TableDefaultValueQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve columns default values");
+                    Run(dbContext, new EncryptedTableColumnQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve Encrypted columns");
+                    Run(dbContext, new PartitionsQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve partitions");
+                    Run(dbContext, new SubPartitionsQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve sub partitions");
+                    Run(dbContext, new TablePartitionColumnQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve table partitions");
+                    Run(dbContext, new IndexPartitionColumnQuery_11() { OwnerNames = Database.OwnerNames }, "Resolve index partitions");
+                    Run(dbContext, new PartitionColumnQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve partition index");
+                    Run(dbContext, new SubpartitionColumnQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve sub partition index");
+                    Run(dbContext, new ProcQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext, ProcedureNames = Database.ProcedureNames }, "Resolve oracle stored procedures");
+                    Run(dbContext, new ProcQueryWithArgument_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext, ProcedureNames = Database.ProcedureNames }, "Resolve oracle stored procedures with arguments");
+                    Run(dbContext, new TypeQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve oracle types");
+                    //Run(dbContext, new ViewQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve oracle views");
+                    Run(dbContext, new SynonymQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve oracle synonymes");
+                    Run(dbContext, new GrantQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve database grants");
+                    Run(dbContext, new TriggerQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve triggers");
+                    Run(dbContext, new ContentCodeQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve sources", dbContext.ExcludeCode);
+                    //Run(dbContext, new TablespacesQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve sources", dbContext.ExcludeCode);
+                    break;
 
+                case 12:
+                    Run(dbContext, new OwnerNameQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "collect of schema");
+                    Run(dbContext, new ObjectQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve objects");
+                    Run(dbContext, new SequenceQuery_12() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve sequences");
+                    Run(dbContext, new TableQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve tables");
+                    //Run(dbContext, new ViewSourceQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve code views");
+                    Run(dbContext, new MaterializedViewSourceQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve code materialized views");
+                    Run(dbContext, new TableColumnQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve columns of tables");
+                    Run(dbContext, new IndexColumnQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve indexes of tables");
+                    Run(dbContext, new ConstraintsQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve constraints tables");
+                    Run(dbContext, new ConstraintColumnQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve IndexColumnQuery columns");
+                    Run(dbContext, new TableDefaultValueQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve columns default values");
+                    Run(dbContext, new EncryptedTableColumnQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve Encrypted columns");
+                    Run(dbContext, new PartitionsQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve partitions");
+                    Run(dbContext, new SubPartitionsQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve sub partitions");
+                    Run(dbContext, new TablePartitionColumnQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve table partitions");
+                    Run(dbContext, new IndexPartitionColumnQuery_11() { OwnerNames = Database.OwnerNames }, "Resolve index partitions");
+                    Run(dbContext, new PartitionColumnQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve partition index");
+                    Run(dbContext, new SubpartitionColumnQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve sub partition index");
+                    Run(dbContext, new ProcQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext, ProcedureNames = Database.ProcedureNames }, "Resolve oracle stored procedures");
+                    Run(dbContext, new ProcQueryWithArgument_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext, ProcedureNames = Database.ProcedureNames }, "Resolve oracle stored procedures with arguments");
+                    Run(dbContext, new TypeQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve oracle types");
+                    //Run(dbContext, new ViewQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve oracle views");
+                    Run(dbContext, new SynonymQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve oracle synonymes");
+                    Run(dbContext, new GrantQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve database grants");
+                    Run(dbContext, new TriggerQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve triggers");
+                    Run(dbContext, new ContentCodeQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve sources", dbContext.ExcludeCode);
+                    //Run(dbContext, new TablespacesQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve sources", dbContext.ExcludeCode);
+                    break;
 
-            Run(dbContext, new PartitionsQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve partitions");
-            Run(dbContext, new SubPartitionsQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve sub partitions");
-            Run(dbContext, new TablePartitionColumnQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve table partitions");
-            Run(dbContext, new IndexPartitionColumnQuery() { OwnerNames = Database.OwnerNames }, "Resolve index partitions");
-            Run(dbContext, new PartitionColumnQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve partition index");
-            Run(dbContext, new SubpartitionColumnQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve sub partition index");
+                default:
+                    throw new NotImplementedException(dbContext.Version.ToString());
 
-            Run(dbContext, new ProcQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext, ProcedureNames = Database.ProcedureNames }, "Resolve oracle stored procedures");
-            Run(dbContext, new ProcQueryWithArgument() { OwnerNames = Database.OwnerNames, OracleContext = dbContext, ProcedureNames = Database.ProcedureNames }, "Resolve oracle stored procedures with arguments");
-            Run(dbContext, new TypeQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve oracle types");
-            //Run(dbContext, new ViewQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve oracle views");
-
-            Run(dbContext, new SynonymQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve oracle synonymes");
-            Run(dbContext, new GrantQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve database grants");
-
-            Run(dbContext, new TriggerQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve triggers");
-            Run(dbContext, new ContentCodeQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve sources", dbContext.ExcludeCode);
-
-            //Run(dbContext, new TablespacesQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve sources", dbContext.ExcludeCode);
-            
+            }
 
         }
 
@@ -155,6 +188,8 @@ namespace Bb.Oracle.Reader
         /// </summary>
         static void Filtre(ArgumentContext ctx, string connectionString)
         {
+
+
 
             if (!string.IsNullOrEmpty(ctx.ExcludeFile))
                 ExcludeSection.Configuration = ExcludeSection.LoadFile(ctx.ExcludeFile);

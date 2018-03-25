@@ -1,9 +1,11 @@
-﻿using Bb.Oracle.Models;
+﻿using Bb.Oracle;
+using Bb.Oracle.Models;
 using Bb.Oracle.Models.Comparer;
 using Bb.Oracle.Reader;
 using Bb.Oracle.Structures.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Management.Automation;
@@ -29,12 +31,14 @@ namespace Black.Beard.Oracle.Powershell
         protected override void ProcessRecord()
         {
 
+            LogInitializer.Initialize();
+
             var sf = new FileInfo(Output);
             string folderForSource = Path.Combine(sf.Directory.FullName, Path.GetFileNameWithoutExtension(sf.Name), Path.GetFileNameWithoutExtension(Source.Name));
             string folderForTarget = Path.Combine(sf.Directory.FullName, Path.GetFileNameWithoutExtension(sf.Name), Path.GetFileNameWithoutExtension(Target.Name));
 
             ModelComparer comparer = new ModelComparer();
-            DifferenceModels diff = new DifferenceModels(folderForSource, folderForTarget, c => Console.WriteLine(c));
+            DifferenceModels diff = new DifferenceModels(folderForSource, folderForTarget, c => Trace.WriteLine(c));
             comparer.CompareModels(Source, Target, diff, new CompareContext() { });
 
             base.WriteObject(diff);

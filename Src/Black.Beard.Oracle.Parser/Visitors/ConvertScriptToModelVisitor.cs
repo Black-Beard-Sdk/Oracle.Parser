@@ -1,15 +1,9 @@
 ﻿using Bb.Oracle.Parser;
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
-using Bb.Oracle.Models;
-using Antlr4.Runtime;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Bb.Oracle.Helpers;
 using Bb.Oracle.Structures.Models;
-using Bb.Oracle.Models.Codes;
 using System.Diagnostics;
+using System.Text;
 using Bb.Oracle.Helpers;
 
 namespace Bb.Oracle.Visitors
@@ -18,7 +12,6 @@ namespace Bb.Oracle.Visitors
     public partial class ConvertScriptToModelVisitor : PlSqlParserBaseVisitor<object>, IFile
     {
 
-
         public ConvertScriptToModelVisitor(OracleDatabase db)
         {
             this.Db = db;
@@ -26,6 +19,8 @@ namespace Bb.Oracle.Visitors
 
         public override object Visit(IParseTree tree)
         {
+
+
             var result = base.Visit(tree);
             return result;
         }
@@ -33,9 +28,10 @@ namespace Bb.Oracle.Visitors
         public override object VisitSql_script([NotNull] PlSqlParser.Sql_scriptContext context)
         {
 
+            this._initialSource = new StringBuilder(context.Start.InputStream.ToString());
+
             if (context.exception != null)
             {
-                //this._initialSource = new StringBuilder(context.Start.InputStream.ToString());
                 AppendException(context.exception);
                 return null;
             }
@@ -108,13 +104,6 @@ namespace Bb.Oracle.Visitors
             return result;
         }
 
-        public override object VisitAlter_sequence([NotNull] PlSqlParser.Alter_sequenceContext context)
-        {
-            Stop();
-            var result = base.VisitAlter_sequence(context);
-            Debug.Assert(result != null);
-            return result;
-        }
 
         public override object VisitAlter_table([NotNull] PlSqlParser.Alter_tableContext context)
         {
@@ -472,22 +461,6 @@ namespace Bb.Oracle.Visitors
             return result;
         }
 
-        public override object VisitCreate_sequence([NotNull] PlSqlParser.Create_sequenceContext context)
-        {
-            Stop();
-            var result = base.VisitCreate_sequence(context);
-            Debug.Assert(result != null);
-            return result;
-        }
-
-        public override object VisitCreate_synonym([NotNull] PlSqlParser.Create_synonymContext context)
-        {
-            Stop();
-            var result = base.VisitCreate_synonym(context);
-            Debug.Assert(result != null);
-            return result;
-        }
-
         public override object VisitCreate_table([NotNull] PlSqlParser.Create_tableContext context)
         {
             Stop();
@@ -600,18 +573,6 @@ namespace Bb.Oracle.Visitors
             return result;
         }
 
-        /// <summary>
-        /// (ASSIGN_OP | DEFAULT) expression
-        /// </summary>
-        /// <param name="context"></param>
-        /// <returns></returns>
-        public override object VisitDefault_value_part([NotNull] PlSqlParser.Default_value_partContext context)
-        {
-            var result = context.expression().Accept<object>(this);
-            Debug.Assert(result != null);
-            return result;
-        }
-
         public override object VisitDelete_statement([NotNull] PlSqlParser.Delete_statementContext context)
         {
             Stop();
@@ -696,14 +657,6 @@ namespace Bb.Oracle.Visitors
         {
             Stop();
             var result = base.VisitDrop_index(context);
-            Debug.Assert(result != null);
-            return result;
-        }
-
-        public override object VisitDrop_sequence([NotNull] PlSqlParser.Drop_sequenceContext context)
-        {
-            Stop();
-            var result = base.VisitDrop_sequence(context);
             Debug.Assert(result != null);
             return result;
         }
@@ -1915,22 +1868,6 @@ namespace Bb.Oracle.Visitors
             return result;
         }
 
-        public override object VisitSequence_spec([NotNull] PlSqlParser.Sequence_specContext context)
-        {
-            Stop();
-            var result = base.VisitSequence_spec(context);
-            Debug.Assert(result != null);
-            return result;
-        }
-
-        public override object VisitSequence_start_clause([NotNull] PlSqlParser.Sequence_start_clauseContext context)
-        {
-            Stop();
-            var result = base.VisitSequence_start_clause(context);
-            Debug.Assert(result != null);
-            return result;
-        }
-
         public override object VisitSeq_of_declare_specs([NotNull] PlSqlParser.Seq_of_declare_specsContext context)
         {
             Stop();
@@ -2344,10 +2281,50 @@ namespace Bb.Oracle.Visitors
             return result;
         }
 
+        /// <summary>
+        /// type_declaration :
+        ///     TYPE identifier IS(table_type_def | varray_type_def | record_type_def | ref_cursor_type_def) ';'
+        ///     ;
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public override object VisitType_declaration([NotNull] PlSqlParser.Type_declarationContext context)
         {
-            Stop();
+
             var t = context.GetText();
+            var names = context.identifier().GetCleanedTexts();
+
+            var table_type_def = context.table_type_def();
+            if (table_type_def != null)
+            {
+                Stop();
+
+            }
+            else
+            {
+                var varray_type_def = context.varray_type_def();
+                if (varray_type_def != null)
+                {
+                    Stop();
+
+                }
+                else
+                {
+                    var record_type_def = context.record_type_def();
+                    if (record_type_def!= null)
+                    {
+                        Stop();
+
+                    }
+                    else
+                    {
+                        Stop();
+                        var ref_cursor_type_def = context.ref_cursor_type_def();
+
+                    }
+                }
+            }
+
             // TYPE REF CURSOR IS REF CURSOR;
             var result = base.VisitType_declaration(context);
             Debug.Assert(result != null);

@@ -78,12 +78,12 @@ namespace Bb.Oracle.Reader
 
         }
 
-        private static List<ContentCodeQuery.CodeSource> GetCodeFromProc(this DbContextOracle connection, List<string> schemas, List<string> names)
+        private static List<ContentCodeQuery_11.CodeSource> GetCodeFromProc(this DbContextOracle connection, List<string> schemas, List<string> names)
         {
 
             var db = new OracleDatabase();
             connection.database = db;
-            ContentCodeQuery q1 = new ContentCodeQuery()
+            ContentCodeQuery_11 q1 = new ContentCodeQuery_11()
             {
                 OwnerNames = schemas,
                 ProcedureNames = names,

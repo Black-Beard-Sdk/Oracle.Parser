@@ -48,7 +48,7 @@ namespace Bb.Oracle.Models.Comparer
                 CompareSequences(source.Sequences, target.Sequences);
 
             if (!_context.IgnoreSynonyms)
-                CompareSynonyms(source.Synonymes, target.Synonymes);
+                CompareSynonyms(source.Synonyms, target.Synonyms);
 
             if (!_context.IgnoreTypes)
                 CompareTypes(source.Types, target.Types);
@@ -236,10 +236,10 @@ namespace Bb.Oracle.Models.Comparer
             EvaluateFiles(target);
 
             if (source.ObjectTargetOwner != target.ObjectTargetOwner)
-                this._changes.AppendChange(source, target, "SchemaName");
+                this._changes.AppendChange(source, target, "ObjectTargetOwner");
 
             else if (source.ObjectTargetName != target.ObjectTargetName)
-                this._changes.AppendChange(source, target, "ObjectTarget");
+                this._changes.AppendChange(source, target, "ObjectTargetName");
 
             if (source.IsPublic != target.IsPublic)
                 this._changes.AppendChange(source, target, "IsPublic");
@@ -568,8 +568,8 @@ namespace Bb.Oracle.Models.Comparer
             if (source.CycleFlag != target.CycleFlag)
                 this._changes.AppendChange(source, target, "CycleFlag");
 
-            if (source.Generated != target.Generated)
-                this._changes.AppendChange(source, target, "Generated");
+            //if (source.Generated != target.Generated)
+            //    this._changes.AppendChange(source, target, "Generated");
 
             if (source.IncrementBy != target.IncrementBy)
                 this._changes.AppendChange(source, target, "IncrementBy");
@@ -583,10 +583,10 @@ namespace Bb.Oracle.Models.Comparer
             if (source.Status != target.Status)
                 this._changes.AppendChange(source, target, "Status");
 
-            if (source.Temporary != target.Temporary)
-                this._changes.AppendChange(source, target, "Temporary");
+            if (source.Session != target.Session)
+                this._changes.AppendChange(source, target, "Session");
 
-            if (source.MaxValue != target.MaxValue && source.MaxValueIsSpecified && target.MaxValueIsSpecified)
+            if (source.MaxValue != target.MaxValue)
                 this._changes.AppendChange(source, target, "MaxValue");
 
         }

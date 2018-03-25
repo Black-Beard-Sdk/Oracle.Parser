@@ -1,4 +1,5 @@
-﻿using Bb.Oracle.Models;
+﻿using Bb.Oracle;
+using Bb.Oracle.Models;
 using Bb.Oracle.Solutions;
 using Bb.Oracle.Structures.Models;
 using Bb.Oracle.Visitors;
@@ -32,6 +33,8 @@ namespace Black.Beard.Oracle.Powershell
 
         protected override void ProcessRecord()
         {
+
+            LogInitializer.Initialize();
 
             string path = SourcePath;
 

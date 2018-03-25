@@ -28,9 +28,46 @@ namespace Bb.Oracle.Visitors
         /// <returns></returns>
         public override object VisitExpression([NotNull] PlSqlParser.ExpressionContext context)
         {
-            var result = base.VisitExpression(context);
+            object result = null;
+
+            var cursor_expression = context.cursor_expression();
+            if (cursor_expression != null)
+                result = this.VisitCursor_expression(cursor_expression);
+            else
+            {
+                var logical_expression = context.logical_expression();
+                if (logical_expression != null)
+                    result = this.VisitLogical_expression(logical_expression);
+                else
+                {
+                    var variable_session = context.VARIABLE_SESSION();
+                    if (variable_session != null)
+                        result = new OCodeVariableReferenceExpression() { Name = variable_session.GetCleanedText() };
+                }
+            }
+
             Debug.Assert(result != null);
+
             return result;
+
+        }
+
+        /// <summary>
+        /// (ASSIGN_OP | DEFAULT) expression
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public override object VisitDefault_value_part([NotNull] PlSqlParser.Default_value_partContext context)
+        {
+            var value = this.VisitExpression(context.expression());
+            Debug.Assert(value != null);
+            return value;
+        }
+
+        public override object VisitCursor_expression([NotNull] PlSqlParser.Cursor_expressionContext context)
+        {
+            Stop();
+            return base.VisitCursor_expression(context);
         }
 
         /// <summary>
@@ -194,7 +231,7 @@ namespace Bb.Oracle.Visitors
             var model_expression = context.model_expression();
             if (model_expression != null)
             {
-                
+
                 result = VisitModel_expression(model_expression);
                 if (context.AT() != null)
                 {
@@ -289,7 +326,7 @@ namespace Bb.Oracle.Visitors
             else if (context.DBTIMEZONE() != null)
             {
                 Stop();
-            }            
+            }
             else if (context.NULL() != null)
             {
                 Stop();
@@ -407,7 +444,7 @@ namespace Bb.Oracle.Visitors
             }
             else
             {
-                result = base.VisitUnary_expression(context);
+                result = this.VisitUnary_expression(context);
 
                 //var quantified_expression = context.quantified_expression();
                 //var standard_function = context.standard_function();

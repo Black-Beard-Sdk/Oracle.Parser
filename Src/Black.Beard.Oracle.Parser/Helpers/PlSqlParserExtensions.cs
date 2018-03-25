@@ -6,6 +6,7 @@ using Bb.Oracle.Models.Codes;
 using Bb.Oracle.Parser;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,7 +15,7 @@ namespace Bb.Oracle.Helpers
 {
 
 
- 
+
     public static class PlSqlParserExtensions
     {
 
@@ -31,7 +32,7 @@ namespace Bb.Oracle.Helpers
                 case "<>":
                     return OperatorEnum.NotEqual;
                 case "!=":
-                    return OperatorEnum.AddNot;
+                    return OperatorEnum.Not;
                 case "<":
                     return OperatorEnum.LessThan;
                 case ">":
@@ -72,11 +73,6 @@ namespace Bb.Oracle.Helpers
 
             }
         }
-
-        //public static string GetReference(this IEnumerable<string> items)
-        //{
-        //    return new ObjectReference(items);
-        //}
 
         public static string Join(this IEnumerable<string> items)
         {
@@ -133,8 +129,15 @@ namespace Bb.Oracle.Helpers
                 _names = new List<string>();
 
             if (expression != null)
-                expression.GetCleanedTexts(_names);
+            {
 
+                _names.Add(expression.regular_id().GetCleanedName());
+
+                var d = expression.DELIMITED_ID();
+                if (d != null)
+                    d.GetCleanedTexts(_names);
+
+            }
             return _names;
 
 
@@ -158,7 +161,20 @@ namespace Bb.Oracle.Helpers
 
             return _names;
 
-        }       
+        }
+
+        public static string GetCleanedText([NotNull] this ITerminalNode _id)
+        {
+
+            if (_id != null)
+            {
+                var i = _id.GetText().CleanName();
+                return i;
+            }
+
+            return string.Empty;
+
+        }
 
         public static List<string> GetCleanedTexts([NotNull] this PlSqlParser.IdentifiersContext _id, List<string> _names = null)
         {
@@ -224,124 +240,136 @@ namespace Bb.Oracle.Helpers
             return ctx.GetText().CleanName();
         }
 
-
         public static string GetCleanedName(this PlSqlParser.String_function_nameContext ctx)
         {
             return ctx.GetText().CleanName();
         }
 
-
-
         public static string GetCleanedName(this PlSqlParser.Parameter_nameContext ctx)
         {
             var _names = new List<string>();
-            ctx.identifier().GetCleanedTexts(_names);
+            if (ctx != null)
+                ctx.identifier().GetCleanedTexts(_names);
             return _names.FirstOrDefault();
         }
 
         public static string GetCleanedName(this PlSqlParser.Schema_object_nameContext ctx)
         {
             var _names = new List<string>();
-            ctx.id_expression().GetCleanedTexts(_names);
+            if (ctx != null)
+                ctx.id_expression().GetCleanedTexts(_names);
             return _names.FirstOrDefault();
         }
 
         public static string GetCleanedName(this PlSqlParser.Package_nameContext ctx)
         {
             var _names = new List<string>();
-            ctx.identifier().GetCleanedTexts(_names);
+            if (ctx != null)
+                ctx.identifier().GetCleanedTexts(_names);
             return _names.FirstOrDefault();
         }
 
         public static List<string> GetCleanedTexts(this PlSqlParser.Sequence_nameContext ctx)
         {
             var _names = new List<string>();
-            ctx.id_expressions().GetCleanedTexts(_names);
+            if (ctx != null)
+                ctx.id_expressions().GetCleanedTexts(_names);
             return _names;
         }
 
         public static List<string> GetCleanedTexts(this PlSqlParser.Type_nameContext ctx)
         {
             var _names = new List<string>();
-            ctx.id_expressions().GetCleanedTexts(_names);
+            if (ctx != null)
+                ctx.id_expressions().GetCleanedTexts(_names);
             return _names;
         }
 
         public static List<string> GetCleanedTexts(this PlSqlParser.Char_set_nameContext ctx)
         {
             var _names = new List<string>();
-            ctx.id_expressions().GetCleanedTexts(_names);
+            if (ctx != null)
+                ctx.id_expressions().GetCleanedTexts(_names);
             return _names;
         }
 
         public static List<string> GetCleanedTexts(this PlSqlParser.Trigger_nameContext ctx)
         {
             var _names = new List<string>();
-            ctx.full_identifier().GetCleanedTexts(_names);
+            if (ctx != null)
+                ctx.full_identifier().GetCleanedTexts(_names);
             return _names;
         }
 
         public static List<string> GetCleanedTexts(this PlSqlParser.Synonym_nameContext ctx)
         {
             var _names = new List<string>();
-            ctx.identifier().GetCleanedTexts(_names);
+            if (ctx != null)
+                ctx.identifier().GetCleanedTexts(_names);
             return _names;
         }
 
         public static List<string> GetCleanedTexts(this PlSqlParser.Xml_column_nameContext ctx)
         {
             var _names = new List<string>();
-            ctx.identifier().GetCleanedTexts(_names);
+            if (ctx != null)
+                ctx.identifier().GetCleanedTexts(_names);
             return _names;
         }
 
         public static List<string> GetCleanedTexts(this PlSqlParser.Table_var_nameContext ctx)
         {
             var _names = new List<string>();
-            ctx.identifier().GetCleanedTexts(_names);
+            if (ctx != null)
+                ctx.identifier().GetCleanedTexts(_names);
             return _names;
         }
 
         public static List<string> GetCleanedTexts(this PlSqlParser.Attribute_nameContext ctx)
         {
             var _names = new List<string>();
-            ctx.identifier().GetCleanedTexts(_names);
+            if (ctx != null)
+                ctx.identifier().GetCleanedTexts(_names);
             return _names;
         }
 
         public static List<string> GetCleanedTexts(this PlSqlParser.Collection_nameContext ctx)
         {
             var _names = new List<string>();
-            ctx.full_identifier().GetCleanedTexts(_names);
+            if (ctx != null)
+                ctx.full_identifier().GetCleanedTexts(_names);
             return _names;
         }
 
         public static List<string> GetCleanedTexts(this PlSqlParser.Column_nameContext ctx)
         {
             var _names = new List<string>();
-            ctx.identifiers().GetCleanedTexts(_names);
+            if (ctx != null)
+                ctx.identifiers().GetCleanedTexts(_names);
             return _names;
         }
-
 
         public static List<string> GetCleanedTexts(this PlSqlParser.Constraint_nameContext ctx)
         {
             var _names = new List<string>();
-            ctx.identifiers().GetCleanedTexts(_names);
+            if (ctx != null)
+                ctx.identifiers().GetCleanedTexts(_names);
             return _names;
         }
 
         public static List<string> GetCleanedTexts(this PlSqlParser.Container_tableview_nameContext ctx)
         {
             var _names = new List<string>();
-            ctx.full_identifier().GetCleanedTexts(_names);
+            if (ctx != null)
+                ctx.full_identifier().GetCleanedTexts(_names);
             return _names;
         }
 
         public static List<string> GetCleanedTexts(this PlSqlParser.Cost_class_nameContext ctx)
         {
             var _names = new List<string>();
-            ctx.identifier().GetCleanedTexts(_names);
+            if (ctx != null)
+                ctx.identifier().GetCleanedTexts(_names);
             return _names;
         }
 
@@ -355,103 +383,186 @@ namespace Bb.Oracle.Helpers
         public static List<string> GetCleanedTexts(this PlSqlParser.Main_model_nameContext ctx)
         {
             var _names = new List<string>();
-            ctx.identifier().GetCleanedTexts(_names);
+            if (ctx != null)
+                ctx.identifier().GetCleanedTexts(_names);
             return _names;
         }
 
         public static List<string> GetCleanedTexts(this PlSqlParser.Link_nameContext ctx)
         {
             var _names = new List<string>();
-            ctx.identifier().GetCleanedTexts(_names);
+            if (ctx != null)
+                ctx.identifier().GetCleanedTexts(_names);
             return _names;
         }
 
         public static List<string> GetCleanedTexts(this PlSqlParser.Label_nameContext ctx)
         {
             var _names = new List<string>();
-            ctx.id_expression().GetCleanedTexts(_names);
+            if (ctx != null)
+                ctx.id_expression().GetCleanedTexts(_names);
             return _names;
         }
-     
+
         public static List<string> GetCleanedTexts(this PlSqlParser.Query_nameContext ctx)
         {
             var _names = new List<string>();
-            ctx.identifier().GetCleanedTexts(_names);
+            if (ctx != null)
+                ctx.identifier().GetCleanedTexts(_names);
             return _names;
         }
 
         public static List<string> GetCleanedTexts(this PlSqlParser.Record_nameContext ctx)
         {
             var _names = new List<string>();
-            ctx.identifier().GetCleanedTexts(_names);
+            if (ctx != null)
+                ctx.identifier().GetCleanedTexts(_names);
             return _names;
         }
 
         public static List<string> GetCleanedTexts(this PlSqlParser.Rollback_segment_nameContext ctx)
         {
             var _names = new List<string>();
-            ctx.identifier().GetCleanedTexts(_names);
+            if (ctx != null)
+                ctx.identifier().GetCleanedTexts(_names);
             return _names;
         }
 
         public static List<string> GetCleanedTexts(this PlSqlParser.Role_nameContext ctx)
         {
             var _names = new List<string>();
-            ctx.id_expression().GetCleanedTexts(_names);
-            if (ctx.CONNECT() != null)
-                _names.Add("CONNECT");
+            if (ctx != null)
+            {
+                ctx.id_expression().GetCleanedTexts(_names);
+                if (ctx.CONNECT() != null)
+                    _names.Add("CONNECT");
+            }
             return _names;
         }
-
 
         public static List<string> GetCleanedTexts(this PlSqlParser.Routine_nameContext ctx)
         {
             var _names = new List<string>();
-            ctx.identifiers().GetCleanedTexts(_names);
+            if (ctx != null)
+                ctx.identifiers().GetCleanedTexts(_names);
             return _names;
         }
 
         public static List<string> GetCleanedTexts(this PlSqlParser.Savepoint_nameContext ctx)
         {
             var _names = new List<string>();
-            ctx.identifier().GetCleanedTexts(_names);
+            if (ctx != null)
+                ctx.identifier().GetCleanedTexts(_names);
             return _names;
         }
 
         public static List<string> GetCleanedTexts(this PlSqlParser.Schema_nameContext ctx)
         {
             var _names = new List<string>();
-            ctx.identifier().GetCleanedTexts(_names);
+            if (ctx != null)
+                ctx.identifier().GetCleanedTexts(_names);
+            return _names;
+        }
+
+        public static List<string> GetCleanedTexts(this PlSqlParser.Schema_object_nameContext ctx)
+        {
+            var _names = new List<string>();
+            if (ctx != null)
+                ctx.id_expression().GetCleanedTexts(_names);
             return _names;
         }
 
         public static List<string> GetCleanedTexts(this PlSqlParser.Reference_model_nameContext ctx)
         {
             var _names = new List<string>();
-            ctx.identifier().GetCleanedTexts(_names);
+            if (ctx != null)
+                ctx.identifier().GetCleanedTexts(_names);
             return _names;
         }
 
         public static List<string> GetCleanedTexts(this PlSqlParser.Implementation_type_nameContext ctx)
         {
             var _names = new List<string>();
-            ctx.full_identifier().GetCleanedTexts(_names);
+            if (ctx != null)
+                ctx.full_identifier().GetCleanedTexts(_names);
             return _names;
         }
 
         public static List<string> GetCleanedTexts(this PlSqlParser.Aggregate_function_nameContext ctx)
         {
             var _names = new List<string>();
-            ctx.identifiers().GetCleanedTexts(_names);
+            if (ctx != null)
+                ctx.identifiers().GetCleanedTexts(_names);
             return _names;
         }
 
-        //public static List<string> GetCleanedTexts(this PlSqlParser.ctx)
-        //{
-        //    var _names = new List<string>();
-        //    ctx.identifier().GetCleanedTexts(_names);
-        //    return _names;
-        //}
+        public static int ToInteger(this PlSqlParser.IntegerContext context)
+        {
+
+            string value = null;
+
+            var numeric = context.numeric();
+            if (numeric != null)
+            {
+
+                var unsigned_integer = numeric.UNSIGNED_INTEGER();
+                if (unsigned_integer != null)
+                    value = unsigned_integer.GetText();
+                else
+                {
+                    var approximate_num_lit = numeric.APPROXIMATE_NUM_LIT();
+                    value = approximate_num_lit.GetText();
+                }
+            }
+            else
+            {
+                var numeric_negative = context.numeric_negative();
+                if (numeric_negative != null)
+                {
+                    value = "-" + numeric_negative.UNSIGNED_INTEGER().GetText();
+                }
+            }
+
+            Debug.Assert(value != null);
+
+            try
+            {
+                return int.Parse(value);
+            }
+            catch (Exception e)
+            {
+
+                throw;
+            }
+        }
+
+        public static int ToInteger(this ITerminalNode token)
+        {
+            string value = token.GetText();
+            try
+            {
+                return int.Parse(value);
+            }
+            catch (Exception e)
+            {
+
+                throw;
+            }
+        }
+
+        public static long ToLong(this ITerminalNode token)
+        {
+            string value = token.GetText();
+            try
+            {
+                return long.Parse(value);
+            }
+            catch (Exception e)
+            {
+
+                throw;
+            }
+        }
 
 
     }

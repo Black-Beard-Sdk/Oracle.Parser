@@ -33,11 +33,11 @@ namespace Bb.Oracle.Structures.Models
                 foreach (string item in t)
                     _schemas.Add(item);
 
-                t = model.Synonymes.OfType<SynonymModel>().Select(c => c.Name).Where(c => fnc(c));
+                t = model.Synonyms.OfType<SynonymModel>().Select(c => c.Name).Where(c => fnc(c));
                 foreach (string item in t)
                     _schemas.Add(item);
 
-                t = model.Synonymes.OfType<SynonymModel>().Select(c => c.ObjectTargetName.Split('.')[0]).Where(c => fnc(c));
+                t = model.Synonyms.OfType<SynonymModel>().Select(c => c.ObjectTargetName.Split('.')[0]).Where(c => fnc(c));
                 foreach (string item in t)
                     _schemas.Add(item);
 
@@ -96,8 +96,8 @@ namespace Bb.Oracle.Structures.Models
                 visitor.VisitSequence(item);
 
 
-            this._log(string.Format("--- analyzing {0} synonym(s)", model.Synonymes.OfType<SynonymModel>().Count()));
-            foreach (SynonymModel item in model.Synonymes)
+            this._log(string.Format("--- analyzing {0} synonym(s)", model.Synonyms.OfType<SynonymModel>().Count()));
+            foreach (SynonymModel item in model.Synonyms)
                 visitor.VisitSynonym(item);
 
 

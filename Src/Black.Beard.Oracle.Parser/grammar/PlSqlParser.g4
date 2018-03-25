@@ -499,24 +499,20 @@ alter_sequence :
     ;
 
 create_sequence :
-	CREATE SEQUENCE sequence_name (sequence_start_clause | sequence_spec)* ';'
+	CREATE SEQUENCE sequence_name sequence_spec* ';'
     ;
 
 // Common Sequence
 
 sequence_spec :
-	  (INCREMENT BY | START WITH ) UNSIGNED_INTEGER
-    | (MAXVALUE UNSIGNED_INTEGER | NOMAXVALUE)
-    | (MINVALUE UNSIGNED_INTEGER | NOMINVALUE)
+	  (INCREMENT BY | START WITH ) integer
+    | (MAXVALUE integer | NOMAXVALUE)
+    | (MINVALUE integer | NOMINVALUE)
     | (CYCLE | NOCYCLE)
-    | (CACHE UNSIGNED_INTEGER | NOCACHE)
+    | (CACHE integer | NOCACHE)
     | (ORDER | NOORDER)
     | (KEEP | NOKEEP)
     | (SESSION | GLOBAL)
-    ;
-
-sequence_start_clause :
-	START WITH UNSIGNED_INTEGER
     ;
 
 create_index :
@@ -1624,10 +1620,9 @@ comment_on_column :
 
 // Synonym DDL Clauses
 
-create_synonym :
-    // Synonym's schema cannot be specified for public synonyms :
-	CREATE (OR REPLACE)? PUBLIC SYNONYM synonym_name FOR (schema_name PERIOD)? schema_object_name (AT_SIGN link_name)?
-    | CREATE (OR REPLACE)? SYNONYM (schema_name PERIOD)? synonym_name FOR (schema_name PERIOD)? schema_object_name (AT_SIGN link_name)?
+create_synonym : 
+	  CREATE (OR REPLACE)? PUBLIC SYNONYM synonym_name FOR (objectSchema=schema_name PERIOD)? objectName=schema_object_name (AT_SIGN link_name)?
+    | CREATE (OR REPLACE)? SYNONYM (schema=schema_name PERIOD)? synonym_name FOR (objectSchema=schema_name PERIOD)? objectName=schema_object_name (AT_SIGN link_name)?
     ;
 
 comment_on_table :
@@ -2467,7 +2462,7 @@ dml_table_expression_clause :
     ;
 
 table_collection_expression :
-	(TABLE | THE) ( LEFT_PAREN subquery RIGHT_PAREN | LEFT_PAREN expression RIGHT_PAREN ( LEFT_PAREN '+' RIGHT_PAREN )?)
+	(TABLE | THE) ( LEFT_PAREN subquery RIGHT_PAREN | LEFT_PAREN expression RIGHT_PAREN ( LEFT_PAREN PLUS_SIGN RIGHT_PAREN )?)
     ;
 
 subquery_restriction_clause :
@@ -2582,7 +2577,7 @@ multi_column_for_loop :
     ;
 
 unary_expression :
-	('-' | '+') unary_expression
+	(MINUS_SIGN | PLUS_SIGN) unary_expression
     | PRIOR unary_expression
     | CONNECT_BY_ROOT unary_expression
     | /*TODO {input.LT(1).getText().equalsIgnoreCase("new") && !input.LT(2).getText().equals(".")}?*/ NEW unary_expression
@@ -3412,7 +3407,7 @@ type_name       : id_expressions;
 sequence_name   : id_expressions;
 char_set_name   : id_expressions;
 
-outer_join_sign : LEFT_PAREN '+' RIGHT_PAREN ;
+outer_join_sign : LEFT_PAREN PLUS_SIGN RIGHT_PAREN ;
     
 regular_id :
 	  REGULAR_ID
@@ -3928,17 +3923,17 @@ numeric_function_name :
     ;
 
 integer :
-	numeric
+	  numeric
 	| numeric_negative
 	;
 
 numeric :
-	UNSIGNED_INTEGER
+	  PLUS_SIGN? UNSIGNED_INTEGER
     | APPROXIMATE_NUM_LIT
     ;
 
 numeric_negative :
-	MINUS_SIGN numeric
+	MINUS_SIGN UNSIGNED_INTEGER
     ;
 
 string :

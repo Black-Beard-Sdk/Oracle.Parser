@@ -173,7 +173,7 @@ namespace Bb.Oracle
                     target.Packages.Remove(p);
 
                 else if (item is SynonymModel sy)
-                    target.Synonymes.Remove(sy);
+                    target.Synonyms.Remove(sy);
 
                 else if (item is TypeItem t)
                     target.Types.Remove(t);

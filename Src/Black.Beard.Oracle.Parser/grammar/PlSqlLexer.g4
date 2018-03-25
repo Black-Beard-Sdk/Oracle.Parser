@@ -2252,14 +2252,15 @@ PERIOD:         '.';
             UNSIGNED_INTEGER
             ( '.' UNSIGNED_INTEGER
             | {$type = UNSIGNED_INTEGER;}
-            ) ( E ('+' | '-')? UNSIGNED_INTEGER {$type = APPROXIMATE_NUM_LIT;} )?
-    | '.' UNSIGNED_INTEGER ( E ('+' | '-')? UNSIGNED_INTEGER {$type = APPROXIMATE_NUM_LIT;} )?
+            ) ( E (PLUS_SIGN | MINUS_SIGN)? UNSIGNED_INTEGER {$type = APPROXIMATE_NUM_LIT;} )?
+    | '.' UNSIGNED_INTEGER ( E (PLUS_SIGN | MINUS_SIGN)? UNSIGNED_INTEGER {$type = APPROXIMATE_NUM_LIT;} )?
     )
     (D | F)?
     ;*/
 
-UNSIGNED_INTEGER:    [0-9]+;
-APPROXIMATE_NUM_LIT : FLOAT_FRAGMENT ('E' ('+'|'-')? (FLOAT_FRAGMENT | [0-9]+))? ('D' | 'F')?;
+UNSIGNED_INTEGER: [0-9]+;
+
+APPROXIMATE_NUM_LIT : FLOAT_FRAGMENT ('E' (PLUS_SIGN|MINUS_SIGN)? (FLOAT_FRAGMENT | [0-9]+))? ('D' | 'F')?;
 
 // Rule #--- <CHAR_STRING> is a base for Rule #065 <char_string_lit> , it incorporates <character_representation>
 // and a superfluous subtoken typecasting of the "QUOTE"

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Bb.Oracle.Models;
+using System.Collections.Generic;
 using System.Text;
 
 namespace Bb.Oracle.Structures.Models

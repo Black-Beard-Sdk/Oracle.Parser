@@ -80,7 +80,7 @@ namespace Bb.Oracle.Parser
                 f.Filename = this.File;
 
             if (System.Diagnostics.Debugger.IsAttached)
-                Console.WriteLine(this.File);
+                System.Diagnostics.Trace.WriteLine(this.File);
 
             var context = this._context;
             visitor.Visit(context);

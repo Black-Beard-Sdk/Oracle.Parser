@@ -62,7 +62,7 @@ namespace Bb.Oracle.Solutions
                 db.CollectionChanged += action;
             }
 
-
+            List<ScriptFileInfo> _scripts = new List<ScriptFileInfo>();
             foreach (ScriptFileInfo script in scripts)
                 if (filter(script))
                 {
@@ -70,15 +70,17 @@ namespace Bb.Oracle.Solutions
                     try
                     {
                         script.Visit<T>(cut, visitor);
+                        _scripts.Add(script);
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-
+                        if (System.Diagnostics.Debugger.IsAttached)
+                            System.Diagnostics.Debugger.Break();
                         throw;
                     }
                 }
 
-            foreach (ScriptFileInfo script in scripts)
+            foreach (ScriptFileInfo script in _scripts)
                 script.Finally();
 
             if (db != null)

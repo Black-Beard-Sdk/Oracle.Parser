@@ -8,7 +8,7 @@ namespace Bb.Oracle.Models.Codes
 {
 
     [DebuggerDisplay("{Name.ToString()} ()")]
-    public class OCallMethodReference
+    public class OCallMethodReference : OCodeExpression
     {
 
         public OCallMethodReference()
@@ -20,6 +20,7 @@ namespace Bb.Oracle.Models.Codes
 
         public List<OMethodArgument> Arguments { get; set; }
 
+        public override KindModelEnum KindModel => KindModelEnum.CallProcedure;
 
     }
 

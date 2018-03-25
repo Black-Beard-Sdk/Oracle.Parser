@@ -12,6 +12,8 @@ namespace Bb.Oracle.Models.Codes
 
         public OCodeExpression Right { get; set; }
 
+        public override KindModelEnum KindModel => KindModelEnum.TierceExpression;
+
     }
 
 }

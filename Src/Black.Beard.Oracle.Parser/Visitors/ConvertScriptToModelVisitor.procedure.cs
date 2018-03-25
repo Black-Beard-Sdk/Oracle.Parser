@@ -43,6 +43,8 @@ namespace Bb.Oracle.Visitors
                 //method.Keep = tt;
             }
 
+            //EvaluateGrants(method);
+
             return method;
 
         }
@@ -91,23 +93,38 @@ namespace Bb.Oracle.Visitors
                 ParameterName = context.BIND_VAR() != null ? context.regular_id().GetCleanedName() : string.Empty,
                 Value = value as OCodeExpression,
             };
-                       
+
             return arg;
 
         }
 
+        /// <summary>
+        /// variable_declaration :
+        ///     identifier CONSTANT? type_spec(NOT NULL)? default_value_part? ';'
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public override object VisitVariable_declaration([NotNull] PlSqlParser.Variable_declarationContext context)
         {
-            Stop();
-            var t = context.GetText();
 
-            return base.VisitVariable_declaration(context);
-        }
+            OCodeVariableDeclarationStatement result = new OCodeVariableDeclarationStatement()
+            {
 
-        public override object VisitVariable_name([NotNull] PlSqlParser.Variable_nameContext context)
-        {
-            Stop();
-            return base.VisitVariable_name(context);
+                Name = context.identifier().GetCleanedTexts().First(),
+                IsConstant = context.CONSTANT() != null,
+                CanBeNull = !(context.NOT() != null && context.NULL() != null),
+                Type = (OTypeReference)VisitType_spec(context.type_spec())
+            };
+
+            var default_value_part = context.default_value_part();
+            if (default_value_part != null)
+            {
+                var defaultValue = (OCodeExpression)this.VisitDefault_value_part(default_value_part);
+                result.DefaultValue = defaultValue;
+            }
+
+            return result;
+
         }
 
         public override object VisitSubtype_declaration([NotNull] PlSqlParser.Subtype_declarationContext context)
@@ -120,12 +137,6 @@ namespace Bb.Oracle.Visitors
         {
             Stop();
             return base.VisitCursor_declaration(context);
-        }
-
-        public override object VisitCursor_expression([NotNull] PlSqlParser.Cursor_expressionContext context)
-        {
-            Stop();
-            return base.VisitCursor_expression(context);
         }
 
         public override object VisitCursor_loop_param([NotNull] PlSqlParser.Cursor_loop_paramContext context)
@@ -343,9 +354,8 @@ namespace Bb.Oracle.Visitors
         public override object VisitType_spec([NotNull] PlSqlParser.Type_specContext context)
         {
 
+            OTypeReference result = null;
             var method = this.Current<ItemBase>();
-
-            OracleType resultType = null;
 
             var percent_type = context.PERCENT_TYPE() != null;
             var percent_rowtype = context.PERCENT_ROWTYPE() != null;
@@ -354,47 +364,31 @@ namespace Bb.Oracle.Visitors
             if (typename != null)
             {
 
-                var type_name = (string[])typename.Accept(this);
+                var type_names = typename.GetCleanedTexts();
 
-                int length = type_name.Length;
                 if (percent_type)
-                {
+                    result = new OTypeReference() { Path = type_names, KindTypeReference = PercentTypeEnum.PercentType };
 
-                    var col = ResolveColumn(new ObjectReference(type_name[0], type_name[1]) { SchemaCaller = method.GetOwner() });
-                    if (col != null)
-                        resultType = col.Type.Clone();
-
-                    else
-                    {
-                        Stop();
-                    }
-
-                }
                 else if (percent_rowtype)
-                {
-                    var obj = ResolveTable(new ObjectReference(type_name[0]) { SchemaCaller = method.GetOwner() });
-                    if (obj is TableModel t)
-                    {
-                        resultType = t.ExtractOracleType();
-                    }
-                    else
-                    {
-
-                        Stop();
-
-                    }
-                }
-
-                Debug.Assert(resultType != null);
+                    result = new OTypeReference() { Path = type_names, KindTypeReference = PercentTypeEnum.PercentRowType };
 
             }
             else
             {
                 var dataType = context.datatype();
-                resultType = (OracleType)dataType.Accept(this);
+                var _result = (OracleType)this.VisitDatatype(dataType);
+                result = new OTypeReference()
+                {
+                    DataType = _result,
+                    Path = new string[] { _result.Owner, _result.Name, _result.DataType }
+                    .Where(c => !string.IsNullOrEmpty(c)).ToList(),
+                };
+
             }
 
-            return resultType;
+            Debug.Assert(result != null);
+
+            return result;
 
         }
 

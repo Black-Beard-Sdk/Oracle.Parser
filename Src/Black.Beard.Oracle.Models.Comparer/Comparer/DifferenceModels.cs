@@ -6,6 +6,7 @@ using System.Text;
 using Bb.Oracle.Models;
 using Bb.Oracle.Contracts;
 using Bb.Oracle.Structures.Models;
+using System.Diagnostics;
 
 namespace Bb.Oracle.Models.Comparer
 {
@@ -885,7 +886,7 @@ namespace Bb.Oracle.Models.Comparer
                 if (System.Diagnostics.Debugger.IsAttached)
                     System.Diagnostics.Debugger.Break();
 
-                Console.WriteLine("Exception -> " + e.Message);
+                Trace.WriteLine("Exception -> " + e.Message);
             }
 
         }
@@ -903,7 +904,7 @@ namespace Bb.Oracle.Models.Comparer
             catch (Exception)
             {
                 string msg = $"invalid datas for build path root={root} objectType={objectType} filename={filename}";
-                Console.WriteLine(msg);
+                Trace.WriteLine(msg);
                 throw;
             }
         }

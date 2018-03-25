@@ -41,9 +41,6 @@ namespace Bb.Oracle.Structures.Models
         }
 
         [JsonIgnore]
-        public abstract KindModelEnum KindModel { get; }
-
-        [JsonIgnore]
         public object Parent { get; set; }
 
         [JsonIgnore]

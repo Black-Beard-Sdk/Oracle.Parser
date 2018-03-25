@@ -37,17 +37,17 @@ namespace Bb.Oracle.Solutions
             // Process(KindModelEnum.MaterializedViewLog, scripts, visitor);
             // Process(KindModelEnum.View, scripts, visitor);
             // Process(KindModelEnum.Index, scripts, visitor);
-            // Process(KindModelEnum.Sequence, scripts, visitor);
+            Process(KindModelEnum.Sequence, scripts, visitor);
             // Process(KindModelEnum.Trigger, scripts, visitor);
             // Process(KindModelEnum.Procedure, scripts, visitor);
-            // Process(KindModelEnum.Package, scripts, visitor);
+            Process(KindModelEnum.Package, scripts, visitor);
             // Process(KindModelEnum.PackageBodies, scripts, visitor);
             // Process(KindModelEnum.Function, scripts, visitor);
             // Process(KindModelEnum.Type, scripts, visitor);
             // Process(KindModelEnum.Jobs, scripts, visitor);
-            // Process(KindModelEnum.Synonym, scripts, visitor);
+            //Process(KindModelEnum.Synonym, scripts, visitor);
 
-            Process(script => script.ExpectedKind == KindModelEnum.UserObjectPrivilege, scripts, visitor);
+            Process(KindModelEnum.UserObjectPrivilege, scripts, visitor);
 
 
             foreach (ScriptFileInfo script in scripts)

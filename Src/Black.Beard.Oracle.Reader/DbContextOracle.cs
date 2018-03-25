@@ -41,7 +41,7 @@ namespace Bb.Oracle.Reader
         ///   <c>true</c> if [exclude code]; otherwise, <c>false</c>.
         /// </value>
         public bool ExcludeCode { get; set; }
-
+        public Version Version { get; internal set; }
     }
 
 }

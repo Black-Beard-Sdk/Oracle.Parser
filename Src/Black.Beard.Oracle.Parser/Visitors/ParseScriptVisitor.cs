@@ -1941,12 +1941,6 @@ namespace Bb.Oracle.Visitors
             return base.VisitSequence_spec(context);
         }
 
-        public override object VisitSequence_start_clause([NotNull] PlSqlParser.Sequence_start_clauseContext context)
-        {
-            Stop();
-            return base.VisitSequence_start_clause(context);
-        }
-
         public override object VisitSeq_of_declare_specs([NotNull] PlSqlParser.Seq_of_declare_specsContext context)
         {
             Stop();

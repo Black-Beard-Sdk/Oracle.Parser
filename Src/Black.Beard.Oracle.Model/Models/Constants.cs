@@ -3,6 +3,22 @@
     public static class Constants
     {
 
+
+
+        public static class DefaultValues
+        {
+
+            public const string MaxValueSequence = "9999999999999999999999999999";
+        }
+
+        public static class Errors
+        {
+            public const string AllreadyExists = "object allready exist";
+            public const string NotFoundObject = "object not found";
+        }
+
+
+
         public const string Jobs = "JOBS";
 
         public const string Functions = "FUNCTIONS";

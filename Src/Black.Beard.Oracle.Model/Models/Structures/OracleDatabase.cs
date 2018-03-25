@@ -20,7 +20,7 @@ namespace Bb.Oracle.Structures.Models
             this.Types = new TypeCollection() { Parent = this };
             this.Procedures = new ProcedureCollection() { Parent = this };
             this.Tables = new TableCollection() { Parent = this };
-            this.Synonymes = new SynonymCollection() { Parent = this };
+            this.Synonyms = new SynonymCollection() { Parent = this };
             this.Grants = new GrantCollection() { Parent = this };
 
             this.References = new ReferentialNames();
@@ -116,7 +116,7 @@ namespace Bb.Oracle.Structures.Models
         /// <returns>		
         /// Objet <see cref="SynonymCollection" />.");
         /// </returns>
-        public SynonymCollection Synonymes { get; set; }
+        public SynonymCollection Synonyms { get; set; }
 
         /// <summary>
         /// Sequences
@@ -193,7 +193,7 @@ namespace Bb.Oracle.Structures.Models
             this.Sequences.Initialize();
             this.Procedures.Initialize();
             this.Grants.Initialize();
-            this.Synonymes.Initialize();
+            this.Synonyms.Initialize();
             //this.Tablespaces.Initialize();
             //this.Packages.Initialize();
 

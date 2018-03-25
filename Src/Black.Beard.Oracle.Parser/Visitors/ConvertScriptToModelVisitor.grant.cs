@@ -6,6 +6,7 @@ using System.Linq;
 using Antlr4.Runtime;
 using System;
 using Bb.Oracle.Structures.Models;
+using Bb.Oracle.Models.Codes;
 
 namespace Bb.Oracle.Visitors
 {
@@ -291,14 +292,18 @@ namespace Bb.Oracle.Visitors
 
         }
 
+        private void EvaluateGrants(OCallMethodReference method)
+        {
 
-        //public bool ttoto()
-        //{
+            //if (method.Name.Name == "GRANT_QUEUE_PRIVILEGE")
+            //{
+            //    if (method.Name.Schema == "DBMS_AQADM" && string.IsNullOrEmpty(method.Name.Package))
+            //    {
 
+            //    }
+            //}
 
-        //    return true;
-
-        //}
+        }
 
 
     }
@@ -308,47 +313,47 @@ namespace Bb.Oracle.Visitors
 //public override object VisitDir_object_name([NotNull] PlSqlParser.Dir_object_nameContext context)
 //{
 //    Stop();
-//    return base.VisitDir_object_name(context);
+//    return this..VisitDir_object_name(context);
 //}
 
 //public override object VisitGrantee_name([NotNull] PlSqlParser.Grantee_nameContext context)
 //{
 //    Stop();
-//    return base.VisitGrantee_name(context);
+//    return this..VisitGrantee_name(context);
 //}
 
 //public override object VisitGrant_object_name([NotNull] PlSqlParser.Grant_object_nameContext context)
 //{
 //    Stop();
-//    return base.VisitGrant_object_name(context);
+//    return this..VisitGrant_object_name(context);
 //}
 
 //public override object VisitObject_privilege([NotNull] PlSqlParser.Object_privilegeContext context)
 //{
 //    Stop();
-//    return base.VisitObject_privilege(context);
+//    return this..VisitObject_privilege(context);
 //}
 
 //public override object VisitSchema_object_name([NotNull] PlSqlParser.Schema_object_nameContext context)
 //{
 //    Stop();
-//    return base.VisitSchema_object_name(context);
+//    return this..VisitSchema_object_name(context);
 //}
 
 //public override object VisitSystem_privilege([NotNull] PlSqlParser.System_privilegeContext context)
 //{
 //    Stop();
-//    return base.VisitSystem_privilege(context);
+//    return this..VisitSystem_privilege(context);
 //}
 
 //public override object VisitTableview_name([NotNull] PlSqlParser.Tableview_nameContext context)
 //{
 //    Stop();
-//    return base.VisitTableview_name(context);
+//    return this..VisitTableview_name(context);
 //}
 
 //public override object VisitUser_object_name([NotNull] PlSqlParser.User_object_nameContext context)
 //{
 //    Stop();
-//    return base.VisitUser_object_name(context);
+//    return this..VisitUser_object_name(context);
 //}

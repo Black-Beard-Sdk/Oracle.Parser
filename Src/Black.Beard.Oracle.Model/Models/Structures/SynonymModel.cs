@@ -1,11 +1,12 @@
-﻿using Newtonsoft.Json;
+﻿using Bb.Oracle.Models;
+using Newtonsoft.Json;
 
 namespace Bb.Oracle.Structures.Models
 {
     /// <summary>
     /// Synonym
     /// </summary>
-    [System.Diagnostics.DebuggerDisplay("{Key} -> {ObjectTarget}")]
+    [System.Diagnostics.DebuggerDisplay("SYNONYM {Owner}.{Name} FOR {ObjectTargetOwner}.{ObjectTargetName}")]
     public partial class SynonymModel : ItemBase
     {
 
@@ -13,11 +14,6 @@ namespace Bb.Oracle.Structures.Models
         /// Key
         /// </summary>
         public string Key { get; set; }
-
-        /// <summary>
-        /// Object Type
-        /// </summary>
-        public string ObjectType { get; set; }
 
         /// <summary>
         /// Object Target
@@ -41,7 +37,7 @@ namespace Bb.Oracle.Structures.Models
         public override KindModelEnum KindModel => KindModelEnum.Synonym;
 
         public bool IsPublic { get; set; }
-
+        public string DbLink { get; set; }
     }
 
 }

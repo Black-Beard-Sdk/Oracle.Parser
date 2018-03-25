@@ -1,4 +1,5 @@
-﻿using Bb.Oracle.Models;
+﻿using Bb.Oracle;
+using Bb.Oracle.Models;
 using Bb.Oracle.Reader;
 using Bb.Oracle.Structures.Models;
 using System;
@@ -48,6 +49,8 @@ namespace Black.Beard.Oracle.Powershell
 
         protected override void ProcessRecord()
         {
+
+            LogInitializer.Initialize();
 
             var ctx = new Bb.Oracle.Reader.ArgumentContext()
             {

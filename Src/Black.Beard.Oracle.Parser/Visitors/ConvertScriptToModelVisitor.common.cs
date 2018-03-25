@@ -20,133 +20,133 @@ namespace Bb.Oracle.Visitors
 
         #region Resolvers
 
-        private ItemBase ResolveTable(ObjectReference ob)
-        {
+        //private ItemBase ResolveTable(ObjectReference ob)
+        //{
 
-            if (ob.Path.Length == 1)
-            {
-                var items = ResolveTables(ob.Path[0]);
-                if (items.Count == 1)
-                    return items[0];
-                else
-                {
-                    Stop();
+        //    if (ob.Path.Length == 1)
+        //    {
+        //        var items = ResolveTables(ob.Path[0]);
+        //        if (items.Count == 1)
+        //            return items[0];
+        //        else
+        //        {
+        //            Stop();
 
-                    items = ResolveTypes(ob.Path[0]);
-                    if (items.Count == 1)
-                        return items[0];
-                    else
-                    {
-                        Stop();
+        //            items = ResolveTypes(ob.Path[0]);
+        //            if (items.Count == 1)
+        //                return items[0];
+        //            else
+        //            {
+        //                Stop();
 
-                    }
-                }
-            }
-            else if (ob.Path.Length == 2)
-                return ResolveTable(ob.Path[0], ob.Path[1]);
+        //            }
+        //        }
+        //    }
+        //    else if (ob.Path.Length == 2)
+        //        return ResolveTable(ob.Path[0], ob.Path[1]);
 
-            Stop();
-            return null;
+        //    Stop();
+        //    return null;
 
-        }
+        //}
 
-        private List<ItemBase> ResolveTypes(string typeName)
-        {
-            var _tableName = typeName.CleanName();
-            var items = this.Db.Types.Where(c => c.GetName() == _tableName).Cast<ItemBase>().ToList();
-            Debug.Assert(items.Count > 0);
-            return items;
-        }
+        //private List<ItemBase> ResolveTypes(string typeName)
+        //{
+        //    var _tableName = typeName.CleanName();
+        //    var items = this.Db.Types.Where(c => c.GetName() == _tableName).Cast<ItemBase>().ToList();
+        //    Debug.Assert(items.Count > 0);
+        //    return items;
+        //}
 
-        private List<ItemBase> ResolveTables(string tableName)
-        {
-            var _tableName = tableName.CleanName();
-            var items = this.Db.Tables.Where(c => c.GetName() == _tableName).Cast<ItemBase>().ToList();
-            Debug.Assert(items.Count > 0);
-            return items;
-        }
+        //private List<ItemBase> ResolveTables(string tableName)
+        //{
+        //    var _tableName = tableName.CleanName();
+        //    var items = this.Db.Tables.Where(c => c.GetName() == _tableName).Cast<ItemBase>().ToList();
+        //    Debug.Assert(items.Count > 0);
+        //    return items;
+        //}
 
-        private ItemBase ResolveTable(string schema, string tableName)
-        {
-            var _schema = schema.CleanName();
-            var _tableName = tableName.CleanName();
+        //private ItemBase ResolveTable(string schema, string tableName)
+        //{
+        //    var _schema = schema.CleanName();
+        //    var _tableName = tableName.CleanName();
 
-            var t = Db.Tables[$"{_schema}.{_tableName}"];
+        //    var t = Db.Tables[$"{_schema}.{_tableName}"];
 
-            if (t == null)
-            {
-                Stop();
-                // Search in type
+        //    if (t == null)
+        //    {
+        //        Stop();
+        //        // Search in type
 
-            }
+        //    }
 
-            Debug.Assert(t != null);
+        //    Debug.Assert(t != null);
 
-            return t;
+        //    return t;
 
-        }
+        //}
 
-        private ColumnModel ResolveColumn(ObjectReference ob)
-        {
+        //private ColumnModel ResolveColumn(ObjectReference ob)
+        //{
 
-            var tt = this;
-            if (ob.Path.Length == 2)
-            {
-                // CRM_CORE.SITE
-                // MASTER.SITE
-                // ROUTING_CORE.SITE
-                var items = ResolveColumns(ob.Path[0], ob.Path[1]);
-                if (items.Count == 1)
-                    return items[0];
+        //    var tt = this;
+        //    if (ob.Path.Length == 2)
+        //    {
+        //        // CRM_CORE.SITE
+        //        // MASTER.SITE
+        //        // ROUTING_CORE.SITE
+        //        var items = ResolveColumns(ob.Path[0], ob.Path[1]);
+        //        if (items.Count == 1)
+        //            return items[0];
 
-                else
-                {
-                    Stop();
+        //        else
+        //        {
+        //            Stop();
 
-                    if (ob.SchemaCaller != null)
-                    {
-                        var schemaCaller = ob.SchemaCaller;
-                        var syn = this.Db.Synonymes.Where(c => c.IsPublic || c.ObjectTargetOwner.ToUpper() == schemaCaller || c.Owner.ToUpper() == schemaCaller).ToList();
+        //            if (ob.SchemaCaller != null)
+        //            {
+        //                var schemaCaller = ob.SchemaCaller;
+        //                var syn = this.Db.Synonyms.Where(c => c.IsPublic || c.ObjectTargetOwner.ToUpper() == schemaCaller || c.Owner.ToUpper() == schemaCaller).ToList();
 
-                    }
+        //            }
 
-                }
-            }
-            else if (ob.Path.Length == 3)
-                return ResolveColumn(ob.Path[0], ob.Path[1], ob.Path[2]);
+        //        }
+        //    }
+        //    else if (ob.Path.Length == 3)
+        //        return ResolveColumn(ob.Path[0], ob.Path[1], ob.Path[2]);
 
-            Stop();
-            return null;
+        //    Stop();
+        //    return null;
 
-        }
+        //}
 
-        private List<ColumnModel> ResolveColumns(string tableName, string columnName)
-        {
-            var _columnName = columnName.CleanName();
-            var _tableName = tableName.CleanName();
-            var items = this.Db.Tables.Where(c => c.Name == _tableName).ToList();
-            var cols = items.SelectMany(c => c.Columns).Where(c => c.Name == _columnName).ToList();
+        //private List<ColumnModel> ResolveColumns(string tableName, string columnName)
+        //{
+        //    var _columnName = columnName.CleanName();
+        //    var _tableName = tableName.CleanName();
+        //    var items = this.Db.Tables.Where(c => c.Name == _tableName).ToList();
+        //    var cols = items.SelectMany(c => c.Columns).Where(c => c.Name == _columnName).ToList();
 
-            Debug.Assert(cols.Count > 0);
+        //    Debug.Assert(cols.Count > 0);
 
-            return cols;
+        //    return cols;
 
-        }
+        //}
 
-        private ColumnModel ResolveColumn(string schema, string tableName, string columnName)
-        {
-            var _schema = schema.CleanName();
-            var _tableName = tableName.CleanName();
-            var _columnName = columnName.CleanName();
+        //private ColumnModel ResolveColumn(string schema, string tableName, string columnName)
+        //{
+        //    var _schema = schema.CleanName();
+        //    var _tableName = tableName.CleanName();
+        //    var _columnName = columnName.CleanName();
 
-            var t = Db.Tables[$"{_schema}.{_tableName}"];
-            ColumnModel col = t.Columns.FirstOrDefault(c => c.Name == _columnName);
+        //    var t = Db.Tables[$"{_schema}.{_tableName}"];
+        //    ColumnModel col = t.Columns.FirstOrDefault(c => c.Name == _columnName);
 
-            Debug.Assert(col != null);
+        //    Debug.Assert(col != null);
 
-            return col;
+        //    return col;
 
-        }
+        //}
 
 
         #endregion Resolvers
@@ -247,6 +247,7 @@ namespace Bb.Oracle.Visitors
 
         private StringBuilder GetText(RuleContext context)
         {
+
             if (context is ParserRuleContext s)
                 return GetText(s.Start.StartIndex, s.Stop.StopIndex + 1);
             return new StringBuilder();
@@ -254,6 +255,8 @@ namespace Bb.Oracle.Visitors
 
         private StringBuilder GetText(int startIndex, int stopIndex)
         {
+
+
 
             int length = stopIndex - startIndex;
 

@@ -537,12 +537,6 @@ public interface IPlSqlParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitSequence_spec([NotNull] PlSqlParser.Sequence_specContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="PlSqlParser.sequence_start_clause"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitSequence_start_clause([NotNull] PlSqlParser.Sequence_start_clauseContext context);
-	/// <summary>
 	/// Visit a parse tree produced by <see cref="PlSqlParser.create_index"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>

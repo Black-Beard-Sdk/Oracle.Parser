@@ -1,4 +1,6 @@
 ﻿
+using Bb.Oracle.Models;
+
 namespace Bb.Oracle.Structures.Models
 {
     /// <summary>

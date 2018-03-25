@@ -11,6 +11,9 @@ namespace Bb.Oracle.Models.Codes
 
         public OCodeObject Value { get; set; }
         public string ParameterName { get; set; }
+
+        public override KindModelEnum KindModel => KindModelEnum.MethodArgument;
+
     }
 
 }
