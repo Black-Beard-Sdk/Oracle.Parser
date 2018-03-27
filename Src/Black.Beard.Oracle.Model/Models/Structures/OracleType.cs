@@ -50,12 +50,15 @@ namespace Bb.Oracle.Structures.Models
         /// <summary>
         /// Type Owner
         /// </summary>   
+        [DefaultValue("")]
         public string Owner { get; set; }
 
         /// <summary>
         /// Type Name
         /// </summary>   
+        [DefaultValue("")]
         public string Name { get; set; }
+
 
         public override string GetName() { return Name; }
 

@@ -87,7 +87,7 @@ namespace Bb.Oracle.Visitors
             {
 
                 var txt = GetText(context).ToString().Trim();
-                if (txt.StartsWith("CREATE"))
+                if (!txt.StartsWith("CREATE"))
                     txt = txt.Substring(6).Trim();
 
                 package = new PackageModel()
@@ -120,13 +120,14 @@ namespace Bb.Oracle.Visitors
 
                     var r = (OracleObject)this.VisitPackage_obj_spec(package_obj_spec);
 
+                    if (r.KindModel == KindModelEnum.Function || r.KindModel == KindModelEnum.Procedure)
+                    {
+                        if (r is ProcedureModel p)
+                            Db.Procedures.Add(p);
+
+                    }
                     
-
-                    StringBuilder text = GetText(package_obj_spec);
-
-
-
-                    Stop();
+                    //Stop();
 
                 }
 

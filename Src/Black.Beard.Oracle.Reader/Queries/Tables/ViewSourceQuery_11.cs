@@ -28,7 +28,7 @@ AND t.OBJECT_TYPE = 'VIEW'
 
             List<ViewSourceQueryTable_11> List = new List<ViewSourceQueryTable_11>();
             this.OracleContext = context;
-            var db = context.database;
+            var db = context.Database;
 
             if (action == null)
                 action =

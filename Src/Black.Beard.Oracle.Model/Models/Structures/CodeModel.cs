@@ -22,6 +22,10 @@ namespace Bb.Oracle.Structures.Models
 
         public string Code { get; set; }
 
+        /// <summary>
+        /// return field Code unserialized
+        /// </summary>
+        /// <returns></returns>
         public string GetSource()
         {
 
@@ -29,6 +33,37 @@ namespace Bb.Oracle.Structures.Models
                 return string.Empty;
 
             return Utils.Unserialize(this.Code, true);
+
+        }
+
+        /// <summary>
+        /// Serialize specified source and store it in Code field
+        /// </summary>
+        /// <param name="source"></param>
+        public void SetSource(string source)
+        {
+
+            if (string.IsNullOrEmpty(source))
+                throw new ArgumentException("source can't be null or empty", nameof(source));
+
+            this.Code = Utils.Serialize(source, true);
+
+        }
+
+        /// <summary>
+        /// Serialize specified source and store it in Code field
+        /// </summary>
+        /// <param name="source"></param>
+        public void SetSource(StringBuilder source)
+        {
+
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            if (source.Length == 0)
+                throw new ArgumentException("source can't be null or empty", nameof(source));
+
+            this.Code = Utils.Serialize(source, true);
 
         }
 

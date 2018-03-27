@@ -24,7 +24,7 @@ AND t.OBJECT_TYPE IN ('MATERIALIZED VIEW', 'VIEW')
         public override List<ViewQueryTable_11> Resolve(DbContextOracle context, Action<ViewQueryTable_11> action)
         {
             List<ViewQueryTable_11> List = new List<ViewQueryTable_11>();
-            var db = context.database;
+            var db = context.Database;
             this.OracleContext = context;
 
             if (action == null)

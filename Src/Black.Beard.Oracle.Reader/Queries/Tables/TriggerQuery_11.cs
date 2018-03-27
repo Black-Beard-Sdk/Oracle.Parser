@@ -35,7 +35,7 @@ INNER JOIN dba_objects o ON t.owner = o.owner AND t.trigger_name = o.object_name
         public override List<TriggerQueryTable_11> Resolve(DbContextOracle context, Action<TriggerQueryTable_11> action)
         {
             List<TriggerQueryTable_11> List = new List<TriggerQueryTable_11>();
-            var tables = context.database.Tables;
+            var tables = context.Database.Tables;
             this.OracleContext = context;
 
             if (action == null)

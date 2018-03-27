@@ -37,7 +37,7 @@ ORDER BY tt.TABLE_NAME,tt.COLUMN_ID
 
             List<ModelTable_11> List = new List<ModelTable_11>();
             this.OracleContext = context;
-            var db = context.database;
+            var db = context.Database;
 
             if (action == null)
                 action =
@@ -137,9 +137,9 @@ ORDER BY tt.TABLE_NAME,tt.COLUMN_ID
                 List = view.ReadAll(reader, action).ToList();
             }
 
-            if (this.OracleContext.database != null)
+            if (this.OracleContext.Database != null)
             {
-                var _db = this.OracleContext.database;
+                var _db = this.OracleContext.Database;
                 foreach (TableModel table in _db.Tables)
                 {
 

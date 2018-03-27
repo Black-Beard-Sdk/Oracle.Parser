@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using Bb.Oracle.Structures.Models;
+using Bb.Oracle.Models.Codes;
 
 namespace Bb.Oracle.Reader.Queries
 {
@@ -13,7 +14,7 @@ namespace Bb.Oracle.Reader.Queries
     public class ProcQueryWithArgument_11 : DbQueryBase<ModelProcWithArgument_11>
     {
 
-        string sql =@"
+        string sql = @"
 SELECT 
     t.subprogram_id, 
     t.PACKAGE_NAME, 
@@ -44,7 +45,7 @@ ORDER BY t.SUBPROGRAM_ID, t.PACKAGE_NAME, t.OBJECT_NAME, t.SEQUENCE, t.IN_OUT
             this.OracleContext = context;
             List<ModelProcWithArgument_11> List = new List<ModelProcWithArgument_11>();
             string colName = string.Empty;
-            var db = context.database;
+            var db = context.Database;
 
             HashSet<object> _h = new HashSet<object>();
             if (action == null)
@@ -84,10 +85,10 @@ ORDER BY t.SUBPROGRAM_ID, t.PACKAGE_NAME, t.OBJECT_NAME, t.SEQUENCE, t.IN_OUT
                         db.Procedures.Add(proc);
 
                     }
-                   
+
                     int index = proc.Arguments.Count;
                     colName = (!string.IsNullOrEmpty(t.ArgumentName) ? t.ArgumentName : "arg" + index.ToString());
-                    OracleType _type = null;
+                    OTypeReference _type = new OTypeReference();
 
                     if (colName != "arg0")
                     {
@@ -118,35 +119,38 @@ ORDER BY t.SUBPROGRAM_ID, t.PACKAGE_NAME, t.OBJECT_NAME, t.SEQUENCE, t.IN_OUT
                                 Name = colName,
                                 ColumnId = t.Position,
                             };
-                            _type = c.Type;
+                            _type.DataType = c.Type;
                             proc.ResultType.Columns.Add(c);
 
-                        }                      
+                        }
 
                     }
 
                     if (_type != null)
                     {
 
-                        _type.DataDefault = t.DataDefault != null ? t.DataDefault.ToString()?.Trim() : string.Empty;
-                        _type.DataLength = t.DataLength;
-                        _type.DataPrecision = t.DataPrecision;
-                        _type.DataType = t.DataType;
-                        _type.defaultLength = t.DefaultLength;
-                        _type.DataLevel = t.Data_Level;
-                        _type.Owner = t.TypeOwner;
-                        _type.Name = t.TypeName;
+                        _type.DataType.DataDefault = t.DataDefault != null ? t.DataDefault.ToString()?.Trim() : string.Empty;
+                        _type.DataType.DataLength = t.DataLength;
+                        _type.DataType.DataPrecision = t.DataPrecision;
+                        _type.DataType.DataType = t.DataType;
+                        _type.DataType.defaultLength = t.DefaultLength;
+                        _type.DataType.DataLevel = t.Data_Level;
+                        _type.DataType.Owner = t.TypeOwner;
+                        _type.DataType.Name = t.TypeName;
 
-                        if (_type.DataType != null)
+                        if (_type.DataType.DataType != null)
                         {
 
-                            _type.DbType = TypeMatchExtension.ConvertToDbType(t.DataType).ToString();
+                            _type.DataType.DbType = TypeMatchExtension.ConvertToDbType(t.DataType).ToString();
 
                             if (t.DataType.StartsWith("PL/SQL"))
-                                _type.IsRecord = t.DataType == "PL/SQL RECORD";
+                                _type.DataType.IsRecord = t.DataType == "PL/SQL RECORD";
 
-                            else if (_type.DataType == "TABLE")
-                                _type.IsRecord = true;
+                            else if (_type.DataType.DataType == "TABLE")
+                                _type.DataType.IsRecord = true;
+
+
+                            //TODO : Recopier le nom du type dans le path
 
                         }
 

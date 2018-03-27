@@ -453,7 +453,7 @@ namespace Bb.Oracle.Models.Comparer
             if (!File.Exists(p))
             {
 
-                var txt = CreateOrReplace + Utils.Unserialize(source.Code, true).Trim();
+                var txt = CreateOrReplace + source.Code.GetSource().Trim();
                 if (!txt.EndsWith(@"\"))
                     txt = txt + Environment.NewLine + @"\";
                 sb.AppendLine(txt);
@@ -475,7 +475,7 @@ namespace Bb.Oracle.Models.Comparer
                 if (!File.Exists(p))
                 {
 
-                    var txt = CreateOrReplace + Utils.Unserialize(target.Code, true).Trim();
+                    var txt = CreateOrReplace + target.Code.GetSource().Trim();
                     if (!txt.EndsWith(@"\"))
                         txt = txt + Environment.NewLine + @"\";
                     sb.AppendLine(txt);

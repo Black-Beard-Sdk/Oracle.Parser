@@ -61,6 +61,24 @@ namespace Bb.Oracle
 
         }
 
+        public static string Serialize(StringBuilder code, bool compress)
+        {
+
+            if (code == null)
+                throw new ArgumentNullException(nameof(code));
+
+            if (code.Length > 0)
+            {
+                byte[] plainDatas = System.Text.Encoding.UTF8.GetBytes(code.ToString());
+                byte[] compressedData = compress ? Compression.Compress(plainDatas) : plainDatas;
+                string file_message = Convert.ToBase64String(compressedData);
+                return file_message;
+            }
+
+            return string.Empty;
+
+        }
+
         public static string Serialize(string code, bool compress)
         {
 
@@ -96,6 +114,7 @@ namespace Bb.Oracle
 
 namespace Bb.Oracle.Models
 {
+
     public class Compression
     {
 
@@ -105,9 +124,7 @@ namespace Bb.Oracle.Models
             using (MemoryStream ms = new MemoryStream())
             {
                 using (GZipStream zs = new GZipStream(ms, CompressionMode.Compress, true))
-                {
                     zs.Write(plainData, 0, plainData.Length);
-                }
 
                 ms.Position = 0;
                 compressedData = ms.ToArray();
@@ -120,15 +137,11 @@ namespace Bb.Oracle.Models
         {
             byte[] plainData;
             using (MemoryStream ms = new MemoryStream(compressedData))
+            using (GZipStream zs = new GZipStream(ms, CompressionMode.Decompress, true))
+            using (MemoryStream unzippedMs = new MemoryStream())
             {
-                using (GZipStream zs = new GZipStream(ms, CompressionMode.Decompress, true))
-                {
-                    using (MemoryStream unzippedMs = new MemoryStream())
-                    {
-                        zs.CopyTo(unzippedMs);
-                        plainData = unzippedMs.ToArray();
-                    }
-                }
+                zs.CopyTo(unzippedMs);
+                plainData = unzippedMs.ToArray();
             }
 
             return plainData;

@@ -28,7 +28,7 @@ ORDER BY l.COLUMN_POSITION
         {
 
             List<SubpartitionColumnDto_11> List = new List<SubpartitionColumnDto_11>();
-            var db = context.database;
+            var db = context.Database;
             this.OracleContext = context;
 
             if (action == null)

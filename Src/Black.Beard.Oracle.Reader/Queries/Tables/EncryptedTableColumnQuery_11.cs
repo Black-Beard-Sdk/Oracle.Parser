@@ -32,7 +32,7 @@ namespace Bb.Oracle.Reader.Queries
 
             List<EncryptedTableColumnDto_11> List = new List<EncryptedTableColumnDto_11>();
             this.OracleContext = context;
-            var db = context.database;
+            var db = context.Database;
 
             if (action == null)
                 action =

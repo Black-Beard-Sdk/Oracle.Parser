@@ -28,7 +28,7 @@ LEFT JOIN all_mview_comments c ON t.OWNER = c.OWNER AND t.MVIEW_NAME = c.MVIEW_N
 
             List<MaterializedViewSourceQueryTable_11> List = new List<MaterializedViewSourceQueryTable_11>();
             this.OracleContext = context;
-            var db = context.database;
+            var db = context.Database;
 
             if (action == null)
                 action =

@@ -19,12 +19,12 @@ namespace Bb.Oracle.Reader
         }
 
         /// <summary>
-        /// Gets or sets the database.
+        /// Gets or sets the Database structure.
         /// </summary>
         /// <value>
         /// The database.
         /// </value>
-        public OracleDatabase database { get; set; }
+        public OracleDatabase Database { get; set; }
 
         /// <summary>
         /// Gets or sets the use.

@@ -37,7 +37,7 @@ ORDER BY owner, s.type, s.name, s.line
         public override List<ContentCodeQueryTable_11> Resolve(DbContextOracle context, Action<ContentCodeQueryTable_11> action)
         {
             List<ContentCodeQueryTable_11> List = new List<ContentCodeQueryTable_11>();
-            var db = context.database;
+            var db = context.Database;
             this.OracleContext = context;
             var _p = db.Procedures.Cast<ProcedureModel>().ToLookup(c => c.Name);
 
@@ -113,7 +113,7 @@ ORDER BY owner, s.type, s.name, s.line
                         Sources.Add(new CodeSource() { Key = key, Code = code, Type = k[0] });
 
                         if (i.Count == 1)
-                            i.First().Code = code;
+                            i.First().Code.Code = code;
                         else if (i.Count > 1)
                         {
 

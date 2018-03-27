@@ -26,7 +26,7 @@ ORDER BY t.OWNER, t.TABLE_NAME, t.CONSTRAINT_NAME
 
             this.OracleContext = context;
             List<ConstraintColumnTable_11> list = new List<ConstraintColumnTable_11>();
-            var db = context.database;
+            var db = context.Database;
 
             if (action == null)
                 action = t =>

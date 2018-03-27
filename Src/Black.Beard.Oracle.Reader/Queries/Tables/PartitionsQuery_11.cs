@@ -26,7 +26,7 @@ ORDER BY l.PARTITION_POSITION
         {
 
             List<PartitionsDto_11> List = new List<PartitionsDto_11>();
-            var db = context.database;
+            var db = context.Database;
             this.OracleContext = context;
 
             if (action == null)

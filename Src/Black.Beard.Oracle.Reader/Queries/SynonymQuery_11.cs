@@ -34,7 +34,7 @@ FROM DBA_SYNONYMS t LEFT OUTER JOIN obj o ON (t.TABLE_OWNER = o.OBJECT_OWNER AND
         {
 
             List<SynonymTable_11> List = new List<SynonymTable_11>();
-            var db = context.database;
+            var db = context.Database;
             this.OracleContext = context;
 
             if (action == null)

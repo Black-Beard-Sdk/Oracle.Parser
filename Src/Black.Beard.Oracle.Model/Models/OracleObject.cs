@@ -73,7 +73,10 @@ namespace Bb.Oracle.Models
         TypeReference,
 
         NotImplemented,
-
+        TableTypeRef,
+        ArrayTypeDef,
+        RecordTypeDef,
+        RefCursorTypeDef,
     }
 
 }

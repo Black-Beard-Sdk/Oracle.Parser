@@ -25,7 +25,7 @@ WHERE NOT EXISTS(SELECT 1 FROM dba_arguments a WHERE a.OBJECT_ID = t.OBJECT_ID) 
         {
             List<ModelProc_11> List = new List<ModelProc_11>();
             string colName = string.Empty;
-            var db = context.database;
+            var db = context.Database;
             this.OracleContext = context;
 
             HashSet<object> _h = new HashSet<object>();
@@ -43,32 +43,18 @@ WHERE NOT EXISTS(SELECT 1 FROM dba_arguments a WHERE a.OBJECT_ID = t.OBJECT_ID) 
                     if (t.OBJECT_NAME == t.PROCEDURE_NAME)
                         return;
 
-                    string key = string.Empty;
-
-                    if (!string.IsNullOrEmpty(t.PROCEDURE_NAME))
-                        key = t.ObjectId.ToString() + t.OWNER + "::" + t.OBJECT_NAME + "." + t.PROCEDURE_NAME;
-                    else
-                        key = t.ObjectId.ToString() + t.OWNER + "::" + t.OBJECT_NAME;
-
-                    if (!db.Procedures.TryGet(key, out proc))
+                    proc = new ProcedureModel()
                     {
+                        Owner = t.OWNER,
+                        PackageName = string.IsNullOrEmpty(t.PROCEDURE_NAME) ? string.Empty : t.OBJECT_NAME,
+                        Name = string.IsNullOrEmpty(t.PROCEDURE_NAME) ? t.OBJECT_NAME : t.PROCEDURE_NAME,
+                        IsFunction = false,
+                    };
+                    proc.Key = proc.BuildKey();
 
-                        proc = new ProcedureModel()
-                        {
-                            Owner = t.OWNER,
-                            PackageName = string.IsNullOrEmpty(t.PROCEDURE_NAME) ? string.Empty : t.OBJECT_NAME,
-                            Name = string.IsNullOrEmpty(t.PROCEDURE_NAME) ? t.OBJECT_NAME : t.PROCEDURE_NAME,
-                            Key = key,
-                            IsFunction = false,
-                        };
-
+                    if (!db.Procedures.Contains(proc.Key))
                         db.Procedures.Add(proc);
 
-                    }
-                    else
-                    {
-
-                    }
 
                 };
 

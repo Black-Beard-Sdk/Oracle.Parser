@@ -1,4 +1,5 @@
 ﻿using Bb.Oracle.Models;
+using Bb.Oracle.Models.Codes;
 using Newtonsoft.Json;
 using System;
 
@@ -58,7 +59,7 @@ namespace Bb.Oracle.Structures.Models
         /// <returns>		
         /// Objet <see cref="OracleType" />.");
         /// </returns>
-        public OracleType Type { get; set; } = new OracleType();
+        public OTypeReference Type { get; set; } = new OTypeReference();
 
         public override KindModelEnum KindModel => KindModelEnum.Argument;
 

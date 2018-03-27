@@ -21,6 +21,8 @@ namespace Bb.Oracle.Structures.Models
 
             this.ResultType = new ProcedureResult() { Parent = this };
 
+            this.Code = new CodeModel();
+
         }
 
         /// <summary>
@@ -61,7 +63,7 @@ namespace Bb.Oracle.Structures.Models
         /// <summary>
         /// Code
         /// </summary>
-        public string Code { get; set; }
+        public CodeModel Code { get; set; }
 
         /// <summary>
         /// Arguments
@@ -205,7 +207,7 @@ namespace Bb.Oracle.Structures.Models
             }
         }
 
-
+        [JsonIgnore]
         public string CustomName
         {
             get
@@ -272,9 +274,43 @@ namespace Bb.Oracle.Structures.Models
             return manager.Evaluate(this);
         }
 
-        public string GetCodeSource()
+        public string BuildKey()
         {
-            return Utils.Unserialize(this.Code, true);
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append(this.Owner);
+
+            if (!string.IsNullOrEmpty(this.PackageName))
+                sb.Append("." + this.PackageName);
+
+            sb.Append(".");
+            sb.Append(this.Name);
+            sb.Append("(");
+            foreach (ArgumentModel arg in this.Arguments)
+            {
+
+                sb.Append(arg.Name);
+                sb.Append(" => ");
+
+                var datatype = arg.Type.DataType;
+                if (!string.IsNullOrEmpty(datatype.Owner))
+                {
+                    sb.Append(datatype.Owner);
+                    sb.Append(".");
+                    sb.Append(datatype.Name);
+                }
+                else
+                {
+                    sb.Append(datatype.DataType);
+                }
+
+            }
+
+            sb.Append(")");
+
+            return sb.ToString();
+
         }
 
 

@@ -37,7 +37,7 @@ ORDER BY o.OWNER, o.OBJECT_NAME
         {
 
             List<ModelObject_11> List = new List<ModelObject_11>();
-            var db = context.database;
+            var db = context.Database;
             this.OracleContext = context;
 
             if (action == null)

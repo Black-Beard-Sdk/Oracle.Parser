@@ -8,7 +8,7 @@ namespace Bb.Oracle.Models.Codes
 
 
     public enum PercentTypeEnum
-        {
+    {
         Undefined,
         PercentType,
         PercentRowType,
@@ -16,8 +16,16 @@ namespace Bb.Oracle.Models.Codes
 
     public class OTypeReference : OCodeObject
     {
+
+        public OTypeReference()
+        {
+            DataType = new OracleType();
+        }
+
         public List<string> Path { get; set; }
+
         public PercentTypeEnum KindTypeReference { get; set; }
+
         public OracleType DataType { get; set; }
 
         public override KindModelEnum KindModel => KindModelEnum.TypeReference;

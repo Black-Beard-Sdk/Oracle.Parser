@@ -44,7 +44,7 @@ ORDER BY t.OWNER, t.TABLE_NAME, t.CONSTRAINT_NAME, t.CONSTRAINT_TYPE, t.R_CONSTR
 
             List<ConstraintsTable_11> List = new List<ConstraintsTable_11>();
             this.OracleContext = context;
-            var db = context.database;
+            var db = context.Database;
 
             if (action == null)
                 action =

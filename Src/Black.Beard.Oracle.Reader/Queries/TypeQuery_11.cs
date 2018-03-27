@@ -30,7 +30,7 @@ ORDER BY t1.OWNER,t1.TYPE_NAME,t1.ATTR_NO
         public override List<TypeTable_11> Resolve(DbContextOracle context, Action<TypeTable_11> action)
         {
 
-            var db = context.database;
+            var db = context.Database;
             List<TypeTable_11> List = new List<TypeTable_11>();
             this.OracleContext = context;
 

@@ -30,7 +30,7 @@ namespace Bb.Oracle.Reader.Queries
 
             List<TablePartitionColumnDto_11> List = new List<TablePartitionColumnDto_11>();
             this.OracleContext = context;
-            var db = context.database;
+            var db = context.Database;
 
             if (action == null)
                 action =

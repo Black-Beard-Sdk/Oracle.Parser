@@ -68,7 +68,7 @@ ORDER BY OWNER, TABLE_NAME
 
             List<TableDto_11> List = new List<TableDto_11>();
             this.OracleContext = context;
-            var db = context.database;
+            var db = context.Database;
 
             if (action == null)
                 action =

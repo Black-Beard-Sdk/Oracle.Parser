@@ -53,7 +53,7 @@ ORDER BY s.sequence_owner, s.sequence_name
 
             List<SequenceTable_11> List = new List<SequenceTable_11>();
             this.OracleContext = context;
-            var db = context.database;
+            var db = context.Database;
 
             if (action == null)
                 action =

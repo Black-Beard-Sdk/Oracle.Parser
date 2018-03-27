@@ -82,7 +82,7 @@ namespace Bb.Oracle.Reader
         {
 
             var db = new OracleDatabase();
-            connection.database = db;
+            connection.Database = db;
             ContentCodeQuery_11 q1 = new ContentCodeQuery_11()
             {
                 OwnerNames = schemas,

@@ -30,7 +30,7 @@ ORDER BY l.COLUMN_POSITION
 
             List<PartitionColumnDto_11> List = new List<PartitionColumnDto_11>();
             this.OracleContext = context;
-            var db = context.database;
+            var db = context.Database;
 
             if (action == null)
                 action =

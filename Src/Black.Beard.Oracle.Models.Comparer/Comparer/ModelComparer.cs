@@ -362,7 +362,7 @@ namespace Bb.Oracle.Models.Comparer
                 if (a.Position != b.Position)
                     return false;
 
-                if (!CompareType(a.Type, b.Type))
+                if (!CompareType(a.Type.DataType, b.Type.DataType))
                     return false;
 
             }
@@ -446,10 +446,10 @@ namespace Bb.Oracle.Models.Comparer
 
             string name = source.Name;
 
-            var s = Utils.Unserialize(source.Code, true).Replace(@"""", "");
+            var s = source.Code.GetSource().Replace(@"""", "");
             s = CleanForCompare(s);
 
-            var t = Utils.Unserialize(target.Code, true).Replace(@"""", "");
+            var t = target.Code.GetSource().Replace(@"""", "");
             t = CleanForCompare(t);
 
             // On ne commence a valider qu a partir du nom sinon on va alerter sur tout les boulets qui n'ont pas specifier le nom de schema
@@ -499,28 +499,28 @@ namespace Bb.Oracle.Models.Comparer
             if (argSource.Type.DataType != argTarget.Type.DataType)
                 this._changes.AppendChange(argSource, argTarget, "DataType", source, target);
 
-            if (argSource.Type.DataDefault != argTarget.Type.DataDefault)
+            if (argSource.Type.DataType.DataDefault != argTarget.Type.DataType.DataDefault)
                 this._changes.AppendChange(argSource, argTarget, "DataDefault", source, target);
 
-            if (argSource.Type.DataLength != argTarget.Type.DataLength)
+            if (argSource.Type.DataType.DataLength != argTarget.Type.DataType.DataLength)
                 this._changes.AppendChange(argSource, argTarget, "DataLength", source, target);
 
-            if (argSource.Type.DataLevel != argTarget.Type.DataLevel)
+            if (argSource.Type.DataType.DataLevel != argTarget.Type.DataType.DataLevel)
                 this._changes.AppendChange(argSource, argTarget, "DataLevel", source, target);
 
-            if (argSource.Type.DataPrecision != argTarget.Type.DataPrecision)
+            if (argSource.Type.DataType.DataPrecision != argTarget.Type.DataType.DataPrecision)
                 this._changes.AppendChange(argSource, argTarget, "DataPrecision", source, target);
 
-            if (argSource.Type.defaultLength != argTarget.Type.defaultLength)
+            if (argSource.Type.DataType.defaultLength != argTarget.Type.DataType.defaultLength)
                 this._changes.AppendChange(argSource, argTarget, "defaultLength", source, target);
 
-            if (argSource.Type.IsArray != argTarget.Type.IsArray)
+            if (argSource.Type.DataType.IsArray != argTarget.Type.DataType.IsArray)
                 this._changes.AppendChange(argSource, argTarget, "IsArray", source, target);
 
-            if (argSource.Type.IsRecord != argTarget.Type.IsRecord)
+            if (argSource.Type.DataType.IsRecord != argTarget.Type.DataType.IsRecord)
                 this._changes.AppendChange(argSource, argTarget, "IsRecord", source, target);
 
-            if (argSource.Type.Name != argTarget.Type.Name)
+            if (argSource.Type.DataType.Name != argTarget.Type.DataType.Name)
                 this._changes.AppendChange(argSource, argTarget, "TypeName", source, target);
 
 

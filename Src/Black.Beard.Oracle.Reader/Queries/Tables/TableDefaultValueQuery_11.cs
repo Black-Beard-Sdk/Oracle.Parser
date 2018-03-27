@@ -40,7 +40,7 @@ WHERE t.DATA_DEFAULT is not NULL {0}
         public override List<TableDefaultValueTable_11> Resolve(DbContextOracle context, Action<TableDefaultValueTable_11> action)
         {
             List<TableDefaultValueTable_11> List = new List<TableDefaultValueTable_11>();
-            var db = context.database;
+            var db = context.Database;
             this.OracleContext = context;
 
             if (action == null)

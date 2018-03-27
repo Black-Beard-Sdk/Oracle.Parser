@@ -77,7 +77,7 @@ ORDER BY ROLE, privilege
             GrantModel grant;
             this.OracleContext = context;
             List<GrantQueryTable_11> List = new List<GrantQueryTable_11>();
-            var db = context.database;
+            var db = context.Database;
             GrantCollection grants = null;
             if (db != null)
                 grants = db.Grants;

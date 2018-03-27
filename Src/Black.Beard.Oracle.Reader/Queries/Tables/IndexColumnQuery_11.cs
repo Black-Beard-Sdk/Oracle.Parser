@@ -76,7 +76,7 @@ ORDER BY i.table_owner, i.table_name, c.INDEX_OWNER, i.index_name, c.column_posi
 
             List<IndexColumnQueryTable_11> List = new List<IndexColumnQueryTable_11>();
             this.OracleContext = context;
-            var db = context.database;
+            var db = context.Database;
 
             if (action == null)
                 action =

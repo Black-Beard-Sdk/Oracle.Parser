@@ -24,7 +24,7 @@ namespace Bb.Oracle.Reader.Queries
 
             this.OracleContext = context;
             List<IndexPartitionColumnDto_11> List = new List<IndexPartitionColumnDto_11>();
-            var db = context.database;
+            var db = context.Database;
 
             if (action == null)
                 action =

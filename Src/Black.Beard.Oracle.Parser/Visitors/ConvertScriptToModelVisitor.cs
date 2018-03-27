@@ -5,6 +5,7 @@ using Bb.Oracle.Structures.Models;
 using System.Diagnostics;
 using System.Text;
 using Bb.Oracle.Helpers;
+using Bb.Oracle.Models.Codes;
 
 namespace Bb.Oracle.Visitors
 {
@@ -801,14 +802,6 @@ namespace Bb.Oracle.Visitors
         {
             Stop();
             var result = base.VisitFetch_statement(context);
-            Debug.Assert(result != null);
-            return result;
-        }
-
-        public override object VisitField_spec([NotNull] PlSqlParser.Field_specContext context)
-        {
-            Stop();
-            var result = base.VisitField_spec(context);
             Debug.Assert(result != null);
             return result;
         }
@@ -1643,14 +1636,6 @@ namespace Bb.Oracle.Visitors
             return result;
         }
 
-        public override object VisitRecord_type_def([NotNull] PlSqlParser.Record_type_defContext context)
-        {
-            Stop();
-            var result = base.VisitRecord_type_def(context);
-            Debug.Assert(result != null);
-            return result;
-        }
-
         public override object VisitRedo_log_file_spec([NotNull] PlSqlParser.Redo_log_file_specContext context)
         {
             Stop();
@@ -1688,14 +1673,6 @@ namespace Bb.Oracle.Visitors
         {
             Stop();
             var result = base.VisitReferencing_element(context);
-            Debug.Assert(result != null);
-            return result;
-        }
-
-        public override object VisitRef_cursor_type_def([NotNull] PlSqlParser.Ref_cursor_type_defContext context)
-        {
-            //Stop();
-            var result = base.VisitRef_cursor_type_def(context);
             Debug.Assert(result != null);
             return result;
         }
@@ -2136,14 +2113,6 @@ namespace Bb.Oracle.Visitors
             return result;
         }
 
-        public override object VisitTable_indexed_by_part([NotNull] PlSqlParser.Table_indexed_by_partContext context)
-        {
-            Stop();
-            var result = base.VisitTable_indexed_by_part(context);
-            Debug.Assert(result != null);
-            return result;
-        }
-
         public override object VisitTable_ref([NotNull] PlSqlParser.Table_refContext context)
         {
             Stop();
@@ -2191,15 +2160,6 @@ namespace Bb.Oracle.Visitors
             Debug.Assert(result != null);
             return result;
         }
-
-        public override object VisitTable_type_def([NotNull] PlSqlParser.Table_type_defContext context)
-        {
-            Stop();
-            var result = base.VisitTable_type_def(context);
-            Debug.Assert(result != null);
-            return result;
-        }
-
 
         public override object VisitTempfile_specification([NotNull] PlSqlParser.Tempfile_specificationContext context)
         {
@@ -2277,56 +2237,6 @@ namespace Bb.Oracle.Visitors
         {
             Stop();
             var result = base.VisitType_body_elements(context);
-            Debug.Assert(result != null);
-            return result;
-        }
-
-        /// <summary>
-        /// type_declaration :
-        ///     TYPE identifier IS(table_type_def | varray_type_def | record_type_def | ref_cursor_type_def) ';'
-        ///     ;
-        /// </summary>
-        /// <param name="context"></param>
-        /// <returns></returns>
-        public override object VisitType_declaration([NotNull] PlSqlParser.Type_declarationContext context)
-        {
-
-            var t = context.GetText();
-            var names = context.identifier().GetCleanedTexts();
-
-            var table_type_def = context.table_type_def();
-            if (table_type_def != null)
-            {
-                Stop();
-
-            }
-            else
-            {
-                var varray_type_def = context.varray_type_def();
-                if (varray_type_def != null)
-                {
-                    Stop();
-
-                }
-                else
-                {
-                    var record_type_def = context.record_type_def();
-                    if (record_type_def!= null)
-                    {
-                        Stop();
-
-                    }
-                    else
-                    {
-                        Stop();
-                        var ref_cursor_type_def = context.ref_cursor_type_def();
-
-                    }
-                }
-            }
-
-            // TYPE REF CURSOR IS REF CURSOR;
-            var result = base.VisitType_declaration(context);
             Debug.Assert(result != null);
             return result;
         }
@@ -2463,14 +2373,6 @@ namespace Bb.Oracle.Visitors
         {
             Stop();
             var result = base.VisitValues_clause(context);
-            Debug.Assert(result != null);
-            return result;
-        }
-
-        public override object VisitVarray_type_def([NotNull] PlSqlParser.Varray_type_defContext context)
-        {
-            Stop();
-            var result = base.VisitVarray_type_def(context);
             Debug.Assert(result != null);
             return result;
         }

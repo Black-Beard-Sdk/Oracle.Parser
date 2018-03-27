@@ -59,6 +59,7 @@
     <Compile Include="Validators\ParserValidator.cs" />
     <Compile Include="Visitors\ConvertScriptToModelVisitor.cs" />
     <Compile Include="Visitors\ConvertScriptToModelVisitor.common.cs" />
+    <Compile Include="Visitors\ConvertScriptToModelVisitor.typeDefinitions.cs" />
     <Compile Include="Visitors\ConvertScriptToModelVisitor.synonym.cs" />
     <Compile Include="Visitors\ConvertScriptToModelVisitor.sequence.cs" />
     <Compile Include="Visitors\ConvertScriptToModelVisitor.expression.cs" />

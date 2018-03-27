@@ -153,7 +153,7 @@ namespace Bb.Oracle.Models.Comparer
             if (generateSource)
             {
                 string p = BuildPath(Path.Combine(this.folderForSource, source.Owner), "Procedures", source.Name);
-                WriteFile(p, CreateOrReplace + Utils.Unserialize(source.Code, true));
+                WriteFile(p, CreateOrReplace + source.Code.GetSource());
             }
 
         }
@@ -332,13 +332,13 @@ namespace Bb.Oracle.Models.Comparer
             if (generateSource)
             {
                 string p = BuildPath(Path.Combine(this.folderForSource, source.Owner), "Procedures", source.Name);
-                WriteFile(p, CreateOrReplace + Utils.Unserialize(source.Code, true));
+                WriteFile(p, CreateOrReplace + source.Code.GetSource());
             }
 
             if (generateTarget)
             {
                 string p = BuildPath(Path.Combine(this.folderForTarget, target.Owner), "Procedures", target.Name);
-                WriteFile(p, CreateOrReplace + Utils.Unserialize(target.Code, true));
+                WriteFile(p, CreateOrReplace + target.Code.GetSource());
             }
 
         }
@@ -514,13 +514,13 @@ namespace Bb.Oracle.Models.Comparer
             if (generateSource)
             {
                 string p = BuildPath(Path.Combine(this.folderForSource, source.Owner), "Procedures", source.Name);
-                WriteFile(p, CreateOrReplace + Utils.Unserialize(source.Code, true));
+                WriteFile(p, CreateOrReplace + source.Code.GetSource());
             }
 
             if (generateTarget)
             {
                 string p = BuildPath(Path.Combine(this.folderForTarget, target.Owner), "Procedures", target.Name);
-                WriteFile(p, CreateOrReplace + Utils.Unserialize(target.Code, true));
+                WriteFile(p, CreateOrReplace + target.Code.GetSource());
             }
 
         }
@@ -533,13 +533,13 @@ namespace Bb.Oracle.Models.Comparer
             if (generateSource)
             {
                 string p = BuildPath(Path.Combine(this.folderForSource, source.Owner), "Procedures", source.Name);
-                WriteFile(p, CreateOrReplace + Utils.Unserialize(source.Code, true));
+                WriteFile(p, CreateOrReplace + source.Code.GetSource());
             }
 
             if (generateTarget)
             {
                 string p = BuildPath(Path.Combine(this.folderForTarget, target.Owner), "Procedures", target.Name);
-                WriteFile(p, CreateOrReplace + Utils.Unserialize(target.Code, true));
+                WriteFile(p, CreateOrReplace + target.Code.GetSource());
             }
 
         }

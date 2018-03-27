@@ -93,6 +93,12 @@
     <Compile Include="Queries\Tables\ViewQuery_11.cs" />
     <Compile Include="Queries\Tables\ViewSourceQuery_11.cs" />
     <Compile Include="Queries\TypeQuery_11.cs" />
+    <Compile Include="Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Rules\RuleBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -109,6 +115,12 @@
       <Project>{1FB97F0D-8E91-4557-AB73-F4DAE05B1582}</Project>
       <Name>Black.Beard.Oracle.Models</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

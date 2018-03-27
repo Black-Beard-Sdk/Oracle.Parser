@@ -1781,24 +1781,13 @@ pragma_declaration :
     | RESTRICT_REFERENCES LEFT_PAREN (identifier | DEFAULT) (COMMA identifier)+ RIGHT_PAREN ) ';'
     ;
 
-// Record Declaration Specific Clauses
-
 // incorporates ref_cursor_type_definition
-
-record_type_def :
-	RECORD LEFT_PAREN (COMMA? field_spec)+ RIGHT_PAREN 
-    ;
-
-field_spec :
-	column_name type_spec? (NOT NULL)? default_value_part?
+type_declaration :
+	 TYPE identifier IS (table_type_def | varray_type_def | record_type_def | ref_cursor_type_def) ';'
     ;
 
 ref_cursor_type_def :
 	REF CURSOR (RETURN type_spec)?
-    ;
-
-type_declaration :
-	 TYPE identifier IS (table_type_def | varray_type_def | record_type_def | ref_cursor_type_def) ';'
     ;
 
 table_type_def :
@@ -1813,8 +1802,15 @@ varray_type_def :
 	(VARRAY | VARYING ARRAY) LEFT_PAREN expression RIGHT_PAREN OF type_spec (NOT NULL)?
     ;
 
-// Statements
+record_type_def : // Record Declaration Specific Clauses
+	RECORD LEFT_PAREN (COMMA? field_spec)+ RIGHT_PAREN 
+    ;
 
+field_spec :
+	column_name type_spec? (NOT NULL)? default_value_part?
+    ;
+
+// Statements
 seq_of_statements :
 	(statement (';' | EOF) | label_declaration)+
     ;
@@ -3135,7 +3131,7 @@ respect_or_ignore_nulls :
     ;
 
 type_spec :
-	datatype
+	  datatype
     | REF? type_name (PERCENT_ROWTYPE | PERCENT_TYPE)?
     ;
 

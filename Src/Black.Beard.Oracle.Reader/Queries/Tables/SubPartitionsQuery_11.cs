@@ -24,7 +24,7 @@ SELECT * FROM SYS.DBA_TAB_SUBPARTITIONS l
         public override List<SubPartitionsDto> Resolve(DbContextOracle context, Action<SubPartitionsDto> action)
         {
             List<SubPartitionsDto> List = new List<SubPartitionsDto>();
-            var db = context.database;
+            var db = context.Database;
             this.OracleContext = context;
 
             if (action == null)

@@ -28,7 +28,7 @@ LEFT JOIN SYS.DBA_TABLESPACE_GROUPS g ON t.TABLESPACE_NAME = g.TABLESPACE_NAME
         {
         
             List<TablespacesDto_11> List = new List<TablespacesDto_11>();
-            var db = context.database;
+            var db = context.Database;
             this.OracleContext = context;
 
             if (action == null)

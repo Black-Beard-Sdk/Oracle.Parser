@@ -20,7 +20,7 @@ namespace Bb.Oracle.Reader.Queries
             List<OwnerNameQueryTable_11> List = new List<OwnerNameQueryTable_11>();
             HashSet<string> excluded = new HashSet<string> { "EXFSYS", "MDSYS", "PUBLIC", "OUTLN", "CTXSYS", "HR", "FLOWS_FILES", "SYSTEM", "ORACLE_OCM", "DBSNMP", "APPQOSSYS", "XDB", "SYS" , "ORDSYS", "ORDPLUGINS" , "SYSMAN", "ORDDATA", "SI_INFORMTN_SCHEMA", "PERFSTAT" };
             this.OracleContext = context;
-            var db = context.database;
+            var db = context.Database;
 
             StringBuilder _owners = new StringBuilder(100);
 

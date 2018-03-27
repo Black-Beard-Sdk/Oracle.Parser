@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.IO;
 using Bb.Oracle.Structures.Models;
 using System.Diagnostics;
+using System.Linq;
+using Bb.Oracle.Reader.Rules;
 
 namespace Bb.Oracle.Reader
 {
@@ -36,12 +38,12 @@ namespace Bb.Oracle.Reader
         /// <param name="outputfileFullPath">The outputfile full path.</param>
         /// <param name="use">The use.</param>
         /// <returns></returns>
-        public static OracleDatabase GenerateFile(ArgumentContext ctx,  Func<string, bool> use = null)
+        public static OracleDatabase GenerateFile(ArgumentContext ctx, Func<string, bool> use = null)
         {
 
             System.Data.Common.DbConnectionStringBuilder builder = new System.Data.Common.DbConnectionStringBuilder();
             builder.ConnectionString = string.Format(@"Data source={0};USER ID={1};Password={2};", ctx.Source, ctx.Login, ctx.Pwd);
-            
+
             var manager = new OracleManager(builder.ConnectionString);
             if (System.Diagnostics.Debugger.IsAttached)
                 Trace.WriteLine("{0} Success", builder.ConnectionString.Replace(ctx.Pwd, "".PadLeft(ctx.Pwd.Length, '*')));
@@ -50,17 +52,17 @@ namespace Bb.Oracle.Reader
                 use = shema => true;
 
             DbContextOracle dbContext = new DbContextOracle(manager) { Use = use, ExcludeCode = ctx.ExcludeCode };
-        
-            dbContext.database = new OracleDatabase()
+
+            dbContext.Database = new OracleDatabase()
             {
                 Name = "Instance server " + ctx.Source,
                 SourceScript = false
             };
 
             if (!string.IsNullOrEmpty(ctx.Name))
-                dbContext.database.Name = ctx.Name;
+                dbContext.Database.Name = ctx.Name;
             else
-                dbContext.database.Name = ctx.Source;
+                dbContext.Database.Name = ctx.Source;
 
             Filtre(ctx, builder.ConnectionString);
 
@@ -80,17 +82,18 @@ namespace Bb.Oracle.Reader
                     f.Directory.Create();
 
                 Trace.WriteLine("Writing file at " + ctx.Filename);
-                dbContext.database.WriteFile(ctx.Filename);
+                dbContext.Database.WriteFile(ctx.Filename);
             }
 
             Trace.WriteLine("the end");
 
-            return dbContext.database;
+            return dbContext.Database;
 
         }
 
         private static void Run<T>(DbContextOracle dbContext, DbQueryBase<T> query, string text, bool exclude = false)
         {
+
             if (!exclude)
             {
                 Trace.WriteLine(text);
@@ -106,8 +109,9 @@ namespace Bb.Oracle.Reader
 
             switch (dbContext.Version.Major)
             {
-            
+
                 case 11:
+
                     Run(dbContext, new OwnerNameQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "collect of schema");
                     Run(dbContext, new ObjectQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve objects");
                     Run(dbContext, new SequenceQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve sequences");
@@ -130,11 +134,14 @@ namespace Bb.Oracle.Reader
                     Run(dbContext, new ProcQueryWithArgument_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext, ProcedureNames = Database.ProcedureNames }, "Resolve oracle stored procedures with arguments");
                     Run(dbContext, new TypeQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve oracle types");
                     //Run(dbContext, new ViewQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve oracle views");
-                    Run(dbContext, new SynonymQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve oracle synonymes");
+                    Run(dbContext, new SynonymQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve oracle synonyms");
                     Run(dbContext, new GrantQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve database grants");
                     Run(dbContext, new TriggerQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve triggers");
                     Run(dbContext, new ContentCodeQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve sources", dbContext.ExcludeCode);
                     //Run(dbContext, new TablespacesQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve sources", dbContext.ExcludeCode);
+
+                    //TODO : Il faut identifier dans les objets OTypeReference la valeur de KindTypeReference a partir du type d'object referencé
+
                     break;
 
                 case 12:
@@ -160,7 +167,7 @@ namespace Bb.Oracle.Reader
                     Run(dbContext, new ProcQueryWithArgument_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext, ProcedureNames = Database.ProcedureNames }, "Resolve oracle stored procedures with arguments");
                     Run(dbContext, new TypeQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve oracle types");
                     //Run(dbContext, new ViewQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve oracle views");
-                    Run(dbContext, new SynonymQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve oracle synonymes");
+                    Run(dbContext, new SynonymQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve oracle synonyms");
                     Run(dbContext, new GrantQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve database grants");
                     Run(dbContext, new TriggerQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve triggers");
                     Run(dbContext, new ContentCodeQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve sources", dbContext.ExcludeCode);
@@ -172,9 +179,15 @@ namespace Bb.Oracle.Reader
 
             }
 
+            Run<RebuildMethodKeys>(dbContext);
+
         }
 
-
+        private static void Run<T>(DbContextOracle dbContext) where T : RuleBase, new()
+        {
+            RuleBase processor = new T();
+            processor.Process(dbContext);
+        }
 
         /// <summary>
         /// Filtre
