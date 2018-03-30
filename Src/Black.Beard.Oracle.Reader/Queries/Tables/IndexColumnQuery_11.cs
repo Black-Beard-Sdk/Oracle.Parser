@@ -87,60 +87,54 @@ ORDER BY i.table_owner, i.table_name, c.INDEX_OWNER, i.index_name, c.column_posi
                             return;
 
                         string key = t.Column_Table_Owner + "." + t.Column_Table_name;
-                        TableModel table;
+                        var key2 = t.Index_Owner + "." + t.Index_Name;
+                        IndexModel index;
 
-                        if (db.Tables.TryGet(key, out table))
+                        if (!db.Indexes.Contains(key2))
                         {
 
-                            var key2 = t.Index_Owner + "." + t.Index_Name;
-
-                            IndexModel index;
-
-                            if (!table.Indexes.Contains(key2))
+                            index = new IndexModel()
                             {
-
-                                index = new IndexModel()
-                                {
-
-                                    Name = key2,
-                                    IndexName = t.Index_Name,
-                                    IndexOwner = t.Index_Owner,
-                                    IndexType = t.Index_Type,
-                                    BufferPool = t.buffer_pool,
-                                    Unique = t.uniqueness == "UNIQUE",
+                                Key = key2,
+                                Name = t.Index_Name,
+                                IndexOwner = t.Index_Owner,
+                                IndexType = t.Index_Type,
+                                BufferPool = t.buffer_pool,
+                                Unique = t.uniqueness == "UNIQUE",
                                 // Cache = t.Cache,
                                 // Chunk = t.Chunk,
                                 Compress = t.Compression,
-                                    Compression_Prefix = "",
+                                Compression_Prefix = "",
                                 // Deduplication = t.Deduplication,
                                 FreeListGroups = t.freelist_groups,
-                                    FreeLists = t.freelists,
+                                FreeLists = t.freelists,
                                 // FreePools = t.Freepools,
                                 // In_Row = t.In_row,
                                 InitialExtent = t.initial_extent,
-                                    Logging = t.Logging,
-                                    MaxExtents = t.max_extents,
-                                    MinExtents = t.min_extents,
-                                    NextExtents = t.next_extent,
+                                Logging = t.Logging,
+                                MaxExtents = t.max_extents,
+                                MinExtents = t.min_extents,
+                                NextExtents = t.next_extent,
                                 // PctIncrease = t.Pct_increase,
                                 // PctVersion = t.Pctversion,
                                 // SecureFile = t.Securefile,
                                 // SegmentName = t.Segment_name,
-                                Tablespace = t.tablespace_name,
                                 // InitialExtent = t.initial_extent,
                                 Bitmap = false,
-                                };
+                            };
 
-                                table.Indexes.Add(index);
+                            index.TableReference.Owner = t.Column_Table_Owner;
+                            index.TableReference.Name = t.Column_Table_name;
+                            index.Tablespace.Name = t.tablespace_name;
 
-                            }
-                            else
-                                index = table.Indexes[key2];
-
-                            IndexColumnModel col1 = new IndexColumnModel() { Name = t.Column_Name, Rule = t.column_expression ?? t.Column_Name, Asc = t.Descend == "ASC" };
-                            index.Columns.Add(col1);
+                            db.Indexes.Add(index);
 
                         }
+                        else
+                            index = db.Indexes[key2];
+
+                        IndexColumnModel col1 = new IndexColumnModel() { Name = t.Column_Name, Rule = t.column_expression ?? t.Column_Name, Asc = t.Descend == "ASC" };
+                        index.Columns.Add(col1);
 
                     };
 

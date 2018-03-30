@@ -58,7 +58,7 @@ ORDER BY tt.TABLE_NAME,tt.COLUMN_ID
                             table = new TableModel() { Key = key, Owner = t.SchemaName, Name = t.TableName };
                             db.Tables.Add(table);
                         }
-                      
+
                         //if (!table.Columns.Contains(t.ColumnName))
                         if (!IsColumnExist(table, t.ColumnName))
                         {
@@ -76,44 +76,37 @@ ORDER BY tt.TABLE_NAME,tt.COLUMN_ID
                                 DataUpgrated = t.DataUpgraded,
                                 IsPrimaryKey = false,
                                 IsSequence = false,
-
                                 CharUsed = t.CharUsed,
-
                             };
 
                             c.Type.DataDefault = string.Empty;
                             c.Type.DataPrecision = t.DataPrecision;
                             c.Type.DataLength = t.DataLenght;
-                            c.Type.DataType = t.DataType;
+                            c.Type.Name = t.DataType;
                             c.Type.defaultLength = t.DefaultLength;
 
                             if (t.CharUsed == "C")
-                            {
                                 if (!string.IsNullOrEmpty(t.CHAR_LENGTH))
-                                {
-                                    int l;
-                                    if (int.TryParse(t.CHAR_LENGTH, out l))
+                                    if (int.TryParse(t.CHAR_LENGTH, out int l))
                                         if (c.Type.DataLength != l)
                                             c.Type.DataLength = l;
 
-                                }
-                            }
-                        //else if (c.CharUsed == "B")
-                        //{
-                        //    if (!string.IsNullOrEmpty(t.CHAR_COL_DECL_LENGTH))
-                        //    {
-                        //        int l;
-                        //        if (int.TryParse(t.CHAR_COL_DECL_LENGTH, out l))
-                        //            if (c.Type.DataLength != l)
-                        //                c.Type.DataLength = l;
+                            //else if (c.CharUsed == "B")
+                            //{
+                            //    if (!string.IsNullOrEmpty(t.CHAR_COL_DECL_LENGTH))
+                            //    {
+                            //        int l;
+                            //        if (int.TryParse(t.CHAR_COL_DECL_LENGTH, out l))
+                            //            if (c.Type.DataLength != l)
+                            //                c.Type.DataLength = l;
 
-                        //    }
-                        //}
+                            //    }
+                            //}
 
 
-                        //c.Type.CsType = TypeMatchExtension.Match(t.DataType, t.DataLenght, t.DataPrecision, 0);
+                            //c.Type.CsType = TypeMatchExtension.Match(t.DataType, t.DataLenght, t.DataPrecision, 0);
 
-                        c.ForeignKey.IsForeignKey = false;
+                            c.ForeignKey.IsForeignKey = false;
                             c.ForeignKey.ConstraintName = "";
                             c.ForeignKey.Table = "";
                             c.ForeignKey.Field = "";
@@ -143,13 +136,13 @@ ORDER BY tt.TABLE_NAME,tt.COLUMN_ID
                 foreach (TableModel table in _db.Tables)
                 {
 
-                    table.codeView = string.Empty;
+                    table.CodeView = string.Empty;
 
                     if (table.IsMatrializedView)
                     {
 
-                        StringBuilder sb = new StringBuilder(table.codeView.Length * 4);
-                        sb.Append(Utils.Unserialize(table.codeView, true));
+                        StringBuilder sb = new StringBuilder(table.CodeView.Length * 4);
+                        sb.Append(Utils.Unserialize(table.CodeView, true));
 
                         if (!string.IsNullOrEmpty(table.Comment))
                         {
@@ -160,13 +153,13 @@ ORDER BY tt.TABLE_NAME,tt.COLUMN_ID
                             if (!string.IsNullOrEmpty(item.Description))
                                 sb.AppendLine(string.Format(@"COMMENT ON COLUMN ""{0}"".""{1}"".""{2}"" is '{3}';", table.Owner, table.Name, item.Name, item.Description.Replace("'", "''")));
 
-                        table.codeView = Utils.Serialize(sb.ToString(), true);
+                        table.CodeView = Utils.Serialize(sb.ToString(), true);
                     }
                     else if (table.IsView)
                     {
 
-                        StringBuilder sb = new StringBuilder(table.codeView.Length * 4);
-                        sb.Append(Utils.Unserialize(table.codeView, true));
+                        StringBuilder sb = new StringBuilder(table.CodeView.Length * 4);
+                        sb.Append(Utils.Unserialize(table.CodeView, true));
 
                         if (!string.IsNullOrEmpty(table.Comment))
                         {
@@ -177,7 +170,7 @@ ORDER BY tt.TABLE_NAME,tt.COLUMN_ID
                             if (!string.IsNullOrEmpty(item.Description))
                                 sb.AppendLine(string.Format(@"COMMENT ON COLUMN ""{0}"".""{1}"".""{2}"" is '{3}';", table.Owner, table.Name, item.Name, item.Description.Replace("'", "''")));
 
-                        table.codeView = Utils.Serialize(sb.ToString(), true);
+                        table.CodeView = Utils.Serialize(sb.ToString(), true);
                     }
                 }
 

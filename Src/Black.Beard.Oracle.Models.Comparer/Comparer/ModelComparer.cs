@@ -32,6 +32,12 @@ namespace Bb.Oracle.Models.Comparer
             if (!_context.IgnoreTables)
                 CompareTables(source.Tables, target.Tables);
 
+            CompareTriggers(source.Triggers, target.Triggers);
+
+            CompareIndexes(source.Indexes, target.Indexes);
+            CompareIndexes(target.Indexes, source.Indexes, true);
+            CompareConstraints(source.Constraints, target.Constraints);
+
             if (!_context.IgnoreGrants)
                 CompareGrants(source.Grants, target.Grants, target);
 
@@ -158,8 +164,8 @@ namespace Bb.Oracle.Models.Comparer
             if (source.Type.ArrayOfType != target.Type.ArrayOfType)
                 this._changes.AppendChange(source, target, "ArrayOfType");
 
-            if (source.Type.DataType != target.Type.DataType)
-                this._changes.AppendChange(source, target, "DataType");
+            if (source.Type.Name != target.Type.Name)
+                this._changes.AppendChange(source, target, "Name");
 
             if (source.Type.DataDefault != target.Type.DataDefault)
                 this._changes.AppendChange(source, target, "DataDefault");
@@ -380,7 +386,7 @@ namespace Bb.Oracle.Models.Comparer
             if (source.ArrayOfType != target.ArrayOfType)
                 return false;
 
-            if (source.DataType != target.DataType)
+            if (source.Name != target.Name)
                 return false;
 
             if (source.DataDefault != target.DataDefault)
@@ -811,30 +817,23 @@ namespace Bb.Oracle.Models.Comparer
         {
 
             if (!tableSource.IsView && tableSource.Valid && tableTarget.Valid)
-            {
-                CompareConstraints(tableSource, tableTarget);
                 CompareColumns(tableSource, tableTarget);
-            }
-
-            CompareIndexes(tableSource, tableTarget, toRemove);
-
-            CompareTriggers(tableSource, tableTarget);
 
             EvaluateFiles(tableSource);
             EvaluateFiles(tableTarget);
 
             if (tableSource.IsView)
-                if (tableSource.codeView != tableTarget.codeView)
+                if (tableSource.CodeView != tableTarget.CodeView)
                 {
 
-                    var s = Utils.Unserialize(tableSource.codeView, true).Replace(@"""", "");
+                    var s = Utils.Unserialize(tableSource.CodeView, true).Replace(@"""", "");
                     s = CleanForCompare(s);
 
                     int index = s.ToUpper().IndexOf("VIEW " + tableSource.Owner.ToUpper() + "." + tableSource.Name.ToUpper());
                     if (index > 0)
                         s = s.Substring(index);
 
-                    var t = Utils.Unserialize(tableTarget.codeView, true).Replace(@"""", "");
+                    var t = Utils.Unserialize(tableTarget.CodeView, true).Replace(@"""", "");
                     t = CleanForCompare(t);
 
                     index = t.ToUpper().IndexOf("VIEW " + tableSource.Owner.ToUpper() + "." + tableSource.Name.ToUpper());
@@ -995,20 +994,20 @@ namespace Bb.Oracle.Models.Comparer
                 this._changes.AppendDoublons(typeof(ItemBase).Name.Replace("Model", ""), item, item.GetItemName());
         }
 
-        private void CompareTriggers(TableModel tableSource, TableModel tableTarget)
+        private void CompareTriggers(TriggerCollection sources, TriggerCollection targets)
         {
 
-            foreach (TriggerModel trigger in tableSource.Triggers)
+            foreach (TriggerModel trigger in sources)
             {
 
-                if (tableTarget.Triggers.TryGet(trigger.Key, out TriggerModel tTarget))
+                if (targets.TryGet(trigger.Key, out TriggerModel tTarget))
                     CompareTrigger(trigger, tTarget);
                 else
                     _changes.AppendMissing(trigger);
             }
 
-            foreach (TriggerModel trigger in tableTarget.Triggers)
-                if (!tableSource.Triggers.Contains(trigger.Key))
+            foreach (TriggerModel trigger in targets)
+                if (!sources.Contains(trigger.Key))
                     _changes.AppendToRemove(trigger);
 
         }
@@ -1050,17 +1049,17 @@ namespace Bb.Oracle.Models.Comparer
 
         }
 
-        private void CompareIndexes(TableModel tableSource, TableModel tableTarget, bool toRemove)
+        private void CompareIndexes(IndexCollection indexesSource, IndexCollection indexesTarget, bool toRemove = false)
         {
 
-            foreach (IndexModel index in tableSource.Indexes)
+            foreach (IndexModel index in indexesSource)
             {
 
-                if (!tableTarget.Indexes.TryGet(index.Name, out IndexModel tTarget))
+                if (!indexesTarget.TryGet(index.Key, out IndexModel tTarget))
                 {
 
                     string id1 = GetIdentiferColumns(index);
-                    var cl = GetColumnListFromIndex(tableTarget, id1).ToList();
+                    var cl = GetColumnListFromIndex(indexesTarget, id1).ToList();
 
                     // Trouve dans la table target, les indexes qui pointent les meme colonnes
                     List<IndexModel> _candidates = new List<IndexModel>();
@@ -1283,29 +1282,27 @@ namespace Bb.Oracle.Models.Comparer
         {
 
             bool result = source.Nullable;
-            if (!result)
-            {
-                foreach (ConstraintModel item in source.Constraints)
-                {
-                    if (!string.IsNullOrEmpty(item.Search_Condition))
-                    {
+            //if (!result)
+            //{
+            //    foreach (ConstraintModel item in source.Constraints)
+            //    {
+            //        if (!string.IsNullOrEmpty(item.Search_Condition))
+            //        {
 
-                        var i = Utils.Unserialize(item.Search_Condition, false);
+            //            var i = Utils.Unserialize(item.Search_Condition, false);
 
-                        if (i.EndsWith("NOT NULL"))
-                        {
-                            if (item.Status == "DISABLED")
-                                result = true;
-                        }
+            //            if (i.EndsWith("NOT NULL"))
+            //            {
+            //                if (item.Status == "DISABLED")
+            //                    result = true;
+            //            }
 
-                    }
-                }
-            }
-
+            //        }
+            //    }
+            //}
             return result;
 
         }
-
         private void CompareColumnType(ColumnModel source, ColumnModel target, TableModel tableTarget)
         {
 
@@ -1335,11 +1332,11 @@ namespace Bb.Oracle.Models.Comparer
 
         private void CompareType(ColumnModel source, ColumnModel target)
         {
-            if (source.Type.DataType != target.Type.DataType)
+            if (source.Type.Name != target.Type.Name)
                 this._changes.AppendChange(source, target, "DataType");
             else
             {
-                switch (source.Type.DataType)
+                switch (source.Type.Name)
                 {
 
                     case "VARCHAR":
@@ -1412,16 +1409,13 @@ namespace Bb.Oracle.Models.Comparer
             }
         }
 
-        private void CompareConstraints(TableModel tableSource, TableModel tableTarget)
+        private void CompareConstraints(ConstraintCollection tableSource, ConstraintCollection tableTarget)
         {
 
-            EvaluateFiles(tableSource);
-            EvaluateFiles(tableTarget);
-
-            foreach (ConstraintModel constrSource in tableSource.Constraints)
+            foreach (ConstraintModel constrSource in tableSource)
             {
 
-                if (tableTarget.Constraints.TryGet(constrSource.Key, out ConstraintModel constrTarget))
+                if (tableTarget.TryGet(constrSource.Key, out ConstraintModel constrTarget))
                     CompareConstraint(constrSource, constrTarget);
 
                 else
@@ -1434,9 +1428,8 @@ namespace Bb.Oracle.Models.Comparer
                     foreach (ConstraintModel item in cl)
                         if (constrSource.Owner == item.Owner)
                             if (constrSource.Type == item.Type)
-
-                                if (constrSource.Rel_Constraint_Owner == item.Rel_Constraint_Owner)
-                                    if (constrSource.Rel_Constraint_Name == item.Rel_Constraint_Name)
+                                if (constrSource.Reference.Owner == item.Reference.Owner)
+                                    if (constrSource.Reference.Name == item.Reference.Name)
                                     {
                                         _changes.AppendChange(constrSource, item, "Name");
                                         t = true;
@@ -1481,10 +1474,10 @@ namespace Bb.Oracle.Models.Comparer
             if (source.Rely != source.Rely)
                 this._changes.AppendChange(source, target, "Rely");
 
-            if (source.Rel_Constraint_Name != source.Rel_Constraint_Name)
+            if (source.Reference.Name != source.Reference.Name)
                 this._changes.AppendChange(source, target, "Rel_Constraint_Name");
 
-            if (source.Rel_Constraint_Owner != source.Rel_Constraint_Owner)
+            if (source.Reference.Owner!= source.Reference.Owner)
                 this._changes.AppendChange(source, target, "Rel_Constraint_Owner");
 
             if (source.Search_Condition != source.Search_Condition)
@@ -1526,9 +1519,9 @@ namespace Bb.Oracle.Models.Comparer
         //    }
         //}
 
-        private static IEnumerable<IndexModel> GetColumnListFromIndex(TableModel tableTarget, string id1)
+        private static IEnumerable<IndexModel> GetColumnListFromIndex(IndexCollection indexTargets, string id1)
         {
-            foreach (IndexModel indexTarget in tableTarget.Indexes)
+            foreach (IndexModel indexTarget in indexTargets)
             {
                 string sr2 = GetIdentiferColumns(indexTarget);
                 if (id1 == sr2)
@@ -1537,9 +1530,9 @@ namespace Bb.Oracle.Models.Comparer
 
         }
 
-        private static IEnumerable<ConstraintModel> GetColumnListFromConstraint(TableModel tableTarget, string id1)
+        private static IEnumerable<ConstraintModel> GetColumnListFromConstraint(ConstraintCollection constraintTarget, string id1)
         {
-            foreach (ConstraintModel constrTarget1 in tableTarget.Constraints)
+            foreach (ConstraintModel constrTarget1 in constraintTarget)
             {
                 string sr2 = GetIdentiferColumns(constrTarget1);
                 if (id1 == sr2)

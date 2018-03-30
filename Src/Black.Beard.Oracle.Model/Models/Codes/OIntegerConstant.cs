@@ -2,13 +2,10 @@
 
 namespace Bb.Oracle.Models.Codes
 {
-
-
     [DebuggerDisplay("{Value}")]
-    public class OBoolConstant : OConstant
+    public class OIntegerConstant : OConstant
     {
-
-        public bool Value { get; set; }
+        public int Value { get; set; }
 
     }
 

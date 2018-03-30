@@ -112,6 +112,8 @@ namespace Bb.Oracle.Reader
 
                 case 11:
 
+                    Run(dbContext, new TablespacesQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve tablespaces", dbContext.ExcludeCode);
+
                     Run(dbContext, new OwnerNameQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "collect of schema");
                     Run(dbContext, new ObjectQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve objects");
                     Run(dbContext, new SequenceQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve sequences");
@@ -124,12 +126,14 @@ namespace Bb.Oracle.Reader
                     Run(dbContext, new ConstraintColumnQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve IndexColumnQuery columns");
                     Run(dbContext, new TableDefaultValueQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve columns default values");
                     Run(dbContext, new EncryptedTableColumnQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve Encrypted columns");
+
                     Run(dbContext, new PartitionsQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve partitions");
                     Run(dbContext, new SubPartitionsQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve sub partitions");
                     Run(dbContext, new TablePartitionColumnQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve table partitions");
                     Run(dbContext, new IndexPartitionColumnQuery_11() { OwnerNames = Database.OwnerNames }, "Resolve index partitions");
                     Run(dbContext, new PartitionColumnQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve partition index");
                     Run(dbContext, new SubpartitionColumnQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve sub partition index");
+
                     Run(dbContext, new ProcQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext, ProcedureNames = Database.ProcedureNames }, "Resolve oracle stored procedures");
                     Run(dbContext, new ProcQueryWithArgument_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext, ProcedureNames = Database.ProcedureNames }, "Resolve oracle stored procedures with arguments");
                     Run(dbContext, new TypeQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve oracle types");
@@ -138,13 +142,14 @@ namespace Bb.Oracle.Reader
                     Run(dbContext, new GrantQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve database grants");
                     Run(dbContext, new TriggerQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve triggers");
                     Run(dbContext, new ContentCodeQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve sources", dbContext.ExcludeCode);
-                    //Run(dbContext, new TablespacesQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve sources", dbContext.ExcludeCode);
 
                     //TODO : Il faut identifier dans les objets OTypeReference la valeur de KindTypeReference a partir du type d'object referencé
 
                     break;
 
                 case 12:
+                    Run(dbContext, new TablespacesQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve tablespaces", dbContext.ExcludeCode);
+
                     Run(dbContext, new OwnerNameQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "collect of schema");
                     Run(dbContext, new ObjectQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve objects");
                     Run(dbContext, new SequenceQuery_12() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve sequences");
@@ -157,12 +162,14 @@ namespace Bb.Oracle.Reader
                     Run(dbContext, new ConstraintColumnQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve IndexColumnQuery columns");
                     Run(dbContext, new TableDefaultValueQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve columns default values");
                     Run(dbContext, new EncryptedTableColumnQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve Encrypted columns");
+
                     Run(dbContext, new PartitionsQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve partitions");
                     Run(dbContext, new SubPartitionsQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve sub partitions");
                     Run(dbContext, new TablePartitionColumnQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve table partitions");
                     Run(dbContext, new IndexPartitionColumnQuery_11() { OwnerNames = Database.OwnerNames }, "Resolve index partitions");
                     Run(dbContext, new PartitionColumnQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve partition index");
                     Run(dbContext, new SubpartitionColumnQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve sub partition index");
+
                     Run(dbContext, new ProcQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext, ProcedureNames = Database.ProcedureNames }, "Resolve oracle stored procedures");
                     Run(dbContext, new ProcQueryWithArgument_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext, ProcedureNames = Database.ProcedureNames }, "Resolve oracle stored procedures with arguments");
                     Run(dbContext, new TypeQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve oracle types");
@@ -171,7 +178,6 @@ namespace Bb.Oracle.Reader
                     Run(dbContext, new GrantQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve database grants");
                     Run(dbContext, new TriggerQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve triggers");
                     Run(dbContext, new ContentCodeQuery_11() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve sources", dbContext.ExcludeCode);
-                    //Run(dbContext, new TablespacesQuery() { OwnerNames = Database.OwnerNames, OracleContext = dbContext }, "Resolve sources", dbContext.ExcludeCode);
                     break;
 
                 default:

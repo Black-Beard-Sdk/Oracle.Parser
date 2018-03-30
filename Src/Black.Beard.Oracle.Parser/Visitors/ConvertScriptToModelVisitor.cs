@@ -16,6 +16,7 @@ namespace Bb.Oracle.Visitors
         public ConvertScriptToModelVisitor(OracleDatabase db)
         {
             this.Db = db;
+            this.Policy = new PolicyBehavior();
         }
 
         public override object Visit(IParseTree tree)
@@ -1307,23 +1308,7 @@ namespace Bb.Oracle.Visitors
             Debug.Assert(result != null);
             return result;
         }
-
-        public override object VisitNumeric_function([NotNull] PlSqlParser.Numeric_functionContext context)
-        {
-            Stop();
-            var result = base.VisitNumeric_function(context);
-            Debug.Assert(result != null);
-            return result;
-        }
-
-        public override object VisitNumeric_function_wrapper([NotNull] PlSqlParser.Numeric_function_wrapperContext context)
-        {
-            Stop();
-            var result = base.VisitNumeric_function_wrapper(context);
-            Debug.Assert(result != null);
-            return result;
-        }
-
+        
         public override object VisitNumeric_negative([NotNull] PlSqlParser.Numeric_negativeContext context)
         {
             Stop();
@@ -1408,14 +1393,6 @@ namespace Bb.Oracle.Visitors
         {
             Stop();
             var result = base.VisitOrder_by_elements(context);
-            Debug.Assert(result != null);
-            return result;
-        }
-
-        public override object VisitOther_function([NotNull] PlSqlParser.Other_functionContext context)
-        {
-            Stop();
-            var result = base.VisitOther_function(context);
             Debug.Assert(result != null);
             return result;
         }
@@ -1953,14 +1930,6 @@ namespace Bb.Oracle.Visitors
         //    var result = base.VisitSql_statement(context);
         //}
 
-        public override object VisitStandard_function([NotNull] PlSqlParser.Standard_functionContext context)
-        {
-            Stop();
-            var result = base.VisitStandard_function(context);
-            Debug.Assert(result != null);
-            return result;
-        }
-
         public override object VisitStandard_prediction_function_keyword([NotNull] PlSqlParser.Standard_prediction_function_keywordContext context)
         {
             Stop();
@@ -2000,15 +1969,7 @@ namespace Bb.Oracle.Visitors
             Debug.Assert(result != null);
             return result;
         }
-
-        public override object VisitString_function([NotNull] PlSqlParser.String_functionContext context)
-        {
-            Stop();
-            var result = base.VisitString_function(context);
-            Debug.Assert(result != null);
-            return result;
-        }
-
+        
         public override object VisitSubprogram_spec([NotNull] PlSqlParser.Subprogram_specContext context)
         {
             Stop();

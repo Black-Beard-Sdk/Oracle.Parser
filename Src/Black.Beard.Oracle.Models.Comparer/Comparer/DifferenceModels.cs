@@ -314,7 +314,7 @@ namespace Bb.Oracle.Models.Comparer
             if (source.IsView)
             {
                 string p = BuildPath(Path.Combine(this.folderForSource, source.Owner), typeObject, source.Name);
-                WriteFile(p, Utils.Unserialize(source.codeView, true));
+                WriteFile(p, Utils.Unserialize(source.CodeView, true));
             }
             else
             {
@@ -355,7 +355,7 @@ namespace Bb.Oracle.Models.Comparer
 
             if (generateSource)
             {
-                string p = BuildPath(Path.Combine(this.folderForSource, source.Owner), "Triggers", source.Name);
+                string p = BuildPath(Path.Combine(this.folderForSource, source.TableReference.Owner), "Triggers", source.Name);
                 WriteFile(p, CreateOrReplace + Utils.Unserialize(source.Code, true));
             }
 
@@ -390,12 +390,6 @@ namespace Bb.Oracle.Models.Comparer
         public virtual void AppendToRemove(TableModel target)
         {
             AppendDifference(target, true);
-            foreach (IndexModel index in target.Indexes)
-                AppendToRemove(index);
-            foreach (TriggerModel trigger in target.Triggers)
-                AppendToRemove(trigger);
-            foreach (ConstraintModel c in target.Constraints)
-                AppendToRemove(c);
         }
 
         public virtual void AppendToRemove(IndexModel target)
@@ -694,13 +688,13 @@ namespace Bb.Oracle.Models.Comparer
                 if (generateSource)
                 {
                     string p = BuildPath(Path.Combine(this.folderForSource, source.Owner), typeObject, source.Name);
-                    WriteFile(p, Utils.Unserialize(source.codeView, true).Trim('\n', ' '));
+                    WriteFile(p, Utils.Unserialize(source.CodeView, true).Trim('\n', ' '));
                 }
 
                 if (generateTarget)
                 {
                     string p = BuildPath(Path.Combine(this.folderForTarget, target.Owner), typeObject, target.Name);
-                    WriteFile(p, Utils.Unserialize(target.codeView, true).Trim('\n', ' '));
+                    WriteFile(p, Utils.Unserialize(target.CodeView, true).Trim('\n', ' '));
                 }
             }
             else
@@ -719,13 +713,13 @@ namespace Bb.Oracle.Models.Comparer
 
             if (generateSource)
             {
-                string p = BuildPath(Path.Combine(this.folderForSource, source.Owner), "Triggers", source.Name);
+                string p = BuildPath(Path.Combine(this.folderForSource, source.TableReference.Owner), "Triggers", source.Name);
                 WriteFile(p, CreateOrReplace + Utils.Unserialize(source.Code, true));
             }
 
             if (generateTarget)
             {
-                string p = BuildPath(Path.Combine(this.folderForTarget, target.Owner), "Triggers", target.Name);
+                string p = BuildPath(Path.Combine(this.folderForTarget, target.TableReference.Owner), "Triggers", target.Name);
                 WriteFile(p, CreateOrReplace + Utils.Unserialize(target.Code, true));
             }
 

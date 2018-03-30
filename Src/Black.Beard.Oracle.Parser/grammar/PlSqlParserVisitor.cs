@@ -1821,29 +1821,17 @@ public interface IPlSqlParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitPragma_declaration([NotNull] PlSqlParser.Pragma_declarationContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="PlSqlParser.record_type_def"/>.
+	/// Visit a parse tree produced by <see cref="PlSqlParser.type_declaration"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitRecord_type_def([NotNull] PlSqlParser.Record_type_defContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="PlSqlParser.field_spec"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitField_spec([NotNull] PlSqlParser.Field_specContext context);
+	Result VisitType_declaration([NotNull] PlSqlParser.Type_declarationContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="PlSqlParser.ref_cursor_type_def"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitRef_cursor_type_def([NotNull] PlSqlParser.Ref_cursor_type_defContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="PlSqlParser.type_declaration"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitType_declaration([NotNull] PlSqlParser.Type_declarationContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="PlSqlParser.table_type_def"/>.
 	/// </summary>
@@ -1862,6 +1850,18 @@ public interface IPlSqlParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitVarray_type_def([NotNull] PlSqlParser.Varray_type_defContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.record_type_def"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitRecord_type_def([NotNull] PlSqlParser.Record_type_defContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.field_spec"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitField_spec([NotNull] PlSqlParser.Field_specContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="PlSqlParser.seq_of_statements"/>.
 	/// </summary>
@@ -2736,11 +2736,23 @@ public interface IPlSqlParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitCompound_expression([NotNull] PlSqlParser.Compound_expressionContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.concatenation"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitConcatenation([NotNull] PlSqlParser.ConcatenationContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="PlSqlParser.relational_operator"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitRelational_operator([NotNull] PlSqlParser.Relational_operatorContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.model_expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitModel_expression([NotNull] PlSqlParser.Model_expressionContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="PlSqlParser.in_elements"/>.
 	/// </summary>
@@ -2754,23 +2766,11 @@ public interface IPlSqlParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitBetween_elements([NotNull] PlSqlParser.Between_elementsContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="PlSqlParser.concatenation"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitConcatenation([NotNull] PlSqlParser.ConcatenationContext context);
-	/// <summary>
 	/// Visit a parse tree produced by <see cref="PlSqlParser.interval_expression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitInterval_expression([NotNull] PlSqlParser.Interval_expressionContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="PlSqlParser.model_expression"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitModel_expression([NotNull] PlSqlParser.Model_expressionContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="PlSqlParser.model_expression_element"/>.
 	/// </summary>
@@ -2844,17 +2844,17 @@ public interface IPlSqlParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitQuantified_expression([NotNull] PlSqlParser.Quantified_expressionContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="PlSqlParser.string_function"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitString_function([NotNull] PlSqlParser.String_functionContext context);
-	/// <summary>
 	/// Visit a parse tree produced by <see cref="PlSqlParser.standard_function"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitStandard_function([NotNull] PlSqlParser.Standard_functionContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.string_function"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitString_function([NotNull] PlSqlParser.String_functionContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="PlSqlParser.numeric_function_wrapper"/>.
 	/// </summary>
@@ -2867,6 +2867,12 @@ public interface IPlSqlParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitNumeric_function([NotNull] PlSqlParser.Numeric_functionContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.to_date"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitTo_date([NotNull] PlSqlParser.To_dateContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="PlSqlParser.other_function"/>.
 	/// </summary>

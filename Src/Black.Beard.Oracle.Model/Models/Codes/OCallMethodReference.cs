@@ -11,6 +11,11 @@ namespace Bb.Oracle.Models.Codes
     public class OCallMethodReference : OCodeExpression
     {
 
+        public OCallMethodReference(MethodName name, params OMethodArgument[] arguments) : this()
+        {
+            this.Arguments.AddRange(arguments);
+        }
+
         public OCallMethodReference()
         {
             Arguments = new List<OMethodArgument>();

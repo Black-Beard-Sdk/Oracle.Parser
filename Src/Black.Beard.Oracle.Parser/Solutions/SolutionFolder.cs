@@ -45,7 +45,7 @@ namespace Bb.Oracle.Solutions
             // Process(KindModelEnum.Function, scripts, visitor);
             // Process(KindModelEnum.Type, scripts, visitor);
             // Process(KindModelEnum.Jobs, scripts, visitor);
-            //Process(KindModelEnum.Synonym, scripts, visitor);
+            Process(KindModelEnum.Synonym, scripts, visitor);
 
             Process(KindModelEnum.UserObjectPrivilege, scripts, visitor);
 

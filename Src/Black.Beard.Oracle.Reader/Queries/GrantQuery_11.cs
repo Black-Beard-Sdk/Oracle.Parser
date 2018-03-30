@@ -125,7 +125,6 @@ ORDER BY ROLE, privilege
                                 ObjectSchema = t.Owner,
                                 ObjectName = t.Table_name,
                                 ColumnObjectName = t.Column_name ?? string.Empty,
-                                FullObjectName = FullObjectName,
                                 Grantable = t.Grantable,
                                 Hierarchy = t.Hierarchy
                             };

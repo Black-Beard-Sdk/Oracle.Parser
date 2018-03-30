@@ -35,7 +35,7 @@ INNER JOIN dba_objects o ON t.owner = o.owner AND t.trigger_name = o.object_name
         public override List<TriggerQueryTable_11> Resolve(DbContextOracle context, Action<TriggerQueryTable_11> action)
         {
             List<TriggerQueryTable_11> List = new List<TriggerQueryTable_11>();
-            var tables = context.Database.Tables;
+            var triggers = context.Database.Triggers;
             this.OracleContext = context;
 
             if (action == null)
@@ -43,34 +43,30 @@ INNER JOIN dba_objects o ON t.owner = o.owner AND t.trigger_name = o.object_name
                 t =>
                 {
 
-
                     if (!string.IsNullOrEmpty(t.table_name) && t.table_name.ExcludIfStartwith(t.table_owner, Models.Configurations.ExcludeKindEnum.Table))
                         return;
 
-                    string key = t.table_owner + "." + t.table_name ?? string.Empty;
-
-                    if (tables.Contains(key))
+                    TriggerModel trigger = new TriggerModel()
                     {
+                        ActionType = t.ACTION_TYPE.Trim(),
+                        BaseObjectType = t.base_object_type,
+                        Code = string.Empty,
+                        Description = t.DESCRIPTION,
+                        Key = t.owner + "." + t.trigger_name,
+                        Status = t.status,
+                        Name = t.trigger_name,
+                        TriggerStatus = t.trigger_status,
+                        TriggerType = t.TRIGGER_TYPE,
+                    };
+                    trigger.TableReference.Owner = t.table_owner;
+                    trigger.TableReference.Name = t.table_name;
 
-                        TableModel table = tables[key];
+                    trigger.Key = trigger.BuildKey();
 
-                        TriggerModel trigger = new TriggerModel()
-                        {
-                            ActionType = t.ACTION_TYPE.Trim(),
-                            BaseObjectType = t.base_object_type,
-                            Code = string.Empty,
-                            Description = t.DESCRIPTION,
-                            Key = t.owner + "." + t.trigger_name,
-                            Status = t.status,
-                            Name = t.trigger_name,
-                            TriggerStatus = t.trigger_status,
-                            TriggerType = t.TRIGGER_TYPE,
-                            Owner = t.owner
-                        };
+                    if (triggers.TryGet(trigger.Key, out TriggerModel trigger2))
+                        triggers.Remove(trigger2);
 
-                        table.Triggers.Add(trigger);
-
-                    }
+                    triggers.Add(trigger);
 
                 };
 

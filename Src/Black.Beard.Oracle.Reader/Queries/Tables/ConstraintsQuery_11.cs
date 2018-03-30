@@ -11,7 +11,7 @@ namespace Bb.Oracle.Reader.Queries
 
     public class ConstraintsQuery_11 : DbQueryBase<ConstraintsTable_11>
     {
-        
+
         string sql =
 @"
 SELECT 
@@ -57,39 +57,33 @@ ORDER BY t.OWNER, t.TABLE_NAME, t.CONSTRAINT_NAME, t.CONSTRAINT_TYPE, t.R_CONSTR
                     if (t.TABLE_NAME.ExcludIfStartwith(t.SchemaName, Models.Configurations.ExcludeKindEnum.Table))
                         return;
 
-                    string key = t.SchemaName + "." + t.TABLE_NAME;
-                    TableModel table;
-
-                    if (db.Tables.TryGet(key, out table))
+                    var c = new ConstraintModel()
                     {
+                        Name = t.CONSTRAINT_NAME,
+                        Owner = t.SchemaName,
+                        IndexName = t.INDEX_NAME,
+                        Type = t.CONSTRAINT_TYPE,
+                        DeleteRule = t.DELETE_RULE,
+                        Generated = t.GENERATED,
+                        Deferrable = t.DEFERRABLE,
+                        Deferred = t.DEFERRED,
+                        Rely = t.RELY,
+                        Search_Condition = Utils.Serialize(t.search_condition, false),
+                        ViewRelated = t.VIEW_RELATED,
+                        Invalid = t.INVALID,
+                        Status = t.Status,
+                    };
 
-                        table.Constraints.Add(new ConstraintModel()
-                        {
-                            Key = t.SchemaName + "." + t.CONSTRAINT_NAME,
-                            Name = t.CONSTRAINT_NAME,
-                            Owner = t.SchemaName,
-                            Rel_Constraint_Name = t.R_CONSTRAINT_NAME,
-                            IndexName = t.INDEX_NAME,
-                            Type = t.CONSTRAINT_TYPE,
-                            DeleteRule = t.DELETE_RULE,
-                            Generated = t.GENERATED,
-                            Deferrable = t.DEFERRABLE,
-                            Deferred = t.DEFERRED,
-                            Rely = t.RELY,
-                            Rel_Constraint_Owner = t.R_OWNER,
-                            Search_Condition = Utils.Serialize(t.search_condition, false),
-                            ViewRelated = t.VIEW_RELATED,
-                            Invalid = t.INVALID,
-                            Status = t.Status,
-                        });
+                    c.Reference.Owner = t.R_OWNER;
+                    c.Reference.Name = t.R_CONSTRAINT_NAME;
+                    c.TableReference.Owner = t.SchemaName;
+                    c.TableReference.Name = t.TABLE_NAME;
+                    c.Key = c.BuildKey();
 
-                    }
-                    else
-                    {
-                        // System.Diagnostics.Debugger.Break();
-                    }
+                    if (db.Constraints.TryGet(c.Key, out ConstraintModel c2))
+                        db.Constraints.Remove(c2);
 
-
+                    db.Constraints.Add(c);
 
                 };
 

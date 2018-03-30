@@ -19,10 +19,10 @@ namespace Bb.Oracle.Models.Codes
 
         public OTypeReference()
         {
-            DataType = new OracleType();
+            DataType = new OracleType() { Name = "Undefined" };
         }
 
-        public List<string> Path { get; set; }
+        //public List<string> Path { get; set; }
 
         public PercentTypeEnum KindTypeReference { get; set; }
 

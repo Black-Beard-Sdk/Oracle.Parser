@@ -77,6 +77,11 @@ namespace Bb.Oracle.Models
         ArrayTypeDef,
         RecordTypeDef,
         RefCursorTypeDef,
+        CursorDeclaration,
+        TableIndexedByPart,
+        TableTypeDefinition,
+        FieldSpec,
+        VarrayTypeDef,
     }
 
 }

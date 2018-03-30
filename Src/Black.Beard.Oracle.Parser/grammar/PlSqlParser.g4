@@ -138,7 +138,7 @@ create_package_body :
 // Create Package Specific Clauses
 
 package_obj_spec :
-	variable_declaration
+	  variable_declaration
     | subtype_declaration
     | cursor_declaration
     | exception_declaration
@@ -1621,8 +1621,7 @@ comment_on_column :
 // Synonym DDL Clauses
 
 create_synonym : 
-	  CREATE (OR REPLACE)? PUBLIC SYNONYM synonym_name FOR (objectSchema=schema_name PERIOD)? objectName=schema_object_name (AT_SIGN link_name)?
-    | CREATE (OR REPLACE)? SYNONYM (schema=schema_name PERIOD)? synonym_name FOR (objectSchema=schema_name PERIOD)? objectName=schema_object_name (AT_SIGN link_name)?
+    CREATE (OR REPLACE)? (EDITIONABLE | NONEDITIONABLE)? PUBLIC? SYNONYM (Schema_synonym=schema_name PERIOD)? synonym_name FOR (objectSchema=schema_name PERIOD)? objectName=schema_object_name (AT_SIGN link_name)?
     ;
 
 comment_on_table :
@@ -1774,11 +1773,13 @@ exception_declaration  :
     ;
 
 pragma_declaration :
-	PRAGMA (SERIALLY_REUSABLE 
-    | AUTONOMOUS_TRANSACTION
-    | EXCEPTION_INIT LEFT_PAREN exception_name COMMA numeric_negative RIGHT_PAREN 
-    | INLINE LEFT_PAREN id1=identifier COMMA expression RIGHT_PAREN 
-    | RESTRICT_REFERENCES LEFT_PAREN (identifier | DEFAULT) (COMMA identifier)+ RIGHT_PAREN ) ';'
+	  PRAGMA 
+      (   SERIALLY_REUSABLE 
+        | AUTONOMOUS_TRANSACTION
+        | EXCEPTION_INIT LEFT_PAREN exception_name COMMA numeric_negative RIGHT_PAREN 
+        | INLINE LEFT_PAREN id1=identifier COMMA expression RIGHT_PAREN 
+        | RESTRICT_REFERENCES LEFT_PAREN (identifier | DEFAULT) (COMMA identifier)+ RIGHT_PAREN 
+      ) ';'
     ;
 
 // incorporates ref_cursor_type_definition
@@ -1795,7 +1796,7 @@ table_type_def :
     ;
 
 table_indexed_by_part :
-	(idx1=INDEXED | idx2=INDEX) BY type_spec
+	(INDEXED | INDEX) BY type_spec
     ;
 
 varray_type_def :
@@ -2520,10 +2521,21 @@ compound_expression :
         )?
     ;
 
+concatenation :
+	  model_expression (AT (LOCAL | TIME ZONE concatenation) | interval_expression)?
+    | concatenation op=(ASTERISK | SOLIDUS) concatenation
+    | concatenation op=(PLUS_SIGN | MINUS_SIGN) concatenation
+    | concatenation BAR BAR concatenation
+    ;
+
 relational_operator :
 	'='
     | (NOT_EQUAL_OP | '<' '>' | '!' '=' | '^' '=')
     | ('<' | '>') '='?
+    ;
+
+model_expression :
+	unary_expression ('[' model_expression_element ']')?
     ;
 
 in_elements :
@@ -2538,20 +2550,9 @@ between_elements :
 	concatenation AND concatenation
     ;
 
-concatenation :
-	  model_expression (AT (LOCAL | TIME ZONE concatenation) | interval_expression)?
-    | concatenation op=(ASTERISK | SOLIDUS) concatenation
-    | concatenation op=(PLUS_SIGN | MINUS_SIGN) concatenation
-    | concatenation BAR BAR concatenation
-    ;
-
 interval_expression :
 	DAY ( LEFT_PAREN concatenation RIGHT_PAREN )? TO SECOND ( LEFT_PAREN concatenation RIGHT_PAREN )?
     | YEAR ( LEFT_PAREN concatenation RIGHT_PAREN )? TO MONTH
-    ;
-
-model_expression :
-	unary_expression ('[' model_expression_element ']')?
     ;
 
 model_expression_element :
@@ -2576,12 +2577,12 @@ unary_expression :
 	(MINUS_SIGN | PLUS_SIGN) unary_expression
     | PRIOR unary_expression
     | CONNECT_BY_ROOT unary_expression
+    |  standard_function
     | /*TODO {input.LT(1).getText().equalsIgnoreCase("new") && !input.LT(2).getText().equals(".")}?*/ NEW unary_expression
     |  DISTINCT unary_expression
     |  ALL unary_expression
     |  /*TODO{(input.LA(1) == CASE || input.LA(2) == CASE)}?*/ case_statement/*[false]*/
     |  quantified_expression
-    |  standard_function
     |  atom
     ;
 
@@ -2637,29 +2638,27 @@ quantified_expression :
 	(SOME | EXISTS | ALL | ANY) ( LEFT_PAREN subquery RIGHT_PAREN | LEFT_PAREN expression RIGHT_PAREN )
     ;
 
-string_function :
-	SUBSTR LEFT_PAREN expression COMMA expression (COMMA expression)? RIGHT_PAREN 
-    | TO_CHAR LEFT_PAREN (table_element | standard_function | expression)
-                  (COMMA string)? (COMMA string)? RIGHT_PAREN 
-    | DECODE LEFT_PAREN expressions RIGHT_PAREN 
-    | CHR LEFT_PAREN concatenation USING NCHAR_CS RIGHT_PAREN 
-    | NVL LEFT_PAREN expression COMMA expression RIGHT_PAREN 
-    | TRIM LEFT_PAREN ((LEADING | TRAILING | BOTH)? string? FROM)? concatenation RIGHT_PAREN 
-    | TO_DATE LEFT_PAREN expression (COMMA string)? RIGHT_PAREN 
-    ;
-
 standard_function :
-	string_function
+	  string_function
     | numeric_function_wrapper
     | other_function
+    | id_expression LEFT_PAREN expression (COMMA expression)* RIGHT_PAREN?
     ;
     
+string_function :
+	SUBSTR LEFT_PAREN expression COMMA expression (COMMA expression)? RIGHT_PAREN 
+    | TO_CHAR LEFT_PAREN (table_element | standard_function | expression) (COMMA string1=string)? (COMMA string2=string)? RIGHT_PAREN 
+    | DECODE LEFT_PAREN expressions RIGHT_PAREN 
+    | CHR LEFT_PAREN concatenation USING NCHAR_CS RIGHT_PAREN 
+    | TRIM LEFT_PAREN ((LEADING | TRAILING | BOTH)?  string1=string? FROM)? concatenation RIGHT_PAREN 
+    ;
+
 numeric_function_wrapper :
 	numeric_function (single_column_for_loop | multi_column_for_loop)?
     ;
 
 numeric_function :
-	SUM LEFT_PAREN (DISTINCT | ALL)? expression RIGHT_PAREN 
+	 SUM LEFT_PAREN (DISTINCT | ALL)? expression RIGHT_PAREN 
    | COUNT LEFT_PAREN ( ASTERISK | ((DISTINCT | UNIQUE | ALL)? concatenation)? ) RIGHT_PAREN over_clause?
    | ROUND LEFT_PAREN expression (COMMA UNSIGNED_INTEGER)?RIGHT_PAREN 
    | AVG LEFT_PAREN (DISTINCT | ALL)? expression RIGHT_PAREN 
@@ -2668,9 +2667,15 @@ numeric_function :
    | GREATEST LEFT_PAREN expressions RIGHT_PAREN 
    ;
 
+to_date :
+    TO_DATE LEFT_PAREN expression (COMMA string1=string)? RIGHT_PAREN 
+    ;
+
 other_function :
 	over_clause_keyword function_argument_analytic over_clause?
     | /*TODO stantard_function_enabling_using*/ regular_id function_argument_modeling using_clause?
+    | NVL LEFT_PAREN expression COMMA expression RIGHT_PAREN 
+    | to_date 
     | COUNT LEFT_PAREN (ASTERISK | (DISTINCT | UNIQUE | ALL)? concatenation) RIGHT_PAREN over_clause?
     | (CAST | XMLCAST) LEFT_PAREN (MULTISET LEFT_PAREN subquery RIGHT_PAREN | concatenation) AS type_spec RIGHT_PAREN 
     | COALESCE LEFT_PAREN table_element (COMMA (numeric | string))? RIGHT_PAREN 
@@ -2680,32 +2685,38 @@ other_function :
     | DECOMPOSE LEFT_PAREN concatenation (CANONICAL | COMPATIBILITY)? RIGHT_PAREN 
     | EXTRACT LEFT_PAREN regular_id FROM concatenation RIGHT_PAREN 
     | (FIRST_VALUE | LAST_VALUE) function_argument_analytic respect_or_ignore_nulls? over_clause
-    | standard_prediction_function_keyword 
-      LEFT_PAREN expressions cost_matrix_clause? using_clause? RIGHT_PAREN 
+    | standard_prediction_function_keyword LEFT_PAREN expressions cost_matrix_clause? using_clause? RIGHT_PAREN 
     | TRANSLATE LEFT_PAREN expression (USING (CHAR_CS | NCHAR_CS))? (COMMA expression)* RIGHT_PAREN 
+    | TRANSLATE LEFT_PAREN expression COMMA string COMMA string RIGHT_PAREN 
     | TREAT LEFT_PAREN expression AS REF? type_spec RIGHT_PAREN 
-    | TRIM LEFT_PAREN ((LEADING | TRAILING | BOTH)? string? FROM)? concatenation RIGHT_PAREN 
     | XMLAGG LEFT_PAREN expression order_by_clause? RIGHT_PAREN ('.' general_element_part)?
-    | (XMLCOLATTVAL | XMLFOREST)
-      LEFT_PAREN (COMMA? xml_multiuse_expression_element)+ RIGHT_PAREN ('.' general_element_part)?
-    | XMLELEMENT 
-      LEFT_PAREN (ENTITYESCAPING | NOENTITYESCAPING)? (NAME | EVALNAME)? expression
+    | (XMLCOLATTVAL | XMLFOREST) LEFT_PAREN (COMMA? xml_multiuse_expression_element)+ RIGHT_PAREN ('.' general_element_part)?
+    | XMLELEMENT LEFT_PAREN (ENTITYESCAPING | NOENTITYESCAPING)? (NAME | EVALNAME)? expression
        (/*TODO{input.LT(2).getText().equalsIgnoreCase("xmlattributes")}?*/ COMMA xml_attributes_clause)?
        (COMMA expression column_alias?)* RIGHT_PAREN ('.' general_element_part)?
     | XMLEXISTS LEFT_PAREN expression xml_passing_clause? RIGHT_PAREN 
     | XMLPARSE LEFT_PAREN (DOCUMENT | CONTENT) concatenation WELLFORMED? RIGHT_PAREN ('.' general_element_part)?
     | XMLPI
       LEFT_PAREN (NAME identifier | EVALNAME concatenation) (COMMA concatenation)? RIGHT_PAREN ('.' general_element_part)?
-    | XMLQUERY
-      LEFT_PAREN concatenation xml_passing_clause? RETURNING CONTENT (NULL ON EMPTY)? RIGHT_PAREN ('.' general_element_part)?
-    | XMLROOT
-      LEFT_PAREN concatenation (COMMA xmlroot_param_version_part)? (COMMA xmlroot_param_standalone_part)? RIGHT_PAREN ('.' general_element_part)?
-    | XMLSERIALIZE
-      LEFT_PAREN (DOCUMENT | CONTENT) concatenation (AS type_spec)?
-      xmlserialize_param_enconding_part? xmlserialize_param_version_part? xmlserialize_param_ident_part? ((HIDE | SHOW) DEFAULTS)? RIGHT_PAREN 
-      ('.' general_element_part)?
-    | XMLTABLE
-      LEFT_PAREN xml_namespaces_clause? concatenation xml_passing_clause? (COLUMNS xml_table_column (COMMA xml_table_column))? RIGHT_PAREN ('.' general_element_part)?
+    | XMLQUERY LEFT_PAREN concatenation xml_passing_clause? RETURNING CONTENT (NULL ON EMPTY)? RIGHT_PAREN ('.' general_element_part)?
+    | XMLROOT LEFT_PAREN concatenation (COMMA xmlroot_param_version_part)? (COMMA xmlroot_param_standalone_part)? RIGHT_PAREN ('.' general_element_part)?
+    | XMLSERIALIZE LEFT_PAREN (DOCUMENT | CONTENT) concatenation (AS type_spec)?
+        xmlserialize_param_enconding_part? xmlserialize_param_version_part? xmlserialize_param_ident_part? ((HIDE | SHOW) DEFAULTS)? RIGHT_PAREN 
+        ('.' general_element_part)?
+    | XMLTABLE LEFT_PAREN xml_namespaces_clause? concatenation xml_passing_clause? (COLUMNS xml_table_column (COMMA xml_table_column))? RIGHT_PAREN ('.' general_element_part)?
+    | TRUNC LEFT_PAREN expression (COMMA string)? RIGHT_PAREN
+    // | TO_YMINTERVAL LEFT_PAREN string RIGHT_PAREN
+    // | TO_TIMESTAMP LEFT_PAREN string (COMMA flt (COMMA '\'' nlsparam '\'')?)? RIGHT_PAREN
+    // | TO_TIMESTAMP_TZ LEFT_PAREN string (COMMA flt (COMMA '\'' nlsparam '\'')?)? RIGHT_PAREN
+    // | TO_SINGLE_BYTE LEFT_PAREN char RIGHT_PAREN
+    // | TO_NUMBER LEFT_PAREN expression (COMMA fmt ( COMMA '\'' nlsparam '\'')?)?  RIGHT_PAREN
+    // | TO_NCLOB LEFT_PAREN (lob_column | char)  RIGHT_PAREN
+    // | TO_NCHAR LEFT_PAREN number RIGHT_PAREN
+    // | TO_NCHAR LEFT_PAREN datetime RIGHT_PAREN
+    // | TO_NCHAR LEFT_PAREN char RIGHT_PAREN
+    // | TO_MULTI_BYTE LEFT_PAREN char RIGHT_PAREN
+    // | TO_LOB LEFT_PAREN long_column RIGHT_PAREN
+    // | TO_NCLOB LEFT_PAREN  RIGHT_PAREN
     ;
 
 over_clause_keyword :
@@ -3411,6 +3422,7 @@ regular_id :
 
 // reserved_word :
     | A_LETTER
+    | ACCOUNT
     | ADD
     | AFTER
     | AGENT
@@ -3694,6 +3706,7 @@ regular_id :
     | PARENT
     | PARTITION
     | PASSING
+    | PASSWORD
     | PATH
     //| PERCENT_ROWTYPE
     //| PERCENT_TYPE
@@ -3867,6 +3880,7 @@ regular_id :
     | XMLROOT
     | XMLSERIALIZE
     | XMLTABLE
+    | XMLTYPE
     | YEAR
     | YES
     | YMINTERVAL_UNCONSTRAINED
@@ -3879,6 +3893,7 @@ regular_id :
     | PREDICTION_SET
     | CUME_DIST
     | DENSE_RANK
+    | LIST
     | LISTAGG
     | PERCENT_RANK
     | PERCENTILE_CONT

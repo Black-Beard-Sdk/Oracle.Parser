@@ -69,6 +69,7 @@
     <Compile Include="Visitors\IDbModelVisitor.cs" />
     <Compile Include="Visitors\IFile.cs" />
     <Compile Include="Visitors\ParseScriptVisitor.cs" />
+    <Compile Include="Visitors\PolicyBehavior.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="grammar\generate.ps1" />

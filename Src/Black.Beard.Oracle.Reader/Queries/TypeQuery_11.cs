@@ -76,7 +76,7 @@ ORDER BY t1.OWNER,t1.TYPE_NAME,t1.ATTR_NO
                         IsNotNull = false,
                     };
 
-                    p.Type.DataType = t.ATTR_TYPE_NAME;
+                    p.Type.Name = t.ATTR_TYPE_NAME;
                     //p.Type.CsType = TypeMatchExtension.Match(t.ATTR_TYPE_NAME, t.Lenght, t.Precision, 0);
                     p.Type.DataLength = t.Lenght;
                     p.Type.DataPrecision = t.Precision;

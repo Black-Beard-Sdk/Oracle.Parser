@@ -25,7 +25,7 @@ namespace Bb.Oracle.Structures.Models
         public string Message { get; set; }
 
         public string OjectName { get; set; }
-        public KindModelEnum Kind { get; private set; }
+        public KindModelEnum Kind { get; set; }
         public string Type { get; set; }
 
         public string ValidatorName { get; set; }

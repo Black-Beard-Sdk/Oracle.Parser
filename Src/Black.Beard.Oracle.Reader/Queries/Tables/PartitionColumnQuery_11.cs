@@ -57,7 +57,7 @@ ORDER BY l.COLUMN_POSITION
                     else if (t.ObjectType == "INDEX")
                     {
                         IndexModel index;
-                        if (db.ResolveIndex(k, out index))
+                        if (db.Indexes.TryGet(k, out index))
                             index.BlocPartition.Columns.Add(p);
                     }
                     else

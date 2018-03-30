@@ -14,14 +14,8 @@ namespace Bb.Oracle.Reader.Queries
     {
 
         string sql =
-@"
-
-SELECT t.*, g.GROUP_NAME FROM SYS.DBA_TABLESPACES t
+@"SELECT t.*, g.GROUP_NAME FROM SYS.DBA_TABLESPACES t
 LEFT JOIN SYS.DBA_TABLESPACE_GROUPS g ON t.TABLESPACE_NAME = g.TABLESPACE_NAME
-
-
-{0}
-
 ";
 
         public override List<TablespacesDto_11> Resolve(DbContextOracle context, Action<TablespacesDto_11> action)
@@ -35,7 +29,6 @@ LEFT JOIN SYS.DBA_TABLESPACE_GROUPS g ON t.TABLESPACE_NAME = g.TABLESPACE_NAME
                 action =
                 t =>
                 {
-
 
                     var obj = new TablespaceModel()
                     {
@@ -65,13 +58,11 @@ LEFT JOIN SYS.DBA_TABLESPACE_GROUPS g ON t.TABLESPACE_NAME = g.TABLESPACE_NAME
                         GroupName = t.GroupName,
                     };
 
-
+                    db.Tablespaces.Add(obj);
 
                 };
 
             TablespacesQueryDescriptor_11 Tablespaces = new TablespacesQueryDescriptor_11(context.Manager.ConnectionString);
-            sql = string.Format(sql, TableQueryWhereCondition("l", "Owner"));
-
             using (var reader = context.Manager.ExecuteReader(CommandType.Text, sql, QueryBase.DbParams.ToArray()))
             {
                 List = Tablespaces.ReadAll(reader, action).ToList();

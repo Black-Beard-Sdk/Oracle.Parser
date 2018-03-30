@@ -19,9 +19,34 @@ namespace Bb.Oracle.Helpers
     public static class PlSqlParserExtensions
     {
 
+        public static OStringConstant ToConstant(this PlSqlParser.StringContext stringContext)
+        {
+            return new OStringConstant() { Value = stringContext.GetText() };
+        }
+
+        public static OStringConstant ToConstant(this PlSqlParser.StringContext[] stringContext)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            foreach ( PlSqlParser.StringContext str in stringContext)
+                sb.Append(str.GetText());
+
+            return new OStringConstant() { Value = sb.ToString() };
+        }
+
+        public static bool Exist(this ITerminalNode token)
+        {
+            return token != null;
+        }
+
         public static OperatorEnum ConvertToOperator(this IToken token)
         {
-            switch (token.Text)
+            return ConvertToOperator(token);
+        }
+
+        public static OperatorEnum ConvertToOperator(this string token)
+        {
+            switch (token)
             {
 
                 //case "^=":
@@ -496,6 +521,48 @@ namespace Bb.Oracle.Helpers
             return _names;
         }
 
+        /// <summary>
+        /// numeric :
+        ///     PLUS_SIGN? UNSIGNED_INTEGER
+        ///     | APPROXIMATE_NUM_LIT
+        ///     ;
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public static int ToInteger(this PlSqlParser.NumericContext context)
+        {
+            string value = null;
+
+            var unsigned_integer = context.UNSIGNED_INTEGER();
+            if (unsigned_integer != null)
+                value = unsigned_integer.GetText();
+            else
+            {
+                var approximate_num_lit = context.APPROXIMATE_NUM_LIT();
+                value = approximate_num_lit.GetText();
+            }
+
+            try
+            {
+                return int.Parse(value);
+            }
+            catch (Exception e)
+            {
+
+                throw;
+            }
+
+
+        }
+
+        /// <summary>
+        /// integer :
+        ///     numeric
+	    ///     | numeric_negative
+	    ///     ;
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public static int ToInteger(this PlSqlParser.IntegerContext context)
         {
 
@@ -503,17 +570,8 @@ namespace Bb.Oracle.Helpers
 
             var numeric = context.numeric();
             if (numeric != null)
-            {
+                return numeric.ToInteger();
 
-                var unsigned_integer = numeric.UNSIGNED_INTEGER();
-                if (unsigned_integer != null)
-                    value = unsigned_integer.GetText();
-                else
-                {
-                    var approximate_num_lit = numeric.APPROXIMATE_NUM_LIT();
-                    value = approximate_num_lit.GetText();
-                }
-            }
             else
             {
                 var numeric_negative = context.numeric_negative();
@@ -531,7 +589,6 @@ namespace Bb.Oracle.Helpers
             }
             catch (Exception e)
             {
-
                 throw;
             }
         }
@@ -545,7 +602,6 @@ namespace Bb.Oracle.Helpers
             }
             catch (Exception e)
             {
-
                 throw;
             }
         }

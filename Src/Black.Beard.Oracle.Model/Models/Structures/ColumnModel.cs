@@ -121,17 +121,16 @@ namespace Bb.Oracle.Structures.Models
         public override void Initialize()
         {
 
-            this.Constraints = new List<ConstraintModel>();
-
-            var t = this.Parent.AsTable();
-            foreach (ConstraintModel c in t.Constraints.OfType<ConstraintModel>())
-            {
-                foreach (ConstraintColumnModel item in c.Columns)
-                {
-                    if (item.ColumnName == this.Name)
-                        this.Constraints.Add(c);
-                }
-            }
+            //this.Constraints = new List<ConstraintModel>();
+            //var t = this.Parent.AsTable();
+            //foreach (ConstraintModel c in t.Constraints.OfType<ConstraintModel>())
+            //{
+            //    foreach (ConstraintColumnModel item in c.Columns)
+            //    {
+            //        if (item.ColumnName == this.Name)
+            //            this.Constraints.Add(c);
+            //    }
+            //}
 
         }
 
@@ -159,8 +158,8 @@ namespace Bb.Oracle.Structures.Models
             return manager.Evaluate(this);
         }
 
-        [JsonIgnore]
-        public List<ConstraintModel> Constraints { get; private set; }
+        //[JsonIgnore]
+        //public List<ConstraintModel> Constraints { get; private set; }
 
         public override KindModelEnum KindModel
         {

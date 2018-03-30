@@ -109,27 +109,27 @@ namespace Bb.Oracle.Structures.Models
                 foreach (ColumnModel item2 in item.Columns)
                     visitor.VisitColumn(item2);
 
-                foreach (ConstraintModel item2 in item.Constraints)
-                {
-                    visitor.VisitConstraint(item2);
-                    foreach (ConstraintColumnModel item3 in item2.Columns)
-                        visitor.VisitConstraintColumn(item3);
-                }
-
-                foreach (IndexModel item2 in item.Indexes)
-                {
-                    visitor.VisitIndex(item2);
-                    foreach (IndexColumnModel item3 in item2.Columns)
-                        visitor.VisitIndexColumn(item3);
-                }
-
                 foreach (PartitionRefModel item2 in item.Partitions)
                     visitor.VisitPartitionRef(item2);
 
-                foreach (TriggerModel item2 in item.Triggers)
-                    visitor.VisitTrigger(item2);
-
             }
+
+            foreach (ConstraintModel item2 in model.Constraints)
+            {
+                visitor.VisitConstraint(item2);
+                foreach (ConstraintColumnModel item3 in item2.Columns)
+                    visitor.VisitConstraintColumn(item3);
+            }
+
+            foreach (IndexModel item2 in model.Indexes)
+            {
+                visitor.VisitIndex(item2);
+                foreach (IndexColumnModel item3 in item2.Columns)
+                    visitor.VisitIndexColumn(item3);
+            }
+
+            foreach (TriggerModel item2 in model.Triggers)
+                visitor.VisitTrigger(item2);
 
             this._log(string.Format("--- analyzing {0} tablespace(s)", model.Tablespaces.OfType<TablespaceModel>().Count()));
             foreach (TablespaceModel item in model.Tablespaces)

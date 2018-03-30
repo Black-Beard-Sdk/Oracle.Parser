@@ -140,10 +140,46 @@ namespace Bb.Oracle.Visitors
             return base.VisitSubtype_declaration(context);
         }
 
+        /// <summary>
+        /// cursor_declaration :
+        ///     CURSOR identifier(LEFT_PAREN (COMMA? parameter_spec)+ RIGHT_PAREN )? (RETURN type_spec)? (IS select_statement)? ';'
+        ///     ;
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public override object VisitCursor_declaration([NotNull] PlSqlParser.Cursor_declarationContext context)
         {
-            Stop();
-            return base.VisitCursor_declaration(context);
+
+            var names = context.identifier().GetCleanedTexts();
+
+            OCursorDeclarationStatement method = new OCursorDeclarationStatement()
+            {
+                Name = names[0],
+            };
+
+            var parameter_specs = context.parameter_spec();
+            if (parameter_specs != null && parameter_specs.Length > 0)
+                foreach (PlSqlParser.Parameter_specContext parameter_spec in parameter_specs)
+                {
+                    var arg = (ArgumentModel)VisitParameter_spec(parameter_spec);
+                    arg.Key = method.Arguments.Count().ToString();
+                    method.Arguments.Add(arg);
+                }
+
+            if (context.RETURN().Exist())
+            {
+                var returnType = (OTypeReference)VisitType_spec(context.type_spec());
+                method.ResultType = new ProcedureResult() { Type = returnType };
+            }
+
+            if (context.IS().Exist())
+            {
+                //var select_statement = VisitSelect_statement(context.select_statement());
+                //method.Query = select_statement;
+            }
+
+            return method;
+
         }
 
         public override object VisitCursor_loop_param([NotNull] PlSqlParser.Cursor_loop_paramContext context)
@@ -184,14 +220,34 @@ namespace Bb.Oracle.Visitors
 
         public override object VisitPragma_clause([NotNull] PlSqlParser.Pragma_clauseContext context)
         {
+
             Stop();
             return base.VisitPragma_clause(context);
         }
 
+        /// <summary>
+        /// pragma_declaration :
+	    ///       PRAGMA(SERIALLY_REUSABLE
+        ///     | AUTONOMOUS_TRANSACTION
+        ///     | EXCEPTION_INIT LEFT_PAREN exception_name COMMA numeric_negative RIGHT_PAREN 
+        ///     | INLINE LEFT_PAREN id1= identifier COMMA expression RIGHT_PAREN
+        ///     | RESTRICT_REFERENCES LEFT_PAREN (identifier | DEFAULT) (COMMA identifier)+ RIGHT_PAREN ) ';'
+        ///     ;
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public override object VisitPragma_declaration([NotNull] PlSqlParser.Pragma_declarationContext context)
         {
-            Stop();
-            return base.VisitPragma_declaration(context);
+            // Stop();
+            // PRAGMA RESTRICT_REFERENCES (F_ELAPSED_MILISECONDS, WNDS
+            //var t = GetText(context);
+
+            // See : https://docs.oracle.com/database/121/LNPLS/restrictreferences_pragma.htm#LNPLS01339
+
+            //return base.VisitPragma_declaration(context);
+
+            return null;
+
         }
 
         public override object VisitPragma_elements([NotNull] PlSqlParser.Pragma_elementsContext context)
@@ -207,7 +263,9 @@ namespace Bb.Oracle.Visitors
         }
 
         /// <summary>
-        /// PROCEDURE procedure_name '(' type_elements_parameter (',' type_elements_parameter)* ')' ((IS | AS) call_spec)?
+        /// procedure_spec :
+        ///     PROCEDURE identifier(LEFT_PAREN parameter (COMMA parameter ) * RIGHT_PAREN)? ';'
+        ///     ;
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
@@ -220,45 +278,38 @@ namespace Bb.Oracle.Visitors
                 return null;
             }
 
-            string schema_name = string.Empty;
-            string package_name = string.Empty;
-            var package = this.Current<PackageModel>();
-            if (package != null)
-            {
-                schema_name = package.GetOwner();
-                package_name = package.GetName();
-            }
-
             string procName = context.identifier().GetCleanedTexts().Join();
 
-            var proc = new ProcedureModel()
+            var method = new ProcedureModel()
             {
                 Name = procName,
                 IsFunction = false,
-                Owner = schema_name,
-                PackageName = package_name,
-                // Code = "",
                 // Description = "",
-                // ResultType = new ProcedureResult(),
-                // Files = new FileCollection(),
             };
 
-            proc.Code.SetSource(GetText(context));
+            AppendFile(method, context.Start);
+            method.Code.SetSource(GetText(context));
 
-            using (Enqueue(proc))
+            var parameters = context.parameter();
+            foreach (var parameter in parameters)
             {
-
-                var r = base.VisitProcedure_spec(context);
-
-
+                var arg = (ArgumentModel)VisitParameter(parameter);
+                arg.Key = method.Arguments.Count().ToString();
+                method.Arguments.Add(arg);
             }
 
-            proc.Key = proc.BuildKey();
-
-            return proc;
+            return method;
 
         }
 
+        /// <summary>
+        /// function_spec :
+        ///     FUNCTION identifier(LEFT_PAREN parameter (COMMA parameter)* RIGHT_PAREN)?
+        ///     RETURN type_spec(DETERMINISTIC)? (RESULT_CACHE)? ';'
+        ///     ;
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public override object VisitFunction_spec([NotNull] PlSqlParser.Function_specContext context)
         {
 
@@ -268,40 +319,31 @@ namespace Bb.Oracle.Visitors
                 return null;
             }
 
-            string schema_name = string.Empty;
-            string package_name = string.Empty;
-            var package = this.Current<PackageModel>();
-            if (package != null)
-            {
-                schema_name = package.GetOwner();
-                package_name = package.GetName();
-            }
-
             string funcName = context.identifier().GetCleanedTexts().Join();
 
-            var fnc = new ProcedureModel()
+            var method = new ProcedureModel()
             {
                 Name = funcName,
                 IsFunction = true,
-                Key = "",
-                Owner = schema_name,
-                PackageName = package_name,
-                // Code = "",
                 // Description = "",
-                // ResultType = new ProcedureResult(),
-                // Files = new FileCollection(),
             };
 
-            using (Enqueue(fnc))
+            AppendFile(method, context.Start);
+            method.Code.SetSource(GetText(context));
+
+            var parameters = context.parameter();
+            foreach (var parameter in parameters)
             {
-
-                var r = base.VisitFunction_spec(context);
-
+                var arg = (ArgumentModel)VisitParameter(parameter);
+                arg.Key = method.Arguments.Count().ToString();
+                method.Arguments.Add(arg);
             }
 
-            fnc.Key = "";
+            var type_spec = context.type_spec();
+            var returnType = (OTypeReference)VisitType_spec(type_spec);
+            method.ResultType = new ProcedureResult() { Type = returnType };
 
-            return fnc;
+            return method;
 
         }
 
@@ -319,12 +361,13 @@ namespace Bb.Oracle.Visitors
             return base.VisitType_elements_parameter(context);
         }
 
+        /// <summary>
+        /// : parameter_name(IN | OUT | INOUT | NOCOPY) * type_spec? default_value_part ?
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public override object VisitParameter([NotNull] PlSqlParser.ParameterContext context)
         {
-
-            // : parameter_name(IN | OUT | INOUT | NOCOPY) * type_spec ? default_value_part ?
-
-            var method = this.Current<ProcedureModel>();
 
             bool _in = context.IN() != null;
             bool _out = context.OUT() != null;
@@ -332,30 +375,50 @@ namespace Bb.Oracle.Visitors
                 _in = _out = true;
             bool _nocopy = context.NOCOPY() != null;
 
-            var type = context.type_spec().Accept(this);
+            OTypeReference type = null;
+            var type_spec = context.type_spec();
+            if (type_spec != null)
+                type = (OTypeReference)VisitType_spec(type_spec);
 
             var arg = new ArgumentModel()
             {
-                Key = method.Arguments.Count().ToString(),
+                //Key = method.Arguments.Count().ToString(),
                 Name = context.parameter_name().GetCleanedName(),
                 In = _in,
                 Out = _out,
-                Description = "",
-                Type = (OTypeReference)type,
+                Description = string.Empty,
             };
 
-            //arg.Files.Add(GetFileElement(context.Start));
-
-            method.Arguments.Add(arg);
+            if (type != null)
+                arg.Type = type;
 
             return arg;
 
         }
 
+        /// <summary>
+        /// parameter_spec :
+	    ///     parameter_name(IN? type_spec)? default_value_part?
+        ///     ;
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public override object VisitParameter_spec([NotNull] PlSqlParser.Parameter_specContext context)
         {
-            Stop();
-            return base.VisitParameter_spec(context);
+
+            var type = VisitType_spec(context.type_spec());
+
+            var arg = new ArgumentModel()
+            {
+                //Key = method.Arguments.Count().ToString(),
+                Name = context.parameter_name().GetCleanedName(),
+                In = true,
+                Out = false,
+                Description = "",
+                Type = (OTypeReference)type,
+            };
+
+            return arg;
         }
 
         public override object VisitFunction_argument_analytic([NotNull] PlSqlParser.Function_argument_analyticContext context)

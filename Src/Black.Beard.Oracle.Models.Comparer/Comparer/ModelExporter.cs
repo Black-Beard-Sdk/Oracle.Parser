@@ -339,7 +339,7 @@ namespace Bb.Oracle.Models.Comparer
                 {
                     if (source.IsView)
                     {
-                        sb.Append(Utils.Unserialize(source.codeView, true));
+                        sb.Append(Utils.Unserialize(source.CodeView, true));
                     }
                     else
                     {
@@ -368,7 +368,7 @@ namespace Bb.Oracle.Models.Comparer
 
         private void Append(TriggerModel source, DifferenceModel d)
         {
-            string p = BuildPath(Path.Combine(this.folderForTarget, source.Owner), "Triggers", source.Name);
+            string p = BuildPath(Path.Combine(this.folderForTarget, source.TableReference.Owner), "Triggers", source.Name);
             StringBuilder sb = new StringBuilder();
             if (!File.Exists(p))
             {

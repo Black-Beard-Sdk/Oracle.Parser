@@ -42,12 +42,18 @@ namespace Bb.Oracle.Reader.Queries
 
                         string k2 = t.Owner + "." + t.IndexName;
 
-                        IndexModel index;
-                        
-                        if (!table.Indexes.TryGet(k2, out index))
+                        if (!db.Indexes.TryGet(k2, out IndexModel index))
                         {
-                            index = new IndexModel() { Name = k2 };
-                            table.Indexes.Add(index);
+                            index = new IndexModel()
+                            {
+                                Key = k2,
+                                IndexOwner = t.Owner,
+                                Name = t.IndexName,
+                            };
+
+                            index.TableReference.Owner = t.Owner;
+                            index.TableReference.Name = t.TableName;
+                            db.Indexes.Add(index);
                         }
 
                         index.BlocPartition.PartitioningType = t.PartitioningType;
@@ -138,7 +144,7 @@ namespace Bb.Oracle.Reader.Queries
             public static Field<String> DefParameters = new Field<String>() { ColumnName = "DEF_PARAMETERS", Read = reader => reader.Field<String>((int)IndexPartitionColumnQueryColumns_11.DEF_PARAMETERS) };
             public static Field<String> Interval = new Field<String>() { ColumnName = "INTERVAL", Read = reader => reader.Field<String>((int)IndexPartitionColumnQueryColumns_11.INTERVAL) };
 
-            
+
         }
 
         #region Readers
@@ -181,35 +187,35 @@ namespace Bb.Oracle.Reader.Queries
 
         public override IEnumerable<Field> Fields()
         {
-                     yield return Columns.Owner;
-         yield return Columns.IndexName;
-         yield return Columns.TableName;
-         yield return Columns.PartitioningType;
-         yield return Columns.SubpartitioningType;
-         yield return Columns.PartitionCount;
-         yield return Columns.DefSubpartitionCount;
-         yield return Columns.PartitioningKeyCount;
-         yield return Columns.SubpartitioningKeyCount;
-         yield return Columns.Locality;
-         yield return Columns.Alignment;
-         yield return Columns.DefTablespaceName;
-         yield return Columns.DefPctFree;
-         yield return Columns.DefIniTrans;
-         yield return Columns.DefMaxTrans;
-         yield return Columns.DefInitialExtent;
-         yield return Columns.DefNextExtent;
-         yield return Columns.DefMinExtents;
-         yield return Columns.DefMaxExtents;
-         yield return Columns.DefMaxSize;
-         yield return Columns.DefPctIncrease;
-         yield return Columns.DefFreelists;
-         yield return Columns.DefFreelistGroups;
-         yield return Columns.DefLogging;
-         yield return Columns.DefBufferPool;
-         yield return Columns.DefFlashCache;
-         yield return Columns.DefCellFlashCache;
-         yield return Columns.DefParameters;
-         yield return Columns.Interval;
+            yield return Columns.Owner;
+            yield return Columns.IndexName;
+            yield return Columns.TableName;
+            yield return Columns.PartitioningType;
+            yield return Columns.SubpartitioningType;
+            yield return Columns.PartitionCount;
+            yield return Columns.DefSubpartitionCount;
+            yield return Columns.PartitioningKeyCount;
+            yield return Columns.SubpartitioningKeyCount;
+            yield return Columns.Locality;
+            yield return Columns.Alignment;
+            yield return Columns.DefTablespaceName;
+            yield return Columns.DefPctFree;
+            yield return Columns.DefIniTrans;
+            yield return Columns.DefMaxTrans;
+            yield return Columns.DefInitialExtent;
+            yield return Columns.DefNextExtent;
+            yield return Columns.DefMinExtents;
+            yield return Columns.DefMaxExtents;
+            yield return Columns.DefMaxSize;
+            yield return Columns.DefPctIncrease;
+            yield return Columns.DefFreelists;
+            yield return Columns.DefFreelistGroups;
+            yield return Columns.DefLogging;
+            yield return Columns.DefBufferPool;
+            yield return Columns.DefFlashCache;
+            yield return Columns.DefCellFlashCache;
+            yield return Columns.DefParameters;
+            yield return Columns.Interval;
 
         }
 
@@ -223,35 +229,35 @@ namespace Bb.Oracle.Reader.Queries
 
     public enum IndexPartitionColumnQueryColumns_11
     {
-              OWNER,
-      INDEX_NAME,
-      TABLE_NAME,
-      PARTITIONING_TYPE,
-      SUBPARTITIONING_TYPE,
-      PARTITION_COUNT,
-      DEF_SUBPARTITION_COUNT,
-      PARTITIONING_KEY_COUNT,
-      SUBPARTITIONING_KEY_COUNT,
-      LOCALITY,
-      ALIGNMENT,
-      DEF_TABLESPACE_NAME,
-      DEF_PCT_FREE,
-      DEF_INI_TRANS,
-      DEF_MAX_TRANS,
-      DEF_INITIAL_EXTENT,
-      DEF_NEXT_EXTENT,
-      DEF_MIN_EXTENTS,
-      DEF_MAX_EXTENTS,
-      DEF_MAX_SIZE,
-      DEF_PCT_INCREASE,
-      DEF_FREELISTS,
-      DEF_FREELIST_GROUPS,
-      DEF_LOGGING,
-      DEF_BUFFER_POOL,
-      DEF_FLASH_CACHE,
-      DEF_CELL_FLASH_CACHE,
-      DEF_PARAMETERS,
-      INTERVAL,
+        OWNER,
+        INDEX_NAME,
+        TABLE_NAME,
+        PARTITIONING_TYPE,
+        SUBPARTITIONING_TYPE,
+        PARTITION_COUNT,
+        DEF_SUBPARTITION_COUNT,
+        PARTITIONING_KEY_COUNT,
+        SUBPARTITIONING_KEY_COUNT,
+        LOCALITY,
+        ALIGNMENT,
+        DEF_TABLESPACE_NAME,
+        DEF_PCT_FREE,
+        DEF_INI_TRANS,
+        DEF_MAX_TRANS,
+        DEF_INITIAL_EXTENT,
+        DEF_NEXT_EXTENT,
+        DEF_MIN_EXTENTS,
+        DEF_MAX_EXTENTS,
+        DEF_MAX_SIZE,
+        DEF_PCT_INCREASE,
+        DEF_FREELISTS,
+        DEF_FREELIST_GROUPS,
+        DEF_LOGGING,
+        DEF_BUFFER_POOL,
+        DEF_FLASH_CACHE,
+        DEF_CELL_FLASH_CACHE,
+        DEF_PARAMETERS,
+        INTERVAL,
 
     }
 

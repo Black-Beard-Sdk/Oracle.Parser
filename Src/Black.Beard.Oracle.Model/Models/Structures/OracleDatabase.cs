@@ -19,10 +19,15 @@ namespace Bb.Oracle.Structures.Models
             this.Sequences = new SequenceCollection() { Parent = this };
             this.Types = new TypeCollection() { Parent = this };
             this.Procedures = new ProcedureCollection() { Parent = this };
+
             this.Tables = new TableCollection() { Parent = this };
+            this.Triggers = new TriggerCollection() { Parent = this };
+            this.Indexes = new IndexCollection() { Parent = this };
+            this.Constraints = new ConstraintCollection() { Parent = this };
+
             this.Synonyms = new SynonymCollection() { Parent = this };
             this.Grants = new GrantCollection() { Parent = this };
-
+            
             this.References = new ReferentialNames();
 
         }
@@ -38,20 +43,24 @@ namespace Bb.Oracle.Structures.Models
             switch (arg.Action)
             {
                 case NotifyCollectionChangedAction.Add:
-                    foreach (ItemBase item in arg.NewItems)
-                        this.References.Add(item);
+                    foreach (var i in arg.NewItems)
+                        if (i is ItemBase item)
+                            this.References.Add(item);
                     break;
 
                 case NotifyCollectionChangedAction.Remove:
-                    foreach (ItemBase item in arg.OldItems)
-                        this.References.Remove(item);
+                    foreach (var i in arg.OldItems)
+                        if (i is ItemBase item)
+                            this.References.Remove(item);
                     break;
 
                 case NotifyCollectionChangedAction.Replace:
-                    foreach (ItemBase item in arg.OldItems)
-                        this.References.Remove(item);
-                    foreach (ItemBase item in arg.NewItems)
-                        this.References.Add(item);
+                    foreach (var i in arg.OldItems)
+                        if (i is ItemBase item)
+                            this.References.Remove(item);
+                    foreach (var i in arg.NewItems)
+                        if (i is ItemBase item)
+                            this.References.Add(item);
                     break;
 
                 case NotifyCollectionChangedAction.Move:
@@ -61,7 +70,7 @@ namespace Bb.Oracle.Structures.Models
 
             }
 
-            
+
         }
 
         [JsonIgnore]
@@ -92,6 +101,30 @@ namespace Bb.Oracle.Structures.Models
         /// Objet <see cref="TableCollection" />.");
         /// </returns>
         public TableCollection Tables { get; set; }
+
+        /// <summary>
+        /// Triggers
+        /// </summary>
+        /// <returns>		
+        /// Objet <see cref="TriggerCollection" />.");
+        /// </returns>
+        public TriggerCollection Triggers { get; set; }
+
+        /// <summary>
+        /// Indexes
+        /// </summary>
+        /// <returns>		
+        /// Objet <see cref="IndexCollection" />.");
+        /// </returns>
+        public IndexCollection Indexes { get; set; }
+
+        /// <summary>
+        /// Constraints
+        /// </summary>
+        /// <returns>		
+        /// Objet <see cref="ConstraintCollection" />.");
+        /// </returns>
+        public ConstraintCollection Constraints { get; set; }
 
         /// <summary>
         /// Procedures
@@ -158,46 +191,26 @@ namespace Bb.Oracle.Structures.Models
         /// </returns>
         public PartitionCollection Partitions { get; set; }
 
-        public bool ResolveIndex(string key, out IndexModel index)
-        {
-
-            index = null;
-
-            foreach (TableModel table in Tables)
-                if (table.Indexes.TryGet(key, out index))
-                    return true;
-
-            return false;
-
-        }
-
-        public bool ResolveTrigger(string key, out TriggerModel trigger)
-        {
-
-            trigger = null;
-
-            foreach (TableModel table in Tables)
-                if (table.Triggers.TryGet(key, out trigger))
-                    return true;
-
-            return false;
-
-        }
-
         public void Initialize()
         {
 
-            //this.Partitions.Initialize();
+            this.Partitions.Initialize();
+
             this.Tables.Initialize();
+            this.Triggers.Initialize();
+            this.Indexes.Initialize();
+            this.Constraints.Initialize();
+
             this.Types.Initialize();
             this.Sequences.Initialize();
             this.Procedures.Initialize();
             this.Grants.Initialize();
             this.Synonyms.Initialize();
-            //this.Tablespaces.Initialize();
-            //this.Packages.Initialize();
 
+            this.Tablespaces.Initialize();
+            this.Packages.Initialize();
 
+            
         }
 
         /// <summary>

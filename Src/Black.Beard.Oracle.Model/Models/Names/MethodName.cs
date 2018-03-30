@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace Bb.Oracle.Models.Names
 {
@@ -7,8 +8,14 @@ namespace Bb.Oracle.Models.Names
     public class MethodName : ObjectName
     {
 
+        public MethodName(params string[] items) 
+            : this(items.ToList())
+        {
 
-        public MethodName(List<string> items) : base()
+        }
+
+        public MethodName(List<string> items) 
+            : base()
         {
 
             if (items == null)

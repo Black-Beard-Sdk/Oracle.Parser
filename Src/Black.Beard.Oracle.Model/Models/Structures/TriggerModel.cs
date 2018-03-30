@@ -2,6 +2,7 @@
 using Bb.Oracle.Models;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System;
 
 namespace Bb.Oracle.Structures.Models
 {
@@ -11,6 +12,11 @@ namespace Bb.Oracle.Structures.Models
     [System.Diagnostics.DebuggerDisplay("{TriggerName}")]
     public partial class TriggerModel : ItemBase, Ichangable
     {
+
+        public TriggerModel()
+        {
+            TableReference = new ReferenceTable() { GetDb = () => this.Root };
+        }
 
         /// <summary>
         /// Name
@@ -57,31 +63,21 @@ namespace Bb.Oracle.Structures.Models
         /// </summary>
         public string Code { get; set; }
 
-        /// <summary>
-        /// Owner
-        /// </summary>
-        public string Owner { get; set; }
-
+        public ReferenceTable TableReference { get; set; }
 
         public override void Initialize()
         {
-
-            //this.Constraints = new List<ConstraintModel>();
-
-            //foreach (ConstraintModel c in this.Parent.Constraints.OfType<ConstraintModel>())
-            //{
-            //    foreach (ConstraintColumnModel item in c.Columns)
-            //    {
-            //        if (item.ColumnName == this.ColumnName)
-            //            this.Constraints.Add(c);
-            //    }
-            //}
-
+            TableReference.GetDb = () => this.Root;
         }
 
         public void Create(IchangeVisitor visitor)
         {
             visitor.Create(this);
+        }
+
+        public string BuildKey()
+        {
+            return $"{this.TableReference.Owner}.{this.Name}";
         }
 
         public void Drop(IchangeVisitor visitor)
@@ -106,7 +102,7 @@ namespace Bb.Oracle.Structures.Models
 
         public override string GetOwner()
         {
-            return this.Owner;
+            return this.TableReference.Owner;
         }
 
         public IEnumerable<Anomaly> Evaluate(IEvaluateManager manager)

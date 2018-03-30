@@ -67,7 +67,7 @@ AND t.OBJECT_TYPE = 'VIEW'
 
                             table.IsView = true;
 
-                            table.codeView = GetSource(sb.ToString());
+                            table.CodeView = GetSource(sb.ToString());
 
                         }
                         else

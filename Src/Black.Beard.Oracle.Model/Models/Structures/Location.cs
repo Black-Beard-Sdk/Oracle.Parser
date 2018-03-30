@@ -6,6 +6,13 @@ namespace Bb.Oracle.Structures.Models
     public class Location
     {
 
+
+
+        public Location()
+        {
+
+        }
+
         public int Line { get; set; }
 
         public int Column { get; set; }

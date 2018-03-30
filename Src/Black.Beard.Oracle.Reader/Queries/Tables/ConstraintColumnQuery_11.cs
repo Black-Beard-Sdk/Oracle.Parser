@@ -47,9 +47,9 @@ ORDER BY t.OWNER, t.TABLE_NAME, t.CONSTRAINT_NAME
 
                     string keyContraint = t.Owner + "." + t.CONSTRAINT_NAME;
 
-                    var ct = table.Constraints[keyContraint];
-                    if (ct != null)
-                    {
+                    var ct = db.Constraints[keyContraint];
+                    //if (ct != null)
+                    //{
 
                         ct.Columns.Add(new ConstraintColumnModel() { ColumnName = t.ColumnName, Position = t.Position });
 
@@ -66,7 +66,7 @@ ORDER BY t.OWNER, t.TABLE_NAME, t.CONSTRAINT_NAME
                             SetForeignKeyColumn(table.Columns, t.ColumnName);
                         }
 
-                    }
+                    //}
                 }
 
             };

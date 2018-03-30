@@ -13,7 +13,7 @@ namespace Bb.Oracle.Structures.Models
         /// </summary>
         static IndexCollection()
         {
-            IndexCollection.Key = IndexedCollection<IndexModel>.GetMethodKey(c => c.Name);
+            IndexCollection.Key = IndexedCollection<IndexModel>.GetMethodKey(c => c.Key);
         }
 
     }

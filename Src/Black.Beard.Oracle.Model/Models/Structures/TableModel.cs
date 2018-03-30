@@ -17,12 +17,12 @@ namespace Bb.Oracle.Structures.Models
 
         public TableModel()
         {
-            this.Constraints = new ConstraintCollection() { Parent = this };
             this.Columns = new ColumnCollection() { Parent = this };
-            this.Indexes = new IndexCollection() { Parent = this };
             this.Partitions = new PartitionRefCollection() { Parent = this };
             this.BlocPartition = new BlocPartitionModel() { Parent = this };
-            this.Triggers = new TriggerCollection() { Parent = this };
+
+            this.Tablespace = new ReferenceTablespace();
+
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace Bb.Oracle.Structures.Models
         /// <summary>
         /// Tablespace Name
         /// </summary>
-        public string TablespaceName { get; set; }
+        public ReferenceTablespace Tablespace { get; set; }
 
         /// <summary>
         /// Cluster Name
@@ -236,8 +236,7 @@ namespace Bb.Oracle.Structures.Models
         /// <summary>
         /// code View
         /// </summary>
-        [DefaultValue("")]
-        public string codeView { get; set; }
+        public string CodeView { get; set; }
 
         /// <summary>
         /// Is Matrialized View
@@ -256,30 +255,6 @@ namespace Bb.Oracle.Structures.Models
         /// Objet <see cref="ColumnCollection" />.");
         /// </returns>
         public ColumnCollection Columns { get; set; }
-
-        /// <summary>
-        /// Constraints
-        /// </summary>
-        /// <returns>		
-        /// Objet <see cref="ConstraintCollection" />.");
-        /// </returns>
-        public ConstraintCollection Constraints { get; set; }
-
-        /// <summary>
-        /// Indexes
-        /// </summary>
-        /// <returns>		
-        /// Objet <see cref="IndexCollection" />.");
-        /// </returns>
-        public IndexCollection Indexes { get; set; }
-
-        /// <summary>
-        /// Triggers
-        /// </summary>
-        /// <returns>		
-        /// Objet <see cref="TriggerCollection" />.");
-        /// </returns>
-        public TriggerCollection Triggers { get; set; } = new TriggerCollection();
 
         /// <summary>
         /// Partitions
@@ -306,25 +281,6 @@ namespace Bb.Oracle.Structures.Models
             }
         }
 
-        public OracleType ExtractOracleType()
-        {
-            return new OracleType()
-            {
-                DataDefault = string.Empty,
-                ArrayOfType = string.Empty,
-                DataLength = 0,
-                DataLevel = 0,
-                DataType = "PL/SQL RECORD",
-                DbType = "Object",
-                DataPrecision = 0,
-                IsArray = false,
-                IsRecord = true,
-                defaultLength = 0,
-                Owner = this.GetOwner(),
-                Name = this.GetName(),
-            };
-        }
-
         public IEnumerable<ColumnModel> OrderedColumns
         {
             get
@@ -345,7 +301,6 @@ namespace Bb.Oracle.Structures.Models
 
         }
 
-
         public void Create(IchangeVisitor visitor)
         {
             visitor.Create(this);
@@ -363,12 +318,8 @@ namespace Bb.Oracle.Structures.Models
 
         public override void Initialize()
         {
-
             this.Columns.Initialize();
-            this.Indexes.Initialize();
-            this.Constraints.Initialize();
             this.Partitions.Initialize();
-            this.Triggers.Initialize();
         }
 
         public override KindModelEnum KindModel

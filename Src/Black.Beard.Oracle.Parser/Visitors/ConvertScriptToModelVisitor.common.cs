@@ -18,139 +18,9 @@ namespace Bb.Oracle.Visitors
     public partial class ConvertScriptToModelVisitor : IDbModelVisitor
     {
 
-        #region Resolvers
 
-        //private ItemBase ResolveTable(ObjectReference ob)
-        //{
+        public PolicyBehavior Policy { get; set; }
 
-        //    if (ob.Path.Length == 1)
-        //    {
-        //        var items = ResolveTables(ob.Path[0]);
-        //        if (items.Count == 1)
-        //            return items[0];
-        //        else
-        //        {
-        //            Stop();
-
-        //            items = ResolveTypes(ob.Path[0]);
-        //            if (items.Count == 1)
-        //                return items[0];
-        //            else
-        //            {
-        //                Stop();
-
-        //            }
-        //        }
-        //    }
-        //    else if (ob.Path.Length == 2)
-        //        return ResolveTable(ob.Path[0], ob.Path[1]);
-
-        //    Stop();
-        //    return null;
-
-        //}
-
-        //private List<ItemBase> ResolveTypes(string typeName)
-        //{
-        //    var _tableName = typeName.CleanName();
-        //    var items = this.Db.Types.Where(c => c.GetName() == _tableName).Cast<ItemBase>().ToList();
-        //    Debug.Assert(items.Count > 0);
-        //    return items;
-        //}
-
-        //private List<ItemBase> ResolveTables(string tableName)
-        //{
-        //    var _tableName = tableName.CleanName();
-        //    var items = this.Db.Tables.Where(c => c.GetName() == _tableName).Cast<ItemBase>().ToList();
-        //    Debug.Assert(items.Count > 0);
-        //    return items;
-        //}
-
-        //private ItemBase ResolveTable(string schema, string tableName)
-        //{
-        //    var _schema = schema.CleanName();
-        //    var _tableName = tableName.CleanName();
-
-        //    var t = Db.Tables[$"{_schema}.{_tableName}"];
-
-        //    if (t == null)
-        //    {
-        //        Stop();
-        //        // Search in type
-
-        //    }
-
-        //    Debug.Assert(t != null);
-
-        //    return t;
-
-        //}
-
-        //private ColumnModel ResolveColumn(ObjectReference ob)
-        //{
-
-        //    var tt = this;
-        //    if (ob.Path.Length == 2)
-        //    {
-        //        // CRM_CORE.SITE
-        //        // MASTER.SITE
-        //        // ROUTING_CORE.SITE
-        //        var items = ResolveColumns(ob.Path[0], ob.Path[1]);
-        //        if (items.Count == 1)
-        //            return items[0];
-
-        //        else
-        //        {
-        //            Stop();
-
-        //            if (ob.SchemaCaller != null)
-        //            {
-        //                var schemaCaller = ob.SchemaCaller;
-        //                var syn = this.Db.Synonyms.Where(c => c.IsPublic || c.ObjectTargetOwner.ToUpper() == schemaCaller || c.Owner.ToUpper() == schemaCaller).ToList();
-
-        //            }
-
-        //        }
-        //    }
-        //    else if (ob.Path.Length == 3)
-        //        return ResolveColumn(ob.Path[0], ob.Path[1], ob.Path[2]);
-
-        //    Stop();
-        //    return null;
-
-        //}
-
-        //private List<ColumnModel> ResolveColumns(string tableName, string columnName)
-        //{
-        //    var _columnName = columnName.CleanName();
-        //    var _tableName = tableName.CleanName();
-        //    var items = this.Db.Tables.Where(c => c.Name == _tableName).ToList();
-        //    var cols = items.SelectMany(c => c.Columns).Where(c => c.Name == _columnName).ToList();
-
-        //    Debug.Assert(cols.Count > 0);
-
-        //    return cols;
-
-        //}
-
-        //private ColumnModel ResolveColumn(string schema, string tableName, string columnName)
-        //{
-        //    var _schema = schema.CleanName();
-        //    var _tableName = tableName.CleanName();
-        //    var _columnName = columnName.CleanName();
-
-        //    var t = Db.Tables[$"{_schema}.{_tableName}"];
-        //    ColumnModel col = t.Columns.FirstOrDefault(c => c.Name == _columnName);
-
-        //    Debug.Assert(col != null);
-
-        //    return col;
-
-        //}
-
-
-        #endregion Resolvers
-        
         public override object VisitErrorNode(IErrorNode node)
         {
             if (node.Parent is ParserRuleContext n)
@@ -205,6 +75,26 @@ namespace Bb.Oracle.Visitors
 
         public Errors Errors { get { return this._anomalies; } }
 
+        public List<FileElement> GetFileElements(FileCollection files, ParserRuleContext context)
+        {
+
+            List<FileElement> _files = new List<FileElement>();
+            _files.AddRange(files);
+            _files.Add(new FileElement()
+            {
+                Path = this.Filename,
+                Location = new Location()
+                {
+                    Line = context.Start.Line,
+                    Column = context.Start.Column,
+                    Offset = context.Start.StartIndex,
+                    Length = context.Stop.StopIndex - context.Start.StartIndex
+                }
+            });
+
+            return _files;
+
+        }
 
         public List<ParserValidator> Validators { get { return this._validators; } }
 
@@ -222,6 +112,20 @@ namespace Bb.Oracle.Visitors
         {
             this._events.Add(eventParser);
         }
+
+        private void AppendEventParser(string message, string name, Models.KindModelEnum kind, ParserRuleContext context, FileCollection files)
+        {
+            AppendEventParser(new EventParser()
+            {
+                Files = GetFileElements(files, context),
+                Kind = kind,
+                OjectName = name,
+                ValidatorName = this.GetType().Name,
+                Message = message,
+            });
+
+        }
+
 
         private void AppendException(RecognitionException exception)
         {
@@ -308,6 +212,11 @@ namespace Bb.Oracle.Visitors
 
             return eventParser;
 
+        }
+
+        private void AppendFile(ItemBase item, IToken token)
+        {
+            item.Files.Add(this.GetFileElement(token));
         }
 
         private FileElement GetFileElement(IToken token)

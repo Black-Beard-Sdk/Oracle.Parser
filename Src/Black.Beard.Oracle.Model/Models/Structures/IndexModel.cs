@@ -16,14 +16,15 @@ namespace Bb.Oracle.Structures.Models
         {
             this.Columns = new IndexColumnCollection() { Parent = this };
             this.BlocPartition = new BlocPartitionModel() { Parent = this };
-            this.Columns = new IndexColumnCollection() { Parent = this }; 
-
+            this.Columns = new IndexColumnCollection() { Parent = this };
+            TableReference = new ReferenceTable() { GetDb = () => this.Root };
+            Tablespace = new ReferenceTablespace() { GetDb = () => this.Root };
         }
 
         /// <summary>
         /// Name
         /// </summary>
-        public string Name { get; set; }
+        public string Key { get; set; }
 
         /// <summary>
         /// Compress
@@ -33,7 +34,7 @@ namespace Bb.Oracle.Structures.Models
         /// <summary>
         /// Tablespace
         /// </summary>
-        public string Tablespace { get; set; }
+        public ReferenceTablespace Tablespace { get; set; }
 
         /// <summary>
         /// Segment Name
@@ -129,7 +130,7 @@ namespace Bb.Oracle.Structures.Models
         /// Index Name
         /// </summary>
         [DefaultValue("")]
-        public string IndexName { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Index Owner
@@ -171,7 +172,8 @@ namespace Bb.Oracle.Structures.Models
         /// <returns>		
         /// Objet <see cref="IndexColumnCollection" />.");
         /// </returns>
-        public IndexColumnCollection Columns { get; set; } 
+        public IndexColumnCollection Columns { get; set; }
+        public ReferenceTable TableReference { get; set; }
 
         /// <summary>
         /// BlocPartition
@@ -199,6 +201,8 @@ namespace Bb.Oracle.Structures.Models
 
         public override void Initialize()
         {
+            TableReference.GetDb = () => this.Root;
+            Tablespace.GetDb = () => this.Root;
             this.Columns.Initialize();
         }
 
@@ -209,7 +213,7 @@ namespace Bb.Oracle.Structures.Models
 
         public override string GetName()
         {
-            return this.IndexName;
+            return this.Name;
         }
 
         public override string GetOwner()

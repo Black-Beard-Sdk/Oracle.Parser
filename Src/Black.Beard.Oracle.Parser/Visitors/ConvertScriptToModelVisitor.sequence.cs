@@ -43,6 +43,7 @@ namespace Bb.Oracle.Visitors
                 Owner = name[0],
                 Name = name[1],
             };
+            AppendFile(sequence, context.Start);
 
             using (Enqueue(sequence))
             {

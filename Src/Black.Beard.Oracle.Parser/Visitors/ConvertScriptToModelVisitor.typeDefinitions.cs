@@ -7,6 +7,7 @@ using Bb.Oracle.Models;
 using Bb.Oracle.Models.Codes;
 using System.Text;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace Bb.Oracle.Visitors
 {
@@ -28,26 +29,20 @@ namespace Bb.Oracle.Visitors
 
             var table_type_def = context.table_type_def();
             if (table_type_def != null)
-            {
-                Stop();
                 result = (OTypeDefinition)VisitTable_type_def(table_type_def);
-            }
+
             else
             {
                 var varray_type_def = context.varray_type_def();
                 if (varray_type_def != null)
-                {
-                    Stop();
                     result = (OTypeDefinition)VisitVarray_type_def(varray_type_def);
-                }
+
                 else
                 {
                     var record_type_def = context.record_type_def();
                     if (record_type_def != null)
-                    {
-                        Stop();
                         result = (OTypeDefinition)VisitRecord_type_def(record_type_def);
-                    }
+
                     else
                     {
                         var ref_cursor_type_def = context.ref_cursor_type_def();
@@ -75,39 +70,52 @@ namespace Bb.Oracle.Visitors
         /// <returns></returns>
         public override object VisitTable_type_def([NotNull] PlSqlParser.Table_type_defContext context)
         {
-            Stop();
-            var result = base.VisitTable_type_def(context);
-            Debug.Assert(result != null);
+            var table_indexed_by_part = context.table_indexed_by_part();
+            TableTypeDefinition result = new TableTypeDefinition()
+            {
+                TableOf = (OTypeReference)VisitType_spec(context.type_spec()),
+                IndexedBy = table_indexed_by_part == null
+                    ? new OTableIndexedByPartExpression()
+                    : (OTableIndexedByPartExpression)VisitTable_indexed_by_part(table_indexed_by_part),
+                Nullable = !context.NULL().Exist(),
+            };
             return result;
         }
 
         /// <summary>
-        /// table_indexed_by_part :
-        ///     (idx1=INDEXED | idx2=INDEX) BY type_spec
+        /// table_indexed_by_part : (INDEXED | INDEX) BY type_spec
         ///     ;
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
         public override object VisitTable_indexed_by_part([NotNull] PlSqlParser.Table_indexed_by_partContext context)
         {
-            Stop();
-            var result = base.VisitTable_indexed_by_part(context);
-            Debug.Assert(result != null);
+            OTableIndexedByPartExpression result = new OTableIndexedByPartExpression()
+            {
+                IndexKind = context.INDEXED().Exist()
+                    ? OTableIndexedByPartExpressionEnum.Indexed
+                    : OTableIndexedByPartExpressionEnum.Index,
+                By = (OTypeReference)VisitType_spec(context.type_spec()),
+            };
             return result;
         }
 
         /// <summary>
-        /// record_type_def : // Record Declaration Specific Clauses
-        ///     RECORD LEFT_PAREN(COMMA? field_spec)+ RIGHT_PAREN 
+        /// varray_type_def :
+        ///     (VARRAY | VARYING ARRAY) LEFT_PAREN expression RIGHT_PAREN OF type_spec(NOT NULL)?
         ///     ;
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
         public override object VisitVarray_type_def([NotNull] PlSqlParser.Varray_type_defContext context)
         {
-            Stop();
-            var result = base.VisitVarray_type_def(context);
-            Debug.Assert(result != null);
+            OVarrayTypeDefinition result = new OVarrayTypeDefinition()
+            {
+                Varying = context.VARYING().Exist(),
+                Expression = (OCodeExpression)VisitExpression(context.expression()),
+                Type = (OTypeReference)VisitType_spec(context.type_spec()),
+                Nullable = !context.NULL().Exist(),
+            };
             return result;
         }
 
@@ -120,13 +128,19 @@ namespace Bb.Oracle.Visitors
         /// <returns></returns>
         public override object VisitField_spec([NotNull] PlSqlParser.Field_specContext context)
         {
-            Stop();
+            OFieldSpecExpression result = new OFieldSpecExpression()
+            {
+                Nullable = !context.NULL().Exist(),
+            };
 
             var type_spec = context.type_spec();
-            var _type_spec = VisitType_spec(type_spec);
+            if (type_spec != null)
+                result.Type = (OTypeReference)VisitType_spec(type_spec);
 
-            var result = base.VisitField_spec(context);
-            Debug.Assert(result != null);
+            var default_value_part = context.default_value_part();
+            if (default_value_part != null)
+                result.DefaultValue = (OCodeExpression)VisitDefault_value_part(default_value_part);
+
             return result;
         }
 
@@ -140,9 +154,21 @@ namespace Bb.Oracle.Visitors
         /// <returns></returns>
         public override object VisitRecord_type_def([NotNull] PlSqlParser.Record_type_defContext context)
         {
-            Stop();
-            var result = base.VisitRecord_type_def(context);
-            Debug.Assert(result != null);
+
+            var field_specs = context.field_spec();
+            List<OFieldSpecExpression> _types = new List<OFieldSpecExpression>();
+
+            if (field_specs != null)
+                foreach (PlSqlParser.Field_specContext field_spec in field_specs)
+                {
+                    var field = (OFieldSpecExpression)VisitField_spec(field_spec);
+                    _types.Add(field);
+                }
+
+            ORecordTypeDef result = new ORecordTypeDef()
+            {
+                Fields = _types,
+            };
             return result;
         }
 
@@ -156,17 +182,16 @@ namespace Bb.Oracle.Visitors
         public override object VisitRef_cursor_type_def([NotNull] PlSqlParser.Ref_cursor_type_defContext context)
         {
 
-            var type_spec = context.type_spec();
-            if (type_spec != null)
-            {
-
-                Stop();
-
-            }
             var result = new ORefCursorTypeDef()
             {
 
             };
+
+            var type_spec = context.type_spec();
+            if (type_spec != null)
+            {
+                result.Return = (OTypeReference)VisitType_spec(type_spec);
+            }
 
             Debug.Assert(result != null);
             return result;
@@ -184,23 +209,21 @@ namespace Bb.Oracle.Visitors
         {
 
             OTypeReference result = null;
-            var method = this.Current<ItemBase>();
-
-            var percent_type = context.PERCENT_TYPE() != null;
-            var percent_rowtype = context.PERCENT_ROWTYPE() != null;
             var typename = context.type_name();
 
             if (typename != null)
             {
-
                 var type_names = typename.GetCleanedTexts();
-
-                if (percent_type)
-                    result = new OTypeReference() { Path = type_names, KindTypeReference = PercentTypeEnum.PercentType };
-
-                else if (percent_rowtype)
-                    result = new OTypeReference() { Path = type_names, KindTypeReference = PercentTypeEnum.PercentRowType };
-
+                result = new OTypeReference() { KindTypeReference = PercentTypeEnum.PercentType };
+                if (type_names.Count == 1)
+                    result.DataType.Name = type_names[0];
+                else if (type_names.Count >= 2)
+                {
+                    result.DataType.Owner = type_names[0];
+                    result.DataType.Name = type_names[1];
+                    if (type_names.Count == 3)
+                        result.DataType.Name = type_names[2];
+                }
             }
             else
             {
@@ -208,14 +231,22 @@ namespace Bb.Oracle.Visitors
                 var _result = (OracleType)this.VisitDatatype(dataType);
                 result = new OTypeReference()
                 {
-                    DataType = _result,
-                    Path = new string[] { _result.Owner, _result.Name, _result.DataType }
-                    .Where(c => !string.IsNullOrEmpty(c)).ToList(),
+                    DataType = _result
                 };
+
+                result.DataType.Owner = _result.Owner;
+                result.DataType.Name = _result.Name;
 
             }
 
-            Debug.Assert(result != null);
+            var percent_type = context.PERCENT_TYPE() != null;
+            var percent_rowtype = context.PERCENT_ROWTYPE() != null;
+
+            if (percent_type)
+                result.KindTypeReference = PercentTypeEnum.PercentType;
+
+            else if (percent_rowtype)
+                result.KindTypeReference = PercentTypeEnum.PercentRowType;
 
             return result;
 
@@ -240,7 +271,7 @@ namespace Bb.Oracle.Visitors
             if (native_datatype_element != null)
             {
 
-                result.DataType = (string)native_datatype_element.Accept<object>(this);
+                result.Name = (string)native_datatype_element.Accept<object>(this);
 
                 var precision_part = context.precision_part();
                 if (precision_part != null)
@@ -250,19 +281,32 @@ namespace Bb.Oracle.Visitors
 
                     var values = precision_part.numeric().Select(c => c.Accept<object>(this)).Cast<int>().ToList();
 
-                    if (values.Count > 1)
+                    if (values.Count == 1)
+                    {
+                        result.DataPrecision = values[0];
+                    }
+                    else if (values.Count == 2)
+                    {
+                        var _dec = (System.Math.Pow(10, (double)values[1].ToString().Length));
+                        var _dec2 = (values[1]) / _dec;
+                        result.DataPrecision = new decimal(values[0]) + new decimal(_dec2);
+                    }
+                    else
+                    {
                         Stop();
-
-                    result.DataPrecision = values[0];
+                    }
 
                 }
 
                 if (context.WITH() != null)
                 {
-                    Stop();
 
-                    var local = context.LOCAL() != null;
-                    var t = context.TIME() != null && context.ZONE() != null;
+                    result.Name += " WITH";
+                    if (context.LOCAL() != null)
+                        result.Name += " LOCAL";
+
+                    if (context.TIME() != null && context.ZONE() != null)
+                        result.Name += " TIME ZONE";
 
                 }
                 else if (context.CHARACTER() != null && context.SET() != null)

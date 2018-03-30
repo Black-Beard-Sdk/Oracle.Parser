@@ -17,6 +17,8 @@ namespace Bb.Antlr.Visualizer.Trees
         public AntlrNodeTree(IParseTree item)
         {
 
+            this.CountErrors = 0;
+
             if (item != null)
             {
 
@@ -26,7 +28,11 @@ namespace Bb.Antlr.Visualizer.Trees
                     this.Text = PlSqlParser.ruleNames[r.RuleIndex];
 
                 else if (item is ErrorNodeImpl e)
+                {
                     this.Text = "ERR - " + e.Symbol.Text;
+                    CountErrors++;
+                    this.InError = true;
+                }
 
                 else if (item is TerminalNodeImpl t)
                 {
@@ -34,8 +40,8 @@ namespace Bb.Antlr.Visualizer.Trees
 
                     //if (string.IsNullOrEmpty(this.Text))
                     //{
-                        var _text = PlSqlParser.DefaultVocabulary.GetSymbolicName(t.Symbol.Type);
-                        this.Text = $"{_text} ({t.Symbol.Text})";
+                    var _text = PlSqlParser.DefaultVocabulary.GetSymbolicName(t.Symbol.Type);
+                    this.Text = $"{_text} ({t.Symbol.Text})";
                     //}
 
                 }
@@ -46,13 +52,15 @@ namespace Bb.Antlr.Visualizer.Trees
                     IParseTree child = item.GetChild(i);
                     AntlrNodeTree node = new AntlrNodeTree(child);
                     this.Nodes.Add(node);
+                    CountErrors += node.CountErrors;
                 }
 
             }
         }
 
         public IParseTree ParseTree { get; }
-
+        public int CountErrors { get; }
+        public bool InError { get; }
     }
 
 }

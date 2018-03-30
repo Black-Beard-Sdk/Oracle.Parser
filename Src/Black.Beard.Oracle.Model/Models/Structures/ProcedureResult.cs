@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Bb.Oracle.Models.Codes;
+using Newtonsoft.Json;
 
 namespace Bb.Oracle.Structures.Models
 {
@@ -11,7 +12,7 @@ namespace Bb.Oracle.Structures.Models
         public ProcedureResult()
         {
             this.Columns = new ColumnCollection() { Parent = this };
-            this.Type = new OracleType();
+            this.Type = new OTypeReference();
         }
 
         /// <summary>
@@ -20,7 +21,7 @@ namespace Bb.Oracle.Structures.Models
         /// <returns>		
         /// Objet <see cref="OracleType" />.");
         /// </returns>   
-        public OracleType Type { get; set; }
+        public OTypeReference Type { get; set; }
 
         /// <summary>
         /// Columns

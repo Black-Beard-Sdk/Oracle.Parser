@@ -3,6 +3,7 @@ using Bb.Oracle.Models;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System;
 
 namespace Bb.Oracle.Structures.Models
 {
@@ -15,19 +16,14 @@ namespace Bb.Oracle.Structures.Models
         public ConstraintModel()
         {
             this.Columns = new ConstraintColumnCollection() { Parent = this };
-
+            TableReference = new ReferenceTable() { GetDb = () => this.Root };
+            Reference = new ReferenceConstraint() { GetDb = () => this.Root };
         }
 
         /// <summary>
         /// Name
         /// </summary>
         public string Name { get; set; }
-
-        /// <summary>
-        /// Rel_ Constraint_ Name
-        /// </summary>
-        [DefaultValue("")]
-        public string Rel_Constraint_Name { get; set; }
 
         /// <summary>
         /// Index Name
@@ -75,13 +71,7 @@ namespace Bb.Oracle.Structures.Models
         /// </summary>
         [DefaultValue("")]
         public string Rely { get; set; }
-
-        /// <summary>
-        /// Rel_ Constraint_ Owner
-        /// </summary>
-        [DefaultValue("")]
-        public string Rel_Constraint_Owner { get; set; }
-
+        
         /// <summary>
         /// Search_ Condition
         /// </summary>
@@ -116,13 +106,20 @@ namespace Bb.Oracle.Structures.Models
         /// </summary>
         public string Key { get; set; }
 
+        public string BuildKey()
+        {
+            return this.Owner + "." + this.Name;
+        }
+
         /// <summary>
         /// Columns
         /// </summary>
         /// <returns>		
         /// Objet <see cref="ConstraintColumnCollection" />.");
         /// </returns>
-        public ConstraintColumnCollection Columns { get; set; } 
+        public ConstraintColumnCollection Columns { get; set; }
+
+        public ReferenceTable TableReference { get; set; }
 
         public void Create(IchangeVisitor visitor)
         {
@@ -143,27 +140,36 @@ namespace Bb.Oracle.Structures.Models
         public override void Initialize()
         {
 
+            TableReference.GetDb = () => this.Root;
+            Reference.GetDb = () => this.Root;
             this.Columns.Initialize();
 
-            if (this.Type == "F" || this.Type == "R")
-            {
-
-                string key = this.Rel_Constraint_Owner + "." + this.Rel_Constraint_Name;
-                var table = this.Parent;
-                if (this.Reference == null)
-                {
-
-                    ConstraintModel constraint;
-
-                    if ((table as TableModel).Constraints.TryGet(key, out constraint))
-                        this.Reference = constraint;
-
-                }
-            }
+            //if (this.Type == "F" || this.Type == "R")
+            //{
+            //    string key = this.Rel_Constraint_Owner + "." + this.Rel_Constraint_Name;
+            //    var table = this.Parent;
+            //    if (this.Reference == null)
+            //    {
+            //        if (this.Root.Constraints.TryGet(key, out ConstraintModel constraint))
+            //            this.Reference = constraint;
+            //    }
+            //}
 
         }
 
-        public ConstraintModel Reference { get; set; }
+        ///// <summary>
+        ///// Rel_Constraint_Owner
+        ///// </summary>
+        //[DefaultValue("")]
+        //public string Rel_Constraint_Owner { get; set; }
+
+        ///// <summary>
+        ///// Rel_ Constraint_ Name
+        ///// </summary>
+        //[DefaultValue("")]
+        //public string Rel_Constraint_Name { get; set; }
+
+        public ReferenceConstraint Reference { get; set; }
 
         public override KindModelEnum KindModel
         {
@@ -212,8 +218,8 @@ namespace Bb.Oracle.Structures.Models
             _result ^= this.Name.GetHashCode();
             _result ^= this.Owner.GetHashCode();
             _result ^= this.Rely.GetHashCode();
-            _result ^= this.Rel_Constraint_Name.GetHashCode();
-            _result ^= this.Rel_Constraint_Owner.GetHashCode();
+            _result ^= this.Reference.Name.GetHashCode();
+            _result ^= this.Reference.Owner.GetHashCode();
             _result ^= this.Search_Condition.GetHashCode();
             _result ^= this.Status.GetHashCode();
             _result ^= this.Type.GetHashCode();

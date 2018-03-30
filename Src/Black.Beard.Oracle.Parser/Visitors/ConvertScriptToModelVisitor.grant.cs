@@ -203,28 +203,10 @@ namespace Bb.Oracle.Visitors
             if (!this.Db.Grants.TryGet(key, out grant))
             {
 
-                string fullObjectName = !string.IsNullOrEmpty(columnObjectName) ? @"""" + columnObjectName + @"""" : string.Empty;
-
-                if (!string.IsNullOrEmpty(objectName))
-                {
-                    if (!string.IsNullOrEmpty(fullObjectName))
-                        fullObjectName = "." + fullObjectName;
-                    fullObjectName = @"""" + objectName + @"""" + fullObjectName;
-                }
-
-                if (!string.IsNullOrEmpty(objectSchema))
-                {
-                    if (!string.IsNullOrEmpty(fullObjectName))
-                        fullObjectName = "." + fullObjectName;
-                    fullObjectName = @"""" + objectSchema + @"""" + fullObjectName;
-                }
-
                 grant = new GrantModel()
                 {
 
                     Key = key,
-
-                    FullObjectName = fullObjectName,
                     Role = role,
 
                     ObjectSchema = objectSchema,
@@ -244,7 +226,8 @@ namespace Bb.Oracle.Visitors
                     //SqlTranslationProfile = withSqlTranslationProfile,
 
                 };
-                grant.Files.Add(this.GetFileElement(token));
+
+                AppendFile(grant, token);
                 this.Db.Grants.Add(grant);
 
             }

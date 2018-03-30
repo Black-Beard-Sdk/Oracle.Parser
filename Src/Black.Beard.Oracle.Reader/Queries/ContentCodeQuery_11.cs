@@ -163,7 +163,7 @@ ORDER BY owner, s.type, s.name, s.line
                         Sources.Add(new CodeSource() { Key = key, Code = code, Type = k[0] });
 
                         TriggerModel trigger;
-                        if (db.ResolveTrigger(key, out trigger))
+                        if (db.Triggers.TryGet(key, out trigger))
                             trigger.Code = code;
 
                         break;

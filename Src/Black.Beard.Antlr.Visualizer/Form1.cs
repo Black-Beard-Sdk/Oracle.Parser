@@ -66,7 +66,26 @@ namespace Black.Beard.Antlr.Visualizer
             AntlrNodeTree node = new AntlrNodeTree(tree);
             treeView2.Nodes.Add(node);
             node.Expand();
-            treeView2.Focus();
+            //treeView2.Focus();
+            ErrortoolStripLabel.Text = $"{node.CountErrors} error(s)";
+        }
+
+        private void toolStripButton3_Click(object sender, EventArgs e)
+        {
+            var node = treeView2.Nodes[0] as AntlrNodeTree;
+            ShowErrors(node);
+
+        }
+
+        private static void ShowErrors(AntlrNodeTree node)
+        {
+            if (node.InError)
+                node.EnsureVisible();
+
+            foreach (AntlrNodeTree item in node.Nodes)
+            {
+                ShowErrors(item);
+            }
         }
 
         private void treeView2_AfterSelect(object sender, TreeViewEventArgs e)

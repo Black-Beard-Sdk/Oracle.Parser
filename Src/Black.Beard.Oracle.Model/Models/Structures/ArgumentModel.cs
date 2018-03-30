@@ -9,7 +9,7 @@ namespace Bb.Oracle.Structures.Models
     /// <summary>
     /// 
     /// </summary>
-    [System.Diagnostics.DebuggerDisplay("{ArgumentName}")]
+    [System.Diagnostics.DebuggerDisplay("{Name}")]
     public partial class ArgumentModel : ItemBase
     {
 

@@ -10,6 +10,7 @@ using System.Diagnostics;
 using Bb.Oracle.Models.Codes;
 using Bb.Oracle.Helpers;
 using System.Text;
+using Bb.Oracle.Models.Names;
 
 namespace Bb.Oracle.Visitors
 {
@@ -121,17 +122,39 @@ namespace Bb.Oracle.Visitors
         /// <returns></returns>
         public override object VisitRelational_expression([NotNull] PlSqlParser.Relational_expressionContext context)
         {
-            var result = base.VisitRelational_expression(context);
+            OCodeObject result = null;
+
+            var compound_expression = context.compound_expression();
+            if (compound_expression != null)
+                result = (OCodeObject)VisitCompound_expression(compound_expression);
+
+            else
+            {
+
+                Stop();
+
+                var relational_expression = context.relational_expression();
+                var left = (OCodeExpression)VisitRelational_expression(relational_expression[0]);
+                var right = (OCodeExpression)VisitRelational_expression(relational_expression[1]);
+                var _operator = (OperatorEnum)VisitRelational_operator(context.relational_operator());
+
+                result = new OBinaryExpression()
+                {
+                    Left = left,
+                    Operator = _operator,
+                    Right = right
+                };
+
+            }
+
             Debug.Assert(result != null);
             return result;
         }
 
         public override object VisitRelational_operator([NotNull] PlSqlParser.Relational_operatorContext context)
         {
-            Stop();
-            var result = base.VisitRelational_operator(context);
-            Debug.Assert(result != null);
-            return result;
+            string txt = context.GetText();
+            return txt.ConvertToOperator();
         }
 
         /// <summary>
@@ -344,12 +367,18 @@ namespace Bb.Oracle.Visitors
             else
             {
 
-
                 var _numeric = context.numeric();
                 if (_numeric != null)
                 {
-
-                    Stop();
+                    if (_numeric.APPROXIMATE_NUM_LIT() != null)
+                    {
+                        Stop();
+                    }
+                    else
+                    {
+                        var i = _numeric.ToInteger();
+                        _result = new OIntegerConstant() { Value = i };
+                    }
 
                 }
                 else
@@ -367,6 +396,7 @@ namespace Bb.Oracle.Visitors
             }
 
             Debug.Assert(_result != null);
+
             return _result;
 
         }
@@ -444,7 +474,7 @@ namespace Bb.Oracle.Visitors
             }
             else
             {
-                result = this.VisitUnary_expression(context);
+                result = base.VisitUnary_expression(context);
 
                 //var quantified_expression = context.quantified_expression();
                 //var standard_function = context.standard_function();
@@ -645,6 +675,338 @@ namespace Bb.Oracle.Visitors
             Stop();
             var result = base.VisitGeneral_element(context);
             Debug.Assert(result != null);
+            return result;
+        }
+
+
+        /// <summary>
+        /// standard_function :
+        ///       string_function
+        ///     | numeric_function_wrapper
+        ///     | other_function
+        ///     ;
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public override object VisitStandard_function([NotNull] PlSqlParser.Standard_functionContext context)
+        {
+            var result = base.VisitStandard_function(context);
+            Debug.Assert(result != null);
+            return result;
+        }
+
+        /// <summary>
+        /// other_function :
+        ///         over_clause_keyword function_argument_analytic over_clause?
+        ///     | /*TODO stantard_function_enabling_using*/ regular_id function_argument_modeling using_clause?
+        ///     | NVL LEFT_PAREN expression COMMA expression RIGHT_PAREN 
+        ///     | to_date 
+        ///     | COUNT LEFT_PAREN(ASTERISK | (DISTINCT | UNIQUE | ALL)? concatenation) RIGHT_PAREN over_clause?
+        ///     | (CAST | XMLCAST) LEFT_PAREN(MULTISET LEFT_PAREN subquery RIGHT_PAREN | concatenation) AS type_spec RIGHT_PAREN 
+        ///     | COALESCE LEFT_PAREN table_element(COMMA (numeric | string))? RIGHT_PAREN 
+        ///     | COLLECT LEFT_PAREN(DISTINCT | UNIQUE)? concatenation collect_order_by_part? RIGHT_PAREN 
+        ///     | within_or_over_clause_keyword(function_arguments keep_clause?) within_or_over_part+
+        ///     | cursor_name(PERCENT_ISOPEN | PERCENT_FOUND | PERCENT_NOTFOUND | PERCENT_ROWCOUNT )
+        ///     | DECOMPOSE LEFT_PAREN concatenation(CANONICAL | COMPATIBILITY)? RIGHT_PAREN 
+        ///     | EXTRACT LEFT_PAREN regular_id FROM concatenation RIGHT_PAREN 
+        ///     | (FIRST_VALUE | LAST_VALUE) function_argument_analytic respect_or_ignore_nulls? over_clause
+        ///     | standard_prediction_function_keyword LEFT_PAREN expressions cost_matrix_clause? using_clause? RIGHT_PAREN 
+        ///     | TRANSLATE LEFT_PAREN expression(USING (CHAR_CS | NCHAR_CS))? (COMMA expression) * RIGHT_PAREN 
+        ///     | TRANSLATE LEFT_PAREN expression COMMA string COMMA string RIGHT_PAREN 
+        ///     | TREAT LEFT_PAREN expression AS REF? type_spec RIGHT_PAREN 
+        ///     | XMLAGG LEFT_PAREN expression order_by_clause? RIGHT_PAREN('.' general_element_part)?
+        ///     | (XMLCOLATTVAL | XMLFOREST) LEFT_PAREN(COMMA? xml_multiuse_expression_element)+ RIGHT_PAREN('.' general_element_part)?
+        ///     | XMLELEMENT LEFT_PAREN(ENTITYESCAPING | NOENTITYESCAPING)? (NAME | EVALNAME)? expression
+        ///       (/*TODO{input.LT(2).getText().equalsIgnoreCase("xmlattributes")}?*/ COMMA xml_attributes_clause)?
+        ///        (COMMA expression column_alias?)* RIGHT_PAREN('.' general_element_part)?
+        ///     | XMLEXISTS LEFT_PAREN expression xml_passing_clause? RIGHT_PAREN 
+        ///     | XMLPARSE LEFT_PAREN(DOCUMENT | CONTENT) concatenation WELLFORMED? RIGHT_PAREN('.' general_element_part)?
+        ///     | XMLPI
+        ///       LEFT_PAREN(NAME identifier | EVALNAME concatenation) (COMMA concatenation)? RIGHT_PAREN('.' general_element_part)?
+        ///     | XMLQUERY LEFT_PAREN concatenation xml_passing_clause? RETURNING CONTENT(NULL ON EMPTY)? RIGHT_PAREN('.' general_element_part)?
+        ///     | XMLROOT LEFT_PAREN concatenation(COMMA xmlroot_param_version_part)? (COMMA xmlroot_param_standalone_part)? RIGHT_PAREN('.' general_element_part)?
+        ///     | XMLSERIALIZE LEFT_PAREN(DOCUMENT | CONTENT) concatenation(AS type_spec)?
+        ///         xmlserialize_param_enconding_part? xmlserialize_param_version_part? xmlserialize_param_ident_part? ((HIDE | SHOW) DEFAULTS)? RIGHT_PAREN
+        ///         ('.' general_element_part)?
+        ///     | XMLTABLE LEFT_PAREN xml_namespaces_clause? concatenation xml_passing_clause? (COLUMNS xml_table_column (COMMA xml_table_column))? RIGHT_PAREN('.' general_element_part)?
+        ///     | TRUNC LEFT_PAREN to_date(COMMA string)? RIGHT_PAREN
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public override object VisitOther_function([NotNull] PlSqlParser.Other_functionContext context)
+        {
+            OCallMethodReference result = null;
+
+            if (context.NVL().Exist())  // NVL LEFT_PAREN expression COMMA expression RIGHT_PAREN 
+            {
+                Stop();
+                result = new OCallMethodReference(new MethodName("NVL")
+                    , context.expression().Select(c => new OMethodArgument() { Value = (OCodeObject)VisitExpression(c) }).First()
+                    );
+            }
+            else if (context.COUNT().Exist())   // COUNT LEFT_PAREN (ASTERISK | (DISTINCT | UNIQUE | ALL)? concatenation) RIGHT_PAREN over_clause?
+            {
+                Stop();
+            }
+            else if (context.COALESCE().Exist())    // COALESCE LEFT_PAREN table_element (COMMA (numeric | string))? RIGHT_PAREN 
+            {
+                Stop();
+            }
+            else if (context.COLLECT().Exist())    // COLLECT LEFT_PAREN (DISTINCT | UNIQUE)? concatenation collect_order_by_part? RIGHT_PAREN
+            {
+                Stop();
+            }
+            else if (context.DECOMPOSE().Exist())    // DECOMPOSE LEFT_PAREN concatenation (CANONICAL | COMPATIBILITY)? RIGHT_PAREN
+            {
+                Stop();
+            }
+            else if (context.EXTRACT().Exist())    // EXTRACT LEFT_PAREN regular_id FROM concatenation RIGHT_PAREN 
+            {
+                Stop();
+            }
+            else if (context.TRANSLATE().Exist())    
+            {
+                // TRANSLATE LEFT_PAREN expression (USING (CHAR_CS | NCHAR_CS))? (COMMA expression)* RIGHT_PAREN 
+                // TRANSLATE LEFT_PAREN expression COMMA string COMMA string RIGHT_PAREN 
+                Stop();
+            }
+            else if (context.TREAT().Exist())    // TREAT LEFT_PAREN expression AS REF? type_spec RIGHT_PAREN 
+            {
+                Stop();
+            }
+            else if (context.XMLAGG().Exist())    // XMLAGG LEFT_PAREN expression order_by_clause? RIGHT_PAREN ('.' general_element_part)?
+            {
+                Stop();
+            }
+            else if (context.XMLELEMENT().Exist())    // XMLELEMENT LEFT_PAREN (ENTITYESCAPING | NOENTITYESCAPING)? (NAME | EVALNAME)? expression
+            {
+                Stop();
+            }
+            else if (context.XMLEXISTS().Exist())    // XMLEXISTS LEFT_PAREN expression xml_passing_clause? RIGHT_PAREN 
+            {
+                Stop();
+            }
+            else if (context.XMLPI().Exist())    // XMLPI LEFT_PAREN (NAME identifier | EVALNAME concatenation) (COMMA concatenation)? RIGHT_PAREN ('.' general_element_part)?
+            {
+                Stop();
+            }
+            else if (context.XMLPARSE().Exist())    // XMLPARSE LEFT_PAREN (DOCUMENT | CONTENT) concatenation WELLFORMED? RIGHT_PAREN ('.' general_element_part)?
+            {
+                Stop();
+            }
+            else if (context.XMLQUERY().Exist())    // XMLQUERY LEFT_PAREN concatenation xml_passing_clause? RETURNING CONTENT (NULL ON EMPTY)? RIGHT_PAREN ('.' general_element_part)?
+            {
+                Stop();
+            }
+            else if (context.XMLROOT().Exist())    // XMLROOT LEFT_PAREN concatenation (COMMA xmlroot_param_version_part)? (COMMA xmlroot_param_standalone_part)? RIGHT_PAREN ('.' general_element_part)?
+            {
+                Stop();
+            }
+            else if (context.XMLSERIALIZE().Exist())    // XMLSERIALIZE LEFT_PAREN (DOCUMENT | CONTENT) concatenation (AS type_spec)?
+                                            //       xmlserialize_param_enconding_part? xmlserialize_param_version_part? xmlserialize_param_ident_part? ((HIDE | SHOW) DEFAULTS)? RIGHT_PAREN 
+                                            //       ('.' general_element_part)?
+            {
+                Stop();
+            }
+            else if (context.XMLTABLE().Exist())    // XMLTABLE LEFT_PAREN xml_namespaces_clause? concatenation xml_passing_clause? (COLUMNS xml_table_column (COMMA xml_table_column))? RIGHT_PAREN ('.' general_element_part)?
+            {
+                Stop();
+            }
+            else if (context.TRUNC().Exist())    // TRUNC LEFT_PAREN to_date (COMMA string)? RIGHT_PAREN
+            {
+                Stop();
+            }
+            else if (context.CAST().Exist() || context.XMLCAST().Exist())    // (CAST | XMLCAST) LEFT_PAREN (MULTISET LEFT_PAREN subquery RIGHT_PAREN | concatenation) AS type_spec RIGHT_PAREN 
+            {
+                Stop();
+            }
+            else if (context.XMLCOLATTVAL().Exist() || context.XMLFOREST().Exist())    // (XMLCOLATTVAL | XMLFOREST) LEFT_PAREN (COMMA? xml_multiuse_expression_element)+ RIGHT_PAREN ('.' general_element_part)?
+                                    //      (/*TODO{input.LT(2).getText().equalsIgnoreCase("xmlattributes")}?*/ COMMA xml_attributes_clause)?
+                                    //      (COMMA expression column_alias?)* RIGHT_PAREN ('.' general_element_part)?
+            {
+                Stop();
+            }
+            else if (context.FIRST_VALUE().Exist() || context.LAST_VALUE().Exist())    // (FIRST_VALUE | LAST_VALUE) function_argument_analytic respect_or_ignore_nulls? over_clause
+            {
+                Stop();
+            }
+            else
+            {
+                var to_date = context.to_date();
+                if (to_date != null)
+                    result = (OCallMethodReference)VisitTo_date(to_date);
+
+                else
+                {
+                    Stop();
+                }
+                //over_clause_keyword function_argument_analytic over_clause?
+                //   | /*TODO stantard_function_enabling_using*/ regular_id function_argument_modeling using_clause?
+                //   | within_or_over_clause_keyword (function_arguments keep_clause?) within_or_over_part+
+                //   | cursor_name ( PERCENT_ISOPEN | PERCENT_FOUND | PERCENT_NOTFOUND | PERCENT_ROWCOUNT )
+                //   | standard_prediction_function_keyword LEFT_PAREN expressions cost_matrix_clause? using_clause? RIGHT_PAREN 
+
+            }
+
+            Debug.Assert(result != null);
+            return result;
+        }
+
+        public override object VisitTo_date([NotNull] PlSqlParser.To_dateContext context)
+        {
+            var result = new OCallMethodReference(new MethodName("TO_DATE")
+                 , new OMethodArgument() { Value = (OCodeObject)VisitExpression(context.expression()) }
+                 , new OMethodArgument() { Value = context.@string1.ToConstant() }
+                 );
+            return result;
+        }
+
+        /// <summary>
+        /// numeric_function :
+        ///       SUM LEFT_PAREN(DISTINCT | ALL)? expression RIGHT_PAREN 
+        ///     | COUNT LEFT_PAREN(ASTERISK | ((DISTINCT | UNIQUE | ALL)? concatenation)? ) RIGHT_PAREN over_clause?
+        ///     | ROUND LEFT_PAREN expression(COMMA UNSIGNED_INTEGER)?RIGHT_PAREN 
+        ///     | AVG LEFT_PAREN(DISTINCT | ALL)? expression RIGHT_PAREN 
+        ///     | MAX LEFT_PAREN(DISTINCT | ALL)? expression RIGHT_PAREN 
+        ///     | LEAST LEFT_PAREN expressions RIGHT_PAREN 
+        ///     | GREATEST LEFT_PAREN expressions RIGHT_PAREN
+        ///     ;
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public override object VisitNumeric_function([NotNull] PlSqlParser.Numeric_functionContext context)
+        {
+            Stop();
+            var result = base.VisitNumeric_function(context);
+            Debug.Assert(result != null);
+            return result;
+        }
+
+        /// <summary>
+        /// numeric_function_wrapper :
+	    ///     numeric_function(single_column_for_loop | multi_column_for_loop)?
+        ///     ;
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public override object VisitNumeric_function_wrapper([NotNull] PlSqlParser.Numeric_function_wrapperContext context)
+        {
+            Stop();
+            var result = base.VisitNumeric_function_wrapper(context);
+            Debug.Assert(result != null);
+            return result;
+        }
+
+        /// <summary>
+        /// string_function :
+        ///       SUBSTR LEFT_PAREN expression COMMA expression(COMMA expression)? RIGHT_PAREN 
+        ///     | TO_CHAR LEFT_PAREN(table_element | standard_function | expression) (COMMA string1=string)? (COMMA string2=string)? RIGHT_PAREN 
+        ///     | DECODE LEFT_PAREN expressions RIGHT_PAREN 
+        ///     | CHR LEFT_PAREN concatenation USING NCHAR_CS RIGHT_PAREN 
+        ///     | NVL LEFT_PAREN expression COMMA expression RIGHT_PAREN 
+        ///     | TRIM LEFT_PAREN((LEADING | TRAILING | BOTH)?  string1=string? FROM)? concatenation RIGHT_PAREN 
+        ///     | TO_DATE LEFT_PAREN expression(COMMA string1 = string)? RIGHT_PAREN
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public override object VisitString_function([NotNull] PlSqlParser.String_functionContext context)
+        {
+            OCallMethodReference result = null;
+            if (context.SUBSTR().Exist())
+            {
+                Stop();
+                result = new OCallMethodReference(new MethodName("SUBSTR")
+                    , context.expression().Select(c => new OMethodArgument() { Value = (OCodeObject)VisitExpression(c) }).ToArray()
+                    );
+            }
+            else if (context.TO_CHAR().Exist())
+            {
+                Stop();
+                OCodeObject value = null;
+                var table_element = context.table_element();
+                if (table_element != null)
+                    value = (OCodeObject)VisitTable_element(table_element);
+
+                else
+                {
+
+                    var standard_function = context.standard_function();
+                    if (standard_function != null)
+                        value = (OCodeObject)VisitStandard_function(standard_function);
+
+                    else
+                    {
+                        var expression = context.expression();
+                        value = (OCodeObject)VisitExpression(expression[0]);
+                    }
+                }
+
+                List<OMethodArgument> args = new List<OMethodArgument>()
+                {
+                    new OMethodArgument() { Value = value }
+                };
+                if (context.@string1 != null)
+                    args.Add(new OMethodArgument() { Value = context.@string1.ToConstant() });
+                if (context.@string2 != null)
+                    args.Add(new OMethodArgument() { Value = context.@string2.ToConstant() });
+
+                result = new OCallMethodReference(new MethodName("TO_CHAR")
+
+                    );
+
+            }
+            else if (context.DECODE().Exist())
+            {
+                Stop();
+                var e = context.expressions();
+                result = new OCallMethodReference(new MethodName("DECODE")
+                    , e.expression().Select(c => new OMethodArgument() { Value = (OCodeObject)VisitExpression(c) }).First()
+                    );
+
+            }
+            else if (context.CHR().Exist())
+            {
+                Stop();
+
+                var concatenation = context.concatenation();
+                var value = (OCodeObject)VisitConcatenation(concatenation);
+                if (context.NCHAR_CS().Exist())
+                {
+                    Stop();
+                }
+
+                result = new OCallMethodReference(new MethodName("CHR")
+                    , new OMethodArgument() { Value = value }
+                    );
+            }
+            else if (context.TRIM().Exist())
+            {
+                Stop();
+                List<OMethodArgument> args = new List<OMethodArgument>();
+                if (context.LEADING().Exist())
+                    args.Add(new OMethodArgument() { Value = new OKeyWordConstant() { Value = "LEADING" } });
+
+                else if (context.TRAILING().Exist())
+                    args.Add(new OMethodArgument() { Value = new OKeyWordConstant() { Value = "TRAILING" } });
+
+                if (context.BOTH().Exist())
+                    args.Add(new OMethodArgument() { Value = new OKeyWordConstant() { Value = "BOTH" } });
+
+                if (context.string1 != null)
+                    args.Add(new OMethodArgument() { Value = context.string1.ToConstant() });
+
+                var concatenation = context.concatenation();
+                var value = (OCodeObject)VisitConcatenation(concatenation);
+                //args.Add(new OMethodArgument() { Value = value });
+
+                result = new OCallMethodReference(new MethodName("TRIM"), args.ToArray());
+
+            }
+            else
+            {
+                Stop();
+            }
+
             return result;
         }
 

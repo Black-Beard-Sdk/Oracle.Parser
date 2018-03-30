@@ -64,9 +64,49 @@ namespace Bb.Oracle.Structures.Models
         public string Role { get; set; }
 
         /// <summary>
+        /// Object Schema
+        /// </summary>
+        public string ObjectSchema { get; set; }
+
+        /// <summary>
         /// Object Name
         /// </summary>
         public string ObjectName { get; set; }
+
+
+        /// <summary>
+        /// Full Object Name
+        /// </summary>
+        public string FullObjectName
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(this._fullObjectName))
+                {
+
+                    this._fullObjectName = !string.IsNullOrEmpty(this.ColumnObjectName)
+                                ? this.ColumnObjectName
+                                : string.Empty;
+
+                    if (!string.IsNullOrEmpty(this.ObjectName))
+                    {
+                        if (!string.IsNullOrEmpty(_fullObjectName))
+                            _fullObjectName = "." + _fullObjectName;
+
+                        _fullObjectName = ObjectName + _fullObjectName;
+                    }
+
+                    if (!string.IsNullOrEmpty(this.ObjectSchema))
+                    {
+                        if (!string.IsNullOrEmpty(_fullObjectName))
+                            _fullObjectName = "." + _fullObjectName;
+                        _fullObjectName = @"""" + this.ObjectSchema + @"""" + _fullObjectName;
+                    }
+                }
+
+                return this._fullObjectName;
+            }
+        }
 
         /// <summary>
         /// Privilege
@@ -83,15 +123,7 @@ namespace Bb.Oracle.Structures.Models
         /// </summary>
         public bool Hierarchy { get; set; }
 
-        /// <summary>
-        /// Object Schema
-        /// </summary>
-        public string ObjectSchema { get; set; }
 
-        /// <summary>
-        /// Full Object Name
-        /// </summary>
-        public string FullObjectName { get; set; }
 
         /// <summary>
         /// Column Object Name
@@ -100,6 +132,10 @@ namespace Bb.Oracle.Structures.Models
 
 
         public string PrivilegesToText { get { return string.Join(", ", this.Privileges.OfType<PrivilegeModel>().Select(c => c.Name).ToArray()); } }
+
+
+        private string _fullObjectName;
+
 
     }
 }

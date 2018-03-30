@@ -2,6 +2,7 @@
 using Bb.Oracle.Models;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -287,11 +288,16 @@ namespace Bb.Oracle.Structures.Models
             sb.Append(".");
             sb.Append(this.Name);
             sb.Append("(");
+            string comma = string.Empty;
             foreach (ArgumentModel arg in this.Arguments)
             {
 
+                sb.Append(comma);
                 sb.Append(arg.Name);
                 sb.Append(" => ");
+
+                Debug.Assert(arg.Type != null);
+                Debug.Assert(arg.Type.DataType != null);
 
                 var datatype = arg.Type.DataType;
                 if (!string.IsNullOrEmpty(datatype.Owner))
@@ -302,12 +308,33 @@ namespace Bb.Oracle.Structures.Models
                 }
                 else
                 {
-                    sb.Append(datatype.DataType);
+                    sb.Append(datatype.Name);
                 }
 
+                comma = ", ";
             }
 
             sb.Append(")");
+
+            if (this.IsFunction)
+                if (this.ResultType != null)
+                {
+
+                    sb.Append(" ");
+
+                    var type = this.ResultType.Type;
+                    if (type != null)
+                    {
+                        if (!string.IsNullOrEmpty(type.DataType.Owner))
+                        {
+                            sb.Append(type.DataType.Owner);
+                            sb.Append(".");
+                        }
+                        sb.Append(type.DataType.Name);
+                        if (type.KindTypeReference != Oracle.Models.Codes.PercentTypeEnum.Undefined)
+                            sb.Append(type.KindTypeReference.ToString().ToUpper().Replace("PERCENT", "%"));
+                    }
+                }
 
             return sb.ToString();
 

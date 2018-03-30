@@ -97,39 +97,38 @@ namespace Bb.Oracle.Visitors
                     Name = package_name,
                 };
 
-                package.Code.Code = txt;
-
-                package.Files.Add(GetFileElement(context.Start));
+                package.Code.SetSource(txt);
+                AppendFile(package, context.Start);
                 this.Db.Packages.Add(package);
 
             }
             else
-            {
                 AppendException(new AmbiguousObjectException($"{schema}.{package_name}"), context);
-            }
 
+            var invoker_rights_clause = context.invoker_rights_clause();
 
-            using (Enqueue(package))
+            var package_obj_specs = context.package_obj_spec();
+            foreach (var package_obj_spec in package_obj_specs)
             {
 
-                var invoker_rights_clause = context.invoker_rights_clause();
-
-                var package_obj_specs = context.package_obj_spec();
-                foreach (var package_obj_spec in package_obj_specs)
-                {
-
-                    var r = (OracleObject)this.VisitPackage_obj_spec(package_obj_spec);
-
+                var r = (OracleObject)this.VisitPackage_obj_spec(package_obj_spec);
+                if (r != null)
                     if (r.KindModel == KindModelEnum.Function || r.KindModel == KindModelEnum.Procedure)
                     {
                         if (r is ProcedureModel p)
-                            Db.Procedures.Add(p);
+                        {
+                            p.Owner = package.Owner;
+                            p.PackageName = package.Name;
+                            p.Key = p.BuildKey();
 
+                            if (Db.Procedures.Contains(p.Key))
+                            {
+                                Stop();
+                            }
+                            else
+                                Db.Procedures.Add(p);
+                        }
                     }
-                    
-                    //Stop();
-
-                }
 
             }
 

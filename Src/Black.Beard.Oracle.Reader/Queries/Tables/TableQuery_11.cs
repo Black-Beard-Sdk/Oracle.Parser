@@ -84,7 +84,7 @@ ORDER BY OWNER, TABLE_NAME
                         if (db.Tables.TryGet(key, out table))
                         {
 
-                            table.TablespaceName = t.TablespaceName;
+                            table.Tablespace.Name = t.TablespaceName;
                             table.ClusterName = t.ClusterName;
                             table.Status = t.Status;
                             table.PctFree = t.PctFree;

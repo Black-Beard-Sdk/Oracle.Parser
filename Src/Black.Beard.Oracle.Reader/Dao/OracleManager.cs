@@ -467,19 +467,8 @@ namespace Bb.Oracle.Reader.Dao
 
                 using (OracleCommand cmd = BuildCommand(cmdType, requete, parameters))
                 {
-
                     trans = cmd.Transaction;
-
-                    read = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-
-                    //for (int i = 0; i < parameters.Count; i++)
-                    //    for (int j = 0; j < cmd.Parameters.Count; j++)
-                    //        if (cmd.Parameters[j].Direction != ParameterDirection.Input && cmd.Parameters[j].ParameterName == parameters[i].ParameterName)
-                    //        {
-                    //            parameters[i].Value = cmd.Parameters[j].Value;
-                    //            break;
-                    //        }
-
+                    read = cmd.ExecuteReader(CommandBehavior.CloseConnection);                   
                 }
 
             }

@@ -79,8 +79,8 @@ ORDER BY t.SUBPROGRAM_ID, t.PACKAGE_NAME, t.OBJECT_NAME, t.SEQUENCE, t.IN_OUT
                             IsFunction = false,
                         };
 
-                        proc.ResultType.Type.Owner = t.TypeOwner;
-                        proc.ResultType.Type.Name = t.TypeName;
+                        proc.ResultType.Type.DataType.Owner = t.TypeOwner;
+                        proc.ResultType.Type.DataType.Name = t.TypeName;
 
                         db.Procedures.Add(proc);
 
@@ -132,13 +132,13 @@ ORDER BY t.SUBPROGRAM_ID, t.PACKAGE_NAME, t.OBJECT_NAME, t.SEQUENCE, t.IN_OUT
                         _type.DataType.DataDefault = t.DataDefault != null ? t.DataDefault.ToString()?.Trim() : string.Empty;
                         _type.DataType.DataLength = t.DataLength;
                         _type.DataType.DataPrecision = t.DataPrecision;
-                        _type.DataType.DataType = t.DataType;
+                        _type.DataType.Name = t.DataType;
                         _type.DataType.defaultLength = t.DefaultLength;
                         _type.DataType.DataLevel = t.Data_Level;
                         _type.DataType.Owner = t.TypeOwner;
                         _type.DataType.Name = t.TypeName;
 
-                        if (_type.DataType.DataType != null)
+                        if (_type.DataType.Name != null)
                         {
 
                             _type.DataType.DbType = TypeMatchExtension.ConvertToDbType(t.DataType).ToString();
@@ -146,7 +146,7 @@ ORDER BY t.SUBPROGRAM_ID, t.PACKAGE_NAME, t.OBJECT_NAME, t.SEQUENCE, t.IN_OUT
                             if (t.DataType.StartsWith("PL/SQL"))
                                 _type.DataType.IsRecord = t.DataType == "PL/SQL RECORD";
 
-                            else if (_type.DataType.DataType == "TABLE")
+                            else if (_type.DataType.Name == "TABLE")
                                 _type.DataType.IsRecord = true;
 
 
@@ -346,7 +346,7 @@ ORDER BY t.SUBPROGRAM_ID, t.PACKAGE_NAME, t.OBJECT_NAME, t.SEQUENCE, t.IN_OUT
             item.Out = ProcDescriptorWithArgument_11.Columns.IN_OUT.Read(r).Contains("OUT");
             item.DataDefault = ProcDescriptorWithArgument_11.Columns.DataDefault.Read(r);
             item.DefaultLength = ProcDescriptorWithArgument_11.Columns.DefaultLength.Read(r).ToInt32();
-            item.DataPrecision = ProcDescriptorWithArgument_11.Columns.DataPrecision.Read(r).ToInt32();
+            item.DataPrecision = ProcDescriptorWithArgument_11.Columns.DataPrecision.Read(r);
             item.Sequence = ProcDescriptorWithArgument_11.Columns.Sequence.Read(r).ToInt32();
             item.Data_Level = ProcDescriptorWithArgument_11.Columns.DataLevel.Read(r).ToInt32();
             item.Owner = ProcDescriptorWithArgument_11.Columns.Owner.Read(r);
@@ -431,7 +431,7 @@ ORDER BY t.SUBPROGRAM_ID, t.PACKAGE_NAME, t.OBJECT_NAME, t.SEQUENCE, t.IN_OUT
 
         public int DefaultLength { get; set; }
 
-        public int DataPrecision { get; set; }
+        public decimal DataPrecision { get; set; }
 
         public bool Defaulted { get; set; }
 

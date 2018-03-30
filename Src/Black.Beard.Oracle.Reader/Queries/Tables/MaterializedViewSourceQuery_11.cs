@@ -70,7 +70,7 @@ LEFT JOIN all_mview_comments c ON t.OWNER = c.OWNER AND t.MVIEW_NAME = c.MVIEW_N
                         table.IsView = true;
                         table.IsMatrializedView = true;
 
-                        table.codeView = GetSource(sb.ToString());
+                        table.CodeView = GetSource(sb.ToString());
 
 
                     };

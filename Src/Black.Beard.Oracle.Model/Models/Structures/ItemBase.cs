@@ -61,6 +61,7 @@ namespace Bb.Oracle.Structures.Models
         }
 
 
+
     }
 
 }

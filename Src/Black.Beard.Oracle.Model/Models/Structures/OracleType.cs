@@ -16,11 +16,6 @@ namespace Bb.Oracle.Structures.Models
         }
 
         /// <summary>
-        /// Data Type
-        /// </summary>   
-        public string DataType { get; set; }
-
-        /// <summary>
         /// Data Length
         /// </summary>   
         public int DataLength { get; set; }
@@ -40,7 +35,7 @@ namespace Bb.Oracle.Structures.Models
         /// <summary>
         /// Data Precision
         /// </summary>   
-        public int DataPrecision { get; set; }
+        public decimal DataPrecision { get; set; }
 
         /// <summary>
         /// Db Type
@@ -59,6 +54,11 @@ namespace Bb.Oracle.Structures.Models
         [DefaultValue("")]
         public string Name { get; set; }
 
+        /// <summary>
+        /// Type Name
+        /// </summary>   
+        [DefaultValue("")]
+        public string Name2 { get; set; }
 
         public override string GetName() { return Name; }
 
@@ -87,7 +87,6 @@ namespace Bb.Oracle.Structures.Models
 
         public override KindModelEnum KindModel => KindModelEnum.OracleType;
 
-
         public OracleType Clone()
         {
             return new OracleType()
@@ -97,7 +96,6 @@ namespace Bb.Oracle.Structures.Models
                 DataLength = this.DataLength,
                 DataLevel = this.DataLevel,
                 DataPrecision = this.DataPrecision,
-                DataType = this.DataType,
                 DbType = this.DbType,
                 defaultLength = this.defaultLength,
                 IsArray = this.IsArray,
