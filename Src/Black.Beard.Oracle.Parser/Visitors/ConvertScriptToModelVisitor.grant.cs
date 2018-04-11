@@ -200,51 +200,24 @@ namespace Bb.Oracle.Visitors
         {
 
             GrantModel grant;
-            if (!this.Db.Grants.TryGet(key, out grant))
+
+            grant = new GrantModel()
             {
 
-                grant = new GrantModel()
-                {
+                Key = key,
+                Role = role,
 
-                    Key = key,
-                    Role = role,
+                ObjectSchema = objectSchema,
+                ObjectName = objectName,
+                ColumnObjectName = columnObjectName,
 
-                    ObjectSchema = objectSchema,
-                    ObjectName = objectName,
-                    ColumnObjectName = columnObjectName,
+                Grantable = withGrant,
+                Hierarchy = withHierarchy,
 
-                    Grantable = withGrant,
-                    Hierarchy = withHierarchy,
+            };
 
-                    //Delegate = withDelegate,
-                    //Admin = withAdmin,
-                    //Directory = withDirectory,
-                    //User = withUser,
-                    //Edition = withEdition,
-                    //JavaSource = withJavaSource
-                    //JavaResource = withJavaResource,
-                    //SqlTranslationProfile = withSqlTranslationProfile,
-
-                };
-
-                AppendFile(grant, token);
-                this.Db.Grants.Add(grant);
-
-            }
-
-            //Delegate = withDelegate,
-            //Admin = withAdmin,
-            //Directory = withDirectory,
-            //User = withUser,
-            //Edition = withEdition,
-            //JavaSource = withJavaSource
-            //JavaResource = withJavaResource,
-            //SqlTranslationProfile = withSqlTranslationProfile,
-
-            //if (!string.IsNullOrEmpty(this.File))
-            //    grant.Files.AddIfNotExist(new FileElement() { Path = this.File });
-
-            var fileElement = GetFileElement(token);
+            var fileElement = AppendFile(grant, token);
+            Append(grant);
 
             foreach (var privilege in privileges)
             {
@@ -258,7 +231,7 @@ namespace Bb.Oracle.Visitors
                         Name = privilege
                     };
 
-                    _privilege.Files.Add(fileElement);
+                    AppendFile(_privilege, token);
                     grant.Privileges.Add(_privilege);
 
                 }
@@ -266,8 +239,7 @@ namespace Bb.Oracle.Visitors
                 {
                     var o = privilege + " " + grant.Key;
                     string message = $"Duplicated grant privilege '{privilege}' on object {objectSchema}.{objectName} TO {role}";
-                    var eventParser = GetEventParser(message, o, KindModelEnum.UserObjectPrivilege, fileElement, _privilege.Files.FirstOrDefault());
-                    AppendEventParser(eventParser);
+                    GetEventParser(message, o, KindModelEnum.UserObjectPrivilege, fileElement, _privilege.Files.FirstOrDefault());
                 }
             }
 

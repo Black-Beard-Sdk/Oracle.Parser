@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System;
+using System.Text;
 
 namespace Bb.Oracle.Structures.Models
 {
@@ -18,6 +19,12 @@ namespace Bb.Oracle.Structures.Models
             this.Columns = new ConstraintColumnCollection() { Parent = this };
             TableReference = new ReferenceTable() { GetDb = () => this.Root };
             Reference = new ReferenceConstraint() { GetDb = () => this.Root };
+
+            Status = "ENABLE";
+            Deferred = "IMMEDIATE";
+            Rely = "RELY";
+            Validated = "VALIDATE";
+
         }
 
         /// <summary>
@@ -26,13 +33,24 @@ namespace Bb.Oracle.Structures.Models
         public string Name { get; set; }
 
         /// <summary>
+        /// Owner
+        /// </summary>
+        public string Owner { get; set; }
+
+        /// <summary>
         /// Index Name
         /// </summary>
         [DefaultValue("")]
         public string IndexName { get; set; }
 
         /// <summary>
-        /// Type
+        /// Constraint type
+        ///     C (check constraint on a table)
+        ///     P(primary key)
+        ///     U(unique key)
+        ///     R(referential integrity)
+        ///     V(with check option, on a view)
+        ///     O(with read only, on a view)
         /// </summary>
         public string Type { get; set; }
 
@@ -71,7 +89,7 @@ namespace Bb.Oracle.Structures.Models
         /// </summary>
         [DefaultValue("")]
         public string Rely { get; set; }
-        
+
         /// <summary>
         /// Search_ Condition
         /// </summary>
@@ -97,18 +115,41 @@ namespace Bb.Oracle.Structures.Models
         public string Status { get; set; }
 
         /// <summary>
-        /// Owner
-        /// </summary>
-        public string Owner { get; set; }
-
-        /// <summary>
         /// Key
         /// </summary>
         public string Key { get; set; }
 
+        public bool IsGeneratedName { get => Name.ToUpper().StartsWith("C_SYS_") || Name.ToUpper().StartsWith("SYS_"); }
+
         public string BuildKey()
         {
+
+            if (string.IsNullOrEmpty(this.Name) || this.Name.StartsWith("C_SYS_"))
+            {
+                StringBuilder sb = new StringBuilder();
+
+                sb.Append(this.Type);
+
+                sb.Append(":");
+                sb.Append(this.Owner);
+
+                sb.Append(":");
+                sb.Append(this.TableReference.Owner);
+
+                sb.Append(":");
+                sb.Append(this.TableReference.Name);
+
+                foreach (var item in this.Columns)
+                {
+                    sb.Append(":");
+                    sb.Append(item.ColumnName);
+                }
+
+                this.Name = "C_SYS_" + Crc32.Calculate(sb.ToString()).ToString();
+            }
+
             return this.Owner + "." + this.Name;
+
         }
 
         /// <summary>

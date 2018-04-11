@@ -9,7 +9,7 @@ namespace Bb.Oracle.Validators
     public class CheckLocationFolderParserValidator : ParserValidator
     {
 
-        public override void Evaluate(ItemBase item)
+        public override void Evaluate(OracleObject item)
         {
 
 

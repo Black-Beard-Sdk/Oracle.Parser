@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Text;
 using Bb.Oracle.Helpers;
 using Bb.Oracle.Models.Codes;
+using Bb.Oracle.Models;
 
 namespace Bb.Oracle.Visitors
 {
@@ -13,16 +14,14 @@ namespace Bb.Oracle.Visitors
     public partial class ConvertScriptToModelVisitor : PlSqlParserBaseVisitor<object>, IFile
     {
 
-        public ConvertScriptToModelVisitor(OracleDatabase db)
+        public ConvertScriptToModelVisitor()
         {
-            this.Db = db;
+            this.Items = new System.Collections.Generic.List<OracleObject>();
             this.Policy = new PolicyBehavior();
         }
 
         public override object Visit(IParseTree tree)
         {
-
-
             var result = base.Visit(tree);
             return result;
         }
@@ -102,15 +101,6 @@ namespace Bb.Oracle.Visitors
         {
             Stop();
             var result = base.VisitAlter_index(context);
-            Debug.Assert(result != null);
-            return result;
-        }
-
-
-        public override object VisitAlter_table([NotNull] PlSqlParser.Alter_tableContext context)
-        {
-            Stop();
-            var result = base.VisitAlter_table(context);
             Debug.Assert(result != null);
             return result;
         }
@@ -261,14 +251,6 @@ namespace Bb.Oracle.Visitors
             return result;
         }
 
-        public override object VisitCheck_constraint([NotNull] PlSqlParser.Check_constraintContext context)
-        {
-            Stop();
-            var result = base.VisitCheck_constraint(context);
-            Debug.Assert(result != null);
-            return result;
-        }
-
         public override object VisitClose_statement([NotNull] PlSqlParser.Close_statementContext context)
         {
             Stop();
@@ -298,31 +280,6 @@ namespace Bb.Oracle.Visitors
         {
             Stop();
             var result = base.VisitColumn_based_update_set_clause(context);
-            Debug.Assert(result != null);
-            return result;
-        }
-
-        public override object VisitColumn_list([NotNull] PlSqlParser.Column_listContext context)
-        {
-            Stop();
-            var result = base.VisitColumn_list(context);
-            Debug.Assert(result != null);
-            return result;
-        }
-
-
-        public override object VisitComment_on_column([NotNull] PlSqlParser.Comment_on_columnContext context)
-        {
-            Stop();
-            var result = base.VisitComment_on_column(context);
-            Debug.Assert(result != null);
-            return result;
-        }
-
-        public override object VisitComment_on_table([NotNull] PlSqlParser.Comment_on_tableContext context)
-        {
-            Stop();
-            var result = base.VisitComment_on_table(context);
             Debug.Assert(result != null);
             return result;
         }
@@ -399,14 +356,6 @@ namespace Bb.Oracle.Visitors
             return result;
         }
 
-        public override object VisitConstraint_state([NotNull] PlSqlParser.Constraint_stateContext context)
-        {
-            Stop();
-            var result = base.VisitConstraint_state(context);
-            Debug.Assert(result != null);
-            return result;
-        }
-
         public override object VisitConstructor_declaration([NotNull] PlSqlParser.Constructor_declarationContext context)
         {
             Stop();
@@ -459,14 +408,6 @@ namespace Bb.Oracle.Visitors
         {
             Stop();
             var result = base.VisitCreate_index(context);
-            Debug.Assert(result != null);
-            return result;
-        }
-
-        public override object VisitCreate_table([NotNull] PlSqlParser.Create_tableContext context)
-        {
-            Stop();
-            var result = base.VisitCreate_table(context);
             Debug.Assert(result != null);
             return result;
         }
@@ -663,14 +604,6 @@ namespace Bb.Oracle.Visitors
             return result;
         }
 
-        public override object VisitDrop_table([NotNull] PlSqlParser.Drop_tableContext context)
-        {
-            Stop();
-            var result = base.VisitDrop_table(context);
-            Debug.Assert(result != null);
-            return result;
-        }
-
         public override object VisitDrop_trigger([NotNull] PlSqlParser.Drop_triggerContext context)
         {
             Stop();
@@ -831,14 +764,6 @@ namespace Bb.Oracle.Visitors
             return result;
         }
 
-        public override object VisitForeign_key_clause([NotNull] PlSqlParser.Foreign_key_clauseContext context)
-        {
-            Stop();
-            var result = base.VisitForeign_key_clause(context);
-            Debug.Assert(result != null);
-            return result;
-        }
-
         public override object VisitFor_each_row([NotNull] PlSqlParser.For_each_rowContext context)
         {
             Stop();
@@ -971,15 +896,6 @@ namespace Bb.Oracle.Visitors
         {
             Stop();
             var result = base.VisitIf_statement(context);
-            Debug.Assert(result != null);
-            return result;
-        }
-
-
-        public override object VisitInline_constraint([NotNull] PlSqlParser.Inline_constraintContext context)
-        {
-            Stop();
-            var result = base.VisitInline_constraint(context);
             Debug.Assert(result != null);
             return result;
         }
@@ -1308,7 +1224,7 @@ namespace Bb.Oracle.Visitors
             Debug.Assert(result != null);
             return result;
         }
-        
+
         public override object VisitNumeric_negative([NotNull] PlSqlParser.Numeric_negativeContext context)
         {
             Stop();
@@ -1413,14 +1329,6 @@ namespace Bb.Oracle.Visitors
             return result;
         }
 
-        public override object VisitOut_of_line_constraint([NotNull] PlSqlParser.Out_of_line_constraintContext context)
-        {
-            Stop();
-            var result = base.VisitOut_of_line_constraint(context);
-            Debug.Assert(result != null);
-            return result;
-        }
-
         public override object VisitOver_clause([NotNull] PlSqlParser.Over_clauseContext context)
         {
             Stop();
@@ -1441,14 +1349,6 @@ namespace Bb.Oracle.Visitors
         {
             Stop();
             var result = base.VisitParallel_enable_clause(context);
-            Debug.Assert(result != null);
-            return result;
-        }
-
-        public override object VisitParen_column_list([NotNull] PlSqlParser.Paren_column_listContext context)
-        {
-            Stop();
-            var result = base.VisitParen_column_list(context);
             Debug.Assert(result != null);
             return result;
         }
@@ -1549,14 +1449,6 @@ namespace Bb.Oracle.Visitors
             return result;
         }
 
-        public override object VisitPrimary_key_clause([NotNull] PlSqlParser.Primary_key_clauseContext context)
-        {
-            Stop();
-            var result = base.VisitPrimary_key_clause(context);
-            Debug.Assert(result != null);
-            return result;
-        }
-
         public override object VisitProfile_clause([NotNull] PlSqlParser.Profile_clauseContext context)
         {
             Stop();
@@ -1617,14 +1509,6 @@ namespace Bb.Oracle.Visitors
         {
             Stop();
             var result = base.VisitRedo_log_file_spec(context);
-            Debug.Assert(result != null);
-            return result;
-        }
-
-        public override object VisitReferences_clause([NotNull] PlSqlParser.References_clauseContext context)
-        {
-            Stop();
-            var result = base.VisitReferences_clause(context);
             Debug.Assert(result != null);
             return result;
         }
@@ -1969,7 +1853,7 @@ namespace Bb.Oracle.Visitors
             Debug.Assert(result != null);
             return result;
         }
-        
+
         public override object VisitSubprogram_spec([NotNull] PlSqlParser.Subprogram_specContext context)
         {
             Stop();
@@ -2214,14 +2098,6 @@ namespace Bb.Oracle.Visitors
         {
             Stop();
             var result = base.VisitUndo_tablespace_clause(context);
-            Debug.Assert(result != null);
-            return result;
-        }
-
-        public override object VisitUnique_key_clause([NotNull] PlSqlParser.Unique_key_clauseContext context)
-        {
-            Stop();
-            var result = base.VisitUnique_key_clause(context);
             Debug.Assert(result != null);
             return result;
         }

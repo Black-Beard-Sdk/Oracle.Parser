@@ -12,7 +12,7 @@ namespace Bb.Oracle.Structures.Models
     /// <summary>
     /// Column
     /// </summary>
-    [System.Diagnostics.DebuggerDisplay("{ColumnName}")]
+    [System.Diagnostics.DebuggerDisplay("{Name}")]
     public partial class ColumnModel : ItemBase
     {
 

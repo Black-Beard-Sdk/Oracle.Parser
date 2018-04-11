@@ -169,7 +169,7 @@ namespace Bb.Oracle.Helpers
 
             int length = source.Length;
 
-            StringBuilder sb = new StringBuilder(length + 200);
+            StringBuilder output = new StringBuilder(length + 200);
             bool inChar = false;
             bool inCommentInLine = false;
             bool inCommentOutLine = false;
@@ -194,11 +194,27 @@ namespace Bb.Oracle.Helpers
 
                 else if (inChar)
                 {
-                    if (c == '\'' && i + 1 < length)
+                    if (c == '\'')
                     {
-                        var c2 = source[i + 1];
-                        if (c2 != '\\' && c2 != '\'')
+                        if (i + 1 < length)
+                        {
+                            var c2 = source[i + 1];
+                            if (c2 == '\'')
+                            {
+                                output.Append(c2);
+                                i++;
+                            }
+                            else if (c2 == '\\')
+                            {
+                                output.Append(c2);
+                                i++;
+                            }
+                            else
+                                inChar = false;
+                        }
+                        else
                             inChar = false;
+
                     }
 
                 }
@@ -215,12 +231,30 @@ namespace Bb.Oracle.Helpers
                 else if (lastChar == '/' && c == '*')
                     inCommentOutLine = true;
 
-                sb.Append(c);
+                output.Append(c);
                 lastChar = c;
 
             }
 
-            return sb;
+            if (System.Diagnostics.Debugger.IsAttached)
+            {
+                if (source.Length != output.Length)
+                    System.Diagnostics.Debugger.Break();
+
+                else
+                {
+                    for (int i = 0; i < output.Length; i++)
+                    {
+                        var s1 = source[i];
+                        var t1 = output[i];
+                        if (char.IsLetter(s1) && char.ToUpper(s1) != char.ToUpper(t1))
+                            System.Diagnostics.Debugger.Break();
+
+                    }
+                }
+            }
+
+            return output;
 
         }
 

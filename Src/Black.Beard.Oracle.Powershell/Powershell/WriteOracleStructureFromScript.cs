@@ -2,6 +2,7 @@
 using Bb.Oracle.Models;
 using Bb.Oracle.Solutions;
 using Bb.Oracle.Structures.Models;
+using Bb.Oracle.Validators;
 using Bb.Oracle.Visitors;
 using System;
 using System.Collections.Generic;
@@ -31,6 +32,9 @@ namespace Black.Beard.Oracle.Powershell
         [Parameter(Mandatory = false, HelpMessage = "specify a custom name of the structure")]
         public string searchPattern { get; set; }
 
+        [Parameter(Mandatory = false, HelpMessage = "provide a list of validators on the parser")]
+        public List<ParserValidator> Validators { get; set; }
+
         protected override void ProcessRecord()
         {
 
@@ -46,9 +50,15 @@ namespace Black.Beard.Oracle.Powershell
                 Name = Name,
             };
 
-            var visitor = new ConvertScriptToModelVisitor(db);
+            var visitor = new ConvertScriptToModelVisitor();
+
+            if (this.Validators != null)
+                visitor.Validators.AddRange(this.Validators);
 
             sln.Visit(visitor);
+
+            // Map items in db
+
 
             FileInfo file = new FileInfo(OutputFilename);
             if (!file.Directory.Exists)

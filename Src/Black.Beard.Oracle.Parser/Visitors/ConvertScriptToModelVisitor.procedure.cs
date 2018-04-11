@@ -70,7 +70,6 @@ namespace Bb.Oracle.Visitors
             return arguments;
         }
 
-
         public override object VisitArguments([NotNull] PlSqlParser.ArgumentsContext context)
         {
             List<OMethodArgument> _result = new List<OMethodArgument>();
@@ -81,7 +80,6 @@ namespace Bb.Oracle.Visitors
             }
             return _result;
         }
-
 
         /// <summary>
         /// argument :
@@ -298,6 +296,8 @@ namespace Bb.Oracle.Visitors
                 method.Arguments.Add(arg);
             }
 
+            Append(method);
+
             return method;
 
         }
@@ -343,6 +343,7 @@ namespace Bb.Oracle.Visitors
             var returnType = (OTypeReference)VisitType_spec(type_spec);
             method.ResultType = new ProcedureResult() { Type = returnType };
 
+            Append(method);
             return method;
 
         }

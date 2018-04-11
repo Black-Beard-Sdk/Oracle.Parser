@@ -34,34 +34,16 @@ namespace Bb.Oracle.Solutions
         /// Parse all scripts if the filter return true
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="kind"></param>
-        /// <param name="scripts"></param>
-        /// <param name="visitor"></param>
+        /// <param name="filter"> function return true or false when the script must to be parsed.</param>
+        /// <param name="scripts">List of scripts</param>
+        /// <param name="visitor">visitor that must parse the script's list</param>
+        /// <returns>return count of parsed scripts</returns>
         protected int Process<T>(Func<ScriptFileInfo, bool> filter, List<ScriptFileInfo> scripts, Antlr4.Runtime.Tree.IParseTreeVisitor<T> visitor)
         {
 
             int count = 0;
             int cut = this._Current_context._cut;
-
-            NotifyCollectionChangedEventHandler action = null;
-            OracleDatabase db = null;
-            if (visitor is IDbModelVisitor _visitor)
-            {
-                db = _visitor.Db;
-                action = (o, e) =>
-                {
-                    if (_visitor.Validators.Count > 0)
-                    {
-                        foreach (var item in e.NewItems)
-                            if (item is ItemBase i)
-                                foreach (ParserValidator validator in _visitor.Validators)
-                                    if (validator.CanEvaluate(i))
-                                        validator.Evaluate(i);
-                    }
-                };
-                db.CollectionChanged += action;
-            }
-
+            
             List<ScriptFileInfo> _scripts = new List<ScriptFileInfo>();
             foreach (ScriptFileInfo script in scripts)
                 if (filter(script))
@@ -79,16 +61,7 @@ namespace Bb.Oracle.Solutions
                         throw;
                     }
                 }
-
-            foreach (ScriptFileInfo script in _scripts)
-                script.Finally();
-
-            if (db != null)
-            {
-                db.CollectionChanged -= action;
-                db.Initialize();
-            }
-
+            
             return count;
 
         }

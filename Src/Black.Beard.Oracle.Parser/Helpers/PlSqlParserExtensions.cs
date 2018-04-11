@@ -28,7 +28,7 @@ namespace Bb.Oracle.Helpers
         {
             StringBuilder sb = new StringBuilder();
 
-            foreach ( PlSqlParser.StringContext str in stringContext)
+            foreach (PlSqlParser.StringContext str in stringContext)
                 sb.Append(str.GetText());
 
             return new OStringConstant() { Value = sb.ToString() };
@@ -144,6 +144,19 @@ namespace Bb.Oracle.Helpers
 
             return _names;
 
+
+        }
+
+        public static List<string> GetCleanedTexts([NotNull] this PlSqlParser.Table_fullnameContext context, List<string> _names = null)
+        {
+
+            if (_names == null)
+                _names = new List<string>();
+
+            context.full_identifier()
+                   .GetCleanedTexts(_names);
+
+            return _names;
 
         }
 

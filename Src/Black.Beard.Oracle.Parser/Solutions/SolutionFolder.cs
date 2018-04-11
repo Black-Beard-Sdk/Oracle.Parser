@@ -32,7 +32,7 @@ namespace Bb.Oracle.Solutions
 
             var scripts = GetFiles(this._Current_context.SearhPattern, this._Current_context.FilePropertyResolver);
 
-            // Process(KindModelEnum.Table, scripts, visitor);
+            Process(KindModelEnum.Table, scripts, visitor);
             // Process(KindModelEnum.MaterializedView, scripts, visitor);
             // Process(KindModelEnum.MaterializedViewLog, scripts, visitor);
             // Process(KindModelEnum.View, scripts, visitor);
@@ -48,10 +48,6 @@ namespace Bb.Oracle.Solutions
             Process(KindModelEnum.Synonym, scripts, visitor);
 
             Process(KindModelEnum.UserObjectPrivilege, scripts, visitor);
-
-
-            foreach (ScriptFileInfo script in scripts)
-                script.Finally();
 
         }
 

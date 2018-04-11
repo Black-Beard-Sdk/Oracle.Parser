@@ -720,15 +720,17 @@ inline_constraint :
     ;
 
 out_of_line_constraint :
-	( (CONSTRAINT constraint_name)?
-          ( primary_key_clause
-          | foreign_key_clause
-          | unique_key_clause
-          | check_constraint
-          )
-       )+
-      constraint_state? 
+	out_of_line_constraints+ constraint_state? 
     ;     
+
+out_of_line_constraints :
+	(CONSTRAINT constraint_name)?
+    (     primary_key_clause
+        | foreign_key_clause
+        | unique_key_clause
+        | check_constraint
+    )
+    ;
 
 constraint_state :
 	( NOT? DEFERRABLE
@@ -1091,7 +1093,7 @@ subquery :
     ;
 
 create_table :
-	CREATE (GLOBAL TEMPORARY)? TABLE tableview_name
+	CREATE (GLOBAL TEMPORARY)? TABLE table_fullname
         (
             relational_table 
         /*| object_table 
@@ -1100,12 +1102,16 @@ create_table :
         ;
 
 relational_table : 
-    ( LEFT_PAREN relational_properties+ RIGHT_PAREN )? 
+    ( LEFT_PAREN relational_properties RIGHT_PAREN )? 
     (ON COMMIT (DELETE | PRESERVE)? ROWS)? 
     physical_properties? table_properties
     ;
 
 relational_properties :
+    relational_property (COMMA relational_property)*
+    ;
+
+relational_property :
       column_definition
     | virtual_column_definition
     | period_definition
@@ -1681,7 +1687,6 @@ unique_key_clause :
 
 primary_key_clause :
 	PRIMARY KEY paren_column_list
-      // TODO implement  USING INDEX clause
     ;
 
 // Anonymous PL/SQL code block

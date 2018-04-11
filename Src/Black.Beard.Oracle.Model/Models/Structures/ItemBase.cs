@@ -11,7 +11,7 @@ namespace Bb.Oracle.Structures.Models
         public ItemBase()
         {
             this.Files = new FileCollection() { Parent = this};
-            this.ParserInformations = new ParserInformations();
+            this.EventParser = new EventParsers();
         }
 
         public object Tag { get; set; }
@@ -33,7 +33,7 @@ namespace Bb.Oracle.Structures.Models
         /// </returns>
         public FileCollection Files { get; set; }
 
-        internal ParserInformations ParserInformations { get; private set; }
+        internal EventParsers EventParser { get; private set; }
 
         public virtual void Initialize()
         {

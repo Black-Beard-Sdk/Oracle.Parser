@@ -2264,7 +2264,7 @@ APPROXIMATE_NUM_LIT : FLOAT_FRAGMENT ('E' (PLUS_SIGN|MINUS_SIGN)? (FLOAT_FRAGMEN
 
 // Rule #--- <CHAR_STRING> is a base for Rule #065 <char_string_lit> , it incorporates <character_representation>
 // and a superfluous subtoken typecasting of the "QUOTE"
-CHAR_STRING: '\'' (~('\'' | '\r' | '\n') | '\'' '\'' | NEWLINE)* '\'';
+CHAR_STRING: '\'' (~('\'' | '\r' | '\n') | '\'\'' | NEWLINE)* '\'';
 
 // Perl-style quoted string, see Oracle SQL reference, chapter String Literals
 CHAR_STRING_PERL    : 'Q' ( QS_ANGLE | QS_BRACE | QS_BRACK | QS_PAREN) -> type(CHAR_STRING);

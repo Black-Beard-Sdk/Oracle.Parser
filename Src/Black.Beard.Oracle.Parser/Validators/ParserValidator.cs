@@ -13,12 +13,12 @@ namespace Bb.Oracle.Validators
     public abstract class ParserValidator
     {
 
-        public virtual bool CanEvaluate(ItemBase item)
+        public virtual bool CanEvaluate(OracleObject item)
         {
             return true;
         }
 
-        public abstract void Evaluate(ItemBase item);
+        public abstract void Evaluate(OracleObject item);
 
     }
 

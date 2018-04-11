@@ -82,6 +82,11 @@ namespace Bb.Oracle.Models
         TableTypeDefinition,
         FieldSpec,
         VarrayTypeDef,
+        CreateOrReplace,
+        Alter,
+        Drop,
+        TableComment,
+        TableColumnComment,
     }
 
 }

@@ -23,7 +23,6 @@ SELECT
     t.STATUS, 
     t.VALIDATED, 
     t.INDEX_NAME,
-
     t.DELETE_RULE,
     t.GENERATED,
     t.DEFERRABLE,
@@ -78,11 +77,10 @@ ORDER BY t.OWNER, t.TABLE_NAME, t.CONSTRAINT_NAME, t.CONSTRAINT_TYPE, t.R_CONSTR
                     c.Reference.Name = t.R_CONSTRAINT_NAME;
                     c.TableReference.Owner = t.SchemaName;
                     c.TableReference.Name = t.TABLE_NAME;
-                    c.Key = c.BuildKey();
 
+                    c.Key = c.BuildKey();
                     if (db.Constraints.TryGet(c.Key, out ConstraintModel c2))
                         db.Constraints.Remove(c2);
-
                     db.Constraints.Add(c);
 
                 };

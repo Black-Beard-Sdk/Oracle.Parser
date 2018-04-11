@@ -30,6 +30,8 @@ namespace Bb.Oracle.Structures.Models
 
         public string ValidatorName { get; set; }
 
+        public Error Error { get; set; }
+
     }
 
 }

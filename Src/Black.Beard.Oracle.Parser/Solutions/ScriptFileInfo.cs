@@ -88,11 +88,6 @@ namespace Bb.Oracle.Solutions
 
         private ScriptParser _script;
 
-        internal void Finally()
-        {
-
-        }
-
     }
 
 }

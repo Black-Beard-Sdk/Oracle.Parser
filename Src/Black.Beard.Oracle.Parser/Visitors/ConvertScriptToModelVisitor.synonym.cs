@@ -48,29 +48,8 @@ namespace Bb.Oracle.Visitors
         {
             string p = ispublic ? "public" : string.Empty;
             string key = $"{p}:{synonym_schema}.{synonym_name}:{object_schema}.{object_name}:{link_name}";
-            SynonymModel synonym = Db.Synonyms[key];
 
-            if (synonym != null)
-                if (withReplace)
-                {
-                    AppendEventParser(
-                        "duplicate object",
-                        $"{synonym_schema}.{synonym_name}",
-                        Models.KindModelEnum.Synonym,
-                        context,
-                        synonym.Files
-                    );
-
-                    Db.Synonyms.Remove(synonym);
-
-
-                }
-                else
-                {
-                    Stop();
-                }
-
-            synonym = new SynonymModel()
+            var synonym = new SynonymModel()
             {
                 Key = key,
                 Owner = synonym_schema,
@@ -80,10 +59,25 @@ namespace Bb.Oracle.Visitors
                 DbLink = link_name,
                 IsPublic = ispublic,
             };
-            Db.Synonyms.Add(synonym);
 
+            if (withReplace)
+            {
+                AppendEventParser(
+                    "duplicate object",
+                    $"{synonym_schema}.{synonym_name}",
+                    Models.KindModelEnum.Synonym,
+                    context,
+                    synonym.Files
+                );
+
+                Append(new OCreateOrReplace() { Item = synonym });
+
+            }
+            else
+                Append(synonym);
 
             return synonym;
+
         }
     }
 

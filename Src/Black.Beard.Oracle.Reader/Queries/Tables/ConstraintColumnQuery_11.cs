@@ -48,25 +48,23 @@ ORDER BY t.OWNER, t.TABLE_NAME, t.CONSTRAINT_NAME
                     string keyContraint = t.Owner + "." + t.CONSTRAINT_NAME;
 
                     var ct = db.Constraints[keyContraint];
-                    //if (ct != null)
-                    //{
 
-                        ct.Columns.Add(new ConstraintColumnModel() { ColumnName = t.ColumnName, Position = t.Position });
+                    ct.Columns.Add(new ConstraintColumnModel() { ColumnName = t.ColumnName, Position = t.Position });
 
-                        // Primary Key check
-                        if (ct.Type.Equals("P"))
-                        {
-                            //table.Columns[t.ColumnName].IsPrimaryKey = true;
-                            SetPrimaryKeyColumn(table.Columns, t.ColumnName);
-                        }
+                    if (ct.Type.Equals("P"))        // Primary Key check
+                    {
+                        //table.Columns[t.ColumnName].IsPrimaryKey = true;
+                        SetPrimaryKeyColumn(table.Columns, t.ColumnName);
+                    }
+                    else if (ct.Type.Equals("F"))   // Foreign Key check
+                    {
+                        SetForeignKeyColumn(table.Columns, t.ColumnName);
+                    }
+                    else
+                    {
 
-                        // Foreign Key check
-                        if (ct.Type.Equals("F"))
-                        {
-                            SetForeignKeyColumn(table.Columns, t.ColumnName);
-                        }
+                    }
 
-                    //}
                 }
 
             };

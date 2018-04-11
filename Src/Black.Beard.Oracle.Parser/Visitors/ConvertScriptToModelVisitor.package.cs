@@ -82,54 +82,41 @@ namespace Bb.Oracle.Visitors
 
             var schema = context.schema_object_name().GetCleanedName();
             var package_name = context.package_name()[0].GetCleanedName();
-            PackageModel package = this.Db.Packages.FirstOrDefault(c => c.GetOwner() == schema && c.GetName() == package_name);
-            if (package == null)
+            var txt = GetText(context).ToString().Trim();
+            if (!txt.StartsWith("CREATE"))
+                txt = txt.Substring(6).Trim();
+
+            PackageModel package = new PackageModel()
             {
+                Key = schema + "." + package_name,
+                Owner = schema,
+                Name = package_name,
+            };
 
-                var txt = GetText(context).ToString().Trim();
-                if (!txt.StartsWith("CREATE"))
-                    txt = txt.Substring(6).Trim();
-
-                package = new PackageModel()
-                {
-                    Key = schema + "." + package_name,
-                    Owner = schema,
-                    Name = package_name,
-                };
-
-                package.Code.SetSource(txt);
-                AppendFile(package, context.Start);
-                this.Db.Packages.Add(package);
-
-            }
-            else
-                AppendException(new AmbiguousObjectException($"{schema}.{package_name}"), context);
+            package.Code.SetSource(txt);
+            AppendFile(package, context.Start);
+            Append(package);
 
             var invoker_rights_clause = context.invoker_rights_clause();
 
             var package_obj_specs = context.package_obj_spec();
             foreach (var package_obj_spec in package_obj_specs)
             {
-
                 var r = (OracleObject)this.VisitPackage_obj_spec(package_obj_spec);
                 if (r != null)
+                {
+
                     if (r.KindModel == KindModelEnum.Function || r.KindModel == KindModelEnum.Procedure)
-                    {
                         if (r is ProcedureModel p)
                         {
                             p.Owner = package.Owner;
                             p.PackageName = package.Name;
-                            p.Key = p.BuildKey();
-
-                            if (Db.Procedures.Contains(p.Key))
-                            {
-                                Stop();
-                            }
-                            else
-                                Db.Procedures.Add(p);
                         }
-                    }
 
+                    if (r is ProcedureModel p2)
+                        Append(p2);
+
+                }
             }
 
             return package;

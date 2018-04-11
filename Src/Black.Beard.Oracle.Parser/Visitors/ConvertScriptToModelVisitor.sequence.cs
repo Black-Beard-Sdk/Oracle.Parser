@@ -19,8 +19,6 @@ namespace Bb.Oracle.Visitors
         public override object VisitCreate_sequence([NotNull] PlSqlParser.Create_sequenceContext context)
         {
 
-            SequenceModel sequence = null;
-
             if (context.exception != null)
             {
                 AppendException(context.exception);
@@ -29,15 +27,7 @@ namespace Bb.Oracle.Visitors
 
             var name = context.sequence_name().GetCleanedTexts();
             string key = $"{name[0]}.{name[1]}";
-
-            sequence = Db.Sequences[key];
-            if (sequence != null)
-            {
-                GetEventParser(new Models.Error() { Message = Models.Constants.Errors.AllreadyExists }, key, KindModelEnum.Sequence);
-                return null;
-            }
-
-            sequence = new SequenceModel()
+            SequenceModel sequence = new SequenceModel()
             {
                 Key = key,
                 Owner = name[0],
@@ -46,43 +36,35 @@ namespace Bb.Oracle.Visitors
             AppendFile(sequence, context.Start);
 
             using (Enqueue(sequence))
-            {
-
-                //foreach (var item in context.sequence_start_clause())
-                //    this.VisitSequence_start_clause(item);
-
                 foreach (var item in context.sequence_spec())
                     this.VisitSequence_spec(item);
 
-            }
-
-
+            Append(sequence);
             return sequence;
 
         }
 
         public override object VisitAlter_sequence([NotNull] PlSqlParser.Alter_sequenceContext context)
         {
+
             Stop();
-            SequenceModel sequence = null;
 
             var name = context.sequence_name().GetCleanedTexts();
             string key = $"{name[0]}.{name[1]}";
 
-            sequence = Db.Sequences[key];
-            if (sequence != null)
+            SequenceModel sequence = new SequenceModel()
             {
-                GetEventParser(new Models.Error() { Message = Models.Constants.Errors.NotFoundObject }, key, KindModelEnum.Sequence);
-                return null;
-            }
+                Key = key,
+                Owner = name[0],
+                Name = name[1],
+            };
+            AppendFile(sequence, context.Start);
 
             using (Enqueue(sequence))
-            {
-
                 foreach (var item in context.sequence_spec())
                     this.VisitSequence_spec(item);
 
-            }
+            Append(new OAlter() { Item = sequence });
 
             return sequence;
 
@@ -91,9 +73,21 @@ namespace Bb.Oracle.Visitors
         public override object VisitDrop_sequence([NotNull] PlSqlParser.Drop_sequenceContext context)
         {
             Stop();
-            var result = base.VisitDrop_sequence(context);
-            Debug.Assert(result != null);
-            return result;
+            var name = context.sequence_name().GetCleanedTexts();
+            string key = $"{name[0]}.{name[1]}";
+
+            SequenceModel sequence = new SequenceModel()
+            {
+                Key = key,
+                Owner = name[0],
+                Name = name[1],
+            };
+
+            AppendFile(sequence, context.Start);
+            var oDrop = new ODrop() { Item = sequence };
+            Append(oDrop);
+            return oDrop;
+            
         }
 
         /// <summary>

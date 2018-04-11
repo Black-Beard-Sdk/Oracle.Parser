@@ -18,7 +18,6 @@ namespace Bb.Oracle.Visitors
     public partial class ConvertScriptToModelVisitor : IDbModelVisitor
     {
 
-
         public PolicyBehavior Policy { get; set; }
 
         public override object VisitErrorNode(IErrorNode node)
@@ -69,11 +68,27 @@ namespace Bb.Oracle.Visitors
                 System.Diagnostics.Debugger.Break();
         }
 
-        public OracleDatabase Db { get; }
+        public List<OracleObject> Items { get; }
+
+        private T Append<T>(T item) where T : OracleObject
+        {
+
+            this.Items.Add(item);
+
+            if (Validators != null && Validators.Count > 0)
+                foreach (ParserValidator validator in Validators)
+                    if (validator.CanEvaluate(item))
+                    {
+                        validator.Evaluate(item);
+                    }
+
+            return item;
+
+        }
+
+        public List<ParserValidator> Validators { get; set; }
 
         public EventParsers Events { get { return this._events; } }
-
-        public Errors Errors { get { return this._anomalies; } }
 
         public List<FileElement> GetFileElements(FileCollection files, ParserRuleContext context)
         {
@@ -96,33 +111,28 @@ namespace Bb.Oracle.Visitors
 
         }
 
-        public List<ParserValidator> Validators { get { return this._validators; } }
-
         public string Filename { get; set; }
 
 
         private Stack<IRuleNode> _models = new Stack<IRuleNode>();
-        private Errors _anomalies = new Errors();
         private EventParsers _events = new EventParsers();
         private StringBuilder _initialSource;
         private readonly Stack<Trash> _statck = new Stack<Trash>();
-        private List<ParserValidator> _validators = new List<ParserValidator>();
 
-        private void AppendEventParser(EventParser eventParser)
+        private EventParser AppendEventParser(string message, string name, Models.KindModelEnum kind, ParserRuleContext context, FileCollection files)
         {
-            this._events.Add(eventParser);
-        }
-
-        private void AppendEventParser(string message, string name, Models.KindModelEnum kind, ParserRuleContext context, FileCollection files)
-        {
-            AppendEventParser(new EventParser()
+            var i = new EventParser()
             {
                 Files = GetFileElements(files, context),
                 Kind = kind,
                 OjectName = name,
                 ValidatorName = this.GetType().Name,
                 Message = message,
-            });
+            };
+
+            this.Events.Add(i);
+
+            return i;
 
         }
 
@@ -141,9 +151,8 @@ namespace Bb.Oracle.Visitors
             string message = $"'{exception.Message}' at line '{t.Line} {txt.ToString()}' with token '{t.Text}' column {t.Column}, offset {t.StartIndex}";
 
             var error = new Error() { Exception = exception, Message = message, File = GetFileElement(exception.OffendingToken) };
-            _anomalies.Add(error);
 
-            AppendEventParser(GetEventParser(error, string.Empty, KindModelEnum.Undefined));
+            GetEventParser(error, string.Empty, KindModelEnum.Undefined);
 
             Trace.WriteLine(message + " in " + this.Filename);
 
@@ -160,14 +169,13 @@ namespace Bb.Oracle.Visitors
         private StringBuilder GetText(int startIndex, int stopIndex)
         {
 
-
-
             int length = stopIndex - startIndex;
 
-            StringBuilder sb2 = new StringBuilder(length > 0 ? length : 0);
+            StringBuilder sb2 = new StringBuilder(length > 0 ? length + 1 : 0);
 
             if (length > 0)
             {
+                length++;
                 char[] ar = new char[length];
                 _initialSource.CopyTo(startIndex, ar, 0, length);
                 sb2.Append(ar);
@@ -181,13 +189,16 @@ namespace Bb.Oracle.Visitors
         {
             var t = context;
             string message = $"{exception.Message}. {t.GetText()} at line {t.Start.Line} column {t.Start.Column}, offset {t.Start.StartIndex}";
-            _anomalies.Add(new Error() { Exception = exception, Message = message, File = GetFileElement(context.Start) });
+            var e = new Error() { Exception = exception, Message = message, File = GetFileElement(context.Start) };
+            GetEventParser(e, string.Empty, KindModelEnum.Undefined);
             Trace.WriteLine(message + " in " + this.Filename);
         }
 
         private EventParser GetEventParser(Error error, string objectName, KindModelEnum kind)
         {
-            return GetEventParser(error.Message, objectName, kind, error.File);
+            var i = GetEventParser(error.Message, objectName, kind, error.File);
+            i.Error = error;
+            return i;
         }
 
         private EventParser GetEventParser(string message, string objectName, KindModelEnum kind, params FileElement[] fileElements)
@@ -209,14 +220,16 @@ namespace Bb.Oracle.Visitors
             };
 
             eventParser.Files.AddRange(fileElements);
-
+            this.Events.Add(eventParser);
             return eventParser;
 
         }
 
-        private void AppendFile(ItemBase item, IToken token)
+        private FileElement AppendFile(ItemBase item, IToken token)
         {
-            item.Files.Add(this.GetFileElement(token));
+            var file = this.GetFileElement(token);
+            item.Files.Add(file);
+            return file;
         }
 
         private FileElement GetFileElement(IToken token)

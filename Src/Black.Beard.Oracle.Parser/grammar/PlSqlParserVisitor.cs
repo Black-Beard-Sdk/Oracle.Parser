@@ -741,6 +741,12 @@ public interface IPlSqlParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitOut_of_line_constraint([NotNull] PlSqlParser.Out_of_line_constraintContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.out_of_line_constraints"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitOut_of_line_constraints([NotNull] PlSqlParser.Out_of_line_constraintsContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="PlSqlParser.constraint_state"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -1136,6 +1142,12 @@ public interface IPlSqlParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitRelational_properties([NotNull] PlSqlParser.Relational_propertiesContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.relational_property"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitRelational_property([NotNull] PlSqlParser.Relational_propertyContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="PlSqlParser.table_properties"/>.
 	/// </summary>
