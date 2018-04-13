@@ -8,6 +8,11 @@ namespace Bb.Oracle.Structures.Models
     public partial class SubPartitionModel : ItemBase
     {
 
+        public SubPartitionModel()
+        {
+            this.PhysicalAttributes = new PhysicalAttributesModel() { Parent = this };
+        }
+
         /// <summary>
         /// Subpartition Name
         /// </summary>   
@@ -29,69 +34,9 @@ namespace Bb.Oracle.Structures.Models
         public decimal SubpartitionPosition { get; set; }
 
         /// <summary>
-        /// Tablespace Name
-        /// </summary>   
-        public string TablespaceName { get; set; }
-
-        /// <summary>
-        /// Pct Free
-        /// </summary>   
-        public decimal PctFree { get; set; }
-
-        /// <summary>
-        /// Pct Used
-        /// </summary>   
-        public decimal PctUsed { get; set; }
-
-        /// <summary>
-        /// Ini Trans
-        /// </summary>   
-        public decimal IniTrans { get; set; }
-
-        /// <summary>
-        /// Initial Trans
-        /// </summary>   
-        public decimal InitialTrans { get; set; }
-
-        /// <summary>
-        /// Max Trans
-        /// </summary>   
-        public decimal MaxTrans { get; set; }
-
-        /// <summary>
-        /// Initial Extent
-        /// </summary>   
-        public decimal InitialExtent { get; set; }
-
-        /// <summary>
-        /// Min Extent
-        /// </summary>   
-        public decimal MinExtent { get; set; }
-
-        /// <summary>
-        /// Max Extent
-        /// </summary>   
-        public decimal MaxExtent { get; set; }
-
-        /// <summary>
-        /// Next Extent
-        /// </summary>   
-        public decimal NextExtent { get; set; }
-
-        /// <summary>
         /// Max Size
         /// </summary>   
         public decimal MaxSize { get; set; }
-
-        /// <summary>
-        /// Freelists
-        /// </summary>   
-        public decimal Freelists { get; set; }
-
-        /// <summary>
-        /// Freelist Groups
-        /// </summary>   
-        public decimal FreelistGroups { get; set; }
 
         /// <summary>
         /// Logging
@@ -107,11 +52,6 @@ namespace Bb.Oracle.Structures.Models
         /// Compress For
         /// </summary>   
         public string CompressFor { get; set; }
-
-        /// <summary>
-        /// Pct Increase
-        /// </summary>   
-        public decimal PctIncrease { get; set; }
 
         /// <summary>
         /// Num Rows
@@ -170,5 +110,6 @@ namespace Bb.Oracle.Structures.Models
 
         public override KindModelEnum KindModel => KindModelEnum.SubPartition;
 
+        public PhysicalAttributesModel PhysicalAttributes { get; private set; }
     }
 }

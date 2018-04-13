@@ -1273,14 +1273,6 @@ namespace Bb.Oracle.Visitors
             return result;
         }
 
-        public override object VisitOn_delete_clause([NotNull] PlSqlParser.On_delete_clauseContext context)
-        {
-            Stop();
-            var result = base.VisitOn_delete_clause(context);
-            Debug.Assert(result != null);
-            return result;
-        }
-
         public override object VisitOpen_for_statement([NotNull] PlSqlParser.Open_for_statementContext context)
         {
             Stop();

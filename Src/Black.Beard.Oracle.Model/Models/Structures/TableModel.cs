@@ -20,9 +20,16 @@ namespace Bb.Oracle.Structures.Models
             this.Columns = new ColumnCollection() { Parent = this };
             this.Partitions = new PartitionRefCollection() { Parent = this };
             this.BlocPartition = new BlocPartitionModel() { Parent = this };
+            this.PhysicalAttributes = new PhysicalAttributesModel() { Parent = this, };
 
-            this.Tablespace = new ReferenceTablespace();
+        }
 
+        public override void Initialize()
+        {
+            this.Columns.Initialize();
+            this.Partitions.Initialize();
+            this.BlocPartition.Initialize();
+            this.PhysicalAttributes.Initialize();
         }
 
         /// <summary>
@@ -67,21 +74,11 @@ namespace Bb.Oracle.Structures.Models
         /// Temporary
         /// </summary>
         public bool Temporary { get; set; }
-
-        /// <summary>
-        /// Tablespace Name
-        /// </summary>
-        public ReferenceTablespace Tablespace { get; set; }
-
+        
         /// <summary>
         /// Cluster Name
         /// </summary>
         public string ClusterName { get; set; }
-
-        /// <summary>
-        /// Logging
-        /// </summary>
-        public decimal Logging { get; set; }
 
         /// <summary>
         /// Table Lock
@@ -194,46 +191,6 @@ namespace Bb.Oracle.Structures.Models
         public string ResultCache { get; set; }
 
         /// <summary>
-        /// Pct Free
-        /// </summary>
-        public decimal PctFree { get; set; }
-
-        /// <summary>
-        /// Initial Extent
-        /// </summary>
-        public decimal InitialExtent { get; set; }
-
-        /// <summary>
-        /// Pct Used
-        /// </summary>
-        public decimal PctUsed { get; set; }
-
-        /// <summary>
-        /// Next Extent
-        /// </summary>
-        public decimal NextExtent { get; set; }
-
-        /// <summary>
-        /// Min Extents
-        /// </summary>
-        public decimal MinExtents { get; set; }
-
-        /// <summary>
-        /// Max Extents
-        /// </summary>
-        public decimal MaxExtents { get; set; }
-
-        /// <summary>
-        /// Ini Trans
-        /// </summary>
-        public decimal IniTrans { get; set; }
-
-        /// <summary>
-        /// Max Trans
-        /// </summary>
-        public decimal MaxTrans { get; set; }
-
-        /// <summary>
         /// code View
         /// </summary>
         public string CodeView { get; set; }
@@ -241,7 +198,7 @@ namespace Bb.Oracle.Structures.Models
         /// <summary>
         /// Is Matrialized View
         /// </summary>
-        public bool IsMatrializedView { get; set; }
+        public bool IsMaterializedView { get; set; }
 
         /// <summary>
         /// Parsed
@@ -263,6 +220,7 @@ namespace Bb.Oracle.Structures.Models
         /// Objet <see cref="PartitionRefCollection" />.");
         /// </returns>
         public PartitionRefCollection Partitions { get; set; }
+
         /// <summary>
         /// TablePartition
         /// </summary>
@@ -270,6 +228,11 @@ namespace Bb.Oracle.Structures.Models
         /// Objet <see cref="BlocPartitionModel" />.");
         /// </returns>
         public BlocPartitionModel BlocPartition { get; set; }
+
+        /// <summary>
+        /// Physical attributes
+        /// </summary>
+        public PhysicalAttributesModel PhysicalAttributes { get; private set; }
 
         public string CustomName
         {
@@ -314,12 +277,6 @@ namespace Bb.Oracle.Structures.Models
         public void Alter(IchangeVisitor visitor, Ichangable source, string propertyName)
         {
             visitor.Alter(this, source as TableModel, propertyName);
-        }
-
-        public override void Initialize()
-        {
-            this.Columns.Initialize();
-            this.Partitions.Initialize();
         }
 
         public override KindModelEnum KindModel

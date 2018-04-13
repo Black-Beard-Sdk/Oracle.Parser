@@ -73,16 +73,15 @@ namespace Bb.Oracle.Visitors
         public override object VisitRelational_table([NotNull] PlSqlParser.Relational_tableContext context)
         {
 
+            var table = Current<TableModel>();
+
             var relational_properties = context.relational_properties();
             if (relational_properties != null)
                 VisitRelational_properties(relational_properties);
 
             if (context.ON().Exist() && context.COMMIT().Exist() && context.ROWS().Exist())
             {
-
                 Stop();
-                var table = this.Current<TableModel>();
-
                 if (context.DELETE().Exist())
                 {
                     Stop();
@@ -98,11 +97,15 @@ namespace Bb.Oracle.Visitors
 
             var physical_properties = context.physical_properties();
             if (physical_properties != null)
+            {
+
                 VisitPhysical_properties(physical_properties);
+
+            }
 
             VisitTable_properties(context.table_properties());
 
-            return null;
+            return table;
 
         }
 
@@ -121,10 +124,70 @@ namespace Bb.Oracle.Visitors
         /// <returns></returns>
         public override object VisitPhysical_properties([NotNull] PlSqlParser.Physical_propertiesContext context)
         {
-            Stop();
-            var result = base.VisitPhysical_properties(context);
-            Debug.Assert(result != null);
-            return result;
+
+            var table = Current<TableModel>();
+
+            var deferred_segment_creation = context.deferred_segment_creation();
+            if (deferred_segment_creation != null)
+            {
+
+                VisitDeferred_segment_creation(deferred_segment_creation);
+                Stop();
+            }
+
+            var segment_attributes_clause = context.segment_attributes_clause();
+            if (segment_attributes_clause != null)
+                using (Enqueue(table.PhysicalAttributes))
+                    VisitSegment_attributes_clause(segment_attributes_clause);
+
+            var table_compression = context.table_compression();
+            if (table_compression != null)
+            {
+                VisitTable_compression(table_compression);
+                Stop();
+            }
+
+            var inmemory_table_clause = context.inmemory_table_clause();
+            if (inmemory_table_clause != null)
+            {
+                VisitInmemory_table_clause(inmemory_table_clause);
+                Stop();
+            }
+
+            var ilm_clause = context.ilm_clause();
+            if (ilm_clause != null)
+            {
+                VisitIlm_clause(ilm_clause);
+                Stop();
+            }
+
+            var index_org_table_clause = context.index_org_table_clause();
+            if (index_org_table_clause != null)
+            {
+                VisitIndex_org_table_clause(index_org_table_clause);
+                Stop();
+            }
+
+            var external_table_clause = context.external_table_clause();
+            if (external_table_clause != null)
+            {
+                VisitExternal_table_clause(external_table_clause);
+                Stop();
+            }
+
+            if (context.HEAP().Exist())
+            {
+                Stop();
+
+            }
+            else if (context.INDEX().Exist())
+            {
+                Stop();
+
+            }
+
+            return table;
+
         }
 
         /// <summary>
@@ -264,18 +327,90 @@ namespace Bb.Oracle.Visitors
         /// <returns></returns>
         public override object VisitSegment_attributes_clause([NotNull] PlSqlParser.Segment_attributes_clauseContext context)
         {
-            Stop();
-            var result = base.VisitSegment_attributes_clause(context);
-            Debug.Assert(result != null);
-            return result;
+
+            var physical = Current<PhysicalAttributesModel>();
+            Debug.Assert(physical != null);
+
+            var physical_attributes_clauses = context.physical_attributes_clauses();
+            if (physical_attributes_clauses != null && physical_attributes_clauses.Length > 0)
+            {
+
+                foreach (var physical_attributes_clause in physical_attributes_clauses)
+                {
+                    foreach (var item in physical_attributes_clause.physical_attributes_clause())
+                    {
+                        Stop();
+                        VisitPhysical_attributes_clause(item);
+                    }
+                }
+
+            }
+
+            var tablespace_clauses = context.tablespace_clause();
+            if (tablespace_clauses != null && tablespace_clauses.Length > 0)
+            {
+                foreach (var tablespace_clause in tablespace_clauses)
+                {
+                    var tablespaces = (List<string>)VisitTablespace_clause(tablespace_clause);
+                    physical.Tablespace.Name = tablespaces.FirstOrDefault();
+                }
+            }
+
+            var logging_clauses = context.logging_clause();
+            if (logging_clauses != null && logging_clauses.Length > 0)
+            {
+                foreach (var logging_clause in logging_clauses)
+                {
+                    VisitLogging_clause(logging_clause);
+                    Stop();
+                }
+            }
+
+            return physical;
+
         }
+
+        /// <summary>
+        /// physical_attributes_clauses : physical_attributes_clause+
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public override object VisitPhysical_attributes_clauses([NotNull] PlSqlParser.Physical_attributes_clausesContext context)
+        {
+
+            var result = new PhysicalAttributesModel();
+
+            var physical_attributes_clauses = context.physical_attributes_clause();
+            using (Enqueue(result))
+                foreach (var physical_attributes_clause in physical_attributes_clauses)
+                {
+
+                }
+
+            return result;
+
+        }
+
+
+        /// <summary>
+        /// storage_clause : STORAGE LEFT_PAREN storage_clause+ RIGHT_PAREN
+        ///     ;
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public override object VisitStorage_clauses([NotNull] PlSqlParser.Storage_clausesContext context)
+        {
+            return base.VisitStorage_clauses(context);
+        }
+
 
         /// <summary>
         /// physical_attributes_clause :
         ///       PCTFREE integer 
         ///     | PCTUSED integer 
         ///     | INITRANS integer 
-        ///     | storage_clause 
+        ///     | MAXTRANS integer 
+        ///     | storage_clauses 
 	    ///     ;
         /// </summary>
         /// <param name="context"></param>
@@ -283,9 +418,35 @@ namespace Bb.Oracle.Visitors
         public override object VisitPhysical_attributes_clause([NotNull] PlSqlParser.Physical_attributes_clauseContext context)
         {
             Stop();
-            var result = base.VisitPhysical_attributes_clause(context);
-            Debug.Assert(result != null);
-            return result;
+
+            var physical = Current<PhysicalAttributesModel>();
+
+            if (context.PCTFREE().Exist())
+            {
+                physical.PctFree = context.integer().ToInteger();
+            }
+            else if (context.PCTUSED().Exist())
+            {
+                physical.PctUsed = context.integer().ToInteger();
+            }
+            else if (context.INITRANS().Exist())
+            {
+                physical.IniTrans = context.integer().ToInteger();
+
+            }
+            else if (context.MAXTRANS().Exist())
+            {
+                physical.MaxTrans = context.integer().ToInteger();
+            }
+            else
+            {
+                var storage_clauses = context.storage_clauses();
+                if (storage_clauses != null)
+                    VisitStorage_clauses(storage_clauses);
+            }
+
+            return physical;
+
         }
 
         /// <summary>
@@ -705,7 +866,17 @@ namespace Bb.Oracle.Visitors
                 }
                 else if (i is List<ConstraintModel> m)
                 {
+                    foreach (ConstraintModel constraint in m)
+                    {
 
+                        constraint.TableReference.Owner = table.Owner;
+                        constraint.TableReference.Name = table.Name;
+
+                        if (string.IsNullOrEmpty(constraint.Owner))
+                            if (!string.IsNullOrEmpty(constraint.TableReference.Owner))
+                                constraint.Owner = constraint.TableReference.Owner;
+
+                    }
                 }
                 else
                 {
@@ -744,7 +915,6 @@ namespace Bb.Oracle.Visitors
         /// <returns></returns>
         public override object VisitRelational_property([NotNull] PlSqlParser.Relational_propertyContext context)
         {
-
             List<ConstraintModel> constraints = null;
             ColumnModel result = null;
             var column_definition = context.column_definition();
@@ -842,7 +1012,6 @@ namespace Bb.Oracle.Visitors
             {
                 var defaultExpression = context.expression();
                 _datatype.DataDefault = GetText(defaultExpression.Start.StartIndex, defaultExpression.Stop.StopIndex).ToString();
-                Stop();
             }
 
             if (context.GENERATED().Exist())
@@ -997,6 +1166,7 @@ namespace Bb.Oracle.Visitors
 
                 constraint.TableReference.Owner = table.Owner;
                 constraint.TableReference.Name = table.Name;
+                constraint.TableReference.Set(table);
 
                 var c = context.constraint_name();
                 if (c != null)
@@ -1025,7 +1195,6 @@ namespace Bb.Oracle.Visitors
                         var check_constraint = context.check_constraint();
                         if (check_constraint != null)
                             VisitCheck_constraint(check_constraint);
-
                     }
 
                 }
@@ -1053,6 +1222,7 @@ namespace Bb.Oracle.Visitors
         public override object VisitCheck_constraint([NotNull] PlSqlParser.Check_constraintContext context)
         {
             var constraint = this.Current<ConstraintModel>();
+            //constraint.Type = "O";
             constraint.Type = "C";
             Debug.Assert(constraint != null);
 
@@ -1145,8 +1315,9 @@ namespace Bb.Oracle.Visitors
                 var using_index_clause = context.using_index_clause().FirstOrDefault();
                 if (using_index_clause != null)
                 {
-                    Stop();
-                    VisitUsing_index_clause(using_index_clause);
+                    var index = (IndexModel)VisitUsing_index_clause(using_index_clause);
+                    constraint.IndexOwner = index.IndexOwner;
+                    constraint.IndexName = index.Name;
                 }
                 var exceptions_clause = context.exceptions_clause().FirstOrDefault();
                 if (exceptions_clause != null)
@@ -1173,9 +1344,170 @@ namespace Bb.Oracle.Visitors
         /// <returns></returns>
         public override object VisitUsing_index_clause([NotNull] PlSqlParser.Using_index_clauseContext context)
         {
+
+            IndexModel result = null;
+
+            var index_name = context.index_name();
+            if (index_name != null)
+            {
+                Stop();
+
+                var names = context.index_name().GetCleanedTexts();
+
+                result = new IndexModel()
+                {
+
+                    IndexOwner = names[0],
+                    Name = names[1],
+
+                };
+
+            }
+
+            else
+            {
+                var create_index = context.create_index();
+                if (create_index != null)
+                {
+                    Stop();
+                    result = (IndexModel)VisitCreate_index(create_index);
+                }
+                else
+                {
+                    var index_properties = context.index_properties();
+                    if (index_properties != null)
+                    {
+                        result = new IndexModel();
+                        using (Enqueue(result))
+                            VisitIndex_properties(index_properties);
+
+                        //result.IndexOwner = "";
+                        //result.Name = result.BuildName();
+
+                        AppendFile(result, context.Start);
+                        Append(result);
+
+                    }
+                }
+            }
+
+            return result;
+
+        }
+
+        /// <summary>
+        /// index_properties :
+        ///    (
+        ///        (global_partitioned_index | local_partitioned_index) 
+        ///      | index_attributes+
+        ///    )+ 
+        /// | INDEXTYPE IS(domain_index_clause /*| xmltable_index_clause */| xmlindex_clause)
+        ///;
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public override object VisitIndex_properties([NotNull] PlSqlParser.Index_propertiesContext context)
+        {
+
+            var index = Current<IndexModel>();
+
+            var global_partitioned_indexes = context.global_partitioned_index();
+            if (global_partitioned_indexes != null && global_partitioned_indexes.Length > 0)
+            {
+                foreach (var global_partitioned_index in global_partitioned_indexes)
+                {
+                    Stop();
+                    VisitGlobal_partitioned_index(global_partitioned_index);
+                }
+            }
+            else
+            {
+                var local_partitioned_indexes = context.local_partitioned_index();
+                if (local_partitioned_indexes != null && local_partitioned_indexes.Length > 0)
+                {
+                    foreach (var local_partitioned_index in local_partitioned_indexes)
+                    {
+                        Stop();
+                        VisitLocal_partitioned_index(local_partitioned_index);
+                    }
+                }
+                else
+                {
+                    var index_attributes = context.index_attributes();
+                    if (index_attributes != null && index_attributes.Length > 0)
+                    {
+                        foreach (var index_attribute in index_attributes)
+                            VisitIndex_attributes(index_attribute);
+                    }
+                    else
+                    {
+                        var domain_index_clause = context.domain_index_clause();
+                        if (domain_index_clause != null)
+                        {
+                            Stop();
+                            VisitDomain_index_clause(domain_index_clause);
+                        }
+                        else
+                        {
+                            var xmlindex_clause = context.xmlindex_clause();
+                            if (xmlindex_clause != null)
+                            {
+                                Stop();
+                                VisitXmlindex_clause(xmlindex_clause);
+                            }
+                            else
+                            {
+                                Stop();
+                            }
+                        }
+                    }
+                }
+            }
+
+            return index;
+
+        }
+
+        /// <summary>
+        /// global_partitioned_index :
+        ///     GLOBAL PARTITION BY
+        ///         ( 
+        ///        'RANGE' paren_column_list LEFT_PAREN index_partitioning_clause RIGHT_PAREN 
+	    /// 	 | 'HASH'  paren_column_list (individual_hash_partitions | hash_partitions_by_quantity )
+        ///     )
+	    /// ;
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public override object VisitGlobal_partitioned_index([NotNull] PlSqlParser.Global_partitioned_indexContext context)
+        {
             Stop();
-            // A sortir dans un fichier index
-            return base.VisitUsing_index_clause(context);
+
+            return base.VisitGlobal_partitioned_index(context);
+        }
+
+        /// <summary>
+        /// local_partitioned_index :
+	    ///     LOCAL(on_range_partitioned_table | on_list_partitioned_table | on_hash_partitioned_table | on_comp_partitioned_table )?
+	    ///     ;
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public override object VisitLocal_partitioned_index([NotNull] PlSqlParser.Local_partitioned_indexContext context)
+        {
+            Stop();
+            return base.VisitLocal_partitioned_index(context);
+        }
+
+        /// <summary>
+        /// EMPTY
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public override object VisitXmlindex_clause([NotNull] PlSqlParser.Xmlindex_clauseContext context)
+        {
+            Stop();
+            return base.VisitXmlindex_clause(context);
         }
 
         /// <summary>
@@ -1186,10 +1518,143 @@ namespace Bb.Oracle.Visitors
         /// <returns></returns>
         public override object VisitReferences_clause([NotNull] PlSqlParser.References_clauseContext context)
         {
-            Stop();
-            var result = base.VisitReferences_clause(context);
-            Debug.Assert(result != null);
-            return result;
+
+            var constraint = new ConstraintModel()
+            {
+                Type = "R",
+            };
+
+            var names = context.tableview_name().table_fullname().GetCleanedTexts();
+            if (names.Count == 2)
+            {
+                constraint.TableReference.Owner = names[0];
+                constraint.TableReference.Name = names[1];
+            }
+            else if (names.Count == 1)
+                constraint.TableReference.Name = names[0];
+
+            var columns = (List<string>)VisitParen_column_list(context.paren_column_list());
+            foreach (string item in columns)
+                constraint.Columns.Add(new ConstraintColumnModel() { ColumnName = item, Position = constraint.Columns.Count, });
+
+            if (context.ON().Exist() && context.DELETE().Exist())
+            {
+                if (context.CASCADE().Exist())
+                    constraint.DeleteRule = "CASCADE";
+
+                else if (context.SET().Exist() && context.NULL().Exist())
+                    constraint.DeleteRule = "SET NULL";
+            }
+            else
+                constraint.DeleteRule = "SET NULL";
+
+            return constraint;
+
+        }
+
+        /// <summary>
+        /// index_attributes :
+        ///     physical_attributes_clause+
+        ///     | logging_clause 
+        ///     | ONLINE 
+        ///     | TABLESPACE(tablespace_name | DEFAULT)
+        ///     | advanced_index_compression 
+        ///     | (SORT | NOSORT) 
+        ///     | REVERSE 
+        ///     | (VISIBLE | INVISIBLE) 
+        ///     | partial_index_clause 
+        ///     | parallel_clause    
+	    /// ;
+        /// </summary>é
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public override object VisitIndex_attributes([NotNull] PlSqlParser.Index_attributesContext context)
+        {
+
+            var index = Current<IndexModel>();
+            var physical_attributes_clauses = context.physical_attributes_clauses();
+            if (physical_attributes_clauses != null)
+            {
+                foreach (var physical_attributes_clause in physical_attributes_clauses.physical_attributes_clause())
+                {
+                    Stop();
+                    using (Enqueue(index.PhysicalAttributes))
+                        VisitPhysical_attributes_clause(physical_attributes_clause);
+                }
+            }
+            else
+            {
+                var logging_clause = context.logging_clause();
+                if (logging_clause != null)
+                {
+                    Stop();
+                    VisitLogging_clause(logging_clause);
+                }
+                else if (context.ONLINE().Exist())
+                {
+                    Stop();
+                    index.ONLINE = true;
+                }
+                else if (context.TABLESPACE().Exist())
+                {
+                    if (context.DEFAULT().Exist())
+                        index.PhysicalAttributes.Tablespace.Name = "DEFAULT";
+                    else
+                        index.PhysicalAttributes.Tablespace.Name = context.tablespace_name().id_expression().GetCleanedTexts().FirstOrDefault();
+                }
+                else
+                {
+                    var advanced_index_compression = context.advanced_index_compression();
+                    if (advanced_index_compression != null)
+                    {
+                        Stop();
+                        VisitAdvanced_index_compression(advanced_index_compression);
+                    }
+                    else if (context.SORT().Exist())
+                    {
+                        Stop();
+                    }
+                    else if (context.NOSORT().Exist())
+                    {
+                        Stop();
+                    }
+                    else if (context.REVERSE().Exist())
+                    {
+                        Stop();
+
+                    }
+                    else if (context.VISIBLE().Exist())
+                    {
+                        Stop();
+
+                    }
+                    else if (context.INVISIBLE().Exist())
+                    {
+                        Stop();
+                    }
+                    else
+                    {
+                        var partial_index_clause = context.partial_index_clause();
+                        if (partial_index_clause != null)
+                        {
+                            Stop();
+                            VisitPartial_index_clause(partial_index_clause);
+                        }
+                        else
+                        {
+                            var parallel_clause = context.parallel_clause();
+                            if (parallel_clause != null)
+                            {
+                                Stop();
+                                VisitParallel_clause(parallel_clause);
+                            }
+
+                        }
+                    }
+                }
+            }
+
+            return index;
         }
 
         /// <summary>
@@ -1227,7 +1692,6 @@ namespace Bb.Oracle.Visitors
                 var constraint = (ConstraintModel)VisitOut_of_line_constraints(out_of_line_constraints);
                 if (constraint_state != null)
                 {
-                    Stop();
                     using (Enqueue(constraint))
                         VisitConstraint_state(constraint_state);
                 }
@@ -1252,17 +1716,39 @@ namespace Bb.Oracle.Visitors
         public override object VisitOut_of_line_constraints([NotNull] PlSqlParser.Out_of_line_constraintsContext context)
         {
 
-            var names = context.constraint_name().GetCleanedTexts();
 
             var constraint = new ConstraintModel()
             {
                 //Owner = table.Owner,
             };
 
-            AppendFile(constraint, context.Start);
 
             using (Enqueue(constraint))
                 base.VisitOut_of_line_constraints(context);
+
+
+            var constraint_name = context.constraint_name();
+            if (constraint_name != null)
+            {
+
+                var names = constraint_name.GetCleanedTexts();
+                if (names.Count == 1)
+                {
+                    constraint.Name = names[0];
+                }
+                else if (names.Count == 2)
+                {
+                    constraint.Owner = names[0];
+                    constraint.Name = names[1];
+                }
+
+                if (string.IsNullOrEmpty(constraint.Owner))
+                    if (!string.IsNullOrEmpty(constraint.TableReference.Owner))
+                        constraint.Owner = constraint.TableReference.Owner;
+
+            }
+
+            AppendFile(constraint, context.Start);
 
             return constraint;
 
@@ -1277,7 +1763,6 @@ namespace Bb.Oracle.Visitors
         /// <returns></returns>
         public override object VisitUnique_key_clause([NotNull] PlSqlParser.Unique_key_clauseContext context)
         {
-            Stop();
 
             var result = (List<string>)VisitParen_column_list(context.paren_column_list());
 
@@ -1291,15 +1776,12 @@ namespace Bb.Oracle.Visitors
         }
 
         /// <summary>
-        /// foreign_key_clause :
-        ///     FOREIGN KEY paren_column_list references_clause on_delete_clause?
-        ///     ;
+        /// foreign_key_clause : FOREIGN KEY paren_column_list references_clause
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
         public override object VisitForeign_key_clause([NotNull] PlSqlParser.Foreign_key_clauseContext context)
         {
-            Stop();
 
             var constraint = this.Current<ConstraintModel>();
             constraint.Type = "R";
@@ -1308,11 +1790,8 @@ namespace Bb.Oracle.Visitors
             foreach (string item in result)
                 constraint.Columns.Add(new ConstraintColumnModel() { ColumnName = item, Position = constraint.Columns.Count, });
 
-            VisitReferences_clause(context.references_clause());
-
-            var on_delete_clause = context.on_delete_clause();
-            if (on_delete_clause != null)
-                VisitOn_delete_clause(on_delete_clause);
+            var constraint2 = (ConstraintModel)VisitReferences_clause(context.references_clause());
+            constraint.Reference.Set(constraint2);
 
             return constraint;
 

@@ -316,7 +316,7 @@ namespace Bb.Oracle.Models.Comparer
 
             string typeObject = "Tables";
 
-            if (source.IsMatrializedView)
+            if (source.IsMaterializedView)
                 typeObject = "MaterializedViews";
 
             else if (source.IsView)

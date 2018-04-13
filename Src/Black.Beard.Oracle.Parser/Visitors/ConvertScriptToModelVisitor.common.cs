@@ -171,15 +171,12 @@ namespace Bb.Oracle.Visitors
 
             int length = stopIndex - startIndex;
 
-            StringBuilder sb2 = new StringBuilder(length > 0 ? length + 1 : 0);
+            length++;
 
-            if (length > 0)
-            {
-                length++;
-                char[] ar = new char[length];
-                _initialSource.CopyTo(startIndex, ar, 0, length);
-                sb2.Append(ar);
-            }
+            StringBuilder sb2 = new StringBuilder(length);
+            char[] ar = new char[length];
+            _initialSource.CopyTo(startIndex, ar, 0, length);
+            sb2.Append(ar);
 
             return sb2;
 
@@ -224,6 +221,13 @@ namespace Bb.Oracle.Visitors
             return eventParser;
 
         }
+
+
+        public override object VisitTablespace_name([NotNull] PlSqlParser.Tablespace_nameContext context)
+        {
+            return context.id_expression().GetCleanedTexts();
+        }
+
 
         private FileElement AppendFile(ItemBase item, IToken token)
         {

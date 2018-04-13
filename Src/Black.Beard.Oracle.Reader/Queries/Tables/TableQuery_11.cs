@@ -83,16 +83,9 @@ ORDER BY OWNER, TABLE_NAME
 
                         if (db.Tables.TryGet(key, out table))
                         {
-
-                            table.Tablespace.Name = t.TablespaceName;
+                            
                             table.ClusterName = t.ClusterName;
                             table.Status = t.Status;
-                            table.PctFree = t.PctFree;
-                            table.PctUsed = t.PctUsed;
-                            table.InitialExtent = t.InitialExtent;
-                            table.NextExtent = t.NextExtent;
-                            table.MinExtents = t.MinExtents;
-                            table.Logging = t.Logging;
                             table.Cache = t.Cache.ToBoolean();
                             table.TableLock = t.TableLock;
                             table.Partitioned = t.Partitioned.ToBoolean();
@@ -116,8 +109,17 @@ ORDER BY OWNER, TABLE_NAME
                             table.ReadOnly = t.ReadOnly.ToBoolean();
                             table.SegmentCreated = t.SegmentCreated.ToBoolean();
                             table.ResultCache = t.ResultCache;
-                            table.IniTrans = t.IniTrans;
-                            table.MaxTrans = t.MaxTrans;
+
+                            table.PhysicalAttributes.PctFree = t.PctFree;
+                            table.PhysicalAttributes.PctUsed = t.PctUsed;
+                            table.PhysicalAttributes.InitialExtent = t.InitialExtent;
+                            table.PhysicalAttributes.NextExtent = t.NextExtent;
+                            table.PhysicalAttributes.MinExtents = t.MinExtents;
+                            table.PhysicalAttributes.IniTrans = t.IniTrans;
+                            table.PhysicalAttributes.MaxTrans = t.MaxTrans;
+                            table.PhysicalAttributes.Logging = t.Logging;
+
+                            table.PhysicalAttributes.Tablespace.Name = t.TablespaceName;
 
                         }
 

@@ -8,7 +8,9 @@ namespace Bb.Oracle.Models.Codes
     public abstract class OObjectCommentStatement : OCodeStatement
     {
 
-
+        /// <summary>
+        /// comment on object
+        /// </summary>
         public string Comment { get; set; }
 
     }
@@ -18,20 +20,28 @@ namespace Bb.Oracle.Models.Codes
 
         public override KindModelEnum KindModel => KindModelEnum.TableComment;
 
-
+        /// <summary>
+        /// Name of table reference
+        /// </summary>
         public string Table { get; set; }
+
+        /// <summary>
+        /// schema owner of table reference
+        /// </summary>
         public string Owner { get; set; }
 
     }
 
-    public class OTableColumnCommentStatement : OObjectCommentStatement
+    public class OTableColumnCommentStatement : OTableCommentStatement
     {
 
         public override KindModelEnum KindModel => KindModelEnum.TableColumnComment;
 
-        public string Table { get; set; }
-        public string Owner { get; set; }
+        /// <summary>
+        /// name of the referenced column
+        /// </summary>
         public string Column { get; set; }
+
     }
 
 }

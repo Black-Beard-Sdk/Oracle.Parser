@@ -22,6 +22,7 @@ SELECT
     t.R_CONSTRAINT_NAME, 
     t.STATUS, 
     t.VALIDATED, 
+    t.INDEX_OWNER,
     t.INDEX_NAME,
     t.DELETE_RULE,
     t.GENERATED,
@@ -60,6 +61,7 @@ ORDER BY t.OWNER, t.TABLE_NAME, t.CONSTRAINT_NAME, t.CONSTRAINT_TYPE, t.R_CONSTR
                     {
                         Name = t.CONSTRAINT_NAME,
                         Owner = t.SchemaName,
+                        IndexOwner = t.INDEX_NAME,
                         IndexName = t.INDEX_NAME,
                         Type = t.CONSTRAINT_TYPE,
                         DeleteRule = t.DELETE_RULE,
@@ -151,6 +153,12 @@ ORDER BY t.OWNER, t.TABLE_NAME, t.CONSTRAINT_NAME, t.CONSTRAINT_TYPE, t.R_CONSTR
             {
                 ColumnName = "VALIDATED",
                 Read = reader => reader.Field<string>((int)PrimaryTableColumns.VALIDATED)
+            };
+
+            public static Field<string> INDEX_OWNER = new Field<string>()
+            {
+                ColumnName = "INDEX_OWNER",
+                Read = reader => reader.Field<string>((int)PrimaryTableColumns.INDEX_OWNER)
             };
 
             public static Field<string> INDEX_NAME = new Field<string>()
@@ -252,6 +260,7 @@ ORDER BY t.OWNER, t.TABLE_NAME, t.CONSTRAINT_NAME, t.CONSTRAINT_TYPE, t.R_CONSTR
             yield return Columns.R_CONSTRAINT_NAME;
             yield return Columns.Status;
             yield return Columns.VALIDATED;
+            yield return Columns.INDEX_OWNER;
             yield return Columns.INDEX_NAME;
 
             yield return Columns.DELETE_RULE;
@@ -275,6 +284,7 @@ ORDER BY t.OWNER, t.TABLE_NAME, t.CONSTRAINT_NAME, t.CONSTRAINT_TYPE, t.R_CONSTR
             R_CONSTRAINT_NAME,
             STATUS,
             VALIDATED,
+            INDEX_OWNER,
             INDEX_NAME,
             DELETE_RULE,
             GENERATED,
@@ -311,6 +321,8 @@ ORDER BY t.OWNER, t.TABLE_NAME, t.CONSTRAINT_NAME, t.CONSTRAINT_TYPE, t.R_CONSTR
         public string Status { get; set; }
 
         public bool VALIDATED { get; set; }
+
+        public string INDEX_OWNER { get; set; }
 
         public string INDEX_NAME { get; set; }
 

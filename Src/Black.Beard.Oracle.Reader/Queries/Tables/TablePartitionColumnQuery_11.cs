@@ -48,35 +48,38 @@ namespace Bb.Oracle.Reader.Queries
 
                             table.BlocPartition.PartitioningType = t.PartitioningType;
                             table.BlocPartition.SubpartitioningType = t.SubpartitioningType;
-                        //table.BlocPartition.PartitionCount = t.PartitionCount;
-                        //table.BlocPartition.DefSubpartitionCount = t.DefSubpartitionCount;
-                        //table.BlocPartition.PartitioningKeyCount = t.PartitioningKeyCount;
-                        //table.BlocPartition.SubpartitioningKeyCount = t.SubpartitioningKeyCount;
-                        table.BlocPartition.Status = t.Status;
-                            table.BlocPartition.DefTablespaceName = t.DefTablespaceName;
-                            table.BlocPartition.DefPctFree = t.DefPctFree;
-                            table.BlocPartition.DefPctUsed = t.DefPctUsed;
-                            table.BlocPartition.DefIniTrans = t.DefIniTrans;
-                            table.BlocPartition.DefMaxTrans = t.DefMaxTrans;
-                            table.BlocPartition.DefInitialExtent = t.DefInitialExtent;
-                            table.BlocPartition.DefNextExtent = t.DefNextExtent;
-                            table.BlocPartition.DefMinExtents = t.DefMinExtents;
-                            table.BlocPartition.DefMaxExtents = t.DefMaxExtents;
+                            //table.BlocPartition.PartitionCount = t.PartitionCount;
+                            //table.BlocPartition.DefSubpartitionCount = t.DefSubpartitionCount;
+                            //table.BlocPartition.PartitioningKeyCount = t.PartitioningKeyCount;
+                            //table.BlocPartition.SubpartitioningKeyCount = t.SubpartitioningKeyCount;
+                            table.BlocPartition.Status = t.Status;
                             table.BlocPartition.DefMaxSize = t.DefMaxSize;
-                            table.BlocPartition.DefPctIncrease = t.DefPctIncrease;
-                            table.BlocPartition.DefFreelists = t.DefFreelists;
-                            table.BlocPartition.DefFreelistGroups = t.DefFreelistGroups;
-                            table.BlocPartition.DefLogging = t.DefLogging.ToBoolean();
                             table.BlocPartition.DefCompression = t.DefCompression;
                             table.BlocPartition.DefCompressFor = t.DefCompressFor;
-                            table.BlocPartition.DefBufferPool = t.DefBufferPool;
-                            table.BlocPartition.DefFlashCache = t.DefFlashCache;
                             table.BlocPartition.DefCellFlashCache = t.DefCellFlashCache;
                             table.BlocPartition.RefPtnConstraintName = t.RefPtnConstraintName;
                             table.BlocPartition.Interval = t.Interval;
                             table.BlocPartition.IsNested = t.IsNested.ToBoolean();
                             table.BlocPartition.DefSegmentCreation = t.DefSegmentCreation;
 
+                            table.BlocPartition.DefLogging = t.DefLogging.ToBoolean();
+
+                            table.BlocPartition.PhysicalAttributes.PctFree = t.DefPctFree;
+                            table.BlocPartition.PhysicalAttributes.PctUsed = t.DefPctUsed;
+                            table.BlocPartition.PhysicalAttributes.IniTrans = t.DefIniTrans;
+                            table.BlocPartition.PhysicalAttributes.MaxTrans = t.DefMaxTrans;
+                            table.BlocPartition.PhysicalAttributes.InitialExtent = t.DefInitialExtent;
+                            table.BlocPartition.PhysicalAttributes.NextExtent = t.DefNextExtent;
+                            table.BlocPartition.PhysicalAttributes.MinExtents = t.DefMinExtents;
+                            table.BlocPartition.PhysicalAttributes.MaxExtents = t.DefMaxExtents;
+
+                            table.BlocPartition.PhysicalAttributes.BufferPool = t.DefBufferPool;
+                            table.BlocPartition.PhysicalAttributes.PctIncrease = t.DefPctIncrease;
+                            table.BlocPartition.PhysicalAttributes.Freelists = t.DefFreelists;
+                            table.BlocPartition.PhysicalAttributes.FreelistGroups = t.DefFreelistGroups;
+                            table.BlocPartition.PhysicalAttributes.FlashCache = t.DefFlashCache;
+
+                            table.BlocPartition.PhysicalAttributes.Tablespace.Name = t.DefTablespaceName;
 
                         }
 
@@ -121,12 +124,12 @@ namespace Bb.Oracle.Reader.Queries
             public static Field<Decimal> DefPctUsed = new Field<Decimal>() { ColumnName = "DEF_PCT_USED", Read = reader => reader.Field<Decimal>((int)TablePartitionColumnQueryColumns_11.DEF_PCT_USED) };
             public static Field<Decimal> DefIniTrans = new Field<Decimal>() { ColumnName = "DEF_INI_TRANS", Read = reader => reader.Field<Decimal>((int)TablePartitionColumnQueryColumns_11.DEF_INI_TRANS) };
             public static Field<Decimal> DefMaxTrans = new Field<Decimal>() { ColumnName = "DEF_MAX_TRANS", Read = reader => reader.Field<Decimal>((int)TablePartitionColumnQueryColumns_11.DEF_MAX_TRANS) };
-            public static Field<String> DefInitialExtent = new Field<String>() { ColumnName = "DEF_INITIAL_EXTENT", Read = reader => reader.Field<String>((int)TablePartitionColumnQueryColumns_11.DEF_INITIAL_EXTENT) };
-            public static Field<String> DefNextExtent = new Field<String>() { ColumnName = "DEF_NEXT_EXTENT", Read = reader => reader.Field<String>((int)TablePartitionColumnQueryColumns_11.DEF_NEXT_EXTENT) };
-            public static Field<String> DefMinExtents = new Field<String>() { ColumnName = "DEF_MIN_EXTENTS", Read = reader => reader.Field<String>((int)TablePartitionColumnQueryColumns_11.DEF_MIN_EXTENTS) };
-            public static Field<String> DefMaxExtents = new Field<String>() { ColumnName = "DEF_MAX_EXTENTS", Read = reader => reader.Field<String>((int)TablePartitionColumnQueryColumns_11.DEF_MAX_EXTENTS) };
+            public static Field<decimal> DefInitialExtent = new Field<decimal>() { ColumnName = "DEF_INITIAL_EXTENT", Read = reader => reader.Field<decimal>((int)TablePartitionColumnQueryColumns_11.DEF_INITIAL_EXTENT) };
+            public static Field<decimal> DefNextExtent = new Field<decimal>() { ColumnName = "DEF_NEXT_EXTENT", Read = reader => reader.Field<decimal>((int)TablePartitionColumnQueryColumns_11.DEF_NEXT_EXTENT) };
+            public static Field<decimal> DefMinExtents = new Field<decimal>() { ColumnName = "DEF_MIN_EXTENTS", Read = reader => reader.Field<decimal>((int)TablePartitionColumnQueryColumns_11.DEF_MIN_EXTENTS) };
+            public static Field<decimal> DefMaxExtents = new Field<decimal>() { ColumnName = "DEF_MAX_EXTENTS", Read = reader => reader.Field<decimal>((int)TablePartitionColumnQueryColumns_11.DEF_MAX_EXTENTS) };
             public static Field<String> DefMaxSize = new Field<String>() { ColumnName = "DEF_MAX_SIZE", Read = reader => reader.Field<String>((int)TablePartitionColumnQueryColumns_11.DEF_MAX_SIZE) };
-            public static Field<String> DefPctIncrease = new Field<String>() { ColumnName = "DEF_PCT_INCREASE", Read = reader => reader.Field<String>((int)TablePartitionColumnQueryColumns_11.DEF_PCT_INCREASE) };
+            public static Field<decimal> DefPctIncrease = new Field<decimal>() { ColumnName = "DEF_PCT_INCREASE", Read = reader => reader.Field<decimal>((int)TablePartitionColumnQueryColumns_11.DEF_PCT_INCREASE) };
             public static Field<Decimal> DefFreelists = new Field<Decimal>() { ColumnName = "DEF_FREELISTS", Read = reader => reader.Field<Decimal>((int)TablePartitionColumnQueryColumns_11.DEF_FREELISTS) };
             public static Field<Decimal> DefFreelistGroups = new Field<Decimal>() { ColumnName = "DEF_FREELIST_GROUPS", Read = reader => reader.Field<Decimal>((int)TablePartitionColumnQueryColumns_11.DEF_FREELIST_GROUPS) };
             public static Field<String> DefLogging = new Field<String>() { ColumnName = "DEF_LOGGING", Read = reader => reader.Field<String>((int)TablePartitionColumnQueryColumns_11.DEF_LOGGING) };
@@ -282,13 +285,13 @@ namespace Bb.Oracle.Reader.Queries
         public Decimal DefPctFree { get; set; }
         public Decimal DefPctUsed { get; set; }
         public Decimal DefIniTrans { get; set; }
-        public Decimal DefMaxTrans { get; set; }
-        public String DefInitialExtent { get; set; }
-        public String DefNextExtent { get; set; }
-        public String DefMinExtents { get; set; }
-        public String DefMaxExtents { get; set; }
+        public decimal DefMaxTrans { get; set; }
+        public decimal DefInitialExtent { get; set; }
+        public decimal DefNextExtent { get; set; }
+        public decimal DefMinExtents { get; set; }
+        public decimal DefMaxExtents { get; set; }
         public String DefMaxSize { get; set; }
-        public String DefPctIncrease { get; set; }
+        public decimal DefPctIncrease { get; set; }
         public Decimal DefFreelists { get; set; }
         public Decimal DefFreelistGroups { get; set; }
         public String DefLogging { get; set; }

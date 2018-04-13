@@ -12,7 +12,13 @@ namespace Bb.Oracle.Structures.Models
         public PartitionModel()
         {
             this.SubPartitions = new SubPartitionCollection() { Parent = this };
+            this.PhysicalAttributes = new PhysicalAttributesModel() { Parent = this };
+        }
 
+        public override void Initialize()
+        {
+            this.SubPartitions.Initialize();
+            this.PhysicalAttributes.Initialize();
         }
 
         /// <summary>
@@ -39,72 +45,12 @@ namespace Bb.Oracle.Structures.Models
         /// Partition Position
         /// </summary>   
         public decimal PartitionPosition { get; set; }
-
-        /// <summary>
-        /// Tablespace Name
-        /// </summary>   
-        public string TablespaceName { get; set; }
-
-        /// <summary>
-        /// Ini Trans
-        /// </summary>   
-        public decimal IniTrans { get; set; }
-
-        /// <summary>
-        /// Max Trans
-        /// </summary>   
-        public decimal MaxTrans { get; set; }
-
-        /// <summary>
-        /// Initial Extent
-        /// </summary>   
-        public decimal InitialExtent { get; set; }
-
-        /// <summary>
-        /// Pct Free
-        /// </summary>   
-        public decimal PctFree { get; set; }
-
-        /// <summary>
-        /// Pct Used
-        /// </summary>   
-        public decimal PctUsed { get; set; }
-
-        /// <summary>
-        /// Next Extent
-        /// </summary>   
-        public decimal NextExtent { get; set; }
-
-        /// <summary>
-        /// Min Extent
-        /// </summary>   
-        public decimal MinExtent { get; set; }
-
-        /// <summary>
-        /// Max Extent
-        /// </summary>   
-        public decimal MaxExtent { get; set; }
-
+        
         /// <summary>
         /// Max Size
         /// </summary>   
         public decimal MaxSize { get; set; }
-
-        /// <summary>
-        /// Pct Increase
-        /// </summary>   
-        public decimal PctIncrease { get; set; }
-
-        /// <summary>
-        /// Freelists
-        /// </summary>   
-        public decimal Freelists { get; set; }
-
-        /// <summary>
-        /// Freelist Groups
-        /// </summary>   
-        public decimal FreelistGroups { get; set; }
-
+        
         /// <summary>
         /// Logging
         /// </summary>   
@@ -139,16 +85,6 @@ namespace Bb.Oracle.Structures.Models
         /// Chain Cnt
         /// </summary>   
         public decimal ChainCnt { get; set; }
-
-        /// <summary>
-        /// Buffer Pool
-        /// </summary>   
-        public string BufferPool { get; set; }
-
-        /// <summary>
-        /// Flash Cache
-        /// </summary>   
-        public string FlashCache { get; set; }
 
         /// <summary>
         /// Cell Flash Cache
@@ -192,8 +128,10 @@ namespace Bb.Oracle.Structures.Models
         /// Objet <see cref="SubPartitionCollection" />.");
         /// </returns>   
         public SubPartitionCollection SubPartitions { get; set; }
+        public PhysicalAttributesModel PhysicalAttributes { get; private set; }
 
         public override KindModelEnum KindModel =>  KindModelEnum.Partition;
+
 
     }
 

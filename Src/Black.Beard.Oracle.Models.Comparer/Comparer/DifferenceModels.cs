@@ -305,7 +305,7 @@ namespace Bb.Oracle.Models.Comparer
 
             string typeObject = "Tables";
 
-            if (source.IsMatrializedView)
+            if (source.IsMaterializedView)
                 typeObject = "MaterializedViews";
 
             else if (source.IsView)
@@ -677,7 +677,7 @@ namespace Bb.Oracle.Models.Comparer
 
             string typeObject = "Tables";
 
-            if (source.IsMatrializedView)
+            if (source.IsMaterializedView)
                 typeObject = "MaterializedViews";
 
             else if (source.IsView)
@@ -903,5 +903,9 @@ namespace Bb.Oracle.Models.Comparer
             }
         }
 
+        internal void AppendChange(PhysicalAttributesModel source, PhysicalAttributesModel target, string v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

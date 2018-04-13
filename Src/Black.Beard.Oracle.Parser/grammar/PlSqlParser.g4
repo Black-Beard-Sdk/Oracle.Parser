@@ -753,14 +753,10 @@ using_index_clause :
 
 index_properties :
     ( 
-        (
-              global_partitioned_index 
-            | local_partitioned_index
-        ) 
+        (global_partitioned_index | local_partitioned_index) 
       | index_attributes+
     )+ 
-    | INDEXTYPE IS ( domain_index_clause /*| xmltable_index_clause */| xmlindex_clause) 
-    
+    | INDEXTYPE IS ( domain_index_clause /*| xmltable_index_clause */| xmlindex_clause)     
 	;
 
 global_partitioned_index :
@@ -780,11 +776,11 @@ index_partitioning_clause :
 	;
 
 segment_attributes_clause :
-	( physical_attributes_clause+ | tablespace_clause | logging_clause )+ 
+	( physical_attributes_clauses | tablespace_clause | logging_clause )+ 
 	;
 
 index_attributes :
-          physical_attributes_clause+
+          physical_attributes_clauses
         | logging_clause 
         | ONLINE 
         | TABLESPACE (tablespace_name | DEFAULT) 
@@ -793,15 +789,17 @@ index_attributes :
         | REVERSE 
         | (VISIBLE | INVISIBLE) 
         | partial_index_clause 
-        | parallel_clause
-    
+        | parallel_clause    
 	;
+
+physical_attributes_clauses : physical_attributes_clause+;
 
 physical_attributes_clause :
       PCTFREE integer 
     | PCTUSED integer 
     | INITRANS integer 
-    | storage_clause 
+    | MAXTRANS integer
+    | storage_clauses 
 	;
 
 hash_partitions_by_quantity :
@@ -998,17 +996,17 @@ create_tablespace :
 
 permanent_tablespace_clause :
 	tablespace_clause datafile_specification? 
-        ( MINIMUM EXTENT size_clause
-        | BLOCKSIZE size_clause
-        | logging_clause
-        | FORCE LOGGING
-        | (ONLINE | OFFLINE)
-        | ENCRYPTION tablespace_encryption_spec
-        | DEFAULT //TODO table_compression? storage_clause?
-        | extent_management_clause
-        | segment_management_clause
-        | flashback_mode_clause
-        )*
+    (   MINIMUM EXTENT size_clause
+      | BLOCKSIZE size_clause
+      | logging_clause
+      | FORCE LOGGING
+      | (ONLINE | OFFLINE)
+      | ENCRYPTION tablespace_encryption_spec
+      | DEFAULT //TODO table_compression? storage_clause?
+      | extent_management_clause
+      | segment_management_clause
+      | flashback_mode_clause
+    )*
     ;      
 
 tablespace_encryption_spec :
@@ -1516,20 +1514,21 @@ ilm_time_period :
     )
     ;
 
+storage_clauses :
+    STORAGE LEFT_PAREN storage_clause+ RIGHT_PAREN 
+    ;
+
 storage_clause :
-    STORAGE LEFT_PAREN 
-        (INITIAL initial_size=size_clause
-        | NEXT next_size=size_clause
-        | MINEXTENTS minextents=(UNSIGNED_INTEGER | UNLIMITED)
-        | PCTINCREASE pctincrease=UNSIGNED_INTEGER
-        | FREELISTS freelists=UNSIGNED_INTEGER
-        | FREELIST GROUPS freelist_groups=UNSIGNED_INTEGER
-        | OPTIMAL (size_clause | NULL)
-        | BUFFER_POOL (KEEP | RECYCLE | DEFAULT)
-        | FLASH_CACHE (KEEP | NONE | DEFAULT)
-        | ENCRYPT
-        )+
-    RIGHT_PAREN 
+      INITIAL initial_size=size_clause
+    | NEXT next_size=size_clause
+    | MINEXTENTS minextents=(UNSIGNED_INTEGER | UNLIMITED)
+    | PCTINCREASE pctincrease=UNSIGNED_INTEGER
+    | FREELISTS freelists=UNSIGNED_INTEGER
+    | FREELIST GROUPS freelist_groups=UNSIGNED_INTEGER
+    | OPTIMAL (size_clause | NULL)
+    | BUFFER_POOL (KEEP | RECYCLE | DEFAULT)
+    | FLASH_CACHE (KEEP | NONE | DEFAULT)
+    | ENCRYPT
     ;
 
 column_definition :
@@ -1543,9 +1542,11 @@ column_definition :
     ;
 
 virtual_column_definition : 
-    column_name datatype? SORT? (VISIBLE | INVISIBLE)? (GENERATED ALWAYS)? AS LEFT_PAREN RIGHT_PAREN 
+    column_name datatype? SORT? (VISIBLE | INVISIBLE)? (GENERATED ALWAYS)? AS LEFT_PAREN column_expresssion RIGHT_PAREN 
     VIRTUAL? evaluation_edition_clause? unusable_editions_clause? inline_constraint*
     ;
+
+column_expresssion : compound_expression | simple_expression;
 
 period_definition :
         PERIOD FOR valid_time_column=column_name (start_time_column=column_name COMMA end_time_column=column_name)?
@@ -1669,15 +1670,11 @@ disable_constraint :
     ;
 
 foreign_key_clause :
-	FOREIGN KEY paren_column_list references_clause on_delete_clause?
+	FOREIGN KEY paren_column_list references_clause
     ;
 
 references_clause :
 	REFERENCES tableview_name paren_column_list (ON DELETE (CASCADE | SET NULL))?
-    ;
-
-on_delete_clause :
-	ON DELETE (CASCADE | SET NULL)
     ;
 
 unique_key_clause :
@@ -2515,6 +2512,19 @@ relational_expression :
     | compound_expression
     ;
 
+simple_expression : 
+      (
+        (   query_name
+          | id_expressions
+        ) PERIOD
+      )? (column_name | ROWID)
+    | ROWNUM
+    | string
+    | numeric
+    | sequence_name PERIOD (CURRVAL | NEXTVAL)
+    | NULL
+    ;
+
 compound_expression :
 	concatenation1=concatenation
        (
@@ -2579,16 +2589,16 @@ multi_column_for_loop :
     ;
 
 unary_expression :
-	(MINUS_SIGN | PLUS_SIGN) unary_expression
+	  (MINUS_SIGN | PLUS_SIGN) unary_expression
     | PRIOR unary_expression
     | CONNECT_BY_ROOT unary_expression
-    |  standard_function
+    | standard_function
     | /*TODO {input.LT(1).getText().equalsIgnoreCase("new") && !input.LT(2).getText().equals(".")}?*/ NEW unary_expression
-    |  DISTINCT unary_expression
-    |  ALL unary_expression
-    |  /*TODO{(input.LA(1) == CASE || input.LA(2) == CASE)}?*/ case_statement/*[false]*/
-    |  quantified_expression
-    |  atom
+    | DISTINCT unary_expression
+    | ALL unary_expression
+    | /*TODO{(input.LA(1) == CASE || input.LA(2) == CASE)}?*/ case_statement/*[false]*/
+    | quantified_expression
+    | atom
     ;
 
 case_statement /*TODO [boolean isStatementParameter]
@@ -2677,13 +2687,13 @@ to_date :
     ;
 
 other_function :
-	over_clause_keyword function_argument_analytic over_clause?
+	  over_clause_keyword function_argument_analytic over_clause?
     | /*TODO stantard_function_enabling_using*/ regular_id function_argument_modeling using_clause?
     | NVL LEFT_PAREN expression COMMA expression RIGHT_PAREN 
     | to_date 
     | COUNT LEFT_PAREN (ASTERISK | (DISTINCT | UNIQUE | ALL)? concatenation) RIGHT_PAREN over_clause?
     | (CAST | XMLCAST) LEFT_PAREN (MULTISET LEFT_PAREN subquery RIGHT_PAREN | concatenation) AS type_spec RIGHT_PAREN 
-    | COALESCE LEFT_PAREN table_element (COMMA (numeric | string))? RIGHT_PAREN 
+    | COALESCE LEFT_PAREN logical_expression (COMMA logical_expression)* RIGHT_PAREN 
     | COLLECT LEFT_PAREN (DISTINCT | UNIQUE)? concatenation collect_order_by_part? RIGHT_PAREN 
     | within_or_over_clause_keyword (function_arguments keep_clause?) within_or_over_part+
     | cursor_name ( PERCENT_ISOPEN | PERCENT_FOUND | PERCENT_NOTFOUND | PERCENT_ROWCOUNT )
@@ -3727,6 +3737,7 @@ regular_id :
     | PRESENT
     //| PRIOR
     | PRIVILEGE
+    | PRIORITY
     //| PROCEDURE
     | PROGRAM
     | RAISE
@@ -3770,7 +3781,7 @@ regular_id :
     | SEGMENT
     // | SELECT
     | SELF
-    // | SEQUENCE
+    | SEQUENCE
     | SEQUENTIAL
     | SERIALIZABLE
     | SERIALLY_REUSABLE
@@ -3786,16 +3797,17 @@ regular_id :
     | SIGNTYPE
     | SIMPLE_INTEGER
     | SINGLE
-    //| SIZE
+    | SIZE
     | SKIP_
     | SMALLINT
     | SNAPSHOT
     | SOME
+    | SORT
     | SPECIFICATION
     | SQLDATA
     | SQLERROR
     | STANDALONE
-    //| START
+    | START
     | STARTUP
     | STATEMENT
     | STATEMENT_ID

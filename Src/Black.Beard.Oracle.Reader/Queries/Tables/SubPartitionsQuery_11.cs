@@ -44,38 +44,42 @@ SELECT * FROM SYS.DBA_TAB_SUBPARTITIONS l
                                     HighValue = t.HighValue,
                                     HighValueLength = t.HighValueLength,
                                     SubpartitionPosition = t.SubpartitionPosition,
-                                    TablespaceName = t.TablespaceName,
-                                    PctFree = t.PctFree,
-                                    PctUsed = t.PctUsed,
-                                    IniTrans = t.IniTrans,
-                                    MaxTrans = t.MaxTrans,
-                                    InitialExtent = t.InitialExtent,
-                                    NextExtent = t.NextExtent,
-                                    MinExtent = t.MinExtent,
-                                    MaxExtent = t.MaxExtent,
                                     MaxSize = t.MaxSize,
-                                    PctIncrease = t.PctIncrease,
-                                    Freelists = t.Freelists,
-                                    FreelistGroups = t.FreelistGroups,
-                                    Logging = t.Logging.ToBoolean(),
                                     Compression = t.Compression,
                                     CompressFor = t.CompressFor,
                                     NumRows = t.NumRows,
                                     Blocks = t.Blocks,
                                     EmptyBlocks = t.EmptyBlocks,
-                                //AvgSpace = t.AvgSpace,
-                                ChainCnt = t.ChainCnt,
-                                //AvgRowLen = t.AvgRowLen,
-                                //SampleSize = t.SampleSize,
-                                //LastAnalyzed = t.LastAnalyzed,
-                                BufferPool = t.BufferPool,
+                                    //AvgSpace = t.AvgSpace,
+                                    ChainCnt = t.ChainCnt,
+                                    //AvgRowLen = t.AvgRowLen,
+                                    //SampleSize = t.SampleSize,
+                                    //LastAnalyzed = t.LastAnalyzed,
+                                    BufferPool = t.BufferPool,
                                     FlashCache = t.FlashCache,
                                     CellFlashCache = t.CellFlashCache,
                                     GlobalStats = t.GlobalStats.ToBoolean(),
                                     UserStats = t.UserStats.ToBoolean(),
                                     Interval = t.Interval.ToBoolean(),
                                     SegmentCreated = t.SegmentCreated.ToBoolean(),
+
+                                    Logging = t.Logging.ToBoolean(),
+
                                 };
+
+                                sub.PhysicalAttributes.PctIncrease = t.PctIncrease;
+                                sub.PhysicalAttributes.Freelists = t.Freelists;
+                                sub.PhysicalAttributes.FreelistGroups = t.FreelistGroups;
+                                sub.PhysicalAttributes.PctFree = t.PctFree;
+                                sub.PhysicalAttributes.PctUsed = t.PctUsed;
+                                sub.PhysicalAttributes.IniTrans = t.IniTrans;
+                                sub.PhysicalAttributes.MaxTrans = t.MaxTrans;
+                                sub.PhysicalAttributes.InitialExtent = t.InitialExtent;
+                                sub.PhysicalAttributes.NextExtent = t.NextExtent;
+                                sub.PhysicalAttributes.MinExtent = t.MinExtent;
+                                sub.PhysicalAttributes.MaxExtent = t.MaxExtent;
+
+                                sub.PhysicalAttributes.Tablespace.Name = t.TablespaceName;
 
                                 partition.SubPartitions.Add(sub);
 

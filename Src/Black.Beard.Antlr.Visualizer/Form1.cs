@@ -98,14 +98,21 @@ namespace Black.Beard.Antlr.Visualizer
                     int _start = p.Start.StartIndex;
                     int _end = p.Stop.StopIndex;
 
-                    richTextBox1.Select(_start, _end - _start + 1);
+                    var rel = richTextBox1.Text.Substring(0, Math.Min(_start, richTextBox1.Text.Length)).Count(c => c == '\n');
+
+                    richTextBox1.Select(_start - rel, _end - _start + 1);
+
                 }
                 else if (i.ParseTree is Antlr4.Runtime.Tree.TerminalNodeImpl t)
                 {
                     int _start = t.Symbol.StartIndex;
                     int _end = t.Symbol.StopIndex;
                     int length = Math.Max((int)(_end - _start + 1), (int)0);
-                    richTextBox1.Select(Math.Max(_start, 0), length);
+                    var start = Math.Max(_start, 0);
+
+                    var rel = richTextBox1.Text.Substring(0, Math.Min(start, richTextBox1.Text.Length)).Count(c => c == '\n');
+
+                    richTextBox1.Select(start - rel, length);
                 }
                 else
                 {

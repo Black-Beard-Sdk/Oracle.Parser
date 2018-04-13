@@ -18,7 +18,7 @@ namespace Bb.Oracle.Structures.Models
             this.BlocPartition = new BlocPartitionModel() { Parent = this };
             this.Columns = new IndexColumnCollection() { Parent = this };
             TableReference = new ReferenceTable() { GetDb = () => this.Root };
-            Tablespace = new ReferenceTablespace() { GetDb = () => this.Root };
+            this.PhysicalAttributes = new PhysicalAttributesModel() { Parent = this };
         }
 
         /// <summary>
@@ -31,10 +31,7 @@ namespace Bb.Oracle.Structures.Models
         /// </summary>
         public string Compress { get; set; }
 
-        /// <summary>
-        /// Tablespace
-        /// </summary>
-        public ReferenceTablespace Tablespace { get; set; }
+        public PhysicalAttributesModel PhysicalAttributes { get; private set; }
 
         /// <summary>
         /// Segment Name
@@ -57,11 +54,6 @@ namespace Bb.Oracle.Structures.Models
         public int Chunk { get; set; }
 
         /// <summary>
-        /// Pct Version
-        /// </summary>
-        public int PctVersion { get; set; }
-
-        /// <summary>
         /// Free Pools
         /// </summary>
         public string FreePools { get; set; }
@@ -72,46 +64,6 @@ namespace Bb.Oracle.Structures.Models
         public bool Cache { get; set; }
 
         /// <summary>
-        /// Tablespace Name
-        /// </summary>
-        public string TablespaceName { get; set; }
-
-        /// <summary>
-        /// Initial Extent
-        /// </summary>
-        public string InitialExtent { get; set; }
-
-        /// <summary>
-        /// Min Extents
-        /// </summary>
-        public string MinExtents { get; set; }
-
-        /// <summary>
-        /// Max Extents
-        /// </summary>
-        public string MaxExtents { get; set; }
-
-        /// <summary>
-        /// Pct Increase
-        /// </summary>
-        public string PctIncrease { get; set; }
-
-        /// <summary>
-        /// Free Lists
-        /// </summary>
-        public string FreeLists { get; set; }
-
-        /// <summary>
-        /// Free List Groups
-        /// </summary>
-        public decimal FreeListGroups { get; set; }
-
-        /// <summary>
-        /// Buffer Pool
-        /// </summary>
-        public string BufferPool { get; set; }
-
-        /// <summary>
         /// Logging
         /// </summary>
         public string Logging { get; set; }
@@ -120,11 +72,6 @@ namespace Bb.Oracle.Structures.Models
         /// Deduplication
         /// </summary>
         public string Deduplication { get; set; }
-
-        /// <summary>
-        /// Next Extents
-        /// </summary>
-        public string NextExtents { get; set; }
 
         /// <summary>
         /// Index Name
@@ -202,14 +149,16 @@ namespace Bb.Oracle.Structures.Models
         public override void Initialize()
         {
             TableReference.GetDb = () => this.Root;
-            Tablespace.GetDb = () => this.Root;
             this.Columns.Initialize();
+            this.PhysicalAttributes.Initialize();
         }
 
         public override KindModelEnum KindModel
         {
             get { return KindModelEnum.Index; }
         }
+
+        public bool ONLINE { get; set; }
 
         public override string GetName()
         {

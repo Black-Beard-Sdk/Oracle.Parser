@@ -13,6 +13,14 @@ namespace Bb.Oracle.Structures.Models
         {
             this.Columns = new PartitionColumnCollection() { Parent = this };
             this.SubColumns = new PartitionColumnCollection() { Parent = this };
+            this.PhysicalAttributes = new PhysicalAttributesModel() { Parent = this };
+        }
+
+        public override void Initialize()
+        {
+            this.Columns.Initialize();
+            this.SubColumns.Initialize();
+            this.PhysicalAttributes.Initialize();
         }
 
         /// <summary>
@@ -31,69 +39,9 @@ namespace Bb.Oracle.Structures.Models
         public string Status { get; set; }
 
         /// <summary>
-        /// Def Tablespace Name
-        /// </summary>   
-        public string DefTablespaceName { get; set; }
-
-        /// <summary>
-        /// Def Pct Free
-        /// </summary>   
-        public decimal DefPctFree { get; set; }
-
-        /// <summary>
-        /// Def Pct Used
-        /// </summary>   
-        public decimal DefPctUsed { get; set; }
-
-        /// <summary>
-        /// Def Ini Trans
-        /// </summary>   
-        public decimal DefIniTrans { get; set; }
-
-        /// <summary>
-        /// Def Max Trans
-        /// </summary>   
-        public decimal DefMaxTrans { get; set; }
-
-        /// <summary>
-        /// Def Initial Extent
-        /// </summary>   
-        public string DefInitialExtent { get; set; }
-
-        /// <summary>
-        /// Def Next Extent
-        /// </summary>   
-        public string DefNextExtent { get; set; }
-
-        /// <summary>
-        /// Def Min Extents
-        /// </summary>   
-        public string DefMinExtents { get; set; }
-
-        /// <summary>
-        /// Def Max Extents
-        /// </summary>   
-        public string DefMaxExtents { get; set; }
-
-        /// <summary>
         /// Def Max Size
         /// </summary>   
         public string DefMaxSize { get; set; }
-
-        /// <summary>
-        /// Def Pct Increase
-        /// </summary>   
-        public string DefPctIncrease { get; set; }
-
-        /// <summary>
-        /// Def Freelists
-        /// </summary>   
-        public decimal DefFreelists { get; set; }
-
-        /// <summary>
-        /// Def Freelist Groups
-        /// </summary>   
-        public decimal DefFreelistGroups { get; set; }
 
         /// <summary>
         /// Def Logging
@@ -109,16 +57,6 @@ namespace Bb.Oracle.Structures.Models
         /// Def Compress For
         /// </summary>   
         public string DefCompressFor { get; set; }
-
-        /// <summary>
-        /// Def Buffer Pool
-        /// </summary>   
-        public string DefBufferPool { get; set; }
-
-        /// <summary>
-        /// Def Flash Cache
-        /// </summary>   
-        public string DefFlashCache { get; set; }
 
         /// <summary>
         /// Def Cell Flash Cache
@@ -175,8 +113,9 @@ namespace Bb.Oracle.Structures.Models
         /// Objet <see cref="PartitionColumnCollection" />.");
         /// </returns>   
         public PartitionColumnCollection SubColumns { get; set; }
+        public PhysicalAttributesModel PhysicalAttributes { get; set; }
 
-        public override KindModelEnum KindModel =>  KindModelEnum.BlocPartition;
+        public override KindModelEnum KindModel => KindModelEnum.BlocPartition;
 
     }
 }

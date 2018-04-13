@@ -795,6 +795,12 @@ public interface IPlSqlParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitIndex_attributes([NotNull] PlSqlParser.Index_attributesContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.physical_attributes_clauses"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitPhysical_attributes_clauses([NotNull] PlSqlParser.Physical_attributes_clausesContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="PlSqlParser.physical_attributes_clause"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -1539,6 +1545,12 @@ public interface IPlSqlParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitIlm_time_period([NotNull] PlSqlParser.Ilm_time_periodContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.storage_clauses"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitStorage_clauses([NotNull] PlSqlParser.Storage_clausesContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="PlSqlParser.storage_clause"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -1556,6 +1568,12 @@ public interface IPlSqlParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitVirtual_column_definition([NotNull] PlSqlParser.Virtual_column_definitionContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.column_expresssion"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitColumn_expresssion([NotNull] PlSqlParser.Column_expresssionContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="PlSqlParser.period_definition"/>.
 	/// </summary>
@@ -1706,12 +1724,6 @@ public interface IPlSqlParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitReferences_clause([NotNull] PlSqlParser.References_clauseContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="PlSqlParser.on_delete_clause"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitOn_delete_clause([NotNull] PlSqlParser.On_delete_clauseContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="PlSqlParser.unique_key_clause"/>.
 	/// </summary>
@@ -2741,6 +2753,12 @@ public interface IPlSqlParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitRelational_expression([NotNull] PlSqlParser.Relational_expressionContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="PlSqlParser.simple_expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitSimple_expression([NotNull] PlSqlParser.Simple_expressionContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="PlSqlParser.compound_expression"/>.
 	/// </summary>

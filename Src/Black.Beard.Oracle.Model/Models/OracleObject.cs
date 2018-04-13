@@ -87,6 +87,7 @@ namespace Bb.Oracle.Models
         Drop,
         TableComment,
         TableColumnComment,
+        PhysicalAttribute,
     }
 
 }

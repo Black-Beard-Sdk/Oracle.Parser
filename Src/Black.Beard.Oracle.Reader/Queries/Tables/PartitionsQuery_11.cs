@@ -44,32 +44,18 @@ ORDER BY l.PARTITION_POSITION
                                 HighValue = t.HighValue,
                                 HighValueLength = t.HighValueLength,
                                 PartitionPosition = t.PartitionPosition,
-                                TablespaceName = t.TablespaceName,
-                                PctFree = t.PctFree,
-                                PctUsed = t.PctUsed,
-                                IniTrans = t.IniTrans,
-                                MaxTrans = t.MaxTrans,
-                                InitialExtent = t.InitialExtent,
-                                NextExtent = t.NextExtent,
-                                MinExtent = t.MinExtent,
-                                MaxExtent = t.MaxExtent,
                                 MaxSize = t.MaxSize,
-                                PctIncrease = t.PctIncrease,
-                                Freelists = t.Freelists,
-                                FreelistGroups = t.FreelistGroups,
                                 Logging = t.Logging.ToBoolean(),
                                 Compression = t.Compression,
                                 CompressFor = t.CompressFor,
                                 NumRows = t.NumRows,
                                 Blocks = t.Blocks,
                                 EmptyBlocks = t.EmptyBlocks,
-                            //AvgSpace = t.AvgSpace,
-                            ChainCnt = t.ChainCnt,
-                            //AvgRowLen = t.AvgRowLen,
-                            //SampleSize = t.SampleSize,
-                            //LastAnalyzed = t.LastAnalyzed,
-                            BufferPool = t.BufferPool,
-                                FlashCache = t.FlashCache,
+                                //AvgSpace = t.AvgSpace,
+                                ChainCnt = t.ChainCnt,
+                                //AvgRowLen = t.AvgRowLen,
+                                //SampleSize = t.SampleSize,
+                                //LastAnalyzed = t.LastAnalyzed,
                                 CellFlashCache = t.CellFlashCache,
                                 GlobalStats = t.GlobalStats.ToBoolean(),
                                 UserStats = t.UserStats.ToBoolean(),
@@ -79,6 +65,22 @@ ORDER BY l.PARTITION_POSITION
                                 SegmentCreated = t.SegmentCreated.ToBoolean(),
 
                             };
+
+                            partition.PhysicalAttributes.PctFree = t.PctFree;
+                            partition.PhysicalAttributes.PctUsed = t.PctUsed;
+                            partition.PhysicalAttributes.IniTrans = t.IniTrans;
+                            partition.PhysicalAttributes.MaxTrans = t.MaxTrans;
+                            partition.PhysicalAttributes.InitialExtent = t.InitialExtent;
+                            partition.PhysicalAttributes.NextExtent = t.NextExtent;
+                            partition.PhysicalAttributes.MinExtent = t.MinExtent;
+                            partition.PhysicalAttributes.MaxExtent = t.MaxExtent;
+
+                            partition.PhysicalAttributes.BufferPool = t.BufferPool;
+                            partition.PhysicalAttributes.FlashCache = t.FlashCache;
+                            partition.PhysicalAttributes.Tablespace.Name = t.TablespaceName;
+                            partition.PhysicalAttributes.PctIncrease = t.PctIncrease;
+                            partition.PhysicalAttributes.Freelists = t.Freelists;
+                            partition.PhysicalAttributes.FreelistGroups = t.FreelistGroups;
 
                             db.Partitions.Add(partition);
 

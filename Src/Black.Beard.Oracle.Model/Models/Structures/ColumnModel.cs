@@ -22,6 +22,7 @@ namespace Bb.Oracle.Structures.Models
             {
                 Parent = this
             };
+
             this.Type = new OracleType()
             {
                 Parent = this

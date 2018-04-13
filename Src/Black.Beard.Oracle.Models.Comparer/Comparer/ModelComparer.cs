@@ -789,6 +789,7 @@ namespace Bb.Oracle.Models.Comparer
 
         private void CompareTables(TableCollection targets, List<TableModel> src, bool findToRemove = false)
         {
+
             foreach (TableModel tableSource in src)
             {
 
@@ -851,23 +852,17 @@ namespace Bb.Oracle.Models.Comparer
 
                 }
 
-            //if (!tableSource.IsView && !tableTarget.IsView)
-            //{
+            if (!tableSource.IsView && !tableTarget.IsView)
+            {
+
+                //ComparePhysicialAttributes(source.)
+            }
 
             //    //if (tableSource.BlocPartition != tableTarget.BlocPartition)
             //    //    this._changes.AppendChange(tableSource, tableTarget, "BlocPartition");
 
-            //    //if (tableTarget.BufferPool == null)
-            //    //    tableTarget.BufferPool = "DEFAULT";
-
-            //    //if (tableSource.BufferPool != tableTarget.BufferPool)
-            //    //    this._changes.AppendChange(tableSource, tableTarget, "BufferPool");
-
             //    //if (tableSource.Cache != tableTarget.Cache)
             //    //    this._changes.AppendChange(tableSource, tableTarget, "Cache");
-
-            //    //if (tableSource.CellFlashCache != tableTarget.CellFlashCache)
-            //    //    this._changes.AppendChange(tableSource, tableTarget, "CellFlashCache");
 
             //    //if (tableSource.ClusterName != tableTarget.ClusterName)
             //    //    this._changes.AppendChange(tableSource, tableTarget, "ClusterName");
@@ -896,9 +891,6 @@ namespace Bb.Oracle.Models.Comparer
             //    //if (tableSource.Duration != tableTarget.Duration)
             //    //    this._changes.AppendChange(tableSource, tableTarget, "Duration");
 
-            //    //if (tableSource.FlashCache != tableTarget.FlashCache)
-            //    //    this._changes.AppendChange(tableSource, tableTarget, "FlashCache");
-
             //    //if (tableSource.Generated != tableTarget.Generated)
             //    //    this._changes.AppendChange(tableSource, tableTarget, "Generated");
 
@@ -911,38 +903,17 @@ namespace Bb.Oracle.Models.Comparer
             //    //if (tableSource.IniTrans != tableTarget.IniTrans)
             //    //    this._changes.AppendChange(tableSource, tableTarget, "IniTrans");
 
-            //    //if (tableSource.Logging != tableTarget.Logging)
-            //    //    this._changes.AppendChange(tableSource, tableTarget, "Logging");
-
-            //    //if (tableSource.MaxExtents != tableTarget.MaxExtents)
-            //    //    this._changes.AppendChange(tableSource, tableTarget, "MaxExtents");
-
-            //    //if (tableSource.MaxTrans != tableTarget.MaxTrans)
-            //    //    this._changes.AppendChange(tableSource, tableTarget, "MaxTrans");
-
-            //    //if (tableSource.MinExtents != tableTarget.MinExtents)
-            //    //    this._changes.AppendChange(tableSource, tableTarget, "MinExtents");
-
             //    //if (tableSource.Monitoring != tableTarget.Monitoring)
             //    //    this._changes.AppendChange(tableSource, tableTarget, "Monitoring");
 
             //    //if (tableSource.Nested != tableTarget.Nested)
             //    //    this._changes.AppendChange(tableSource, tableTarget, "Nested");
 
-            //    //if (tableSource.NextExtent != tableTarget.NextExtent)
-            //    //    this._changes.AppendChange(tableSource, tableTarget, "NextExtent");
-
             //    //if (tableSource.Partitioned != tableTarget.Partitioned)
             //    //    this._changes.AppendChange(tableSource, tableTarget, "Partitioned");
 
             //    ////if (tableSource.Partitions != tableTarget.Partitions)
             //    ////    this._changes.AppendChange(tableSource, tableTarget, "Partitions");
-
-            //    //if (tableSource.PctFree != tableTarget.PctFree)
-            //    //    this._changes.AppendChange(tableSource, tableTarget, "PctFree");
-
-            //    //if (tableSource.PctUsed != tableTarget.PctUsed)
-            //    //    this._changes.AppendChange(tableSource, tableTarget, "PctUsed");
 
             //    //if (tableSource.ReadOnly != tableTarget.ReadOnly)
             //    //    this._changes.AppendChange(tableSource, tableTarget, "ReadOnly");
@@ -981,6 +952,7 @@ namespace Bb.Oracle.Models.Comparer
 
             if (tableSource.IsView != tableTarget.IsView)
                 this._changes.AppendChange(tableSource, tableTarget, "IsView");
+
         }
 
         private void EvaluateFiles(ItemBase item)
@@ -1096,8 +1068,15 @@ namespace Bb.Oracle.Models.Comparer
             EvaluateFiles(source);
             EvaluateFiles(target);
 
+
+            ComparePhysicialAttributes(source.PhysicalAttributes, target.PhysicalAttributes);
+
             if (!SourceScript)
             {
+
+                if (source.Root.SourceScript && target.Root.SourceScript)
+                    if (source.ONLINE != target.ONLINE)
+                        this._changes.AppendChange(source, target, "ONLINE");
 
                 if (source.BlocPartition != target.BlocPartition)
                     this._changes.AppendChange(source, target, "BlocPartition");
@@ -1105,31 +1084,10 @@ namespace Bb.Oracle.Models.Comparer
                 if (source.Logging != target.Logging)
                     this._changes.AppendChange(source, target, "Logging");
 
-                if (source.MaxExtents != target.MaxExtents)
-                    this._changes.AppendChange(source, target, "MaxExtents");
-
-                if (source.MinExtents != target.MinExtents)
-                    this._changes.AppendChange(source, target, "MinExtents");
-
-                if (source.NextExtents != target.NextExtents)
-                    this._changes.AppendChange(source, target, "NextExtents");
-
-                if (source.InitialExtent != target.InitialExtent)
-                    this._changes.AppendChange(source, target, "InitialExtent");
-
-                if (source.Tablespace != target.Tablespace)
-                    this._changes.AppendChange(source, target, "Tablespace");
-
-                if (source.FreeLists != target.FreeLists)
-                    this._changes.AppendChange(source, target, "FreeLists");
-
             }
 
             if (source.Bitmap != target.Bitmap)
                 this._changes.AppendChange(source, target, "Bitmap");
-
-            if (source.BufferPool != target.BufferPool)
-                this._changes.AppendChange(source, target, "BufferPool");
 
             if (source.Cache != target.Cache)
                 this._changes.AppendChange(source, target, "Bitmap");
@@ -1165,9 +1123,6 @@ namespace Bb.Oracle.Models.Comparer
             if ((source.Deduplication ?? string.Empty) != (target.Deduplication ?? string.Empty))
                 this._changes.AppendChange(source, target, "Deduplication");
 
-            if (source.FreeListGroups != target.FreeListGroups)
-                this._changes.AppendChange(source, target, "FreeListGroups");
-
             if ((source.FreePools ?? string.Empty) != (target.FreePools ?? string.Empty))
                 this._changes.AppendChange(source, target, "FreePools");
 
@@ -1180,23 +1135,64 @@ namespace Bb.Oracle.Models.Comparer
             if (source.KindModel != target.KindModel)
                 this._changes.AppendChange(source, target, "KindModel");
 
-            if ((source.PctIncrease ?? string.Empty) != (target.PctIncrease ?? string.Empty))
-                this._changes.AppendChange(source, target, "PctIncrease");
-
-            if (source.PctVersion != target.PctVersion)
-                this._changes.AppendChange(source, target, "PctVersion");
-
             if (source.SecureFile != target.SecureFile)
                 this._changes.AppendChange(source, target, "SecureFile");
 
             if ((source.SegmentName ?? string.Empty) != (target.SegmentName ?? string.Empty))
                 this._changes.AppendChange(source, target, "SegmentName");
 
-            if ((source.TablespaceName ?? string.Empty) != (target.TablespaceName ?? string.Empty))
-                this._changes.AppendChange(source, target, "TablespaceName");
-
             if (source.Unique != target.Unique)
                 this._changes.AppendChange(source, target, "Unique");
+
+        }
+
+        private void ComparePhysicialAttributes(PhysicalAttributesModel source, PhysicalAttributesModel target)
+        {
+
+            if (source.Logging != target.Logging)
+                this._changes.AppendChange(source, target, "Logging");
+
+            if (source.FlashCache != target.FlashCache)
+                this._changes.AppendChange(source, target, "FlashCache");
+
+            if (source.FreelistGroups != target.FreelistGroups)
+                this._changes.AppendChange(source, target, "FreeListGroups");
+
+            if (source.PctIncrease != target.PctIncrease)
+                this._changes.AppendChange(source, target, "PctIncrease");
+
+            //if (source.PcPctVersion != target.PctVersion)
+            //this._changes.AppendChange(source, target, "PctVersion");
+
+            if (target.BufferPool == null)
+                target.BufferPool = "DEFAULT";
+
+            if (source.BufferPool == null)
+                source.BufferPool = "DEFAULT";
+
+            if (source.BufferPool != target.BufferPool)
+                this._changes.AppendChange(source, target, "BufferPool");
+
+            if ((source.Tablespace.Name ?? string.Empty) != (target.Tablespace.Name ?? string.Empty))
+                this._changes.AppendChange(source, target, "Tablespace.Name");
+
+            if (source.MaxExtents != target.MaxExtents)
+                this._changes.AppendChange(source, target, "MaxExtents");
+
+            if (source.MinExtents != target.MinExtents)
+                this._changes.AppendChange(source, target, "MinExtents");
+
+            if (source.NextExtent != target.NextExtent)
+                this._changes.AppendChange(source, target, "NextExtent");
+
+            if (source.InitialExtent != target.InitialExtent)
+                this._changes.AppendChange(source, target, "InitialExtent");
+
+            if (source.Tablespace != target.Tablespace)
+                this._changes.AppendChange(source, target, "Tablespace");
+
+            if (source.Freelists != target.Freelists)
+                this._changes.AppendChange(source, target, "Freelists");
 
         }
 
@@ -1449,7 +1445,7 @@ namespace Bb.Oracle.Models.Comparer
             EvaluateFiles(source);
             EvaluateFiles(target);
 
-            
+
             if (GetIdentiferColumns(source) != GetIdentiferColumns(target))
                 this._changes.AppendChange(source, target, "Columns");
 
@@ -1465,6 +1461,9 @@ namespace Bb.Oracle.Models.Comparer
             if (source.Generated != source.Generated)
                 this._changes.AppendChange(source, target, "Generated");
 
+            if (source.IndexOwner != source.IndexOwner)
+                this._changes.AppendChange(source, target, "IndexOwner");
+
             if (source.IndexName != source.IndexName)
                 this._changes.AppendChange(source, target, "IndexName");
 
@@ -1477,7 +1476,7 @@ namespace Bb.Oracle.Models.Comparer
             if (source.Reference.Name != source.Reference.Name)
                 this._changes.AppendChange(source, target, "Rel_Constraint_Name");
 
-            if (source.Reference.Owner!= source.Reference.Owner)
+            if (source.Reference.Owner != source.Reference.Owner)
                 this._changes.AppendChange(source, target, "Rel_Constraint_Owner");
 
             if (source.Search_Condition != source.Search_Condition)

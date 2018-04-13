@@ -41,6 +41,12 @@ namespace Bb.Oracle.Structures.Models
         /// Index Name
         /// </summary>
         [DefaultValue("")]
+        public string IndexOwner { get; set; }
+
+        /// <summary>
+        /// Index Name
+        /// </summary>
+        [DefaultValue("")]
         public string IndexName { get; set; }
 
         /// <summary>

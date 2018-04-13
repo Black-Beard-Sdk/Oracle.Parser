@@ -6,12 +6,24 @@ using System.Text;
 namespace Bb.Oracle.Structures.Models
 {
 
-    public abstract class Reference<T> where T: ItemBase
+    public abstract class Reference<T> where T : ItemBase
     {
+
+        private T _item;
 
         public string Name { get; set; }
 
-        public abstract T Resolve();
+        public T Resolve()
+        {
+            return _item ?? (_item = Resolve(GetDb()));
+        }
+
+        protected abstract T Resolve(OracleDatabase oracleDatabase);
+
+        public void Set(T item)
+        {
+            _item = item;
+        }
 
         internal Func<OracleDatabase> GetDb;
 
@@ -20,9 +32,9 @@ namespace Bb.Oracle.Structures.Models
     public class ReferenceTablespace : Reference<TablespaceModel>
     {
 
-        public override TablespaceModel Resolve()
+        protected override TablespaceModel Resolve(OracleDatabase db)
         {
-            return GetDb().Tablespaces[this.Name];
+            return db.Tablespaces[this.Name];
         }
 
     }
@@ -32,9 +44,9 @@ namespace Bb.Oracle.Structures.Models
 
         public string Owner { get; set; }
 
-        public override TableModel Resolve()
+        protected override TableModel Resolve(OracleDatabase db)
         {
-            return GetDb().Tables[$"{this.Owner}.{this.Name}"];
+            return db.Tables[$"{this.Owner}.{this.Name}"];
         }
 
     }
@@ -44,9 +56,9 @@ namespace Bb.Oracle.Structures.Models
 
         public string Owner { get; set; }
 
-        public override ConstraintModel Resolve()
+        protected override ConstraintModel Resolve(OracleDatabase db)
         {
-            return GetDb().Constraints[$"{this.Owner}.{this.Name}"];
+            return db.Constraints[$"{this.Owner}.{this.Name}"];
         }
 
     }

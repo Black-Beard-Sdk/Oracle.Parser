@@ -138,7 +138,7 @@ ORDER BY tt.TABLE_NAME,tt.COLUMN_ID
 
                     table.CodeView = string.Empty;
 
-                    if (table.IsMatrializedView)
+                    if (table.IsMaterializedView)
                     {
 
                         StringBuilder sb = new StringBuilder(table.CodeView.Length * 4);
