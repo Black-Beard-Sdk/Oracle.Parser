@@ -16,5 +16,11 @@ namespace Bb.Oracle.Structures.Models
             TablespaceCollection.Key = IndexedCollection<TablespaceModel>.GetMethodKey(c => c.Name);
         }
 
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            foreach (var item in this)
+                item.Accept(visitor);
+        }
+
     }
 }

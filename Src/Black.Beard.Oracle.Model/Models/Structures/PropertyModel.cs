@@ -17,6 +17,12 @@ namespace Bb.Oracle.Structures.Models
             this.Type = new OracleType() { Parent = this };
         }
 
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            visitor.VisitProperty(this);
+            this.Type.Accept(visitor);
+        }
+
         /// <summary>
         /// Name
         /// </summary>

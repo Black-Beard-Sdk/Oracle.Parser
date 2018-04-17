@@ -34,16 +34,10 @@ LEFT JOIN SYS.DBA_TABLESPACE_GROUPS g ON t.TABLESPACE_NAME = g.TABLESPACE_NAME
                     {
                         Name = t.TablespaceName,
                         BlockSize = t.BlockSize,
-                        InitialExtent = t.InitialExtent,
-                        NextExtent = t.NextExtent,
-                        MinExtents = t.MinExtents,
-                        MaxExtents = t.MaxExtents,
-                        MaxSize = t.MaxSize,
-                        PctIncrease = t.PctIncrease,
+                        MaxSize = t.MaxSize,                      
                         MinExtlen = t.MinExtlen,
                         Status = t.Status,
                         Contents = t.Contents,
-                        Logging = t.Logging,
                         ForceLogging = t.ForceLogging.ToBoolean(),
                         ExtentManagement = t.ExtentManagement,
                         AllocationType = t.AllocationType,
@@ -57,6 +51,13 @@ LEFT JOIN SYS.DBA_TABLESPACE_GROUPS g ON t.TABLESPACE_NAME = g.TABLESPACE_NAME
                         CompressFor = t.CompressFor,
                         GroupName = t.GroupName,
                     };
+
+                    obj.PhysicalAttributes.Logging = t.Logging;
+                    obj.PhysicalAttributes.InitialExtent = t.InitialExtent;
+                    obj.PhysicalAttributes.NextExtent = t.NextExtent;
+                    obj.PhysicalAttributes.MinExtents = t.MinExtents;
+                    obj.PhysicalAttributes.MaxExtents = t.MaxExtents;
+                    obj.PhysicalAttributes.PctIncrease = t.PctIncrease;
 
                     db.Tablespaces.Add(obj);
 
@@ -88,12 +89,12 @@ LEFT JOIN SYS.DBA_TABLESPACE_GROUPS g ON t.TABLESPACE_NAME = g.TABLESPACE_NAME
 
             public static Field<String> TablespaceName = new Field<String>() { ColumnName = "TABLESPACE_NAME", Read = reader => reader.Field<String>((int)TablespacesQueryColumns_11.TABLESPACE_NAME) };
             public static Field<Decimal> BlockSize = new Field<Decimal>() { ColumnName = "BLOCK_SIZE", Read = reader => reader.Field<Decimal>((int)TablespacesQueryColumns_11.BLOCK_SIZE) };
-            public static Field<Decimal> InitialExtent = new Field<Decimal>() { ColumnName = "INITIAL_EXTENT", Read = reader => reader.Field<Decimal>((int)TablespacesQueryColumns_11.INITIAL_EXTENT) };
-            public static Field<Decimal> NextExtent = new Field<Decimal>() { ColumnName = "NEXT_EXTENT", Read = reader => reader.Field<Decimal>((int)TablespacesQueryColumns_11.NEXT_EXTENT) };
-            public static Field<Decimal> MinExtents = new Field<Decimal>() { ColumnName = "MIN_EXTENTS", Read = reader => reader.Field<Decimal>((int)TablespacesQueryColumns_11.MIN_EXTENTS) };
-            public static Field<Decimal> MaxExtents = new Field<Decimal>() { ColumnName = "MAX_EXTENTS", Read = reader => reader.Field<Decimal>((int)TablespacesQueryColumns_11.MAX_EXTENTS) };
+            public static Field<string> InitialExtent = new Field<string>() { ColumnName = "INITIAL_EXTENT", Read = reader => reader.Field<string>((int)TablespacesQueryColumns_11.INITIAL_EXTENT) };
+            public static Field<string> NextExtent = new Field<string>() { ColumnName = "NEXT_EXTENT", Read = reader => reader.Field<string>((int)TablespacesQueryColumns_11.NEXT_EXTENT) };
+            public static Field<string> MinExtents = new Field<string>() { ColumnName = "MIN_EXTENTS", Read = reader => reader.Field<string>((int)TablespacesQueryColumns_11.MIN_EXTENTS) };
+            public static Field<string> MaxExtents = new Field<string>() { ColumnName = "MAX_EXTENTS", Read = reader => reader.Field<string>((int)TablespacesQueryColumns_11.MAX_EXTENTS) };
             public static Field<Decimal> MaxSize = new Field<Decimal>() { ColumnName = "MAX_SIZE", Read = reader => reader.Field<Decimal>((int)TablespacesQueryColumns_11.MAX_SIZE) };
-            public static Field<Decimal> PctIncrease = new Field<Decimal>() { ColumnName = "PCT_INCREASE", Read = reader => reader.Field<Decimal>((int)TablespacesQueryColumns_11.PCT_INCREASE) };
+            public static Field<string> PctIncrease = new Field<string>() { ColumnName = "PCT_INCREASE", Read = reader => reader.Field<string>((int)TablespacesQueryColumns_11.PCT_INCREASE) };
             public static Field<Decimal> MinExtlen = new Field<Decimal>() { ColumnName = "MIN_EXTLEN", Read = reader => reader.Field<Decimal>((int)TablespacesQueryColumns_11.MIN_EXTLEN) };
             public static Field<String> Status = new Field<String>() { ColumnName = "STATUS", Read = reader => reader.Field<String>((int)TablespacesQueryColumns_11.STATUS) };
             public static Field<String> Contents = new Field<String>() { ColumnName = "CONTENTS", Read = reader => reader.Field<String>((int)TablespacesQueryColumns_11.CONTENTS) };
@@ -218,12 +219,12 @@ LEFT JOIN SYS.DBA_TABLESPACE_GROUPS g ON t.TABLESPACE_NAME = g.TABLESPACE_NAME
 
         public String TablespaceName { get; set; }
         public Decimal BlockSize { get; set; }
-        public Decimal InitialExtent { get; set; }
-        public Decimal NextExtent { get; set; }
-        public Decimal MinExtents { get; set; }
-        public Decimal MaxExtents { get; set; }
+        public string InitialExtent { get; set; }
+        public string NextExtent { get; set; }
+        public string MinExtents { get; set; }
+        public string MaxExtents { get; set; }
         public Decimal MaxSize { get; set; }
-        public Decimal PctIncrease { get; set; }
+        public string PctIncrease { get; set; }
         public Decimal MinExtlen { get; set; }
         public String Status { get; set; }
         public String Contents { get; set; }

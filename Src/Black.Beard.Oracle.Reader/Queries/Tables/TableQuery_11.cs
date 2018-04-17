@@ -29,7 +29,7 @@ SELECT
   l.MAX_TRANS,
   NEXT_EXTENT, 
   MIN_EXTENTS, 
-  MAX_EXTENTS
+  MAX_EXTENTS,
   LOGGING, 
   CACHE, 
   TABLE_LOCK, 
@@ -54,9 +54,8 @@ SELECT
   READ_ONLY, 
   SEGMENT_CREATED, 
   RESULT_CACHE 
+
 FROM SYS.DBA_TABLES l
-
-
 
 {0}
 
@@ -115,6 +114,7 @@ ORDER BY OWNER, TABLE_NAME
                             table.PhysicalAttributes.InitialExtent = t.InitialExtent;
                             table.PhysicalAttributes.NextExtent = t.NextExtent;
                             table.PhysicalAttributes.MinExtents = t.MinExtents;
+                            table.PhysicalAttributes.MaxExtents = t.MaxExtents;
                             table.PhysicalAttributes.IniTrans = t.IniTrans;
                             table.PhysicalAttributes.MaxTrans = t.MaxTrans;
                             table.PhysicalAttributes.Logging = t.Logging;
@@ -158,12 +158,13 @@ ORDER BY OWNER, TABLE_NAME
             public static Field<String> Status = new Field<String>() { ColumnName = "STATUS", Read = reader => reader.Field<String>((int)TableQueryColumns_11.STATUS) };
             public static Field<Decimal> PctFree = new Field<Decimal>() { ColumnName = "PCT_FREE", Read = reader => reader.Field<Decimal>((int)TableQueryColumns_11.PCT_FREE) };
             public static Field<Decimal> PctUsed = new Field<Decimal>() { ColumnName = "PCT_USED", Read = reader => reader.Field<Decimal>((int)TableQueryColumns_11.PCT_USED) };
-            public static Field<Decimal> InitialExtent = new Field<Decimal>() { ColumnName = "INITIAL_EXTENT", Read = reader => reader.Field<Decimal>((int)TableQueryColumns_11.INITIAL_EXTENT) };
+            public static Field<string> InitialExtent = new Field<string>() { ColumnName = "INITIAL_EXTENT", Read = reader => reader.Field<string>((int)TableQueryColumns_11.INITIAL_EXTENT) };
             public static Field<Decimal> IniTrans = new Field<Decimal>() { ColumnName = "INI_TRANS", Read = reader => reader.Field<Decimal>((int)TableQueryColumns_11.INI_TRANS) };
             public static Field<Decimal> MaxTrans = new Field<Decimal>() { ColumnName = "MAX_TRANS", Read = reader => reader.Field<Decimal>((int)TableQueryColumns_11.MAX_TRANS) };
-            public static Field<Decimal> NextExtent = new Field<Decimal>() { ColumnName = "NEXT_EXTENT", Read = reader => reader.Field<Decimal>((int)TableQueryColumns_11.NEXT_EXTENT) };
-            public static Field<Decimal> MinExtents = new Field<Decimal>() { ColumnName = "MIN_EXTENTS", Read = reader => reader.Field<Decimal>((int)TableQueryColumns_11.MIN_EXTENTS) };
-            public static Field<Decimal> Logging = new Field<Decimal>() { ColumnName = "LOGGING", Read = reader => reader.Field<Decimal>((int)TableQueryColumns_11.LOGGING) };
+            public static Field<string> NextExtent = new Field<string>() { ColumnName = "NEXT_EXTENT", Read = reader => reader.Field<string>((int)TableQueryColumns_11.NEXT_EXTENT) };
+            public static Field<string> MinExtents = new Field<string>() { ColumnName = "MIN_EXTENTS", Read = reader => reader.Field<string>((int)TableQueryColumns_11.MIN_EXTENTS) };
+            public static Field<string> MaxExtents = new Field<string>() { ColumnName = "MAX_EXTENTS", Read = reader => reader.Field<string>((int)TableQueryColumns_11.MAX_EXTENTS) };
+            public static Field<string> Logging = new Field<string>() { ColumnName = "LOGGING", Read = reader => reader.Field<string>((int)TableQueryColumns_11.LOGGING) };
             public static Field<String> Cache = new Field<String>() { ColumnName = "CACHE", Read = reader => reader.Field<String>((int)TableQueryColumns_11.CACHE) };
             public static Field<String> TableLock = new Field<String>() { ColumnName = "TABLE_LOCK", Read = reader => reader.Field<String>((int)TableQueryColumns_11.TABLE_LOCK) };
             public static Field<String> Partitioned = new Field<String>() { ColumnName = "PARTITIONED", Read = reader => reader.Field<String>((int)TableQueryColumns_11.PARTITIONED) };
@@ -207,6 +208,7 @@ ORDER BY OWNER, TABLE_NAME
             item.MaxTrans = TableQueryDescriptor_11.Columns.MaxTrans.Read(r);
             item.NextExtent = TableQueryDescriptor_11.Columns.NextExtent.Read(r);
             item.MinExtents = TableQueryDescriptor_11.Columns.MinExtents.Read(r);
+            item.MaxExtents = TableQueryDescriptor_11.Columns.MaxExtents.Read(r);
             item.Logging = TableQueryDescriptor_11.Columns.Logging.Read(r);
             item.Cache = TableQueryDescriptor_11.Columns.Cache.Read(r);
             item.TableLock = TableQueryDescriptor_11.Columns.TableLock.Read(r);
@@ -250,6 +252,7 @@ ORDER BY OWNER, TABLE_NAME
             yield return Columns.MaxTrans;
             yield return Columns.NextExtent;
             yield return Columns.MinExtents;
+            yield return Columns.MaxExtents;
             yield return Columns.Logging;
             yield return Columns.Cache;
             yield return Columns.TableLock;
@@ -299,6 +302,7 @@ ORDER BY OWNER, TABLE_NAME
         MAX_TRANS,
         NEXT_EXTENT,
         MIN_EXTENTS,
+        MAX_EXTENTS,
         LOGGING,
         CACHE,
         TABLE_LOCK,
@@ -323,7 +327,6 @@ ORDER BY OWNER, TABLE_NAME
         READ_ONLY,
         SEGMENT_CREATED,
         RESULT_CACHE,
-
     }
 
     public class TableDto_11
@@ -336,12 +339,13 @@ ORDER BY OWNER, TABLE_NAME
         public String Status { get; set; }
         public Decimal PctFree { get; set; }
         public Decimal PctUsed { get; set; }
-        public Decimal InitialExtent { get; set; }
+        public string InitialExtent { get; set; }
         public Decimal IniTrans { get; set; }
         public Decimal MaxTrans { get; set; }
-        public Decimal NextExtent { get; set; }
-        public Decimal MinExtents { get; set; }
-        public Decimal Logging { get; set; }
+        public string NextExtent { get; set; }
+        public string MinExtents { get; set; }
+        public string MaxExtents { get; set; }
+        public string Logging { get; set; }
         public String Cache { get; set; }
         public String TableLock { get; set; }
         public String Partitioned { get; set; }

@@ -422,22 +422,17 @@ namespace Bb.Oracle.Visitors
             var physical = Current<PhysicalAttributesModel>();
 
             if (context.PCTFREE().Exist())
-            {
                 physical.PctFree = context.integer().ToInteger();
-            }
+
             else if (context.PCTUSED().Exist())
-            {
                 physical.PctUsed = context.integer().ToInteger();
-            }
+
             else if (context.INITRANS().Exist())
-            {
                 physical.IniTrans = context.integer().ToInteger();
 
-            }
             else if (context.MAXTRANS().Exist())
-            {
                 physical.MaxTrans = context.integer().ToInteger();
-            }
+
             else
             {
                 var storage_clauses = context.storage_clauses();

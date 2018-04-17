@@ -1,4 +1,5 @@
-﻿using Bb.Oracle.Models;
+﻿using Bb.Oracle.Contracts;
+using Bb.Oracle.Models;
 using Bb.Oracle.Models.Codes;
 using Newtonsoft.Json;
 using System;
@@ -86,6 +87,11 @@ namespace Bb.Oracle.Structures.Models
 
             return "null";
 
+        }
+
+        public override void Accept(IOracleModelVisitor visitor)
+        {
+            visitor.VisitArgument(this);
         }
 
         //public string GetDefaultValue()

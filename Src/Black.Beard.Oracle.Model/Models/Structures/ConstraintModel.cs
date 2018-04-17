@@ -27,6 +27,12 @@ namespace Bb.Oracle.Structures.Models
 
         }
 
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            visitor.VisitConstraint(this);
+            this.Columns.Accept(visitor);
+        }
+
         /// <summary>
         /// Name
         /// </summary>

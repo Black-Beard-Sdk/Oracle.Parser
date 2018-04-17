@@ -22,6 +22,11 @@ namespace Bb.Oracle.Structures.Models
 
         public PartitionModel Partition { get; private set; }
 
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            visitor.VisitPartitionRef(this);
+        }
+
         public override KindModelEnum KindModel => KindModelEnum.PartitionRef;
 
     }

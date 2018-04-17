@@ -10,6 +10,11 @@
     public partial class UserElement 
     {
 
+        public UserElement()
+        {
+
+        }
+
         /// <summary>
         /// Name
         /// </summary>

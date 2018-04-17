@@ -18,6 +18,11 @@ namespace Bb.Oracle.Structures.Models
             TableReference = new ReferenceTable() { GetDb = () => this.Root };
         }
 
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            visitor.VisitTrigger(this);
+        }
+
         /// <summary>
         /// Name
         /// </summary>

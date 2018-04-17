@@ -14,6 +14,13 @@ namespace Bb.Oracle.Models.Configurations
             ExcludeSchemaCollection.Key = IndexedCollection<ExcludeSchemaElement>.GetMethodKey(c => c.Name);
         }
 
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            //foreach (var item in this)
+            //    item.Accept(visitor);
+        }
+
+
     }
 
 }

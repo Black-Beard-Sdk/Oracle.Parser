@@ -12,6 +12,13 @@ namespace Bb.Oracle.Models.Codes
 
         public override KindModelEnum KindModel => KindModelEnum.UnaryExpression;
 
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            visitor.VisitUnaryExpression(this);
+            Left.Accept(visitor);
+        }
+
+
     }
 
 }

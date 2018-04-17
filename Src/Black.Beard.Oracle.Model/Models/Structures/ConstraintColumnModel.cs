@@ -21,6 +21,11 @@ namespace Bb.Oracle.Structures.Models
 
         public override KindModelEnum KindModel => KindModelEnum.ConstraintColumn;
 
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            visitor.VisitConstraintColumn(this);
+        }
+
     }
 
 }

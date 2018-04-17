@@ -62,8 +62,7 @@ namespace Bb.Oracle.Reader.Queries
                             table.BlocPartition.IsNested = t.IsNested.ToBoolean();
                             table.BlocPartition.DefSegmentCreation = t.DefSegmentCreation;
 
-                            table.BlocPartition.DefLogging = t.DefLogging.ToBoolean();
-
+                            table.BlocPartition.PhysicalAttributes.Logging = t.DefLogging;
                             table.BlocPartition.PhysicalAttributes.PctFree = t.DefPctFree;
                             table.BlocPartition.PhysicalAttributes.PctUsed = t.DefPctUsed;
                             table.BlocPartition.PhysicalAttributes.IniTrans = t.DefIniTrans;
@@ -124,12 +123,12 @@ namespace Bb.Oracle.Reader.Queries
             public static Field<Decimal> DefPctUsed = new Field<Decimal>() { ColumnName = "DEF_PCT_USED", Read = reader => reader.Field<Decimal>((int)TablePartitionColumnQueryColumns_11.DEF_PCT_USED) };
             public static Field<Decimal> DefIniTrans = new Field<Decimal>() { ColumnName = "DEF_INI_TRANS", Read = reader => reader.Field<Decimal>((int)TablePartitionColumnQueryColumns_11.DEF_INI_TRANS) };
             public static Field<Decimal> DefMaxTrans = new Field<Decimal>() { ColumnName = "DEF_MAX_TRANS", Read = reader => reader.Field<Decimal>((int)TablePartitionColumnQueryColumns_11.DEF_MAX_TRANS) };
-            public static Field<decimal> DefInitialExtent = new Field<decimal>() { ColumnName = "DEF_INITIAL_EXTENT", Read = reader => reader.Field<decimal>((int)TablePartitionColumnQueryColumns_11.DEF_INITIAL_EXTENT) };
-            public static Field<decimal> DefNextExtent = new Field<decimal>() { ColumnName = "DEF_NEXT_EXTENT", Read = reader => reader.Field<decimal>((int)TablePartitionColumnQueryColumns_11.DEF_NEXT_EXTENT) };
-            public static Field<decimal> DefMinExtents = new Field<decimal>() { ColumnName = "DEF_MIN_EXTENTS", Read = reader => reader.Field<decimal>((int)TablePartitionColumnQueryColumns_11.DEF_MIN_EXTENTS) };
-            public static Field<decimal> DefMaxExtents = new Field<decimal>() { ColumnName = "DEF_MAX_EXTENTS", Read = reader => reader.Field<decimal>((int)TablePartitionColumnQueryColumns_11.DEF_MAX_EXTENTS) };
+            public static Field<string> DefInitialExtent = new Field<string>() { ColumnName = "DEF_INITIAL_EXTENT", Read = reader => reader.Field<string>((int)TablePartitionColumnQueryColumns_11.DEF_INITIAL_EXTENT) };
+            public static Field<string> DefNextExtent = new Field<string>() { ColumnName = "DEF_NEXT_EXTENT", Read = reader => reader.Field<string>((int)TablePartitionColumnQueryColumns_11.DEF_NEXT_EXTENT) };
+            public static Field<string> DefMinExtents = new Field<string>() { ColumnName = "DEF_MIN_EXTENTS", Read = reader => reader.Field<string>((int)TablePartitionColumnQueryColumns_11.DEF_MIN_EXTENTS) };
+            public static Field<string> DefMaxExtents = new Field<string>() { ColumnName = "DEF_MAX_EXTENTS", Read = reader => reader.Field<string>((int)TablePartitionColumnQueryColumns_11.DEF_MAX_EXTENTS) };
             public static Field<String> DefMaxSize = new Field<String>() { ColumnName = "DEF_MAX_SIZE", Read = reader => reader.Field<String>((int)TablePartitionColumnQueryColumns_11.DEF_MAX_SIZE) };
-            public static Field<decimal> DefPctIncrease = new Field<decimal>() { ColumnName = "DEF_PCT_INCREASE", Read = reader => reader.Field<decimal>((int)TablePartitionColumnQueryColumns_11.DEF_PCT_INCREASE) };
+            public static Field<string> DefPctIncrease = new Field<string>() { ColumnName = "DEF_PCT_INCREASE", Read = reader => reader.Field<string>((int)TablePartitionColumnQueryColumns_11.DEF_PCT_INCREASE) };
             public static Field<Decimal> DefFreelists = new Field<Decimal>() { ColumnName = "DEF_FREELISTS", Read = reader => reader.Field<Decimal>((int)TablePartitionColumnQueryColumns_11.DEF_FREELISTS) };
             public static Field<Decimal> DefFreelistGroups = new Field<Decimal>() { ColumnName = "DEF_FREELIST_GROUPS", Read = reader => reader.Field<Decimal>((int)TablePartitionColumnQueryColumns_11.DEF_FREELIST_GROUPS) };
             public static Field<String> DefLogging = new Field<String>() { ColumnName = "DEF_LOGGING", Read = reader => reader.Field<String>((int)TablePartitionColumnQueryColumns_11.DEF_LOGGING) };
@@ -286,12 +285,12 @@ namespace Bb.Oracle.Reader.Queries
         public Decimal DefPctUsed { get; set; }
         public Decimal DefIniTrans { get; set; }
         public decimal DefMaxTrans { get; set; }
-        public decimal DefInitialExtent { get; set; }
-        public decimal DefNextExtent { get; set; }
-        public decimal DefMinExtents { get; set; }
-        public decimal DefMaxExtents { get; set; }
+        public string DefInitialExtent { get; set; }
+        public string DefNextExtent { get; set; }
+        public string DefMinExtents { get; set; }
+        public string DefMaxExtents { get; set; }
         public String DefMaxSize { get; set; }
-        public decimal DefPctIncrease { get; set; }
+        public string DefPctIncrease { get; set; }
         public Decimal DefFreelists { get; set; }
         public Decimal DefFreelistGroups { get; set; }
         public String DefLogging { get; set; }

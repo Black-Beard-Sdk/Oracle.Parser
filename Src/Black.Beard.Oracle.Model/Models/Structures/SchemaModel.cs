@@ -13,6 +13,11 @@ namespace Bb.Oracle.Structures.Models
 
         public override KindModelEnum KindModel => KindModelEnum.Schemas;
 
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            visitor.VisitSchema(this);
+        }
+
     }
 
 

@@ -11,5 +11,11 @@ namespace Bb.Oracle.Models.Codes
 
         public override KindModelEnum KindModel => KindModelEnum.VariableReference;
 
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            visitor.VisitCodeVariableReferenceExpression(this);
+        }
+
+
     }
 }

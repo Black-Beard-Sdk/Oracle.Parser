@@ -16,9 +16,16 @@ namespace Bb.Oracle.Structures.Models
         {
             this.Columns = new IndexColumnCollection() { Parent = this };
             this.BlocPartition = new BlocPartitionModel() { Parent = this };
-            this.Columns = new IndexColumnCollection() { Parent = this };
             TableReference = new ReferenceTable() { GetDb = () => this.Root };
             this.PhysicalAttributes = new PhysicalAttributesModel() { Parent = this };
+        }
+
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            visitor.VisitIndex(this);
+            this.Columns.Accept(visitor);
+            this.BlocPartition.Accept(visitor);
+            this.PhysicalAttributes.Accept(visitor);
         }
 
         /// <summary>
@@ -62,12 +69,7 @@ namespace Bb.Oracle.Structures.Models
         /// Cache
         /// </summary>
         public bool Cache { get; set; }
-
-        /// <summary>
-        /// Logging
-        /// </summary>
-        public string Logging { get; set; }
-
+     
         /// <summary>
         /// Deduplication
         /// </summary>

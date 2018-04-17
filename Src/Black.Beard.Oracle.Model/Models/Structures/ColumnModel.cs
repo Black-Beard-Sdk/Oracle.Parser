@@ -30,6 +30,12 @@ namespace Bb.Oracle.Structures.Models
 
         }
 
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            visitor.VisitColumn(this);
+            this.ForeignKey.Accept(visitor);
+        }
+
         /// <summary>
         /// Column Name
         /// </summary>

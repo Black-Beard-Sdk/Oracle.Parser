@@ -1,4 +1,5 @@
 ﻿
+using Bb.Oracle.Contracts;
 using Bb.Oracle.Models;
 using System.ComponentModel;
 
@@ -104,6 +105,11 @@ namespace Bb.Oracle.Structures.Models
                 Name = this.Name,
                 Owner = this.Owner,
             };
+        }
+
+        public override void Accept(IOracleModelVisitor visitor)
+        {
+            visitor.VisitOracleType(this);
         }
 
     }

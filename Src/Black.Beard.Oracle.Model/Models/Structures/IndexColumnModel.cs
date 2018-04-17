@@ -25,6 +25,12 @@ namespace Bb.Oracle.Structures.Models
         public bool Asc { get; set; }
 
         public override KindModelEnum KindModel => KindModelEnum.IndexColumn;
+
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            visitor.VisitIndexColumn(this);
+        }
+
     }
 
 }

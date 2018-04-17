@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Bb.Oracle.Contracts;
+using Bb.Oracle.Models;
+using Bb.Oracle.Models.Codes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -29,6 +32,166 @@ namespace Bb.Oracle.Structures.Models
                 parser.Visit(model, this, _log);
             }
             return _items;
+        }
+
+        public void VisitArrayTypeDef(OArrayTypeDef oArrayTypeDef)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void VisitBinaryExpression(OBinaryExpression oBinaryExpression)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void VisitBlocPartition(BlocPartitionModel blocPartitionModel)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void VisitBoolConstant(OBoolConstant oBoolConstant)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void VisitCallMethodReference(OCallMethodReference oCallMethodReference)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void VisitCodeVariableDeclarationStatement(OCodeVariableDeclarationStatement oCodeVariableDeclarationStatement)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void VisitCodeVariableReferenceExpression(OCodeVariableReferenceExpression oCodeVariableReferenceExpression)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void VisitCursorDeclarationStatement(OCursorDeclarationStatement oCursorDeclarationStatement)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void VisitFieldSpecExpression(OFieldSpecExpression oFieldSpecExpression)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void VisitForeignKeyConstraint(ForeignKeyConstraintModel foreignKeyConstraintModel)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void VisitIntegerConstant(OIntegerConstant oIntegerConstant)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void VisitKeyWordConstant(OKeyWordConstant oKeyWordConstant)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void VisitMethodArgument(OMethodArgument oMethodArgument)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void VisitODecimalConstant(ODecimalConstant oDecimalConstant)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void VisitOracleType(OracleType oracleType)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void VisitPartitionColumn(PartitionColumnModel item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void VisitPhysicalAttributes(PhysicalAttributesModel physicalAttributesModel)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void VisitPrivilege(PrivilegeModel item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void VisitProperty(PropertyModel item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void VisitRecordTypeDef(ORecordTypeDef oRecordTypeDef)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void VisitRefCursorTypeDef(ORefCursorTypeDef oRefCursorTypeDef)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void VisitStringConstant(OStringConstant oStringConstant)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void VisitSubPartition(SubPartitionModel item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void VisitTableColumnComment(OTableColumnCommentStatement oTableColumnCommentStatement)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void VisitTableComment(OTableCommentStatement oTableCommentStatement)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void VisitTableIndexedByPartExpression(OTableIndexedByPartExpression oTableIndexedByPartExpression)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void VisitTableTypeDef(OTableTypeDef oTableTypeDef)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void VisitTableTypeDefinition(TableTypeDefinition tableTypeDefinition)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void VisitTierceExpression(OTierceExpression oTierceExpression)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void VisitTypeReference(OTypeReference oTypeReference)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void VisitUnaryExpression(OUnaryExpression oUnaryExpression)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void VisitVarrayTypeDefinition(OVarrayTypeDefinition oVarrayTypeDefinition)
+        {
+            throw new NotImplementedException();
         }
 
         void IOracleModelVisitor.VisitArgument(ArgumentModel item)

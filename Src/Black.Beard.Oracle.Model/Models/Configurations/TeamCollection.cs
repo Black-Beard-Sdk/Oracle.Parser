@@ -16,6 +16,13 @@ namespace Bb.Oracle.Models.Configurations
             TeamCollection.Key = IndexedCollection<TeamElement>.GetMethodKey(c => c.Name);
         }
 
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            //foreach (var item in this)
+            //    item.Accept(visitor);
+        }
+
+
     }
 
 

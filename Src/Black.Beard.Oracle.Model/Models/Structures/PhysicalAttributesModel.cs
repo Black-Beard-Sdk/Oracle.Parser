@@ -16,6 +16,11 @@ namespace Bb.Oracle.Structures.Models
 
         }
 
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            visitor.VisitPhysicalAttributes(this);
+        }
+
         public override void Initialize()
         {
             Tablespace.GetDb = () => this.Root;
@@ -41,7 +46,7 @@ namespace Bb.Oracle.Structures.Models
         /// <summary>
         /// Pct Increase
         /// </summary>   
-        public decimal PctIncrease { get; set; }
+        public string PctIncrease { get; set; }
 
         /// <summary>
         /// Freelists
@@ -76,7 +81,7 @@ namespace Bb.Oracle.Structures.Models
         /// <summary>
         /// Initial Extent
         /// </summary>   
-        public decimal InitialExtent { get; set; }
+        public string InitialExtent { get; set; }
 
         /// <summary>
         /// Min Extent
@@ -91,17 +96,16 @@ namespace Bb.Oracle.Structures.Models
         /// <summary>
         /// Next Extent
         /// </summary>   
-        public decimal NextExtent { get; set; }
+        public string NextExtent { get; set; }
 
-        public decimal MinExtents { get; set; }
+        public string MinExtents { get; set; }
 
-        public decimal MaxExtents { get; set; }
+        public string MaxExtents { get; set; }
 
         /// <summary>
         /// Logging
         /// </summary>
-        public decimal Logging { get; set; }
-
+        public string Logging { get; set; }
 
     }
 

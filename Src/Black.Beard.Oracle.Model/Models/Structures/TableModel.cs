@@ -24,6 +24,17 @@ namespace Bb.Oracle.Structures.Models
 
         }
 
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            visitor.VisitTable(this);
+            this.Columns.Accept(visitor);
+            this.Partitions.Accept(visitor);
+            this.BlocPartition.Accept(visitor);
+            this.PhysicalAttributes.Accept(visitor);
+        }
+
+
+
         public override void Initialize()
         {
             this.Columns.Initialize();

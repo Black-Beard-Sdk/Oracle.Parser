@@ -9,7 +9,7 @@ using System.Text;
 namespace Bb.Oracle.Structures.Models
 {
 
-    public class IndexedCollection<T> : IndexedCollection, IEnumerable<T>, ICollection<T>
+    public abstract class IndexedCollection<T> : IndexedCollection, IEnumerable<T>, ICollection<T>
     {
 
         /// <summary>

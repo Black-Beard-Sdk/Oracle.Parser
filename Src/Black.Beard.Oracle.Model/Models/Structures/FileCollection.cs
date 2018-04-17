@@ -22,8 +22,15 @@ namespace Bb.Oracle.Structures.Models
             return string.Join(", ", this.Select(c => c.Path));
         }
 
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            //foreach (var item in this)
+            //    item.Accept(visitor);
+        }
+
+
     }
 
-    
+
 
 }

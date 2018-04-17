@@ -16,6 +16,12 @@ namespace Bb.Oracle.Structures.Models
             ConstraintColumnCollection.Key = IndexedCollection<ConstraintColumnModel>.GetMethodKey(c => c.ColumnName);
         }
 
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            foreach (var item in this)
+                item.Accept(visitor);
+        }
+
     }
 
 

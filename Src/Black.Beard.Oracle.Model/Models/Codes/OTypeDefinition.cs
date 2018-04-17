@@ -16,12 +16,22 @@ namespace Bb.Oracle.Models.Codes
 
         public override KindModelEnum KindModel =>  KindModelEnum.TableTypeRef;
 
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            visitor.VisitTableTypeDef(this);
+        }
+
     }
 
     public class OArrayTypeDef : OTypeDefinition
     {
 
         public override KindModelEnum KindModel => KindModelEnum.ArrayTypeDef;
+
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            visitor.VisitArrayTypeDef(this);
+        }
 
     }
 
@@ -31,6 +41,14 @@ namespace Bb.Oracle.Models.Codes
         public override KindModelEnum KindModel => KindModelEnum.RecordTypeDef;
 
         public List<OFieldSpecExpression> Fields { get; set; }
+
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            visitor.VisitRecordTypeDef(this);
+            foreach (var item in this.Fields)
+                item.Accept(visitor);
+        }
+
     }
 
     public class OVarrayTypeDefinition : OTypeDefinition
@@ -42,6 +60,14 @@ namespace Bb.Oracle.Models.Codes
         public bool Varying { get; set; }
         public OCodeExpression Expression { get; set; }
         public bool Nullable { get; set; }
+
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            visitor.VisitVarrayTypeDefinition(this);
+            Type.Accept(visitor);
+            Expression.Accept(visitor);
+        }
+
     }
 
     public class ORefCursorTypeDef : OTypeDefinition
@@ -55,6 +81,12 @@ namespace Bb.Oracle.Models.Codes
         public override KindModelEnum KindModel => KindModelEnum.RefCursorTypeDef;
 
         public OTypeReference Return { get; set; }
+
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            visitor.VisitRefCursorTypeDef(this);
+            Return.Accept(visitor);
+        }
 
     }
 

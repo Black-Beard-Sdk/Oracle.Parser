@@ -16,6 +16,12 @@ namespace Bb.Oracle.Structures.Models
             TriggerCollection.Key = IndexedCollection<TriggerModel>.GetMethodKey(c => c.Key);
         }
 
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            foreach (var item in this)
+                item.Accept(visitor);
+        }
+
     }
 
 

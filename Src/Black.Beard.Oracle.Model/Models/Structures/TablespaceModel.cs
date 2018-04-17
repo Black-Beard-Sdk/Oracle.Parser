@@ -7,7 +7,17 @@ namespace Bb.Oracle.Structures.Models
     /// </summary>
     public partial class TablespaceModel : ItemBase
     {
-        
+
+        public TablespaceModel()
+        {
+            this.PhysicalAttributes = new PhysicalAttributesModel() { Parent = this };
+        }
+
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            visitor.VisitTablespace(this);
+        }
+
         /// <summary>
         /// Tablespace Name
         /// </summary>
@@ -19,34 +29,9 @@ namespace Bb.Oracle.Structures.Models
         public decimal BlockSize { get; set; }
 
         /// <summary>
-        /// Initial Extent
-        /// </summary>
-        public decimal InitialExtent { get; set; }
-        
-        /// <summary>
-        /// Min Extents
-        /// </summary>   
-        public decimal MinExtents { get; set; }
-        
-        /// <summary>
-        /// Next Extent
-        /// </summary>   
-        public decimal NextExtent { get; set; }
-
-        /// <summary>
         /// Max Size
         /// </summary>   
         public decimal MaxSize { get; set; }
-
-        /// <summary>
-        /// Max Extents
-        /// </summary>   
-        public decimal MaxExtents { get; set; }
-
-        /// <summary>
-        /// Pct Increase
-        /// </summary>   
-        public decimal PctIncrease { get; set; }
 
         /// <summary>
         /// Min Extlen
@@ -62,12 +47,7 @@ namespace Bb.Oracle.Structures.Models
         /// Contents
         /// </summary>   
         public string Contents { get; set; }
-
-        /// <summary>
-        /// Logging
-        /// </summary>   
-        public string Logging { get; set; }
-
+    
         /// <summary>
         /// Force Logging
         /// </summary>   
@@ -129,6 +109,13 @@ namespace Bb.Oracle.Structures.Models
         public string GroupName { get; set; }
 
         public override KindModelEnum KindModel => KindModelEnum.Tablespace;
+
+        public PhysicalAttributesModel PhysicalAttributes { get; private set; }
+
+        public override void Initialize()
+        {
+            this.PhysicalAttributes.Initialize();
+        }
 
     }
 

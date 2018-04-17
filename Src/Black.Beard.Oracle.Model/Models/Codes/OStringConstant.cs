@@ -9,6 +9,11 @@ namespace Bb.Oracle.Models.Codes
 
         public string Value { get; set; }
 
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            visitor.VisitStringConstant(this);
+        }
+
     }
 
     [DebuggerDisplay("{Value}")]
@@ -16,6 +21,12 @@ namespace Bb.Oracle.Models.Codes
     {
 
         public string Value { get; set; }
+
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            visitor.VisitKeyWordConstant(this);
+        }
+
 
     }
 

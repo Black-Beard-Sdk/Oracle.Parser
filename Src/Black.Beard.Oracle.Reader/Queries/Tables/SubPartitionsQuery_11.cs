@@ -63,10 +63,10 @@ SELECT * FROM SYS.DBA_TAB_SUBPARTITIONS l
                                     Interval = t.Interval.ToBoolean(),
                                     SegmentCreated = t.SegmentCreated.ToBoolean(),
 
-                                    Logging = t.Logging.ToBoolean(),
 
                                 };
 
+                                sub.PhysicalAttributes.Logging = t.Logging;
                                 sub.PhysicalAttributes.PctIncrease = t.PctIncrease;
                                 sub.PhysicalAttributes.Freelists = t.Freelists;
                                 sub.PhysicalAttributes.FreelistGroups = t.FreelistGroups;
@@ -127,12 +127,12 @@ SELECT * FROM SYS.DBA_TAB_SUBPARTITIONS l
             public static Field<Decimal> PctUsed = new Field<Decimal>() { ColumnName = "PCT_USED", Read = reader => reader.Field<Decimal>((int)SubPartitionsQueryColumns.PCT_USED) };
             public static Field<Decimal> IniTrans = new Field<Decimal>() { ColumnName = "INI_TRANS", Read = reader => reader.Field<Decimal>((int)SubPartitionsQueryColumns.INI_TRANS) };
             public static Field<Decimal> MaxTrans = new Field<Decimal>() { ColumnName = "MAX_TRANS", Read = reader => reader.Field<Decimal>((int)SubPartitionsQueryColumns.MAX_TRANS) };
-            public static Field<Decimal> InitialExtent = new Field<Decimal>() { ColumnName = "INITIAL_EXTENT", Read = reader => reader.Field<Decimal>((int)SubPartitionsQueryColumns.INITIAL_EXTENT) };
-            public static Field<Decimal> NextExtent = new Field<Decimal>() { ColumnName = "NEXT_EXTENT", Read = reader => reader.Field<Decimal>((int)SubPartitionsQueryColumns.NEXT_EXTENT) };
+            public static Field<string> InitialExtent = new Field<string>() { ColumnName = "INITIAL_EXTENT", Read = reader => reader.Field<string>((int)SubPartitionsQueryColumns.INITIAL_EXTENT) };
+            public static Field<string> NextExtent = new Field<string>() { ColumnName = "NEXT_EXTENT", Read = reader => reader.Field<string>((int)SubPartitionsQueryColumns.NEXT_EXTENT) };
             public static Field<Decimal> MinExtent = new Field<Decimal>() { ColumnName = "MIN_EXTENT", Read = reader => reader.Field<Decimal>((int)SubPartitionsQueryColumns.MIN_EXTENT) };
             public static Field<Decimal> MaxExtent = new Field<Decimal>() { ColumnName = "MAX_EXTENT", Read = reader => reader.Field<Decimal>((int)SubPartitionsQueryColumns.MAX_EXTENT) };
             public static Field<Decimal> MaxSize = new Field<Decimal>() { ColumnName = "MAX_SIZE", Read = reader => reader.Field<Decimal>((int)SubPartitionsQueryColumns.MAX_SIZE) };
-            public static Field<Decimal> PctIncrease = new Field<Decimal>() { ColumnName = "PCT_INCREASE", Read = reader => reader.Field<Decimal>((int)SubPartitionsQueryColumns.PCT_INCREASE) };
+            public static Field<string> PctIncrease = new Field<string>() { ColumnName = "PCT_INCREASE", Read = reader => reader.Field<string>((int)SubPartitionsQueryColumns.PCT_INCREASE) };
             public static Field<Decimal> Freelists = new Field<Decimal>() { ColumnName = "FREELISTS", Read = reader => reader.Field<Decimal>((int)SubPartitionsQueryColumns.FREELISTS) };
             public static Field<Decimal> FreelistGroups = new Field<Decimal>() { ColumnName = "FREELIST_GROUPS", Read = reader => reader.Field<Decimal>((int)SubPartitionsQueryColumns.FREELIST_GROUPS) };
             public static Field<String> Logging = new Field<String>() { ColumnName = "LOGGING", Read = reader => reader.Field<String>((int)SubPartitionsQueryColumns.LOGGING) };
@@ -313,12 +313,12 @@ SELECT * FROM SYS.DBA_TAB_SUBPARTITIONS l
         public Decimal PctUsed { get; set; }
         public Decimal IniTrans { get; set; }
         public Decimal MaxTrans { get; set; }
-        public Decimal InitialExtent { get; set; }
-        public Decimal NextExtent { get; set; }
+        public string InitialExtent { get; set; }
+        public string NextExtent { get; set; }
         public Decimal MinExtent { get; set; }
         public Decimal MaxExtent { get; set; }
         public Decimal MaxSize { get; set; }
-        public Decimal PctIncrease { get; set; }
+        public string PctIncrease { get; set; }
         public Decimal Freelists { get; set; }
         public Decimal FreelistGroups { get; set; }
         public String Logging { get; set; }

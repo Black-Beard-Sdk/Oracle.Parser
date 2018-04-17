@@ -18,6 +18,11 @@ namespace Bb.Oracle.Models.Codes
 
         }
 
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            visitor.VisitCursorDeclarationStatement(this);
+        }
+
         public override KindModelEnum KindModel =>  KindModelEnum.CursorDeclaration;
 
         /// <summary>

@@ -18,6 +18,13 @@ namespace Bb.Oracle.Structures.Models
             this.Code = new CodeModel();
             this.CodeBody = new CodeModel();
         }
+
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            visitor.VisitType(this);
+            this.Properties.Accept(visitor);
+        }
+
         /// <summary>
         /// Key
         /// </summary>
@@ -126,9 +133,6 @@ namespace Bb.Oracle.Structures.Models
             }
 
         }
-
-        [JsonIgnore]
-        public OracleDatabase Parent { get; internal set; }
 
         
     }

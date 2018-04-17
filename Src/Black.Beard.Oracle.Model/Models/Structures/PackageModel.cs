@@ -91,6 +91,11 @@ namespace Bb.Oracle.Structures.Models
             return manager.Evaluate(this);
         }
 
+        public override void Accept(IOracleModelVisitor visitor)
+        {
+            visitor.VisitPackage(this);
+        }
+
     }
 
 }

@@ -27,6 +27,7 @@ namespace Bb.Oracle.Structures.Models
             Keep = false,
             Session = false,
         };
+
         public SequenceModel()
         {
             var _default = SequenceModel.Default;
@@ -42,6 +43,11 @@ namespace Bb.Oracle.Structures.Models
                 this.Keep = _default.Keep;
                 this.Session = _default.Session;
             }
+        }
+
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            visitor.VisitSequence(this);
         }
 
         /// <summary>

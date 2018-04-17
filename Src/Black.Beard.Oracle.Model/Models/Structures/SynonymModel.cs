@@ -10,6 +10,11 @@ namespace Bb.Oracle.Structures.Models
     public partial class SynonymModel : ItemBase
     {
 
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            visitor.VisitSynonym(this);
+        }
+
         /// <summary>
         /// Key
         /// </summary>

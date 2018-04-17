@@ -22,6 +22,12 @@ namespace Bb.Oracle.Models.Codes
             DataType = new OracleType() { Name = "Undefined" };
         }
 
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            visitor.VisitTypeReference(this);
+            DataType.Accept(visitor);
+        }
+
         //public List<string> Path { get; set; }
 
         public PercentTypeEnum KindTypeReference { get; set; }

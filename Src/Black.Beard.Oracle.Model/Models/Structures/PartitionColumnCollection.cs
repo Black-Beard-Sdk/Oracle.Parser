@@ -17,7 +17,12 @@ namespace Bb.Oracle.Structures.Models
             PartitionColumnCollection.Key = IndexedCollection<PartitionColumnModel>.GetMethodKey(c => c.ColumnName);
         }
 
-        
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            foreach (var item in this)
+                item.Accept(visitor);
+        }
+
     }
 
 }

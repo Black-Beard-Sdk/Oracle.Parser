@@ -21,5 +21,10 @@ namespace Bb.Oracle.Structures.Models
 
         public override KindModelEnum KindModel => KindModelEnum.PartitionColumn;
 
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            visitor.VisitPartitionColumn(this);
+        }
+
     }
 }

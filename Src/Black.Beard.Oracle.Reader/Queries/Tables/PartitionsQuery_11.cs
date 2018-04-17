@@ -45,7 +45,6 @@ ORDER BY l.PARTITION_POSITION
                                 HighValueLength = t.HighValueLength,
                                 PartitionPosition = t.PartitionPosition,
                                 MaxSize = t.MaxSize,
-                                Logging = t.Logging.ToBoolean(),
                                 Compression = t.Compression,
                                 CompressFor = t.CompressFor,
                                 NumRows = t.NumRows,
@@ -66,6 +65,7 @@ ORDER BY l.PARTITION_POSITION
 
                             };
 
+                            partition.PhysicalAttributes.Logging = t.Logging;
                             partition.PhysicalAttributes.PctFree = t.PctFree;
                             partition.PhysicalAttributes.PctUsed = t.PctUsed;
                             partition.PhysicalAttributes.IniTrans = t.IniTrans;
@@ -139,12 +139,12 @@ ORDER BY l.PARTITION_POSITION
             public static Field<Decimal> PctUsed = new Field<Decimal>() { ColumnName = "PCT_USED", Read = reader => reader.Field<Decimal>((int)PartitionsQueryColumns_11.PCT_USED) };
             public static Field<Decimal> IniTrans = new Field<Decimal>() { ColumnName = "INI_TRANS", Read = reader => reader.Field<Decimal>((int)PartitionsQueryColumns_11.INI_TRANS) };
             public static Field<Decimal> MaxTrans = new Field<Decimal>() { ColumnName = "MAX_TRANS", Read = reader => reader.Field<Decimal>((int)PartitionsQueryColumns_11.MAX_TRANS) };
-            public static Field<Decimal> InitialExtent = new Field<Decimal>() { ColumnName = "INITIAL_EXTENT", Read = reader => reader.Field<Decimal>((int)PartitionsQueryColumns_11.INITIAL_EXTENT) };
-            public static Field<Decimal> NextExtent = new Field<Decimal>() { ColumnName = "NEXT_EXTENT", Read = reader => reader.Field<Decimal>((int)PartitionsQueryColumns_11.NEXT_EXTENT) };
+            public static Field<string> InitialExtent = new Field<string>() { ColumnName = "INITIAL_EXTENT", Read = reader => reader.Field<string>((int)PartitionsQueryColumns_11.INITIAL_EXTENT) };
+            public static Field<string> NextExtent = new Field<string>() { ColumnName = "NEXT_EXTENT", Read = reader => reader.Field<string>((int)PartitionsQueryColumns_11.NEXT_EXTENT) };
             public static Field<Decimal> MinExtent = new Field<Decimal>() { ColumnName = "MIN_EXTENT", Read = reader => reader.Field<Decimal>((int)PartitionsQueryColumns_11.MIN_EXTENT) };
             public static Field<Decimal> MaxExtent = new Field<Decimal>() { ColumnName = "MAX_EXTENT", Read = reader => reader.Field<Decimal>((int)PartitionsQueryColumns_11.MAX_EXTENT) };
             public static Field<Decimal> MaxSize = new Field<Decimal>() { ColumnName = "MAX_SIZE", Read = reader => reader.Field<Decimal>((int)PartitionsQueryColumns_11.MAX_SIZE) };
-            public static Field<Decimal> PctIncrease = new Field<Decimal>() { ColumnName = "PCT_INCREASE", Read = reader => reader.Field<Decimal>((int)PartitionsQueryColumns_11.PCT_INCREASE) };
+            public static Field<string> PctIncrease = new Field<string>() { ColumnName = "PCT_INCREASE", Read = reader => reader.Field<string>((int)PartitionsQueryColumns_11.PCT_INCREASE) };
             public static Field<Decimal> Freelists = new Field<Decimal>() { ColumnName = "FREELISTS", Read = reader => reader.Field<Decimal>((int)PartitionsQueryColumns_11.FREELISTS) };
             public static Field<Decimal> FreelistGroups = new Field<Decimal>() { ColumnName = "FREELIST_GROUPS", Read = reader => reader.Field<Decimal>((int)PartitionsQueryColumns_11.FREELIST_GROUPS) };
             public static Field<String> Logging = new Field<String>() { ColumnName = "LOGGING", Read = reader => reader.Field<String>((int)PartitionsQueryColumns_11.LOGGING) };
@@ -337,12 +337,12 @@ ORDER BY l.PARTITION_POSITION
         public Decimal PctUsed { get; set; }
         public Decimal IniTrans { get; set; }
         public Decimal MaxTrans { get; set; }
-        public Decimal InitialExtent { get; set; }
-        public Decimal NextExtent { get; set; }
+        public string InitialExtent { get; set; }
+        public string NextExtent { get; set; }
         public Decimal MinExtent { get; set; }
         public Decimal MaxExtent { get; set; }
         public Decimal MaxSize { get; set; }
-        public Decimal PctIncrease { get; set; }
+        public string PctIncrease { get; set; }
         public Decimal Freelists { get; set; }
         public Decimal FreelistGroups { get; set; }
         public String Logging { get; set; }

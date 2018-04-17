@@ -18,6 +18,12 @@ namespace Bb.Oracle.Structures.Models
 
         }
 
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            visitor.VisitGrant(this);
+            this.Privileges.Accept(visitor);
+        }
+
         public void Create(IchangeVisitor visitor)
         {
             visitor.Create(this);

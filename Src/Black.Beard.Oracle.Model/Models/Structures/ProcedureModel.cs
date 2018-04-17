@@ -26,6 +26,13 @@ namespace Bb.Oracle.Structures.Models
 
         }
 
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            visitor.VisitProcedure(this);
+            this.Arguments.Accept(visitor);
+            this.ResultType.Accept(visitor);
+        }
+
         /// <summary>
         /// Key
         /// </summary>

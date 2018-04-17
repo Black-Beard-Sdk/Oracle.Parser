@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Bb.Oracle.Contracts;
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -39,12 +40,14 @@ namespace Bb.Oracle.Structures.Models
 
         }
 
+        public abstract void Accept(Contracts.IOracleModelVisitor visitor);
+
         public abstract void Clear();
 
         public abstract bool Contains(string key);
 
         public bool IsReadOnly { get { return false; } }
-
+        
         [JsonIgnore]
         public object Parent { get; internal set; }
 

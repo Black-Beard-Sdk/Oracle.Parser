@@ -43,6 +43,11 @@ namespace Bb.Oracle.Structures.Models
         [JsonIgnore]
         public object Parent { get; set; }
 
+        internal void VisitAlter(OAlter oAlter)
+        {
+            throw new NotImplementedException();
+        }
+
         [JsonIgnore]
         public OracleDatabase Root
         {
@@ -60,8 +65,10 @@ namespace Bb.Oracle.Structures.Models
             }
         }
 
-
-
+        internal void VisitDrop(ODrop oDrop)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }

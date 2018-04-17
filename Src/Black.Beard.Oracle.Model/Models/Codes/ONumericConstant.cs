@@ -1,7 +1,8 @@
 ﻿namespace Bb.Oracle.Models.Codes
 {
-    public class ONumericConstant : OConstant
+    public abstract class ONumericConstant : OConstant
     {
+
 
 
     }

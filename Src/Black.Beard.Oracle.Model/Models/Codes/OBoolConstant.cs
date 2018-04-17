@@ -10,6 +10,11 @@ namespace Bb.Oracle.Models.Codes
 
         public bool Value { get; set; }
 
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            visitor.VisitBoolConstant(this);
+        }
+
     }
 
 }

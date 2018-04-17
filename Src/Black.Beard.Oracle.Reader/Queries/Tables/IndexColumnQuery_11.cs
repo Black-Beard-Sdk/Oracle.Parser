@@ -111,7 +111,6 @@ ORDER BY i.table_owner, i.table_name, c.INDEX_OWNER, i.index_name, c.column_posi
                                 // SegmentName = t.Segment_name,
                                 // InitialExtent = t.initial_extent,
                                 Bitmap = false,
-                                Logging = t.Logging,
 
                             };
 
@@ -129,6 +128,7 @@ ORDER BY i.table_owner, i.table_name, c.INDEX_OWNER, i.index_name, c.column_posi
                             index.PhysicalAttributes.MinExtents = t.min_extents;
                             index.PhysicalAttributes.NextExtent = t.next_extent;
                             index.PhysicalAttributes.PctIncrease = t.pct_increase;
+                            index.PhysicalAttributes.Logging = t.Logging;
 
                             db.Indexes.Add(index);
 
@@ -185,11 +185,11 @@ ORDER BY i.table_owner, i.table_name, c.INDEX_OWNER, i.index_name, c.column_posi
             public static Field<string> pct_free = new Field<string>() { ColumnName = "PCT_FREE", Read = reader => reader.Field<string>((int)IndexColumnQueryColumns_11.pct_free) };
             public static Field<string> ini_trans = new Field<string>() { ColumnName = "INI_TRANS", Read = reader => reader.Field<string>((int)IndexColumnQueryColumns_11.ini_trans) };
             public static Field<string> max_trans = new Field<string>() { ColumnName = "MAX_TRANS", Read = reader => reader.Field<string>((int)IndexColumnQueryColumns_11.max_trans) };
-            public static Field<decimal> initial_extent = new Field<decimal>() { ColumnName = "INITIAL_EXTENT", Read = reader => reader.Field<decimal>((int)IndexColumnQueryColumns_11.initial_extent) };
-            public static Field<decimal> next_extent = new Field<decimal>() { ColumnName = "NEXT_EXTENT", Read = reader => reader.Field<decimal>((int)IndexColumnQueryColumns_11.next_extent) };
-            public static Field<decimal> min_extents = new Field<decimal>() { ColumnName = "MIN_EXTENTS", Read = reader => reader.Field<decimal>((int)IndexColumnQueryColumns_11.min_extents) };
-            public static Field<decimal> max_extents = new Field<decimal>() { ColumnName = "MAX_EXTENTS", Read = reader => reader.Field<decimal>((int)IndexColumnQueryColumns_11.max_extents) };
-            public static Field<decimal> pct_increase = new Field<decimal>() { ColumnName = "PCT_INCREASE", Read = reader => reader.Field<decimal>((int)IndexColumnQueryColumns_11.pct_increase) };
+            public static Field<string> initial_extent = new Field<string>() { ColumnName = "INITIAL_EXTENT", Read = reader => reader.Field<string>((int)IndexColumnQueryColumns_11.initial_extent) };
+            public static Field<string> next_extent = new Field<string>() { ColumnName = "NEXT_EXTENT", Read = reader => reader.Field<string>((int)IndexColumnQueryColumns_11.next_extent) };
+            public static Field<string> min_extents = new Field<string>() { ColumnName = "MIN_EXTENTS", Read = reader => reader.Field<string>((int)IndexColumnQueryColumns_11.min_extents) };
+            public static Field<string> max_extents = new Field<string>() { ColumnName = "MAX_EXTENTS", Read = reader => reader.Field<string>((int)IndexColumnQueryColumns_11.max_extents) };
+            public static Field<string> pct_increase = new Field<string>() { ColumnName = "PCT_INCREASE", Read = reader => reader.Field<string>((int)IndexColumnQueryColumns_11.pct_increase) };
             public static Field<decimal> freelists = new Field<decimal>() { ColumnName = "FREELISTS", Read = reader => reader.Field<decimal>((int)IndexColumnQueryColumns_11.freelists) };
             public static Field<decimal> freelist_groups = new Field<decimal>() { ColumnName = "FREELIST_GROUPS", Read = reader => reader.Field<decimal>((int)IndexColumnQueryColumns_11.freelist_groups) };
             public static Field<string> buffer_pool = new Field<string>() { ColumnName = "BUFFER_POOL", Read = reader => reader.Field<string>((int)IndexColumnQueryColumns_11.buffer_pool) };
@@ -381,11 +381,11 @@ ORDER BY i.table_owner, i.table_name, c.INDEX_OWNER, i.index_name, c.column_posi
         public string pct_free { get; set; }
         public string ini_trans { get; set; }
         public string max_trans { get; set; }
-        public decimal initial_extent { get; set; }
-        public decimal next_extent { get; set; }
-        public decimal min_extents { get; set; }
-        public decimal max_extents { get; set; }
-        public decimal pct_increase { get; set; }
+        public string initial_extent { get; set; }
+        public string next_extent { get; set; }
+        public string min_extents { get; set; }
+        public string max_extents { get; set; }
+        public string pct_increase { get; set; }
         public decimal freelists { get; set; }
         public decimal freelist_groups { get; set; }
         public string buffer_pool { get; set; }

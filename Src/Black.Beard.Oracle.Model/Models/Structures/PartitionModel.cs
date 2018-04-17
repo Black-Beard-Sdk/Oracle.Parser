@@ -15,6 +15,13 @@ namespace Bb.Oracle.Structures.Models
             this.PhysicalAttributes = new PhysicalAttributesModel() { Parent = this };
         }
 
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            visitor.VisitPartition(this);
+            this.SubPartitions.Accept(visitor);
+            this.PhysicalAttributes.Accept(visitor);
+        }
+
         public override void Initialize()
         {
             this.SubPartitions.Initialize();
@@ -50,12 +57,7 @@ namespace Bb.Oracle.Structures.Models
         /// Max Size
         /// </summary>   
         public decimal MaxSize { get; set; }
-        
-        /// <summary>
-        /// Logging
-        /// </summary>   
-        public bool Logging { get; set; }
-
+  
         /// <summary>
         /// Compression
         /// </summary>   

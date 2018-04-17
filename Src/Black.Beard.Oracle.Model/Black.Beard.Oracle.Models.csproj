@@ -8,6 +8,10 @@
   <ItemGroup>
     <Compile Remove="Models\ArgumentInfoModel.cs" />
     <Compile Remove="Models\ArgumentsInfoModel.cs" />
+    <Compile Remove="Models\Configurations\TeamCollection.cs" />
+    <Compile Remove="Models\Configurations\TeamElement.cs" />
+    <Compile Remove="Models\Configurations\UserCollection.cs" />
+    <Compile Remove="Models\Configurations\UserElement.cs" />
     <Compile Remove="Models\DirectoryArg.cs" />
   </ItemGroup>
 

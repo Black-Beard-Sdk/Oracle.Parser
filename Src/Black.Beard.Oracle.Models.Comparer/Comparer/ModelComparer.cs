@@ -1080,10 +1080,7 @@ namespace Bb.Oracle.Models.Comparer
 
                 if (source.BlocPartition != target.BlocPartition)
                     this._changes.AppendChange(source, target, "BlocPartition");
-
-                if (source.Logging != target.Logging)
-                    this._changes.AppendChange(source, target, "Logging");
-
+          
             }
 
             if (source.Bitmap != target.Bitmap)

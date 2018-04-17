@@ -16,6 +16,12 @@ namespace Bb.Oracle.Structures.Models
             PartitionRefCollection.Key = IndexedCollection<PartitionRefModel>.GetMethodKey(c => c.PartitionName);
         }
 
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            foreach (var item in this)
+                item.Accept(visitor);
+        }
+
     }
 
 

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Bb.Oracle.Contracts;
+using Newtonsoft.Json;
 
 namespace Bb.Oracle.Models
 {
@@ -8,6 +9,8 @@ namespace Bb.Oracle.Models
 
         [JsonIgnore]
         public abstract KindModelEnum KindModel { get; }
+
+        public abstract void Accept(IOracleModelVisitor visitor);
 
     }
 

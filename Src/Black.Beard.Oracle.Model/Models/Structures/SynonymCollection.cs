@@ -16,6 +16,12 @@ namespace Bb.Oracle.Structures.Models
             SynonymCollection.Key = IndexedCollection<SynonymModel>.GetMethodKey(c => c.Key);
         }
 
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            foreach (var item in this)
+                item.Accept(visitor);
+        }
+
     }
 
 

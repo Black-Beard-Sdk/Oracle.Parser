@@ -1,4 +1,5 @@
-﻿using Bb.Oracle.Structures.Models;
+﻿using Bb.Oracle.Contracts;
+using Bb.Oracle.Structures.Models;
 
 namespace Bb.Oracle.Models
 {
@@ -30,6 +31,10 @@ namespace Bb.Oracle.Models
 
         public override KindModelEnum KindModel => KindModelEnum.ForeignKey;
 
+        public override void Accept(IOracleModelVisitor visitor)
+        {
+            visitor.VisitForeignKeyConstraint(this);
+        }
     }
 
 }

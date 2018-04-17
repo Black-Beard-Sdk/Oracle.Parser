@@ -15,6 +15,13 @@ namespace Bb.Oracle.Structures.Models
             this.Type = new OTypeReference();
         }
 
+
+        public void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            this.Columns.Accept(visitor);
+            this.Type.Accept(visitor);
+        }
+
         /// <summary>
         /// Type
         /// </summary>

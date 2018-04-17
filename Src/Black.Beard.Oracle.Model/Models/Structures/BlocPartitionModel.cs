@@ -23,6 +23,14 @@ namespace Bb.Oracle.Structures.Models
             this.PhysicalAttributes.Initialize();
         }
 
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            visitor.VisitBlocPartition(this);
+            this.Columns.Accept(visitor);
+            this.SubColumns.Accept(visitor);
+            this.PhysicalAttributes.Accept(visitor);
+        }
+
         /// <summary>
         /// Partitioning Type
         /// </summary>   
@@ -42,12 +50,7 @@ namespace Bb.Oracle.Structures.Models
         /// Def Max Size
         /// </summary>   
         public string DefMaxSize { get; set; }
-
-        /// <summary>
-        /// Def Logging
-        /// </summary>   
-        public bool DefLogging { get; set; }
-
+    
         /// <summary>
         /// Def Compression
         /// </summary>   

@@ -16,6 +16,12 @@ namespace Bb.Oracle.Structures.Models
             PrivilegeCollection.Key = IndexedCollection<PrivilegeModel>.GetMethodKey(c => c.Name);
         }
 
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            foreach (var item in this)
+                item.Accept(visitor);
+        }
+
     }
 
 }

@@ -7,7 +7,6 @@ namespace Bb.Oracle.Models.Codes
     public class OMethodArgument : OCodeObject
     {
 
-
         public OMethodArgument(string name) : this()
         {
             this.ParameterName = name;
@@ -16,6 +15,11 @@ namespace Bb.Oracle.Models.Codes
         public OMethodArgument()
         {
 
+        }
+
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            visitor.VisitMethodArgument(this);
         }
 
         public OCodeObject Value { get; set; }

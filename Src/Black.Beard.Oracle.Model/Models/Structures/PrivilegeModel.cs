@@ -18,7 +18,13 @@ namespace Bb.Oracle.Structures.Models
         /// Name
         /// </summary>
         public string Name { get; set; }
-              
+
+
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            visitor.VisitPrivilege(this);
+        }
+
         public void Create(IchangeVisitor visitor)
         {
             visitor.Create(this);

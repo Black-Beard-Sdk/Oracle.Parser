@@ -14,6 +14,14 @@ namespace Bb.Oracle.Models.Codes
 
         public override KindModelEnum KindModel => KindModelEnum.TierceExpression;
 
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            visitor.VisitTierceExpression(this);
+            this.Left.Accept(visitor);
+            this.Center.Accept(visitor);
+            this.Right.Accept(visitor);
+        }
+
     }
 
 }

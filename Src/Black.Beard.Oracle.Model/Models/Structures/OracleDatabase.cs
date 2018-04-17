@@ -32,6 +32,22 @@ namespace Bb.Oracle.Structures.Models
 
         }
 
+        public void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            this.Partitions.Accept(visitor);
+            this.Tablespaces.Accept(visitor);
+            this.Packages.Accept(visitor);
+            this.Sequences.Accept(visitor);
+            this.Types.Accept(visitor);
+            this.Procedures.Accept(visitor);
+            this.Tables.Accept(visitor);
+            this.Triggers.Accept(visitor);
+            this.Indexes.Accept(visitor);
+            this.Constraints.Accept(visitor);
+            this.Synonyms.Accept(visitor);
+            this.Grants.Accept(visitor);
+        }
+
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
         internal void Changes(IndexedCollection indexedCollection, NotifyCollectionChangedEventArgs arg)

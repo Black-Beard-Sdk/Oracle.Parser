@@ -18,6 +18,11 @@ namespace Bb.Oracle.Models.Codes
     public class OTableCommentStatement : OObjectCommentStatement
     {
 
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            visitor.VisitTableComment(this);
+        }
+
         public override KindModelEnum KindModel => KindModelEnum.TableComment;
 
         /// <summary>
@@ -41,6 +46,12 @@ namespace Bb.Oracle.Models.Codes
         /// name of the referenced column
         /// </summary>
         public string Column { get; set; }
+
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            visitor.VisitTableColumnComment(this);
+        }
+
 
     }
 

@@ -1,4 +1,6 @@
-﻿using Bb.Oracle.Models;
+﻿using Bb.Oracle.Contracts;
+using Bb.Oracle.Models;
+using Bb.Oracle.Models.Codes;
 using Bb.Oracle.Structures.Models;
 using System.Collections.Generic;
 using System.Linq;
@@ -188,6 +190,165 @@ namespace Bb.Oracle
 
             }
 
+        }
+
+        public void VisitStringConstant(OStringConstant oStringConstant)
+        {
+        }
+
+        public void VisitIntegerConstant(OIntegerConstant oIntegerConstant)
+        {
+            
+        }
+
+        public void VisitUnaryExpression(OUnaryExpression oUnaryExpression)
+        {
+            
+        }
+
+        public void VisitTableTypeDefinition(TableTypeDefinition tableTypeDefinition)
+        {
+            
+        }
+
+        public void VisitTableTypeDef(OTableTypeDef oTableTypeDef)
+        {
+            
+        }
+
+        public void VisitTypeReference(OTypeReference oTypeReference)
+        {
+            
+        }
+
+        public void VisitODecimalConstant(ODecimalConstant oDecimalConstant)
+        {
+            
+        }
+
+        public void VisitTableIndexedByPartExpression(OTableIndexedByPartExpression oTableIndexedByPartExpression)
+        {
+            
+        }
+
+        public void VisitTierceExpression(OTierceExpression oTierceExpression)
+        {
+            
+        }
+
+        public void VisitArrayTypeDef(OArrayTypeDef oArrayTypeDef)
+        {
+            
+        }
+
+        public void VisitMethodArgument(OMethodArgument oMethodArgument)
+        {
+            
+        }
+
+        public void VisitKeyWordConstant(OKeyWordConstant oKeyWordConstant)
+        {
+            
+        }
+
+        public void VisitTableComment(OTableCommentStatement oTableCommentStatement)
+        {
+            
+        }
+
+        public void VisitBoolConstant(OBoolConstant oBoolConstant)
+        {
+            
+        }
+
+        public void VisitRecordTypeDef(ORecordTypeDef oRecordTypeDef)
+        {
+            
+        }
+
+        public void VisitFieldSpecExpression(OFieldSpecExpression oFieldSpecExpression)
+        {
+            
+        }
+
+        public void VisitCodeVariableReferenceExpression(OCodeVariableReferenceExpression oCodeVariableReferenceExpression)
+        {
+            
+        }
+
+        public void VisitCursorDeclarationStatement(OCursorDeclarationStatement oCursorDeclarationStatement)
+        {
+            
+        }
+
+        public void VisitPhysicalAttributes(PhysicalAttributesModel physicalAttributesModel)
+        {
+            
+        }
+
+        public void VisitCodeVariableDeclarationStatement(OCodeVariableDeclarationStatement oCodeVariableDeclarationStatement)
+        {
+            
+        }
+
+        public void VisitVarrayTypeDefinition(OVarrayTypeDefinition oVarrayTypeDefinition)
+        {
+            
+        }
+
+        public void VisitTableColumnComment(OTableColumnCommentStatement oTableColumnCommentStatement)
+        {
+            
+        }
+
+        public void VisitCallMethodReference(OCallMethodReference oCallMethodReference)
+        {
+            
+        }
+
+        public void VisitBinaryExpression(OBinaryExpression oBinaryExpression)
+        {
+            
+        }
+
+        public void VisitRefCursorTypeDef(ORefCursorTypeDef oRefCursorTypeDef)
+        {
+            
+        }
+
+        public void VisitProperty(PropertyModel item)
+        {
+            
+        }
+
+        public void VisitSubPartition(SubPartitionModel item)
+        {
+            
+        }
+
+        public void VisitPrivilege(PrivilegeModel item)
+        {
+            
+        }
+
+        public void VisitBlocPartition(BlocPartitionModel blocPartitionModel)
+        {
+            
+        }
+
+        public void VisitPartitionColumn(PartitionColumnModel item)
+        {
+            
+        }
+
+        public void VisitOracleType(OracleType oracleType)
+        {
+            
+        }
+
+        public void VisitForeignKeyConstraint(ForeignKeyConstraintModel foreignKeyConstraintModel)
+        {
+            
         }
 
         private List<ItemBase> _sequenceToDelete = new List<ItemBase>();

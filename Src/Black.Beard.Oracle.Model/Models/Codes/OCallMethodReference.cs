@@ -16,6 +16,13 @@ namespace Bb.Oracle.Models.Codes
             this.Arguments.AddRange(arguments);
         }
 
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            visitor.VisitCallMethodReference(this);
+            foreach (var item in this.Arguments)
+                item.Accept(visitor);
+        }
+
         public OCallMethodReference()
         {
             Arguments = new List<OMethodArgument>();

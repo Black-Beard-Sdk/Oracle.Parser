@@ -28,6 +28,13 @@ namespace Bb.Oracle.Models.Configurations
             schemaCollection.Key = IndexedCollection<SchemaElement>.GetMethodKey(c => c.Name);
         }
 
+        public override void Accept(Contracts.IOracleModelVisitor visitor)
+        {
+            //foreach (var item in this)
+            //    item.Accept(visitor);
+        }
+
+
     }
 
 }
