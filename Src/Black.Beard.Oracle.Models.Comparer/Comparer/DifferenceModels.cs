@@ -430,12 +430,12 @@ namespace Bb.Oracle.Models.Comparer
                     StringBuilder sb = new StringBuilder(source.Code.Length + source.CodeBody.Length + 100);
                     if (!source.Code.IsEmpty)
                     {
-                        sb.AppendLine(CreateOrReplace + source.Code.GetSource());
+                        sb.AppendLine(CreateOrReplace + (source.Code?.GetSource() ?? string.Empty));
                         sb.AppendLine(string.Empty);
                         sb.AppendLine("/");
                     }
                     if (!source.CodeBody.IsEmpty)
-                        sb.AppendLine(CreateOrReplace + source.CodeBody.GetSource() );
+                        sb.AppendLine(CreateOrReplace + (source.CodeBody?.GetSource() ?? string.Empty));
                     string p = BuildPath(Path.Combine(this.folderForSource, source.Owner), "Types", source.Name);
                     WriteFile(p, sb.ToString());
                 }
@@ -445,12 +445,12 @@ namespace Bb.Oracle.Models.Comparer
                     StringBuilder sb = new StringBuilder(target.Code.Length + target.CodeBody.Length + 100);
                     if (!target.Code.IsEmpty)
                     {
-                        sb.AppendLine(CreateOrReplace + target.Code.GetSource());
+                        sb.AppendLine(CreateOrReplace + (target.Code?.GetSource() ?? string.Empty));
                         sb.AppendLine(string.Empty);
                         sb.AppendLine("/");
                     }
                     if (!target.CodeBody.IsEmpty)
-                        sb.AppendLine(CreateOrReplace + target.CodeBody.GetSource());
+                        sb.AppendLine(CreateOrReplace + (target.CodeBody?.GetSource() ?? string.Empty));
 
                     string p = BuildPath(Path.Combine(this.folderForTarget, target.Owner), "Types", target.Name);
                     WriteFile(p, sb.ToString());
