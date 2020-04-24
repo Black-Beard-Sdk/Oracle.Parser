@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27004.2009
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Black.Beard.Oracle.Parser", "Black.Beard.Oracle.Parser\Black.Beard.Oracle.Parser.csproj", "{2DEACC35-BD90-4239-883C-E7DB2344E0DC}"
 EndProject
@@ -13,13 +13,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Black.Beard.Oracle.Helpers"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Black.Beard.Oracle.DdlReader", "Black.Beard.Oracle.DdlReader\Black.Beard.Oracle.DdlReader.csproj", "{96061953-2592-4BF8-A956-F0E2A37DC465}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Black.Beard.Oracle.Models.Comparer", "Black.Beard.Oracle.Models.Comparer\Black.Beard.Oracle.Models.Comparer.csproj", "{D6DC915B-84D6-472A-89A3-83BD9DA1480B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Black.Beard.Antlr.Visualizer", "Black.Beard.Antlr.Visualizer\Black.Beard.Antlr.Visualizer.csproj", "{FF149C48-1C51-4BA4-85E7-46C732B01AEE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Black.Beard.Oracle.Parser.UnitTests", "Black.Beard.Oracle.Parser.UnitTests\Black.Beard.Oracle.Parser.UnitTests.csproj", "{2462028C-33E8-4B37-8F32-5EA0E15A9101}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Black.Beard.Oracle.Powershell", "Black.Beard.Oracle.Powershell\Black.Beard.Oracle.Powershell.csproj", "{6ED800A3-505D-4DBE-8B17-86E295880283}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Black.Beard.Oracle.Models.Comparer", "Black.Beard.Oracle.Models.Comparer\Black.Beard.Oracle.Models.Comparer.csproj", "{563390F3-A8FA-430B-A9AC-F0433D7C5C35}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Exe.CompareModel", "Exe.CompareModel\Exe.CompareModel.csproj", "{D8F172B2-C76D-4DFF-9EA6-D33719911A65}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Consoles", "Consoles", "{8D248351-F9EC-40B6-9BA5-501AB93CEB55}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,10 +51,6 @@ Global
 		{96061953-2592-4BF8-A956-F0E2A37DC465}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{96061953-2592-4BF8-A956-F0E2A37DC465}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{96061953-2592-4BF8-A956-F0E2A37DC465}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D6DC915B-84D6-472A-89A3-83BD9DA1480B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D6DC915B-84D6-472A-89A3-83BD9DA1480B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D6DC915B-84D6-472A-89A3-83BD9DA1480B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D6DC915B-84D6-472A-89A3-83BD9DA1480B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FF149C48-1C51-4BA4-85E7-46C732B01AEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FF149C48-1C51-4BA4-85E7-46C732B01AEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FF149C48-1C51-4BA4-85E7-46C732B01AEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -63,9 +63,20 @@ Global
 		{6ED800A3-505D-4DBE-8B17-86E295880283}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6ED800A3-505D-4DBE-8B17-86E295880283}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6ED800A3-505D-4DBE-8B17-86E295880283}.Release|Any CPU.Build.0 = Release|Any CPU
+		{563390F3-A8FA-430B-A9AC-F0433D7C5C35}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{563390F3-A8FA-430B-A9AC-F0433D7C5C35}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{563390F3-A8FA-430B-A9AC-F0433D7C5C35}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{563390F3-A8FA-430B-A9AC-F0433D7C5C35}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8F172B2-C76D-4DFF-9EA6-D33719911A65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8F172B2-C76D-4DFF-9EA6-D33719911A65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8F172B2-C76D-4DFF-9EA6-D33719911A65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8F172B2-C76D-4DFF-9EA6-D33719911A65}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D8F172B2-C76D-4DFF-9EA6-D33719911A65} = {8D248351-F9EC-40B6-9BA5-501AB93CEB55}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ECEBDD8B-2ECA-409F-A02F-53B0DD4F38F6}

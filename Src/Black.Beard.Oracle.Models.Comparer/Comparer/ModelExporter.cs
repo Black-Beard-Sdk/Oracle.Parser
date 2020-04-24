@@ -1,12 +1,10 @@
 ﻿using Bb.Oracle.Helpers;
-using Bb.Oracle.Models;
 using Bb.Oracle.Structures.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Bb.Oracle.Models.Comparer
 {
@@ -295,7 +293,7 @@ namespace Bb.Oracle.Models.Comparer
                 var file = source.Files.OfType<FileElement>().FirstOrDefault();
 
                 if (file != null && file.Exist(this.rootFolderSource))
-                    sb = new StringBuilder(Helpers.ContentHelper.LoadContentFromFile(this.rootFolderSource, file.Path));
+                    sb = new StringBuilder(ContentHelper.LoadContentFromFile(this.rootFolderSource, file.Path));
 
                 else
                 {

@@ -73,10 +73,11 @@
     <Compile Include="Visitors\PolicyBehavior.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="grammar\generate.ps1" />
-    <None Include="grammar\PlSqlLexer.g4" />
+    <None Include="grammar\Generator\generate.ps1" />
+    <None Include="grammar\Generator\Move.bat" />
+    <None Include="grammar\Generator\PlSqlLexer.g4" />
     <None Include="grammar\PlSqlLexer.tokens" />
-    <None Include="grammar\PlSqlParser.g4" />
+    <None Include="grammar\Generator\PlSqlParser.g4" />
     <None Include="grammar\PlSqlParser.tokens" />
     <None Include="packages.config" />
   </ItemGroup>
