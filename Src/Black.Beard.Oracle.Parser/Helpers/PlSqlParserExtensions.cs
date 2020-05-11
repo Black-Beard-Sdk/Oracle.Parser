@@ -561,8 +561,7 @@ namespace Bb.Oracle.Helpers
             }
             catch (Exception e)
             {
-
-                throw;
+                throw e;
             }
 
 
@@ -602,7 +601,7 @@ namespace Bb.Oracle.Helpers
             }
             catch (Exception e)
             {
-                throw;
+                throw e;
             }
         }
 
@@ -615,7 +614,7 @@ namespace Bb.Oracle.Helpers
             }
             catch (Exception e)
             {
-                throw;
+                throw e;
             }
         }
 
@@ -629,7 +628,7 @@ namespace Bb.Oracle.Helpers
             catch (Exception e)
             {
 
-                throw;
+                throw e;
             }
         }
 

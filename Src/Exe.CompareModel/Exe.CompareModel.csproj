@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Crc32.cs" />
     <Compile Remove="Exports\ProcessorMail.cs" />
   </ItemGroup>
 

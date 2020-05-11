@@ -58,7 +58,7 @@ namespace Bb.Oracle.Solutions
                     {
                         if (System.Diagnostics.Debugger.IsAttached)
                             System.Diagnostics.Debugger.Break();
-                        throw;
+                        throw e;
                     }
                 }
             

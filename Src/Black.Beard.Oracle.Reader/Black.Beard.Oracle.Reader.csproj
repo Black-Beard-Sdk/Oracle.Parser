@@ -112,7 +112,7 @@
       <Name>Black.Beard.Oracle.Helpers</Name>
     </ProjectReference>
     <ProjectReference Include="..\Black.Beard.Oracle.Model\Black.Beard.Oracle.Models.csproj">
-      <Project>{1FB97F0D-8E91-4557-AB73-F4DAE05B1582}</Project>
+      <Project>{1fb97f0d-8e91-4557-ab73-f4dae05b1582}</Project>
       <Name>Black.Beard.Oracle.Models</Name>
     </ProjectReference>
   </ItemGroup>

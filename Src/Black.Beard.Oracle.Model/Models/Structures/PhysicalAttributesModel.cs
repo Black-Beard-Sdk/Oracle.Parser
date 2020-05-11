@@ -13,6 +13,7 @@ namespace Bb.Oracle.Structures.Models
         {
 
             Tablespace = new ReferenceTablespace() { GetDb = () => this.Root };
+            
 
         }
 
@@ -29,7 +30,7 @@ namespace Bb.Oracle.Structures.Models
         /// <summary>
         /// Buffer Pool
         /// </summary>   
-        public string BufferPool { get; set; }
+        public string BufferPool { get; set; } = "DEFAULT";
 
         /// <summary>
         /// Flash Cache
