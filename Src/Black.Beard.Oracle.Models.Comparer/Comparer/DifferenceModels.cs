@@ -361,6 +361,56 @@ namespace Bb.Oracle.Models.Comparer
 
         }
 
+        public virtual void AppendMissingReference(TriggerModel trigger, ReferenceTable table)
+        {
+
+            var d = new DifferenceModel()
+            {
+                Source = trigger,
+                Kind = TypeDifferenceEnum.Orphean,
+                Reference = "Table " + table.ToString(),
+            };
+            this._lst.Add(d);
+
+            if (generateSource)
+            {
+                string p = BuildPath(Path.Combine(this.folderForSource, trigger.TableReference.Owner), "Triggers", trigger.Name);
+                WriteFile(p, CreateOrReplace + Utils.Unserialize(trigger.Code, true));
+            }
+
+        }
+
+        public virtual void AppendMissingReference(IndexModel index, ReferenceTable table)
+        {
+
+            var d = new DifferenceModel()
+            {
+                Source = index,
+                Kind = TypeDifferenceEnum.Orphean,
+                Reference = "Table " + table.ToString(),
+            };
+            this._lst.Add(d);
+
+        }
+
+        public virtual void AppendMissingReference(ConstraintModel constraint, ReferenceTable table)
+        {
+
+            var d = new DifferenceModel()
+            {
+                Source = constraint,
+                Kind = TypeDifferenceEnum.Orphean,
+                Reference = "Table " + table.ToString(),
+            };
+            this._lst.Add(d);
+
+            //if (generateSource)
+            //{
+            //    string p = BuildPath(Path.Combine(this.folderForSource, constraint.TableReference.Owner), "Triggers", constraint.Name);
+            //    WriteFile(p, CreateOrReplace + Utils.Unserialize(constraint.Code, true));
+            //}
+
+        }
 
         public virtual void AppendToRemove(TypeItem target)
         {
@@ -458,6 +508,11 @@ namespace Bb.Oracle.Models.Comparer
             }
 
 
+        }
+
+        internal void AppendChange(PhysicalAttributesModel source, PhysicalAttributesModel target, string propertyName)
+        {
+            AppendDifference(source, target, propertyName);
         }
 
         public virtual void AppendChange(PropertyModel source, PropertyModel target, string propertyName)
@@ -818,6 +873,9 @@ namespace Bb.Oracle.Models.Comparer
                 return string.Format("{0}.{1}", i.GetOwner(), i.GetName());
             }
 
+            else if (item is PhysicalAttributesModel)
+                result = (item as PhysicalAttributesModel).GetName();
+
             //else if (item is IndexModel)
             //    result = (item as IndexModel).GetName();
 
@@ -848,7 +906,8 @@ namespace Bb.Oracle.Models.Comparer
 
             else
             {
-
+                //if (System.Diagnostics.Debugger.IsAttached)
+                //    System.Diagnostics.Debugger.Break();
             }
 
             return result;
@@ -903,9 +962,6 @@ namespace Bb.Oracle.Models.Comparer
             }
         }
 
-        internal void AppendChange(PhysicalAttributesModel source, PhysicalAttributesModel target, string v)
-        {
-            throw new NotImplementedException();
-        }
+
     }
 }

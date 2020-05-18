@@ -24,6 +24,7 @@ namespace Bb.Oracle.Models.Comparer
         public List<FileElement> Files { get; set; }
 
         public string Team { get; set; }
+        public string Reference { get; internal set; }
 
         internal void Addfile(string path)
         {

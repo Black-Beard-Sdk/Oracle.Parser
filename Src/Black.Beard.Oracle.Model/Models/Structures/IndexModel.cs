@@ -122,7 +122,13 @@ namespace Bb.Oracle.Structures.Models
         /// Objet <see cref="IndexColumnCollection" />.");
         /// </returns>
         public IndexColumnCollection Columns { get; set; }
+
         public ReferenceTable TableReference { get; set; }
+
+        public TableModel GetTable()
+        {
+            return this.TableReference.Resolve();
+        }
 
         /// <summary>
         /// BlocPartition

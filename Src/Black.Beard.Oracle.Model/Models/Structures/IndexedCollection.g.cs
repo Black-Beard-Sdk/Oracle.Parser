@@ -225,7 +225,10 @@ namespace Bb.Oracle.Structures.Models
                     p.Parent = this.Parent;
                     p.Initialize();
                 }
+                else
+                {
 
+                }
             }
 
 

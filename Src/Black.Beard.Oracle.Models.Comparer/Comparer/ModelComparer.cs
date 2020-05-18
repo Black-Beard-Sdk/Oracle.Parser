@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Transactions;
 
 namespace Bb.Oracle.Models.Comparer
 {
@@ -972,6 +973,9 @@ namespace Bb.Oracle.Models.Comparer
             foreach (TriggerModel trigger in sources)
             {
 
+                if (trigger.GetTable() == null)
+                    _changes.AppendMissingReference(trigger, trigger.TableReference);
+
                 if (targets.TryGet(trigger.Key, out TriggerModel tTarget))
                     CompareTrigger(trigger, tTarget);
                 else
@@ -1026,6 +1030,9 @@ namespace Bb.Oracle.Models.Comparer
 
             foreach (IndexModel index in indexesSource)
             {
+
+                if (index.GetTable() == null)
+                    _changes.AppendMissingReference(index, index.TableReference);
 
                 if (!indexesTarget.TryGet(index.Key, out IndexModel tTarget))
                 {
@@ -1408,25 +1415,28 @@ namespace Bb.Oracle.Models.Comparer
             foreach (ConstraintModel constrSource in tableSource)
             {
 
+                if (constrSource.GetTable() == null)
+                    _changes.AppendMissingReference(constrSource, constrSource.TableReference);
+
                 if (tableTarget.TryGet(constrSource.Key, out ConstraintModel constrTarget))
                     CompareConstraint(constrSource, constrTarget);
 
                 else
                 {
                     bool t = false;
-                    string id1 = GetIdentiferColumns(constrSource);
+                    //string id1 = GetIdentiferColumns(constrSource);
 
-                    var cl = GetColumnListFromConstraint(tableTarget, id1).ToList();
+                    //var cl = GetColumnListFromConstraint(tableTarget, id1).ToList();
 
-                    foreach (ConstraintModel item in cl)
-                        if (constrSource.Owner == item.Owner)
-                            if (constrSource.Type == item.Type)
-                                if (constrSource.Reference.Owner == item.Reference.Owner)
-                                    if (constrSource.Reference.Name == item.Reference.Name)
-                                    {
-                                        _changes.AppendChange(constrSource, item, "Name");
-                                        t = true;
-                                    }
+                    //foreach (ConstraintModel item in cl)
+                    //    if (constrSource.Owner == item.Owner)
+                    //        if (constrSource.Type == item.Type)
+                    //            if (constrSource.Reference.Owner == item.Reference.Owner)
+                    //                if (constrSource.Reference.Name == item.Reference.Name)
+                    //                {
+                    //                    _changes.AppendChange(constrSource, item, "Name");
+                    //                    t = true;
+                    //                }
 
                     if (!t)
                         _changes.AppendMissing(constrSource);

@@ -174,6 +174,11 @@ namespace Bb.Oracle.Structures.Models
 
         public ReferenceTable TableReference { get; set; }
 
+        public TableModel GetTable()
+        {
+            return this.TableReference.Resolve();
+        }
+
         public void Create(IchangeVisitor visitor)
         {
             visitor.Create(this);

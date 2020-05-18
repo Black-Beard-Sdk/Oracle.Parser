@@ -37,10 +37,18 @@ namespace Bb.Oracle.Structures.Models
 
         public override void Initialize()
         {
+            this.Columns.Parent = this;
             this.Columns.Initialize();
+
+            this.Partitions.Parent = this;
             this.Partitions.Initialize();
+            
+            this.BlocPartition.Parent = this;
             this.BlocPartition.Initialize();
+            
+            this.PhysicalAttributes.Parent = this;
             this.PhysicalAttributes.Initialize();
+        
         }
 
         /// <summary>

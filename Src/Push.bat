@@ -11,6 +11,4 @@ XCOPY .\Black.Beard.Oracle.Reader\bin\Debug\*.* F:\src\tfs\SqlGenerator\Developp
 
 XCOPY .\Black.Beard.Antlr.Visualizer\bin\Debug\*.* F:\Src\SqlGenerator\Developpement\V10\ThirdParty /s /e /y
 
-
-
 PAUSE

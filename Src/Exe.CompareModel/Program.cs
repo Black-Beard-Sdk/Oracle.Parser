@@ -9,6 +9,15 @@ using System.Threading;
 
 namespace Exe.CompareModel
 {
+
+    /*
+     
+        -source "F:\test.oracle.models\ora_dev_v.config" -target "F:\test.oracle.models\tfs_dev_v.config" -output "F:\test.oracle.models\rapports\Compare_ora_dev_v_2_tfs_dev_v.xls" -TfsProjectName "PLSQL" 
+        //-pathSource "$/PLSQL/Pickup/dev-v/Schemas" -RuleFilename "Configurations\rules.config"
+
+
+     */
+
     class Program
     {
 
@@ -22,11 +31,6 @@ namespace Exe.CompareModel
 
             var argCxt = new ArgumentContext(args);
             bool withoutTfs = false;
-
-            //ResponsabilitiesSection section = CheckArguments(argCxt, ref withoutTfs);
-
-            //if (!string.IsNullOrEmpty(argCxt.RuleFilename))
-            //    RuleSection.Configuration = RuleSection.LoadFile(argCxt.RuleFilename);
 
             if (!File.Exists(argCxt.Source))
                 throw new Exception(string.Format("missing source file {0}", argCxt.Source));
@@ -58,26 +62,6 @@ namespace Exe.CompareModel
             Console.WriteLine("fin de la comparaison");
             Console.WriteLine(string.Empty);
 
-            //if (section != null)
-            //{
-            //    if (argCxt.Mail)
-            //    {
-
-            //        Console.WriteLine("Lancement des mails");
-
-            //        ProcessorMail proc2 = new ProcessorMail(source.SourceScript, target.SourceScript, argCxt.TfsProjectName, section, argCxt)
-            //        {
-            //            EnvironmentSource = source.Name,
-            //            EnvironmentTarget = target.Name,
-            //        };
-            //        proc2.Run(diff, argCxt.PathSource, argCxt.PathTarget);
-            //    }
-            //    else
-            //        Console.WriteLine("Aucun Lancement de mail");
-            //}
-
-            //if (argCxt.Excel)
-            //{
             ProcessorExcel proc = new ProcessorExcel(withoutTfs, argCxt.UrlTfs, source.SourceScript, target.SourceScript, argCxt.TfsProjectName)
             {
                 EnvironmentSource = source.Name,
@@ -87,10 +71,6 @@ namespace Exe.CompareModel
             proc.Run(diff, argCxt.PathSource, argCxt.PathTarget);
             DeleteFile(sf);
             proc.Save(sf.FullName);
-
-            //}
-
-
 
         }
 

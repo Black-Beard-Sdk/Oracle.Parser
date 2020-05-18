@@ -9,7 +9,7 @@ namespace Bb.Oracle.Structures.Models
     /// <summary>
     /// Trigger
     /// </summary>
-    [System.Diagnostics.DebuggerDisplay("{TriggerName}")]
+    [System.Diagnostics.DebuggerDisplay("{Name}")]
     public partial class TriggerModel : ItemBase, Ichangable
     {
 
@@ -69,6 +69,11 @@ namespace Bb.Oracle.Structures.Models
         public string Code { get; set; }
 
         public ReferenceTable TableReference { get; set; }
+
+        public TableModel GetTable()
+        {
+            return this.TableReference.Resolve();
+        }
 
         public override void Initialize()
         {

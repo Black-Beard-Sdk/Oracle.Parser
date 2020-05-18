@@ -37,6 +37,11 @@ namespace Bb.Oracle.Structures.Models
             return db.Tablespaces[this.Name];
         }
 
+        public override string ToString()
+        {
+            return this.Name;
+        }
+
     }
 
     public class ReferenceTable : Reference<TableModel>
@@ -49,6 +54,11 @@ namespace Bb.Oracle.Structures.Models
             return db.Tables[$"{this.Owner}.{this.Name}"];
         }
 
+        public override string ToString()
+        {
+            return $"{this.Owner}.{this.Name}";
+        }
+
     }
 
     public class ReferenceConstraint : Reference<ConstraintModel>
@@ -59,6 +69,11 @@ namespace Bb.Oracle.Structures.Models
         protected override ConstraintModel Resolve(OracleDatabase db)
         {
             return db.Constraints[$"{this.Owner}.{this.Name}"];
+        }
+
+        public override string ToString()
+        {
+            return $"{this.Owner}.{this.Name}";
         }
 
     }

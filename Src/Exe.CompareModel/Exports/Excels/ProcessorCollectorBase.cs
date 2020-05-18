@@ -56,11 +56,15 @@ namespace CompareModel
         protected override void Visit(IndexModel source, IndexModel target, TypeDifferenceEnum kind, string propertyName, DifferenceModel item)
         {
 
-            var ts = (source.Parent as TableModel);
+            var ts = source.GetTable();
             table t;
+
+            if (ts == null)
+                return;
+
             if (!this._tables.TryGetValue(ts.Key, out t))
             {
-                t = new table(ts, target != null ? target.Parent.AsTable() : null) { Kind = TypeDifferenceEnum.Change, DifferenceModel = item };
+                t = new table(ts, target != null ? target.GetTable() : null) { Kind = TypeDifferenceEnum.Change, DifferenceModel = item };
                 this._tables.Add(ts.Key, t);
             }
 
@@ -124,11 +128,15 @@ namespace CompareModel
         protected override void Visit(TriggerModel source, TriggerModel target, TypeDifferenceEnum kind, string propertyName, DifferenceModel item)
         {
 
-            var ts = source.Parent.AsTable();
+            var ts = source.GetTable();
+            
+            if (ts == null)
+                return;
+
             table t;
             if (!this._tables.TryGetValue(ts.Key, out t))
             {
-                t = new table(ts, target != null ? target.Parent.AsTable() : null) { Kind = TypeDifferenceEnum.None };
+                t = new table(ts, target != null ? target.GetTable() : null) { Kind = TypeDifferenceEnum.None };
                 this._tables.Add(ts.Key, t);
             }
             else
@@ -179,6 +187,7 @@ namespace CompareModel
 
         protected override void Visit(ColumnModel source, ColumnModel target, TypeDifferenceEnum kind, string propertyName, DifferenceModel item)
         {
+
             var ts = source.Parent.AsTable();
             table t;
             if (!this._tables.TryGetValue(ts.Key, out t))
@@ -215,11 +224,15 @@ namespace CompareModel
 
         protected override void Visit(ConstraintModel source, ConstraintModel target, TypeDifferenceEnum kind, string propertyName, DifferenceModel item)
         {
-            var ts = source.Parent.AsTable();
+            var ts = source.GetTable();
+
+            if (ts == null)
+                return;
+
             table t;
             if (!this._tables.TryGetValue(ts.Key, out t))
             {
-                t = new table(ts, target != null ? target.Parent.AsTable() : null) { Kind = TypeDifferenceEnum.Change, DifferenceModel = item };
+                t = new table(ts, target != null ? target.GetTable() : null) { Kind = TypeDifferenceEnum.Change, DifferenceModel = item };
                 this._tables.Add(ts.Key, t);
             }
             else

@@ -10,6 +10,7 @@ namespace Bb.Oracle
     public static class ModelHelper
     {
 
+
         public static TableModel AsTable(this object self)
         {
 
