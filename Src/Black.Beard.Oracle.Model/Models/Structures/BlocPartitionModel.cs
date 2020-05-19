@@ -18,9 +18,15 @@ namespace Bb.Oracle.Structures.Models
 
         public override void Initialize()
         {
+            this.Columns.Root = this.Root;
             this.Columns.Initialize();
+
+            this.SubColumns.Root = this.Root;
             this.SubColumns.Initialize();
+
+            this.PhysicalAttributes.Root = this.Root;
             this.PhysicalAttributes.Initialize();
+
         }
 
         public override void Accept(Contracts.IOracleModelVisitor visitor)

@@ -24,6 +24,8 @@ namespace Bb.Oracle.Structures.Models
 
         public override void Initialize()
         {
+            this.SubPartitions.Root = this.Root;
+            this.PhysicalAttributes.Root = this.Root;
             this.SubPartitions.Initialize();
             this.PhysicalAttributes.Initialize();
         }

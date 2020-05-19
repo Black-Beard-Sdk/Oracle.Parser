@@ -1087,7 +1087,7 @@ namespace Bb.Oracle.Models.Comparer
 
                 if (source.BlocPartition != target.BlocPartition)
                     this._changes.AppendChange(source, target, "BlocPartition");
-          
+
             }
 
             if (source.Bitmap != target.Bitmap)
@@ -1153,8 +1153,9 @@ namespace Bb.Oracle.Models.Comparer
         private void ComparePhysicialAttributes(PhysicalAttributesModel source, PhysicalAttributesModel target)
         {
 
-            if (source.Logging != target.Logging)
-                this._changes.AppendChange(source, target, "Logging");
+            if (source.Logging != null && target.Logging != null)
+                if (source.Logging != target.Logging)
+                    this._changes.AppendChange(source, target, "Logging");
 
             if (source.FlashCache != target.FlashCache)
                 this._changes.AppendChange(source, target, "FlashCache");
@@ -1177,23 +1178,26 @@ namespace Bb.Oracle.Models.Comparer
             if (source.BufferPool != target.BufferPool)
                 this._changes.AppendChange(source, target, "BufferPool");
 
-            if ((source.Tablespace.Name ?? string.Empty) != (target.Tablespace.Name ?? string.Empty))
-                this._changes.AppendChange(source, target, "Tablespace.Name");
+            if (source.MaxExtents != null && target.MaxExtents != null)
+                if (source.MaxExtents != target.MaxExtents)
+                    this._changes.AppendChange(source, target, "MaxExtents");
 
-            if (source.MaxExtents != target.MaxExtents)
-                this._changes.AppendChange(source, target, "MaxExtents");
+            if (source.MinExtents != null && target.MinExtents != null)
+                if (source.MinExtents != target.MinExtents)
+                    this._changes.AppendChange(source, target, "MinExtents");
 
-            if (source.MinExtents != target.MinExtents)
-                this._changes.AppendChange(source, target, "MinExtents");
+            if (source.NextExtent != null && target.NextExtent != null)
+                if (source.NextExtent != target.NextExtent)
+                    this._changes.AppendChange(source, target, "NextExtent");
 
-            if (source.NextExtent != target.NextExtent)
-                this._changes.AppendChange(source, target, "NextExtent");
+            if (source.InitialExtent != null && target.InitialExtent != null)
+                if (source.InitialExtent != target.InitialExtent)
+                    this._changes.AppendChange(source, target, "InitialExtent");
 
-            if (source.InitialExtent != target.InitialExtent)
-                this._changes.AppendChange(source, target, "InitialExtent");
-
-            if (source.Tablespace != target.Tablespace)
-                this._changes.AppendChange(source, target, "Tablespace");
+            if (source.Tablespace != null && target.Tablespace != null)
+                if (source.Tablespace.Name != null && target.Tablespace.Name != null)
+                    if (source.Tablespace.Name != target.Tablespace.Name)
+                        this._changes.AppendChange(source, target, "Tablespace");
 
             if (source.Freelists != target.Freelists)
                 this._changes.AppendChange(source, target, "Freelists");
@@ -1412,20 +1416,30 @@ namespace Bb.Oracle.Models.Comparer
         private void CompareConstraints(ConstraintCollection tableSource, ConstraintCollection tableTarget)
         {
 
+            //var indexSources = tableSource.ToLookup(c => c.UniqueKeyIndex, c => c);
+            //var indexTargets = tableTarget.ToLookup(c => c.UniqueKeyIndex, c => c);
+
             foreach (ConstraintModel constrSource in tableSource)
             {
+
+                //var key = constrSource.UniqueKeyIndex;
+                //var key2 = indexSources[key].ToList();
+                //var u = indexTargets[key].ToList();
 
                 if (constrSource.GetTable() == null)
                     _changes.AppendMissingReference(constrSource, constrSource.TableReference);
 
                 if (tableTarget.TryGet(constrSource.Key, out ConstraintModel constrTarget))
+                {
+                    //var o = constrTarget.UniqueKeyIndex;
                     CompareConstraint(constrSource, constrTarget);
-
+                }
                 else
                 {
-                    bool t = false;
-                    //string id1 = GetIdentiferColumns(constrSource);
 
+                    bool t = false;
+
+                    //string id1 = GetIdentiferColumns(constrSource);
                     //var cl = GetColumnListFromConstraint(tableTarget, id1).ToList();
 
                     //foreach (ConstraintModel item in cl)
@@ -1438,7 +1452,7 @@ namespace Bb.Oracle.Models.Comparer
                     //                    t = true;
                     //                }
 
-                    if (!t)
+                    if (!t && !constrSource.IsGeneratedName)
                         _changes.AppendMissing(constrSource);
 
                 }

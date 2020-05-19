@@ -128,6 +128,7 @@ namespace Bb.Oracle.Structures.Models
         {
             foreach (PropertyModel item in Properties)
             {
+                item.Root = this.Root;
                 item.Parent = this;
                 item.Initialize();
             }

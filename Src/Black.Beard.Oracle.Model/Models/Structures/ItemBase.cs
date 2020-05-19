@@ -10,7 +10,7 @@ namespace Bb.Oracle.Structures.Models
 
         public ItemBase()
         {
-            this.Files = new FileCollection() { Parent = this};
+            this.Files = new FileCollection() { Parent = this };
             this.EventParser = new EventParsers();
         }
 
@@ -41,7 +41,7 @@ namespace Bb.Oracle.Structures.Models
         }
 
         [JsonIgnore]
-        public object Parent { get; set; }
+        public ItemBase Parent { get; set; }
 
         internal void VisitAlter(OAlter oAlter)
         {
@@ -49,21 +49,7 @@ namespace Bb.Oracle.Structures.Models
         }
 
         [JsonIgnore]
-        public OracleDatabase Root
-        {
-            get
-            {
-
-                if (this.Parent is OracleDatabase r)
-                    return r;
-
-                if (this.Parent is ItemBase i)
-                    return i.Root;
-
-                return null;
-                    
-            }
-        }
+        public OracleDatabase Root { get; internal set; }
 
         internal void VisitDrop(ODrop oDrop)
         {

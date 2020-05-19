@@ -127,18 +127,8 @@ namespace Bb.Oracle.Structures.Models
 
         public override void Initialize()
         {
-
-            //this.Constraints = new List<ConstraintModel>();
-            //var t = this.Parent.AsTable();
-            //foreach (ConstraintModel c in t.Constraints.OfType<ConstraintModel>())
-            //{
-            //    foreach (ConstraintColumnModel item in c.Columns)
-            //    {
-            //        if (item.ColumnName == this.Name)
-            //            this.Constraints.Add(c);
-            //    }
-            //}
-
+            ForeignKey.Root = this.Root;
+            this.Type.Root = this.Root;
         }
 
         public void Create(IchangeVisitor visitor)

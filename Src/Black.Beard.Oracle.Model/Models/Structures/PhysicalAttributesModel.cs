@@ -12,7 +12,7 @@ namespace Bb.Oracle.Structures.Models
         public PhysicalAttributesModel()
         {
 
-            Tablespace = new ReferenceTablespace() { GetDb = () => this.Root };
+            Tablespace = new ReferenceTablespace() { Root = this.Root };
             
 
         }
@@ -24,7 +24,7 @@ namespace Bb.Oracle.Structures.Models
 
         public override void Initialize()
         {
-            Tablespace.GetDb = () => this.Root;
+            Tablespace.Root = this.Root;
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace Bb.Oracle.Structures.Models
 
         public string MinExtents { get; set; }
 
-        public string MaxExtents { get; set; }
+        public string MaxExtents { get; set; }// = "2147483645";
 
         /// <summary>
         /// Logging

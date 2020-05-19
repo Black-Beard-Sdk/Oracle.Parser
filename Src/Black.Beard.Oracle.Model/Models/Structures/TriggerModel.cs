@@ -15,7 +15,7 @@ namespace Bb.Oracle.Structures.Models
 
         public TriggerModel()
         {
-            TableReference = new ReferenceTable() { GetDb = () => this.Root };
+            TableReference = new ReferenceTable();
         }
 
         public override void Accept(Contracts.IOracleModelVisitor visitor)
@@ -77,7 +77,7 @@ namespace Bb.Oracle.Structures.Models
 
         public override void Initialize()
         {
-            TableReference.GetDb = () => this.Root;
+            TableReference.Root = this.Root;
         }
 
         public void Create(IchangeVisitor visitor)

@@ -1,4 +1,5 @@
 ﻿
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,7 +16,7 @@ namespace Bb.Oracle.Structures.Models
 
         public T Resolve()
         {
-            return _item ?? (_item = Resolve(GetDb()));
+            return _item ?? (_item = Resolve(Root));
         }
 
         protected abstract T Resolve(OracleDatabase oracleDatabase);
@@ -25,7 +26,10 @@ namespace Bb.Oracle.Structures.Models
             _item = item;
         }
 
-        internal Func<OracleDatabase> GetDb;
+        [JsonIgnore]
+        public OracleDatabase Root { get; internal set; }
+
+        //internal Func<OracleDatabase> GetDb;
 
     }
 
@@ -47,11 +51,33 @@ namespace Bb.Oracle.Structures.Models
     public class ReferenceTable : Reference<TableModel>
     {
 
+        public ReferenceTable()
+        {
+
+        }
+
         public string Owner { get; set; }
 
         protected override TableModel Resolve(OracleDatabase db)
         {
             return db.Tables[$"{this.Owner}.{this.Name}"];
+        }
+
+        public override string ToString()
+        {
+            return $"{this.Owner}.{this.Name}";
+        }
+
+    }
+
+    public class ReferenceIndex : Reference<IndexModel>
+    {
+
+        public string Owner { get; set; }
+
+        protected override IndexModel Resolve(OracleDatabase db)
+        {
+            return db.Indexes[$"{this.Owner}.{this.Name}"];
         }
 
         public override string ToString()
@@ -68,7 +94,9 @@ namespace Bb.Oracle.Structures.Models
 
         protected override ConstraintModel Resolve(OracleDatabase db)
         {
-            return db.Constraints[$"{this.Owner}.{this.Name}"];
+            if (!string.IsNullOrEmpty(this.Name))
+                return db.Constraints[$"{this.Owner}.{this.Name}"];
+            return null;
         }
 
         public override string ToString()

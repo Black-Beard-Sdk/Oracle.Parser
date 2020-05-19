@@ -10,24 +10,34 @@ namespace Bb.Oracle.Structures.Models
     public partial class OracleDatabase
     {
 
+        static OracleDatabase()
+        {
+            _serializer = new JsonSerializer()
+            {
+                Formatting = Formatting.Indented,
+                DefaultValueHandling = DefaultValueHandling.Ignore,
+                NullValueHandling = NullValueHandling.Ignore,
+            };
+        }
+
         public OracleDatabase()
         {
 
-            this.Partitions = new PartitionCollection() { Parent = this };
-            this.Tablespaces = new TablespaceCollection() { Parent = this };
-            this.Packages = new PackageCollection() { Parent = this };
-            this.Sequences = new SequenceCollection() { Parent = this };
-            this.Types = new TypeCollection() { Parent = this };
-            this.Procedures = new ProcedureCollection() { Parent = this };
+            this.Partitions = new PartitionCollection() { Root = this, Parent = this };
+            this.Tablespaces = new TablespaceCollection() { Root = this, Parent = this };
+            this.Packages = new PackageCollection() { Root = this, Parent = this };
+            this.Sequences = new SequenceCollection() { Root = this, Parent = this };
+            this.Types = new TypeCollection() { Root = this, Parent = this };
+            this.Procedures = new ProcedureCollection() { Root = this, Parent = this };
 
-            this.Tables = new TableCollection() { Parent = this };
-            this.Triggers = new TriggerCollection() { Parent = this };
-            this.Indexes = new IndexCollection() { Parent = this };
-            this.Constraints = new ConstraintCollection() { Parent = this };
+            this.Tables = new TableCollection() { Root = this, Parent = this };
+            this.Triggers = new TriggerCollection() { Root = this, Parent = this };
+            this.Indexes = new IndexCollection() { Root = this, Parent = this };
+            this.Constraints = new ConstraintCollection() { Root = this, Parent = this };
 
-            this.Synonyms = new SynonymCollection() { Parent = this };
-            this.Grants = new GrantCollection() { Parent = this };
-            
+            this.Synonyms = new SynonymCollection() { Root = this, Parent = this };
+            this.Grants = new GrantCollection() { Root = this, Parent = this };
+
             this.References = new ReferentialNames();
 
         }
@@ -211,12 +221,10 @@ namespace Bb.Oracle.Structures.Models
         {
 
             this.Partitions.Initialize();
-
             this.Tables.Initialize();
             this.Triggers.Initialize();
             this.Indexes.Initialize();
             this.Constraints.Initialize();
-
             this.Types.Initialize();
             this.Sequences.Initialize();
             this.Procedures.Initialize();
@@ -226,7 +234,7 @@ namespace Bb.Oracle.Structures.Models
             this.Tablespaces.Initialize();
             this.Packages.Initialize();
 
-            
+
         }
 
         /// <summary>
@@ -235,33 +243,26 @@ namespace Bb.Oracle.Structures.Models
         [JsonIgnore]
         public string Annotation { get; set; }
 
-
         public void WriteFile(string filename)
         {
             FileInfo file = new FileInfo(filename);
             using (StreamWriter stream = file.CreateText())
-            {
-                JsonSerializer serializer = new JsonSerializer()
-                {
-                    Formatting = Formatting.Indented,
-                    DefaultValueHandling = DefaultValueHandling.Ignore,
-                    NullValueHandling = NullValueHandling.Ignore,
-                };
-                serializer.Serialize(stream, this);
-            }
+                _serializer.Serialize(stream, this);
         }
 
         public static OracleDatabase ReadFile(string filename)
         {
+            OracleDatabase db;
             FileInfo file = new FileInfo(filename);
             using (StreamReader stream = file.OpenText())
-            {
-                JsonSerializer serializer = new JsonSerializer();
-                OracleDatabase db = (OracleDatabase)serializer.Deserialize(stream, typeof(OracleDatabase));
-                db.Initialize();
-                return db;
-            }
+                db = (OracleDatabase)_serializer.Deserialize(stream, typeof(OracleDatabase));
+
+            db.Initialize();
+            return db;
+
         }
+
+        private static readonly JsonSerializer _serializer;
 
     }
 

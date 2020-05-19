@@ -16,7 +16,7 @@ namespace Bb.Oracle.Structures.Models
         {
             this.Columns = new IndexColumnCollection() { Parent = this };
             this.BlocPartition = new BlocPartitionModel() { Parent = this };
-            TableReference = new ReferenceTable() { GetDb = () => this.Root };
+            this.TableReference = new ReferenceTable() { };
             this.PhysicalAttributes = new PhysicalAttributesModel() { Parent = this };
         }
 
@@ -69,7 +69,7 @@ namespace Bb.Oracle.Structures.Models
         /// Cache
         /// </summary>
         public bool Cache { get; set; }
-     
+
         /// <summary>
         /// Deduplication
         /// </summary>
@@ -156,9 +156,20 @@ namespace Bb.Oracle.Structures.Models
 
         public override void Initialize()
         {
-            TableReference.GetDb = () => this.Root;
+            this.TableReference.Root = this.Root;
+            var table = this.GetTable();
+            if (table != null)
+                this.Columns.Parent = table;
+
+            this.Columns.Root = this.Root;
             this.Columns.Initialize();
+
+            this.PhysicalAttributes.Root = this.Root;
             this.PhysicalAttributes.Initialize();
+        
+            this.BlocPartition.Root = this.Root;
+            this.BlocPartition.Initialize();
+
         }
 
         public override KindModelEnum KindModel

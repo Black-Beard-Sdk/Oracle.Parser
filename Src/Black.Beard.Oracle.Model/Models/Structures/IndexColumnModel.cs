@@ -31,6 +31,14 @@ namespace Bb.Oracle.Structures.Models
             visitor.VisitIndexColumn(this);
         }
 
+        public ColumnModel GetColumnModel()
+        {
+            var table = this.Parent.AsTable();
+            if (table == null)
+                return null;
+            return table.Columns[this.Name];
+        }
+
     }
 
 }

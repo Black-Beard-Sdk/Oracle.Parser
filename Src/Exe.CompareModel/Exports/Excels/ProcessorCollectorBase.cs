@@ -239,7 +239,7 @@ namespace CompareModel
             {
                 if (t.Target == null && target != null)
                 {
-                    t.Target = target.Parent.AsTable();
+                    t.Target = target.GetTable();
                 }
             }
 

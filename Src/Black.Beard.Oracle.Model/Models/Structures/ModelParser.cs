@@ -65,7 +65,7 @@ namespace Bb.Oracle.Structures.Models
             }
 
 
-            var schemas = _schemas.Select(c => new SchemaModel() { Name = c.ToUpper(), Parent = model });
+            var schemas = _schemas.Select(c => new SchemaModel() { Name = c.ToUpper(), Root = model });
             this._log(string.Format("--- analyzing {0} schema name(s)", schemas.Count()));
             foreach (var item in schemas)
                 visitor.VisitSchema(item);

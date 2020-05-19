@@ -26,6 +26,20 @@ namespace Bb.Oracle.Structures.Models
             visitor.VisitConstraintColumn(this);
         }
 
+        public ColumnModel GetColumnModel()
+        {
+           var table = this.Parent.AsTable();
+            if (table == null)
+                return null;
+           return  table.Columns[this.ColumnName];
+        }
+
+        public override void Initialize()
+        {
+            base.Initialize();
+
+        }
+
     }
 
 }

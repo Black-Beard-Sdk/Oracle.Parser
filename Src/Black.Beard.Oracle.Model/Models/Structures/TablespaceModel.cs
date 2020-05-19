@@ -114,6 +114,7 @@ namespace Bb.Oracle.Structures.Models
 
         public override void Initialize()
         {
+            this.PhysicalAttributes.Root = this.Root;
             this.PhysicalAttributes.Initialize();
         }
 

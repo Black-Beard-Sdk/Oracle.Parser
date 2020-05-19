@@ -37,18 +37,22 @@ namespace Bb.Oracle.Structures.Models
 
         public override void Initialize()
         {
+            this.Columns.Root = this.Root;
             this.Columns.Parent = this;
             this.Columns.Initialize();
 
+            this.Partitions.Root = this.Root;
             this.Partitions.Parent = this;
             this.Partitions.Initialize();
-            
+
+            this.BlocPartition.Root = this.Root;
             this.BlocPartition.Parent = this;
             this.BlocPartition.Initialize();
-            
+
+            this.PhysicalAttributes.Root = this.Root;
             this.PhysicalAttributes.Parent = this;
             this.PhysicalAttributes.Initialize();
-        
+
         }
 
         /// <summary>
@@ -72,7 +76,7 @@ namespace Bb.Oracle.Structures.Models
         /// Description
         /// </summary>
         public string Description { get; set; }
-        
+
         /// <summary>
         /// Comment
         /// </summary>
@@ -93,7 +97,7 @@ namespace Bb.Oracle.Structures.Models
         /// Temporary
         /// </summary>
         public bool Temporary { get; set; }
-        
+
         /// <summary>
         /// Cluster Name
         /// </summary>

@@ -39,6 +39,17 @@ namespace Bb.Oracle.Structures.Models
         public ColumnCollection Columns { get; set; }
 
         [JsonIgnore]
+        public OracleDatabase Root { get; internal set; }
+
+        public void Initialize()
+        {
+            //Type.Root = this.Root;
+            //type.Ini
+            this.Columns.Root = this.Root;
+            this.Columns.Initialize();
+        }
+
+        [JsonIgnore]
         public object Parent { get; set; }
 
     }

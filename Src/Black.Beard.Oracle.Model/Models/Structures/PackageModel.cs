@@ -46,6 +46,16 @@ namespace Bb.Oracle.Structures.Models
 
         public bool Excluded { get; set; }
 
+        public override void Initialize()
+        {
+            
+            this.Code.Files.Root = this.Root;
+            this.Code.Files.Initialize();
+
+            this.CodeBody.Files.Root = this.Root;
+            this.CodeBody.Files.Initialize();
+        
+        }
 
         //public static implicit operator PackageModel(string packageName)
         //{

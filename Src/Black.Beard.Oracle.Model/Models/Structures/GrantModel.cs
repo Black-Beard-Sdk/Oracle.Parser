@@ -24,6 +24,12 @@ namespace Bb.Oracle.Structures.Models
             this.Privileges.Accept(visitor);
         }
 
+        public override void Initialize()
+        {
+            this.Privileges.Root = this.Root;
+            this.Privileges.Initialize();
+        }
+
         public void Create(IchangeVisitor visitor)
         {
             visitor.Create(this);

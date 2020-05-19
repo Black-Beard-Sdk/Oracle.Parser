@@ -269,7 +269,10 @@ namespace Bb.Oracle.Structures.Models
 
         public override void Initialize()
         {
+            this.ResultType.Root = this.Root;
+            this.ResultType.Initialize();
 
+            this.Arguments.Root = this.Root;
             this.Arguments.Initialize();
         }
 

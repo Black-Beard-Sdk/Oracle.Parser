@@ -52,21 +52,8 @@ namespace Bb.Oracle.Structures.Models
         public object Parent { get; internal set; }
 
         [JsonIgnore]
-        public OracleDatabase Root
-        {
-            get
-            {
+        public OracleDatabase Root { get; internal set; }
 
-                if (this.Parent is OracleDatabase r)
-                    return r;
-
-                if (this.Parent is ItemBase i)
-                    return i.Root;
-
-                return null;
-
-            }
-        }
 
     }
 

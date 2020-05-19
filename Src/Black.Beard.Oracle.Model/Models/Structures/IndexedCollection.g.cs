@@ -35,8 +35,10 @@ namespace Bb.Oracle.Structures.Models
 
                     var v = value as ItemBase;
                     if (v != null)
-                        v.Parent = this.Parent;
-
+                    {
+                        v.Root = this.Root;
+                        //v.Parent = this.Parent;
+                    }
                 }
                 else
                     AddOrUpdate(value);
@@ -84,7 +86,10 @@ namespace Bb.Oracle.Structures.Models
                 this._datas.Add(key, item);
                 var v = item as ItemBase;
                 if (v != null)
-                    v.Parent = this.Parent;
+                {
+                    v.Root = this.Root;
+                    //v.Parent = this.Parent;
+                }
             }
             else
             {
@@ -92,7 +97,10 @@ namespace Bb.Oracle.Structures.Models
                 this._datas[key] = item;
                 var v = item as ItemBase;
                 if (v != null)
-                    v.Parent = this.Parent;
+                {
+                    v.Root = this.Root;
+                    //v.Parent = this.Parent;
+                }
                 base.AppendChanges(System.Collections.Specialized.NotifyCollectionChangedAction.Replace, new List<T>() { item }, new List<T>() { old });
             }
         }
@@ -117,8 +125,10 @@ namespace Bb.Oracle.Structures.Models
 
                 var v = item as ItemBase;
                 if (v != null)
-                    v.Parent = this.Parent;
-
+                {
+                    v.Root = this.Root;
+                    //v.Parent = this.Parent;
+                }
             }
             else
                 throw new DuplicateWaitObjectException(key);
@@ -153,8 +163,10 @@ namespace Bb.Oracle.Structures.Models
 
                 var v = item as ItemBase;
                 if (v != null)
-                    v.Parent = this.Parent;
-
+                {
+                    v.Root = this.Root;
+                    //v.Parent = this.Parent;
+                }
             }
 
             if (newItem.Count > 0)
@@ -222,12 +234,9 @@ namespace Bb.Oracle.Structures.Models
 
                 if (p != null)
                 {
-                    p.Parent = this.Parent;
+                    p.Root = this.Root;
+                    //p.Parent = this.Parent;
                     p.Initialize();
-                }
-                else
-                {
-
                 }
             }
 

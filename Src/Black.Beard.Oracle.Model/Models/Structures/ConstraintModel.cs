@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System;
 using System.Text;
+using System.Linq;
 
 namespace Bb.Oracle.Structures.Models
 {
@@ -17,8 +18,9 @@ namespace Bb.Oracle.Structures.Models
         public ConstraintModel()
         {
             this.Columns = new ConstraintColumnCollection() { Parent = this };
-            TableReference = new ReferenceTable() { GetDb = () => this.Root };
-            Reference = new ReferenceConstraint() { GetDb = () => this.Root };
+            TableReference = new ReferenceTable() { Root = this.Root };
+            Reference = new ReferenceConstraint() { Root = this.Root };
+            IndexReference = new ReferenceIndex() { Root = this.Root };
 
             Status = "ENABLE";
             Deferred = "IMMEDIATE";
@@ -172,11 +174,74 @@ namespace Bb.Oracle.Structures.Models
         /// </returns>
         public ConstraintColumnCollection Columns { get; set; }
 
-        public ReferenceTable TableReference { get; set; }
+        public ReferenceTable TableReference { get; }
 
         public TableModel GetTable()
         {
             return this.TableReference.Resolve();
+        }
+
+        public string UniqueKeyIndex
+        {
+            get
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.Append(this.TableReference.ToString() + "(");
+                foreach (ConstraintColumnModel c in this.Columns.OrderBy(c => c.ColumnName))
+                {
+                    sb.Append(" " + c.ColumnName);
+
+                }
+                sb.Append(")");
+
+                switch (this.Type)
+                {
+                    case "C":   // (check constraint on a table)
+
+                        break;
+
+                    case "U":   // (unique key)
+                    case "P":   // (primary key)
+                        if (!string.IsNullOrEmpty(this.IndexOwner) && !string.IsNullOrEmpty(this.IndexName))
+                        {
+                            var index = this.Root.Indexes[$"{this.IndexOwner}.{this.IndexName}"];
+                            if (index != null)
+                            {
+
+                            }
+                        }
+                        break;
+
+                    case "R":   // (referential integrity)
+
+                        if (!string.IsNullOrEmpty(this.Reference.Name))
+                        {
+                            sb.Append(" Reference ");
+
+                            var _ref = this.Reference.Resolve();
+                            if (_ref != null)
+                                sb.Append(_ref.UniqueKeyIndex);
+                        }
+                        else if (!string.IsNullOrEmpty(this.Search_Condition))
+                        {
+                            sb.Append(GetCodeSource());
+                        }
+                        break;
+
+                    case "V":   // (with check option, on a view)
+
+                        break;
+
+                    case "O":   // (with read only, on a view)
+
+                        break;
+
+                    default:
+                        break;
+                }
+
+                return sb.ToString();
+            }
         }
 
         public void Create(IchangeVisitor visitor)
@@ -198,36 +263,26 @@ namespace Bb.Oracle.Structures.Models
         public override void Initialize()
         {
 
-            TableReference.GetDb = () => this.Root;
-            Reference.GetDb = () => this.Root;
-            this.Columns.Initialize();
+            this.Columns.Root = this.Root;
+            this.Reference.Root = this.Root;
+            this.TableReference.Root = this.Root;
+            
+            this.IndexReference.Root = this.Root;
+            this.IndexReference.Owner = this.IndexOwner;
+            this.IndexReference.Name = this.IndexName;
 
-            //if (this.Type == "F" || this.Type == "R")
-            //{
-            //    string key = this.Rel_Constraint_Owner + "." + this.Rel_Constraint_Name;
-            //    var table = this.Parent;
-            //    if (this.Reference == null)
-            //    {
-            //        if (this.Root.Constraints.TryGet(key, out ConstraintModel constraint))
-            //            this.Reference = constraint;
-            //    }
-            //}
+            var table = this.TableReference.Resolve();
+            if (table != null)
+            {
+                this.Columns.Parent = this.Parent = table;
+                this.Columns.Initialize();
+            }
 
         }
 
-        ///// <summary>
-        ///// Rel_Constraint_Owner
-        ///// </summary>
-        //[DefaultValue("")]
-        //public string Rel_Constraint_Owner { get; set; }
+        public ReferenceConstraint Reference { get; }
 
-        ///// <summary>
-        ///// Rel_ Constraint_ Name
-        ///// </summary>
-        //[DefaultValue("")]
-        //public string Rel_Constraint_Name { get; set; }
-
-        public ReferenceConstraint Reference { get; set; }
+        public ReferenceIndex IndexReference { get; }
 
         public override KindModelEnum KindModel
         {
@@ -265,22 +320,30 @@ namespace Bb.Oracle.Structures.Models
 
             int _result = 0;
 
+            _result ^= this.TableReference?.Name?.GetHashCode() ?? 0;
+            _result ^= this.TableReference?.Owner?.GetHashCode() ?? 0;
+
             foreach (ConstraintColumnModel item in this.Columns)
                 _result ^= item.ColumnName.GetHashCode();
 
             _result ^= this.Deferrable.GetHashCode();
             _result ^= this.Deferred.GetHashCode();
-            _result ^= this.DeleteRule.GetHashCode();
+            _result ^= this.DeleteRule?.GetHashCode() ?? 0;
             _result ^= this.Generated.GetHashCode();
-            _result ^= this.IndexName.GetHashCode();
+            _result ^= this.IndexOwner?.GetHashCode() ?? 0;
+            _result ^= this.IndexName?.GetHashCode() ?? 0;
             _result ^= this.Name.GetHashCode();
-            _result ^= this.Owner.GetHashCode();
+            _result ^= this.Invalid?.GetHashCode() ?? 0;
+            _result ^= this.Owner?.GetHashCode() ?? 0;
             _result ^= this.Rely.GetHashCode();
-            _result ^= this.Reference.Name.GetHashCode();
-            _result ^= this.Reference.Owner.GetHashCode();
-            _result ^= this.Search_Condition.GetHashCode();
+            _result ^= this.Reference.Name?.GetHashCode() ?? 0;
+            _result ^= this.Reference.Owner?.GetHashCode() ?? 0;
+            _result ^= this.Search_Condition?.GetHashCode() ?? 0;
             _result ^= this.Status.GetHashCode();
             _result ^= this.Type.GetHashCode();
+            _result ^= this.Valid.GetHashCode();
+            _result ^= this.Validated.GetHashCode();
+            _result ^= this.ViewRelated.GetHashCode();
 
             return _result;
         }
